@@ -8,9 +8,9 @@ import { FINISH_SUPPLY } from "@/lib/odds";
 import { packStatus } from "@/lib/packs";
 import { getCurrentUser } from "@/lib/session";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const user = await getCurrentUser();
-  if (!user) return <Landing />;
+  if (!user) return <Landing error={(await searchParams).error} />;
 
   const activity = await db.activity.findMany({
     where: { kind: "pull" },
@@ -69,7 +69,7 @@ export default async function Home() {
   );
 }
 
-function Landing() {
+function Landing({ error }: { error?: string }) {
   const showcase = [
     { id: "fb-lionel-messi+fb-cristiano-ronaldo-duo-the-rivalry", finish: "holo" as Finish },
     { id: "bb-michael-jordan-moment-the-last-shot", finish: "standard" as Finish },
@@ -89,7 +89,7 @@ function Landing() {
           and Gem Mint 10s.
         </p>
         <div className="mt-8">
-          <LoginForm />
+          <LoginForm error={error?.slice(0, 200)} />
         </div>
       </div>
       <div className="relative mx-auto h-[420px] w-full max-w-md" aria-hidden>

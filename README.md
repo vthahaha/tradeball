@@ -28,7 +28,7 @@ npm run dev              # http://localhost:3000
 
 Copy `.env.example` to `.env` first and set `SESSION_SECRET` to any long random string.
 Set `PACK_COOLDOWN_MINUTES=1` in `.env` to test packs quickly.
-Set `INVITE_CODE=something` to keep the league private: new accounts must enter it (existing players aren't affected).
+Sign-in is **Google only**. Set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (see `.env.example`). To keep the league private, leave the Google consent screen in *Testing* mode and add your friends as test users.
 
 ## Where things live
 
@@ -48,10 +48,10 @@ Set `INVITE_CODE=something` to keep the league private: new accounts must enter 
 
 ## Status
 
-- [x] Phase 0: app, local login (username + PIN), SQLite DB
+- [x] Phase 0: app, DB (now Google sign-in + Postgres)
 - [x] Phase 1: 275 players → 361 card designs, all rarity/finish styles
 - [x] Phase 2: server-side packs, 4h timer, daily bonus, pity, opening animation
 - [x] Phase 3 (basic): binder with completion, filters, card detail
 - [x] Phase 4: trading (offers, counters, atomic swaps, auto-expiry, history, league log, wishlist)
-- [x] Phase 5: league page + activity feed, profiles with 5-card showcase, duplicate recycling into shards (10 = 1 pack), invite code, phone tab bar
+- [x] Phase 5: league page + activity feed, profiles with 5-card showcase, duplicate recycling into shards (10 = 1 pack), Google sign-in, phone tab bar
 - [x] Hosting: Vercel + Neon Postgres

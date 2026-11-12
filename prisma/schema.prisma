@@ -16,7 +16,10 @@ datasource db {
 model User {
   id          String   @id @default(cuid())
   username    String   @unique
-  pinHash     String
+  googleId    String?  @unique // Google account "sub"
+  email       String?
+  avatarUrl   String?
+  pinHash     String?  // legacy username+PIN login, no longer used
   createdAt   DateTime @default(now())
 
   // Timed packs: `packs` were banked as of `packClock`; one more is earned

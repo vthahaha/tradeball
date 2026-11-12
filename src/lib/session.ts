@@ -1,5 +1,5 @@
 import "server-only";
-import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { db } from "./db";
 
@@ -16,14 +16,31 @@ function sign(value: string) {
   return createHmac("sha256", secret()).update(value).digest("base64url");
 }
 
+/** `value.signature` — tamper-proof, not encrypted. */
+export function sealValue(value: string) {
+  return `${value}.${sign(value)}`;
+}
+
+export function unsealValue(raw: string | undefined): string | null {
+  if (!raw) return null;
+  const dot = raw.lastIndexOf(".");
+  if (dot < 1) return null;
+  const value = raw.slice(0, dot);
+  const sig = Buffer.from(raw.slice(dot + 1));
+  const expected = Buffer.from(sign(value));
+  if (sig.length !== expected.length || !timingSafeEqual(sig, expected)) return null;
+  return value;
+}
+
+export const cookieBase = {
+  httpOnly: true,
+  sameSite: "lax" as const,
+  secure: process.env.NODE_ENV === "production",
+  path: "/",
+};
+
 export async function setSession(userId: string) {
-  (await cookies()).set(COOKIE, `${userId}.${sign(userId)}`, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: MAX_AGE,
-  });
+  (await cookies()).set(COOKIE, sealValue(userId), { ...cookieBase, maxAge: MAX_AGE });
 }
 
 export async function clearSession() {
@@ -31,30 +48,11 @@ export async function clearSession() {
 }
 
 export async function getSessionUserId(): Promise<string | null> {
-  const raw = (await cookies()).get(COOKIE)?.value;
-  if (!raw) return null;
-  const dot = raw.lastIndexOf(".");
-  const id = raw.slice(0, dot);
-  const sig = Buffer.from(raw.slice(dot + 1));
-  const expected = Buffer.from(sign(id));
-  if (sig.length !== expected.length || !timingSafeEqual(sig, expected)) return null;
-  return id;
+  return unsealValue((await cookies()).get(COOKIE)?.value);
 }
 
 export async function getCurrentUser() {
   const id = await getSessionUserId();
   if (!id) return null;
   return db.user.findUnique({ where: { id } });
-}
-
-export function hashPin(pin: string) {
-  const salt = randomBytes(16).toString("hex");
-  return `${salt}:${scryptSync(pin, salt, 32).toString("hex")}`;
-}
-
-export function verifyPin(pin: string, stored: string) {
-  const [salt, hash] = stored.split(":");
-  const a = Buffer.from(hash, "hex");
-  const b = scryptSync(pin, salt, 32);
-  return a.length === b.length && timingSafeEqual(a, b);
 }
