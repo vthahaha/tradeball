@@ -41,6 +41,7 @@ export interface NbaPlayerRow {
 
 export interface Player {
   id: string;
+  espnId: string;
   sport: Sport;
   name: string;
   team: string; // team nickname, e.g. "Celtics"

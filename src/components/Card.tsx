@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, type CSSProperties } from "react";
-import { SET_NAME, teamColors, type CardView, type Finish } from "@/lib/catalog";
+import { useRef, useState, type CSSProperties } from "react";
+import { headshotUrl, SET_NAME, teamColors, type CardView, type Finish } from "@/lib/catalog";
 import { SportIcon } from "./SportIcon";
 
 export interface CardProps {
@@ -63,9 +63,12 @@ function lastName(name: string) {
 
 export function Card({ card, finish = "standard", serialNo, supply, grade, missing, tilt = true, className }: CardProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [faceFailed, setFaceFailed] = useState(false);
   const [p1, p2] = card.players;
   const [t1, t2] = teamColors(p1.team);
   const isDuo = card.type === "duo" && p2;
+  // Single-player cards show the ESPN headshot; duos and failed loads keep the initials.
+  const showFace = !isDuo && !!p1.espnId && !faceFailed;
   const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;
   const showTitle = card.type === "moment" || ((card.type === "icon" || isDuo) && card.title);
   const typeLabel = TYPE_LABEL[card.type];
@@ -109,9 +112,23 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
       <div className="tb-card__stock">
         <div className="tb-card__face">
           <div className="tb-card__art">
-            <div className={`tb-card__mono ${isDuo ? "is-duo" : ""}`}>
-              {isDuo ? `${initials(p1.name)}·${initials(p2.name)}` : initials(p1.name)}
-            </div>
+            {showFace ? (
+              // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs, hotlinked on purpose
+              <img
+                className="tb-card__face-img"
+                src={headshotUrl(p1.espnId)}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                referrerPolicy="no-referrer"
+                onError={() => setFaceFailed(true)}
+              />
+            ) : (
+              <div className={`tb-card__mono ${isDuo ? "is-duo" : ""}`}>
+                {isDuo ? `${initials(p1.name)}·${initials(p2.name)}` : initials(p1.name)}
+              </div>
+            )}
             {showTitle && (
               <div className="tb-card__moment">
                 {card.year && <small>{card.year}</small>}

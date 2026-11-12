@@ -11,6 +11,9 @@ export const SET_NAME = "Series 1";
 const teamByAbbr = new Map(NBA_TEAMS.map((t) => [t.abbr, t]));
 const teamByName = new Map(NBA_TEAMS.map((t) => [t.name, t]));
 
+/** ESPN's transparent headshot cut-out for a player (borrowed from ESPN's CDN). */
+export const headshotUrl = (espnId: string) => `https://a.espncdn.com/i/headshots/nba/players/full/${espnId}.png`;
+
 /** [primary, secondary] team colours, from the team nickname shown on a card. */
 export function teamColors(team: string): [string, string] {
   const t = teamByName.get(team);
@@ -28,6 +31,7 @@ export function slug(s: string) {
 
 export const PLAYERS: Player[] = NBA_PLAYERS.map((r) => ({
   id: `nba-${r.id}`,
+  espnId: r.id,
   sport: "basketball",
   name: r.name,
   team: teamByAbbr.get(r.team)?.name ?? r.team,
@@ -75,7 +79,7 @@ export interface CardView {
   title?: string;
   year?: number;
   ovr: number;
-  players: Pick<Player, "id" | "name" | "team" | "pos" | "nation" | "jersey" | "pick" | "college">[];
+  players: Pick<Player, "id" | "espnId" | "name" | "team" | "pos" | "nation" | "jersey" | "pick" | "college">[];
   stats: StatLine | null;
   statLine: string | null;
 }
@@ -92,8 +96,9 @@ export function cardView(designId: string): CardView {
     title: d.title,
     year: d.year,
     ovr: d.ovr,
-    players: ps.map(({ id, name, team, pos, nation, jersey, pick, college }) => ({
+    players: ps.map(({ id, espnId, name, team, pos, nation, jersey, pick, college }) => ({
       id,
+      espnId,
       name,
       team,
       pos,
