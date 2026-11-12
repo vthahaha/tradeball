@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { RARITIES, type Sport } from "@/lib/catalog/types";
+import { RARITIES } from "@/lib/catalog/types";
 import type { PulledCard } from "@/lib/packs";
 import { CloseIcon, StarIcon } from "./Icons";
 import { Card } from "./Card";
@@ -47,13 +47,13 @@ function Side({
   highlightLabel: string;
 }) {
   const [q, setQ] = useState("");
-  const [sport, setSport] = useState<Sport | "all">("all");
+  const [kind, setKind] = useState<"all" | "base" | "rookie">("all");
   const [wantedOnly, setWantedOnly] = useState(false);
   const sorted = useMemo(() => sortCards(cards), [cards]);
   const picked = sorted.filter((c) => selected.includes(c.instanceId));
   const pool = sorted.filter((c) => {
     if (selected.includes(c.instanceId)) return false;
-    if (sport !== "all" && c.sport !== sport) return false;
+    if (kind !== "all" && c.type !== kind) return false;
     if (wantedOnly && !highlight.has(c.designId)) return false;
     const s = q.trim().toLowerCase();
     return !s || c.players.some((p) => p.name.toLowerCase().includes(s) || p.team.toLowerCase().includes(s));
@@ -110,14 +110,14 @@ function Side({
           className="min-w-0 flex-1 rounded-full border border-line bg-bg-2 px-3 py-1.5 text-sm outline-none focus:border-accent"
         />
         <select
-          value={sport}
-          onChange={(e) => setSport(e.target.value as Sport | "all")}
-          aria-label="Sport"
+          value={kind}
+          onChange={(e) => setKind(e.target.value as "all" | "base" | "rookie")}
+          aria-label="Card type"
           className="rounded-full border border-line bg-bg-2 px-3 py-1.5 font-cond text-sm font-bold uppercase"
         >
           <option value="all">All</option>
-          <option value="soccer">Soccer</option>
-          <option value="basketball">Basketball</option>
+          <option value="base">Base</option>
+          <option value="rookie">Rookies</option>
         </select>
         {highlight.size > 0 && (
           <button

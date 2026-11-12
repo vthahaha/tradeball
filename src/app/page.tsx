@@ -73,9 +73,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
 
 function Landing({ error }: { error?: string }) {
   const fan = [
-    { id: "fb-lamine-yamal-star", finish: "foil" as Finish, x: "-58%", r: -14 },
-    { id: "bb-michael-jordan-moment-the-last-shot", finish: "standard" as Finish, x: "0%", r: 0 },
-    { id: "fb-lionel-messi+fb-cristiano-ronaldo-duo-the-rivalry", finish: "holo" as Finish, x: "58%", r: 14 },
+    { id: "nba-5104157-base", finish: "foil" as Finish, x: "-58%", r: -14 },
+    { id: "nba-3112335-base", finish: "standard" as Finish, x: "0%", r: 0 },
+    { id: "nba-5142718-rookie", finish: "holo" as Finish, x: "58%", r: 14 },
   ].filter((s) => getDesign(s.id));
 
   return (
@@ -87,7 +87,7 @@ function Landing({ error }: { error?: string }) {
           Real <span className="text-accent">chase.</span>
         </h1>
         <p className="mt-5 max-w-md text-lg text-muted">
-          Soccer and basketball cards for you and your friends. Tear a free ticket every few hours, chase numbered
+          Basketball cards from this season&apos;s rosters, for you and your friends. Tear a free ticket every few hours, chase numbered
           Golds and one-of-one Masterpieces, and trade for the rest.
         </p>
         <div className="mt-8">
@@ -108,7 +108,7 @@ function Landing({ error }: { error?: string }) {
           ))}
         </div>
         <div className="relative z-10 -mt-16">
-          <PackArt type="soccer" no={1} />
+          <PackArt type="basketball" no={1} />
         </div>
       </div>
     </div>

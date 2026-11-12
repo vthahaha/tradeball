@@ -518,6 +518,15 @@ select {
   font-weight: 900;
   font-size: 4.8cqw;
 }
+.tb-card__nostats {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 4cqw;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
 .tb-card__foot {
   display: flex;
   justify-content: space-between;

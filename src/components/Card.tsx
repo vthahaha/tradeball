@@ -90,7 +90,8 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
     s.setProperty("--go", "0");
   }
 
-  const statEntries = Object.entries(card.stats);
+  const statEntries = card.stats ? Object.entries(card.stats) : [];
+  const fmtStat = (v: number) => v.toFixed(1);
 
   return (
     <div
@@ -127,18 +128,26 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
           <div className="tb-card__band">
             <div className={`tb-card__name ${name.length > 17 ? "is-long" : ""}`}>{name}</div>
             <div className="tb-card__meta">
-              {isDuo ? `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}` : `${p1.team} · ${p1.nation}`}
+              {isDuo
+                ? `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}`
+                : card.type === "rookie" && p1.pick
+                  ? `${p1.team} · Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}`
+                  : `${p1.team}${p1.nation ? ` · ${p1.nation}` : ""}`}
             </div>
           </div>
           <div className="tb-card__stub">
-            <div className="tb-card__stats">
-              {statEntries.map(([k, v]) => (
-                <div key={k}>
-                  <span>{k}</span>
-                  <b>{v}</b>
-                </div>
-              ))}
-            </div>
+            {statEntries.length > 0 ? (
+              <div className="tb-card__stats" title={card.statLine ? `${card.statLine} per game` : undefined}>
+                {statEntries.map(([k, v]) => (
+                  <div key={k}>
+                    <span>{k}</span>
+                    <b>{fmtStat(v)}</b>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="tb-card__nostats">No stats yet</div>
+            )}
             <div className="tb-card__foot">
               <span>
                 {serialNo && supply ? (

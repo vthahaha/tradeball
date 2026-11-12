@@ -12,7 +12,7 @@ const body = Archivo({ variable: "--font-body", subsets: ["latin", "latin-ext"],
 
 export const metadata: Metadata = {
   title: "Gate 7",
-  description: "Open free soccer & basketball card packs and trade with friends.",
+  description: "Open free basketball card packs from this season’s rosters and trade with friends.",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

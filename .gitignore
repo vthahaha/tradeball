@@ -51,3 +51,7 @@ next-env.d.ts
 
 # env files stay private; the example is safe to share
 !.env.example
+
+# NBA research downloads
+/scripts/nba/data/
+/scripts/nba/selection.json

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { NUMBERED_FINISHES, SHARDS_PER_PACK, shardValueFor } from "@/lib/odds";
 import { useEffect, useMemo, useState } from "react";
 import type { CardView } from "@/lib/catalog";
-import { RARITIES, type Finish, type Rarity, type Sport } from "@/lib/catalog/types";
+import { RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
 import { Card } from "./Card";
 
@@ -123,7 +123,7 @@ export function CollectionView({
     });
   }
 
-  const [sport, setSport] = useState<Sport | "all">("all");
+  const [kind, setKind] = useState<"all" | "base" | "rookie">("all");
   const [rarity, setRarity] = useState<Rarity | "all">("all");
   const [showMissing, setShowMissing] = useState(false);
   const [dupesOnly, setDupesOnly] = useState(false);
@@ -138,11 +138,11 @@ export function CollectionView({
   }, [copies]);
 
   const stats = useMemo(() => {
-    const per = (s: Sport) => {
-      const all = designs.filter((d) => d.sport === s);
+    const per = (t: "base" | "rookie") => {
+      const all = designs.filter((d) => d.type === t);
       return { owned: all.filter((d) => byDesign.has(d.designId)).length, total: all.length };
     };
-    return { soccer: per("soccer"), basketball: per("basketball") };
+    return { base: per("base"), rookie: per("rookie") };
   }, [designs, byDesign]);
 
   const list = useMemo(() => {
@@ -153,7 +153,7 @@ export function CollectionView({
         if (!wishSet.has(d.designId)) return false;
       } else if (!showMissing && !owned) return false;
       if (dupesOnly && (owned?.length ?? 0) < 2) return false;
-      if (sport !== "all" && d.sport !== sport) return false;
+      if (kind !== "all" && d.type !== kind) return false;
       if (rarity !== "all" && d.rarity !== rarity) return false;
       if (q && !d.players.some((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))) return false;
       return true;
@@ -171,20 +171,19 @@ export function CollectionView({
           return a.players[0].name.localeCompare(b.players[0].name);
       }
     });
-  }, [designs, byDesign, showMissing, dupesOnly, sport, rarity, query, sort, wishOnly, wishSet]);
+  }, [designs, byDesign, showMissing, dupesOnly, kind, rarity, query, sort, wishOnly, wishSet]);
 
   const openDesign = open ? designs.find((d) => d.designId === open) : null;
 
   return (
     <>
-      {/* Completion */}
       {/* Completion, as one season-ticket strip */}
       <section aria-label="Set completion" className="ticket-panel mt-5">
         <div className="grid grid-cols-3">
           {(
             [
-              ["soccer", "Soccer"],
-              ["basketball", "Basketball"],
+              ["base", "Base set"],
+              ["rookie", "Rookies"],
             ] as const
           ).map(([s, label]) => {
             const { owned, total } = stats[s];
@@ -258,9 +257,9 @@ export function CollectionView({
       {/* Filters */}
       <section className="mt-6 flex flex-col gap-3">
         <div className="-mx-4 flex items-center gap-2 no-scrollbar overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
-          <Chip active={sport === "all"} onClick={() => setSport("all")}>All</Chip>
-          <Chip active={sport === "soccer"} onClick={() => setSport("soccer")}>Soccer</Chip>
-          <Chip active={sport === "basketball"} onClick={() => setSport("basketball")}>Basketball</Chip>
+          <Chip active={kind === "all"} onClick={() => setKind("all")}>All</Chip>
+          <Chip active={kind === "base"} onClick={() => setKind("base")}>Base</Chip>
+          <Chip active={kind === "rookie"} onClick={() => setKind("rookie")}>Rookies</Chip>
           <span className="mx-1 hidden h-5 w-px bg-line sm:block" />
           <input
             type="search"

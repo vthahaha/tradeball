@@ -18,9 +18,7 @@ import {
 } from "./odds";
 
 export const PACK_TYPES = {
-  soccer: { name: "Soccer Pack", sports: ["soccer"] as Sport[] },
   basketball: { name: "Hoops Pack", sports: ["basketball"] as Sport[] },
-  mixed: { name: "Mixed Pack", sports: ["soccer", "basketball"] as Sport[] },
 };
 export type PackType = keyof typeof PACK_TYPES;
 
@@ -65,7 +63,11 @@ export type PackStatus = ReturnType<typeof packStatus>;
 const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 
 function rollDesign(sport: Sport, weights: Partial<Record<Rarity, number>>) {
-  const rarity = weightedPick(weights) as Rarity;
+  let rarity = weightedPick(weights) as Rarity;
+  // A tier with no cards yet (Series 1 has no Mythics) falls back to the next tier down.
+  while (POOLS[sport][rarity].length === 0 && RARITIES.indexOf(rarity) > 0) {
+    rarity = RARITIES[RARITIES.indexOf(rarity) - 1];
+  }
   return pick(POOLS[sport][rarity]);
 }
 

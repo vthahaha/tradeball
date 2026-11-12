@@ -46,7 +46,7 @@ export async function showcaseCards(user: { id: string; showcase: string }): Pro
   });
 }
 
-const TOTAL = { soccer: DESIGNS.filter((d) => d.sport === "soccer").length, basketball: DESIGNS.filter((d) => d.sport === "basketball").length };
+const TOTAL = { basketball: DESIGNS.length };
 
 export async function userStats(userId: string) {
   const [designs, cards, trades] = await Promise.all([
@@ -54,17 +54,16 @@ export async function userStats(userId: string) {
     db.cardInstance.count({ where: { ownerId: userId, recycledAt: null } }),
     db.trade.count({ where: { status: "accepted", OR: [{ fromId: userId }, { toId: userId }] } }),
   ]);
-  const owned = { soccer: 0, basketball: 0 };
+  const owned = { basketball: 0 };
   for (const d of designs) {
     const design = getDesign(d.designId);
     if (design) owned[design.sport]++;
   }
-  const unique = owned.soccer + owned.basketball;
+  const unique = owned.basketball;
   return {
     cards,
     unique,
     completion: Math.round((unique / DESIGNS.length) * 100),
-    soccer: { owned: owned.soccer, total: TOTAL.soccer },
     basketball: { owned: owned.basketball, total: TOTAL.basketball },
     trades,
   };

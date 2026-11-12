@@ -10,9 +10,7 @@ import { CheckIcon, TicketIcon } from "./Icons";
 import { SportIcon } from "./SportIcon";
 
 const PACKS: { type: PackType; name: string; gate: string; seat: string }[] = [
-  { type: "soccer", name: "Soccer", gate: "FB", seat: "6" },
   { type: "basketball", name: "Hoops", gate: "BB", seat: "6" },
-  { type: "mixed", name: "Mixed", gate: "FB·BB", seat: "3+3" },
 ];
 
 const BIG: Rarity[] = ["legendary", "mythic"];
@@ -69,14 +67,7 @@ export function PackArt({ type, no, torn = false }: { type: PackType; no: number
       <div className="tb-pack__ticket">
         <div className="tb-pack__body">
           <div className="tb-pack__brand">
-            {type === "mixed" ? (
-              <>
-                <SportIcon sport="soccer" />
-                <SportIcon sport="basketball" />
-              </>
-            ) : (
-              <SportIcon sport={type === "soccer" ? "soccer" : "basketball"} />
-            )}
+            <SportIcon />
             <span className="truncate">Series 1</span>
           </div>
           <div className="tb-pack__name">{p.name}</div>
@@ -187,7 +178,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
   return (
     <div className="flex flex-col">
       {/* Ticket shelf */}
-      <section aria-label="Packs" className="grid grid-cols-1 gap-5 md:grid-cols-3">
+      <section aria-label="Packs" className="w-full max-w-xl">
         {PACKS.map((p) => (
           <motion.button
             key={p.type}
@@ -202,7 +193,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
           >
             <PackArt type={p.type} no={no} />
             <span className="mt-2 flex items-center justify-between font-cond text-sm font-bold text-muted">
-              <span>{p.type === "mixed" ? "3 soccer + 3 basketball" : "6 cards"} · 1 Rare or better</span>
+              <span>6 cards · 1 Rare or better</span>
               <span className="text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                 {busy === p.type ? "Tearing…" : "Tear →"}
               </span>
