@@ -181,7 +181,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
     }
   }
 
-  const noPacks = status.total === 0;
+  const noPacks = status.total === 0 && !status.unlimited;
   const toGo = status.pityLimit - status.pity;
 
   return (
@@ -225,9 +225,11 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
         <div>
           <div className="field-label">Tickets in wallet</div>
           <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-display text-5xl leading-none text-accent">{status.total}</span>
+            <span className="font-display text-5xl leading-none text-accent">{status.unlimited ? "∞" : status.total}</span>
             <span className="font-cond text-sm font-semibold text-muted">
-              {status.timed}/{status.max} free{status.bonus > 0 ? ` + ${status.bonus} bonus` : ""}
+              {status.unlimited
+                ? "Admin · unlimited"
+                : `${status.timed}/${status.max} free${status.bonus > 0 ? ` + ${status.bonus} bonus` : ""}`}
             </span>
           </div>
         </div>
@@ -274,7 +276,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
             type={opening.type}
             no={opening.no}
             cards={opening.cards}
-            canOpenAnother={status.total > 0}
+            canOpenAnother={status.total > 0 || status.unlimited}
             onAnother={() => {
               const t = opening.type;
               setOpening(null);

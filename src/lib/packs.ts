@@ -1,6 +1,7 @@
 import "server-only";
 import type { User } from "@prisma/client";
 import { cardView, getDesign, POOLS, RARITIES, type CardView, type Finish, type Rarity, type Sport } from "./catalog";
+import { isAdmin } from "./admin";
 import { db } from "./db";
 import {
   CARDS_PER_PACK,
@@ -46,6 +47,7 @@ export function isDailyClaimable(user: Pick<User, "lastDailyAt">, now = new Date
 export function packStatus(user: User) {
   const t = timedPacks(user);
   return {
+    unlimited: isAdmin(user.username),
     timed: t.available,
     bonus: user.bonusPacks,
     total: t.available + user.bonusPacks,
@@ -88,8 +90,11 @@ export async function openPack(userId: string, type: PackType): Promise<{ cards:
     const t = timedPacks(user);
 
     // Spend a timed pack first (keeps the timer running), then bonus packs.
+    // Admins open packs without spending anything.
     let userUpdate: { packs?: number; packClock?: Date; bonusPacks?: number };
-    if (t.available > 0) {
+    if (isAdmin(user.username)) {
+      userUpdate = {};
+    } else if (t.available > 0) {
       userUpdate = { packs: t.available - 1, packClock: new Date(t.clockIfSpent) };
     } else if (user.bonusPacks > 0) {
       userUpdate = { bonusPacks: user.bonusPacks - 1 };
