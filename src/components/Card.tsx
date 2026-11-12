@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type CSSProperties } from "react";
-import { headshotUrl, SET_NAME, teamColors, type CardView, type Finish } from "@/lib/catalog";
+import { headshotUrl, isInsert, SET_NAME, teamColors, type CardView, type Finish } from "@/lib/catalog";
 import { SportIcon } from "./SportIcon";
 
 export interface CardProps {
@@ -18,10 +18,10 @@ export interface CardProps {
 const TYPE_LABEL: Record<CardView["type"], string | null> = {
   base: null,
   rookie: "Rookie",
-  star: "Star",
-  captain: "Captain",
-  icon: "Icon",
-  moment: "Moment",
+  champs: "Champs",
+  courtside: "Courtside",
+  hot: "Flamin' Hot",
+  arrival: "New Arrival",
   duo: "Duo",
 };
 
@@ -65,12 +65,17 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
   const ref = useRef<HTMLDivElement>(null);
   const [faceFailed, setFaceFailed] = useState(false);
   const [p1, p2] = card.players;
-  const [t1, t2] = teamColors(p1.team);
+  const [t1, t2] = teamColors(card.team);
+  const [f1] = card.fromTeam ? teamColors(card.fromTeam) : [t1];
   const isDuo = card.type === "duo" && p2;
-  // Single-player cards show the ESPN headshot; duos and failed loads keep the initials.
-  const showFace = !isDuo && !!p1.espnId && !faceFailed;
+  const insert = isInsert(card.type);
+  // Base and rookie cards show the ESPN headshot. Inserts show their splash art once one
+  // is chosen (insert-art.ts), and the initials until then. Failed loads fall back too.
+  const imgSrc = insert ? card.art : !isDuo && p1.espnId ? headshotUrl(p1.espnId) : undefined;
+  const showImg = !!imgSrc && !faceFailed;
   const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;
-  const showTitle = card.type === "moment" || ((card.type === "icon" || isDuo) && card.title);
+  const artTitle = card.type === "arrival" ? card.team : card.title;
+  const showTitle = insert && (artTitle || card.kicker);
   const typeLabel = TYPE_LABEL[card.type];
 
   function onMove(e: React.PointerEvent) {
@@ -94,7 +99,8 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
   }
 
   const statEntries = card.stats ? Object.entries(card.stats) : [];
-  const fmtStat = (v: number) => v.toFixed(1);
+  // A single game shows whole numbers; season averages and percentages show one decimal.
+  const fmtStat = (k: string, v: number) => (card.type === "hot" && !k.endsWith("%") ? String(v) : v.toFixed(1));
 
   return (
     <div
@@ -103,8 +109,9 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
       data-rarity={card.rarity}
       data-finish={finish}
       data-sport={card.sport}
-      data-art={isLightColor(t1) ? "light" : undefined}
-      style={{ "--t1": t1, "--t2": t2 } as CSSProperties}
+      data-type={card.type}
+      data-art={!insert && isLightColor(t1) ? "light" : undefined}
+      style={{ "--t1": t1, "--t2": t2, "--f1": f1 } as CSSProperties}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
       aria-label={`${name}, ${card.rarity} ${card.type}${finish !== "standard" ? `, ${finish}` : ""}`}
@@ -112,11 +119,11 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
       <div className="tb-card__stock">
         <div className="tb-card__face">
           <div className="tb-card__art">
-            {showFace ? (
-              // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs, hotlinked on purpose
+            {showImg ? (
+              // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs / chosen splash art, hotlinked on purpose
               <img
-                className="tb-card__face-img"
-                src={headshotUrl(p1.espnId)}
+                className={insert ? "tb-card__splash" : "tb-card__face-img"}
+                src={imgSrc}
                 alt=""
                 loading="lazy"
                 decoding="async"
@@ -131,8 +138,8 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
             )}
             {showTitle && (
               <div className="tb-card__moment">
-                {card.year && <small>{card.year}</small>}
-                {card.title}
+                {card.kicker && <small>{card.kicker}</small>}
+                {artTitle}
               </div>
             )}
             <div className="tb-card__ovr">
@@ -147,18 +154,22 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
             <div className="tb-card__meta">
               {isDuo
                 ? `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}`
-                : card.type === "rookie" && p1.pick
-                  ? `${p1.team} · Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}`
-                  : `${p1.team}${p1.nation ? ` · ${p1.nation}` : ""}`}
+                : card.type === "arrival" && card.fromTeam
+                  ? `${card.fromTeam} → ${card.team}`
+                  : card.type === "hot"
+                    ? `${card.team} · 2025–26`
+                    : card.type === "rookie" && p1.pick
+                      ? `${p1.team} · Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}`
+                      : `${p1.team}${p1.nation ? ` · ${p1.nation}` : ""}`}
             </div>
           </div>
           <div className="tb-card__stub">
             {statEntries.length > 0 ? (
-              <div className="tb-card__stats" title={card.statLine ? `${card.statLine} per game` : undefined}>
+              <div className="tb-card__stats" title={card.statLine ? (card.type === "hot" ? card.statLine : `${card.statLine} per game`) : undefined}>
                 {statEntries.map(([k, v]) => (
                   <div key={k}>
                     <span>{k}</span>
-                    <b>{fmtStat(v)}</b>
+                    <b>{fmtStat(k, v)}</b>
                   </div>
                 ))}
               </div>

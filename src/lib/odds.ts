@@ -49,7 +49,15 @@ export const GRADE_WEIGHTS: [number, number][] = [
   [4, 2],
 ];
 
-export const CARDS_PER_PACK = 6;
+export const CARDS_PER_PACK = 8;
+
+/** The last slot of every pack is an insert; which class it comes from: */
+export const INSERT_CLASS_WEIGHTS = {
+  hot: 40, // Flamin' Hot (Rare)
+  arrival: 35, // New Arrivals (Rare)
+  courtside: 20, // Courtside (Epic)
+  champs: 5, // Champs (Legendary)
+} as const;
 export const MAX_BANKED_PACKS = 3;
 
 export function cooldownMs() {

@@ -1,6 +1,17 @@
 import "server-only";
 import type { User } from "@prisma/client";
-import { cardView, getDesign, POOLS, RARITIES, type CardView, type Finish, type Rarity, type Sport } from "./catalog";
+import {
+  cardView,
+  getDesign,
+  INSERT_POOLS,
+  POOLS,
+  RARITIES,
+  type CardView,
+  type Finish,
+  type InsertType,
+  type Rarity,
+  type Sport,
+} from "./catalog";
 import { isAdmin } from "./admin";
 import { db } from "./db";
 import {
@@ -8,6 +19,7 @@ import {
   cooldownMs,
   FINISH_SUPPLY,
   GUARANTEED_WEIGHTS,
+  INSERT_CLASS_WEIGHTS,
   MAX_BANKED_PACKS,
   PITY_LIMIT,
   PITY_WEIGHTS,
@@ -71,6 +83,11 @@ function rollDesign(sport: Sport, weights: Partial<Record<Rarity, number>>) {
   return pick(POOLS[sport][rarity]);
 }
 
+function rollInsert() {
+  const cls = weightedPick(INSERT_CLASS_WEIGHTS as Partial<Record<InsertType, number>>) as InsertType;
+  return pick(INSERT_POOLS[cls]);
+}
+
 const isLegendaryPlus = (r: Rarity) => RARITIES.indexOf(r) >= RARITIES.indexOf("legendary");
 
 export interface PulledCard extends CardView {
@@ -111,10 +128,11 @@ export async function openPack(userId: string, type: PackType): Promise<{ cards:
         : Array.from({ length: CARDS_PER_PACK }, (_, i) => pack.sports[i % 2]);
 
     const pityHit = user.pityCounter >= PITY_LIMIT - 1;
+    // Slots: 1..n-2 normal base/rookie rolls, n-1 guaranteed Rare+ (pity applies), n = insert.
     const designs = sports.map((sport, i) => {
-      const last = i === CARDS_PER_PACK - 1;
-      if (!last) return rollDesign(sport, RARITY_WEIGHTS);
-      return rollDesign(pick(pack.sports), pityHit ? PITY_WEIGHTS : GUARANTEED_WEIGHTS);
+      if (i === CARDS_PER_PACK - 1) return rollInsert();
+      if (i === CARDS_PER_PACK - 2) return rollDesign(pick(pack.sports), pityHit ? PITY_WEIGHTS : GUARANTEED_WEIGHTS);
+      return rollDesign(sport, RARITY_WEIGHTS);
     });
 
     const cards: PulledCard[] = [];

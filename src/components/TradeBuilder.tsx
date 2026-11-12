@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { RARITIES } from "@/lib/catalog/types";
+import { isInsert, RARITIES } from "@/lib/catalog/types";
 import type { PulledCard } from "@/lib/packs";
 import { CloseIcon, StarIcon } from "./Icons";
 import { Card } from "./Card";
@@ -47,13 +47,13 @@ function Side({
   highlightLabel: string;
 }) {
   const [q, setQ] = useState("");
-  const [kind, setKind] = useState<"all" | "base" | "rookie">("all");
+  const [kind, setKind] = useState<"all" | "base" | "rookie" | "insert">("all");
   const [wantedOnly, setWantedOnly] = useState(false);
   const sorted = useMemo(() => sortCards(cards), [cards]);
   const picked = sorted.filter((c) => selected.includes(c.instanceId));
   const pool = sorted.filter((c) => {
     if (selected.includes(c.instanceId)) return false;
-    if (kind !== "all" && c.type !== kind) return false;
+    if (kind === "insert" ? !isInsert(c.type) : kind !== "all" && c.type !== kind) return false;
     if (wantedOnly && !highlight.has(c.designId)) return false;
     const s = q.trim().toLowerCase();
     return !s || c.players.some((p) => p.name.toLowerCase().includes(s) || p.team.toLowerCase().includes(s));
@@ -111,13 +111,14 @@ function Side({
         />
         <select
           value={kind}
-          onChange={(e) => setKind(e.target.value as "all" | "base" | "rookie")}
+          onChange={(e) => setKind(e.target.value as "all" | "base" | "rookie" | "insert")}
           aria-label="Card type"
           className="rounded-full border border-line bg-bg-2 px-3 py-1.5 font-cond text-sm font-bold uppercase"
         >
           <option value="all">All</option>
           <option value="base">Base</option>
           <option value="rookie">Rookies</option>
+          <option value="insert">Inserts</option>
         </select>
         {highlight.size > 0 && (
           <button

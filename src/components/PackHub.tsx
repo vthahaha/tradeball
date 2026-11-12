@@ -10,7 +10,7 @@ import { CheckIcon, TicketIcon } from "./Icons";
 import { SportIcon } from "./SportIcon";
 
 const PACKS: { type: PackType; name: string; gate: string; seat: string }[] = [
-  { type: "basketball", name: "Hoops", gate: "BB", seat: "6" },
+  { type: "basketball", name: "Hoops", gate: "BB", seat: "8" },
 ];
 
 const BIG: Rarity[] = ["legendary", "mythic"];
@@ -193,7 +193,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
           >
             <PackArt type={p.type} no={no} />
             <span className="mt-2 flex items-center justify-between font-cond text-sm font-bold text-muted">
-              <span>6 cards · 1 Rare or better</span>
+              <span>8 cards · 1 Rare or better · 1 insert</span>
               <span className="text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                 {busy === p.type ? "Tearing…" : "Tear →"}
               </span>
@@ -373,7 +373,7 @@ function PackOpening({
         </div>
       ) : (
         <div className="my-auto flex w-full flex-col items-center">
-          <div className="grid w-full max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6">
+          <div className="grid w-full max-w-6xl grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5 lg:grid-cols-8">
             {cards.map((c, i) => (
               <motion.button
                 type="button"

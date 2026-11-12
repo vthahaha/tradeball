@@ -870,6 +870,130 @@ select {
   background: repeating-linear-gradient(90deg, var(--ink) 0 0.5cqw, transparent 0.5cqw 1cqw, var(--ink) 1cqw 2cqw, transparent 2cqw 2.4cqw);
 }
 
+/* ───────────────────────────── Insert classes ─────────────────────────────
+   Each insert has its own art panel. Splash art (insert-art.ts) covers it once
+   chosen; until then the initials sit on the class background.            */
+.tb-card__splash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  pointer-events: none;
+  user-select: none;
+}
+.tb-card[data-type="champs"] .tb-card__art::after,
+.tb-card[data-type="hot"] .tb-card__art::after,
+.tb-card[data-type="arrival"] .tb-card__art::after {
+  display: none;
+}
+
+/* Champs: black lacquer, gold pinstripes, gold lettering */
+.tb-card[data-type="champs"] .tb-card__art {
+  background:
+    repeating-linear-gradient(135deg, #f2c14e1f 0 0.6cqw, transparent 0.6cqw 5cqw),
+    linear-gradient(90deg, #f2c14e 0 1.2cqw, transparent 1.2cqw calc(100% - 1.2cqw), #f2c14e calc(100% - 1.2cqw)),
+    radial-gradient(90% 70% at 50% 35%, #2a2316, #0b0a08 75%);
+}
+.tb-card[data-type="champs"] .tb-card__mono {
+  color: #f2c14e;
+  -webkit-text-stroke: 0.5cqw #0b0a08;
+}
+.tb-card[data-type="champs"] .tb-card__type {
+  color: #0b0a08;
+  background: #f2c14e;
+  border-color: #f2c14e;
+}
+.tb-card[data-type="champs"] .tb-card__moment {
+  color: #f2c14e;
+}
+.tb-card[data-type="champs"] .tb-card__band {
+  background: #0b0a08;
+}
+
+/* Courtside: maple hardwood with a painted arc in the team colour */
+.tb-card[data-type="courtside"] .tb-card__art {
+  background:
+    radial-gradient(circle at 50% 118%, transparent 44cqw, var(--t1) 44.4cqw, var(--t1) 46cqw, transparent 46.4cqw),
+    repeating-linear-gradient(90deg, #00000012 0 0.25cqw, transparent 0.25cqw 9cqw),
+    repeating-linear-gradient(90deg, #dcab6a 0 9cqw, #d39e5b 9cqw 18cqw, #e0b274 18cqw 27cqw);
+}
+.tb-card[data-type="courtside"] .tb-card__art::after {
+  top: auto;
+  bottom: 0;
+  height: 3cqw;
+  transform: none;
+  background: var(--t1);
+  opacity: 1;
+}
+.tb-card[data-type="courtside"] .tb-card__mono {
+  color: var(--t1);
+  -webkit-text-stroke: 0.6cqw var(--paper);
+}
+.tb-card[data-type="courtside"] .tb-card__ovr,
+.tb-card[data-type="courtside"] .tb-card__sport,
+.tb-card[data-type="courtside"] .tb-card__moment {
+  color: var(--ink);
+  text-shadow: none;
+  filter: none;
+}
+.tb-card[data-type="courtside"] .tb-card__type {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/* Flamin' Hot: a flame field, the points total printed big */
+.tb-card[data-type="hot"] .tb-card__art {
+  background:
+    radial-gradient(40% 55% at 18% 100%, #ffe36a 0, #ffe36a00 70%),
+    radial-gradient(35% 65% at 55% 105%, #ffd23f 0, #ffd23f00 70%),
+    radial-gradient(40% 50% at 88% 100%, #ffb12b 0, #ffb12b00 70%),
+    linear-gradient(0deg, #ff8a1f 0%, #e8331c 45%, #6a0b0b 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  animation: tb-flicker 2.4s ease-in-out infinite alternate;
+}
+@keyframes tb-flicker {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+  50% { background-position: 0 -1.5cqw, 0 1cqw, 0 -1cqw, 0 0; }
+  100% { background-position: 0 1cqw, 0 -1.5cqw, 0 1.5cqw, 0 0; }
+}
+.tb-card[data-type="hot"] .tb-card__mono {
+  color: var(--paper);
+  -webkit-text-stroke: 0.6cqw #6a0b0b;
+}
+.tb-card[data-type="hot"] .tb-card__moment {
+  font-size: 12cqw;
+  font-weight: 900;
+  font-stretch: 115%;
+}
+.tb-card[data-type="hot"] .tb-card__type {
+  color: #6a0b0b;
+  background: #ffe36a;
+  border-color: #ffe36a;
+}
+
+/* New Arrivals: old team to new team across a perforated diagonal, customs stamp */
+.tb-card[data-type="arrival"] .tb-card__art {
+  background:
+    linear-gradient(135deg, transparent 49%, #f7f7f2cc 49% 51%, transparent 51%),
+    linear-gradient(135deg, var(--f1) 0 50%, var(--t1) 50% 100%);
+}
+.tb-card[data-type="arrival"] .tb-card__mono {
+  color: var(--paper);
+  -webkit-text-stroke: 0.6cqw #0009;
+}
+.tb-card[data-type="arrival"] .tb-card__type {
+  color: var(--stamp-ink);
+  background: var(--paper);
+  border-color: var(--stamp-ink);
+  border-style: double;
+  border-width: 1cqw;
+  transform: rotate(-10deg);
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

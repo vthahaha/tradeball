@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { NUMBERED_FINISHES, SHARDS_PER_PACK, shardValueFor } from "@/lib/odds";
 import { useEffect, useMemo, useState } from "react";
 import type { CardView } from "@/lib/catalog";
-import { RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
+import { isInsert, RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
 import { Card } from "./Card";
 
@@ -123,7 +123,7 @@ export function CollectionView({
     });
   }
 
-  const [kind, setKind] = useState<"all" | "base" | "rookie">("all");
+  const [kind, setKind] = useState<"all" | "base" | "rookie" | "insert">("all");
   const [rarity, setRarity] = useState<Rarity | "all">("all");
   const [showMissing, setShowMissing] = useState(false);
   const [dupesOnly, setDupesOnly] = useState(false);
@@ -138,11 +138,11 @@ export function CollectionView({
   }, [copies]);
 
   const stats = useMemo(() => {
-    const per = (t: "base" | "rookie") => {
-      const all = designs.filter((d) => d.type === t);
+    const per = (t: "base" | "rookie" | "insert") => {
+      const all = designs.filter((d) => (t === "insert" ? isInsert(d.type) : d.type === t));
       return { owned: all.filter((d) => byDesign.has(d.designId)).length, total: all.length };
     };
-    return { base: per("base"), rookie: per("rookie") };
+    return { base: per("base"), rookie: per("rookie"), insert: per("insert") };
   }, [designs, byDesign]);
 
   const list = useMemo(() => {
@@ -153,7 +153,7 @@ export function CollectionView({
         if (!wishSet.has(d.designId)) return false;
       } else if (!showMissing && !owned) return false;
       if (dupesOnly && (owned?.length ?? 0) < 2) return false;
-      if (kind !== "all" && d.type !== kind) return false;
+      if (kind === "insert" ? !isInsert(d.type) : kind !== "all" && d.type !== kind) return false;
       if (rarity !== "all" && d.rarity !== rarity) return false;
       if (q && !d.players.some((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))) return false;
       return true;
@@ -184,11 +184,12 @@ export function CollectionView({
             [
               ["base", "Base set"],
               ["rookie", "Rookies"],
+              ["insert", "Inserts"],
             ] as const
           ).map(([s, label]) => {
             const { owned, total } = stats[s];
             return (
-              <div key={s} className="border-r-2 border-dashed border-line px-3 py-3 sm:px-5 sm:py-4">
+              <div key={s} className="border-r-2 border-dashed border-line px-3 py-3 last:border-r-0 sm:px-5 sm:py-4">
                 <div className="field-label">{label}</div>
                 <div className="mt-1 flex items-baseline gap-1.5">
                   <span className="font-display text-2xl leading-none sm:text-3xl">{owned}</span>
@@ -201,19 +202,15 @@ export function CollectionView({
               </div>
             );
           })}
-          <div className="px-3 py-3 sm:px-5 sm:py-4">
-            <div className="field-label">Cards</div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="font-display text-2xl leading-none sm:text-3xl">{copies.length}</span>
-              <span className="hidden font-cond text-sm text-muted sm:inline">from {packsOpened} packs</span>
-            </div>
-          </div>
         </div>
         <div className="perf" aria-hidden />
         <div className="flex items-center justify-between gap-3 px-3 py-2.5 sm:px-5">
           <span className="font-cond text-sm font-semibold text-muted" title={`${SHARDS_PER_PACK} shards = 1 bonus pack`}>
+            <span className="text-text">{copies.length}</span> cards
+            <span className="hidden sm:inline"> from {packsOpened} packs</span>
+            <span className="mx-2 text-line">·</span>
             <ShardIcon className="mr-1 inline size-4 align-[-3px]" />
-            {shards}/{SHARDS_PER_PACK} shards<span className="hidden sm:inline"> toward a bonus pack</span>
+            {shards}/{SHARDS_PER_PACK} shards
           </span>
           <button
             type="button"
@@ -260,6 +257,7 @@ export function CollectionView({
           <Chip active={kind === "all"} onClick={() => setKind("all")}>All</Chip>
           <Chip active={kind === "base"} onClick={() => setKind("base")}>Base</Chip>
           <Chip active={kind === "rookie"} onClick={() => setKind("rookie")}>Rookies</Chip>
+          <Chip active={kind === "insert"} onClick={() => setKind("insert")}>Inserts</Chip>
           <span className="mx-1 hidden h-5 w-px bg-line sm:block" />
           <input
             type="search"

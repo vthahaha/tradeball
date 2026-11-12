@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { WipePanel } from "@/components/WipePanel";
 import { isAdmin } from "@/lib/admin";
+import { cardView, INSERT_DESIGNS, INSERT_NAMES, INSERT_POOLS, INSERT_TYPES } from "@/lib/catalog";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 
@@ -9,6 +10,7 @@ export default async function AdminPage() {
   if (!user || !isAdmin(user.username)) notFound();
 
   const [users, cards, trades] = await Promise.all([db.user.count(), db.cardInstance.count(), db.trade.count()]);
+  const withArt = INSERT_DESIGNS.filter((d) => cardView(d.id).art).length;
 
   return (
     <div className="max-w-2xl">
@@ -28,6 +30,35 @@ export default async function AdminPage() {
           Right now: {cards} cards · {trades} trades
         </p>
         <WipePanel />
+      </section>
+
+      <section className="mt-10">
+        <h2 className="font-display text-2xl">Insert splash art</h2>
+        <p className="mt-2 text-sm text-muted">
+          Add an image for any card below in <code className="text-text">src/lib/catalog/insert-art.ts</code>, keyed by
+          its card id. Cards without art show the player&apos;s initials. {withArt} of {INSERT_DESIGNS.length} have art.
+        </p>
+        {INSERT_TYPES.map((t) => (
+          <div key={t} className="mt-6">
+            <h3 className="field-label">
+              {INSERT_NAMES[t]} · {INSERT_POOLS[t].length}
+            </h3>
+            <ul className="mt-2 divide-y divide-line/60 rounded-md border border-line bg-panel/80 font-cond text-sm">
+              {INSERT_POOLS[t].map((d) => {
+                const v = cardView(d.id);
+                return (
+                  <li key={d.id} className="flex items-center justify-between gap-3 px-3 py-1.5">
+                    <span className="truncate">
+                      <span className="font-bold text-text">{v.players[0].name}</span>
+                      <span className="text-muted"> · {v.title ?? v.kicker ?? v.team}</span>
+                    </span>
+                    <code className={`shrink-0 select-all ${v.art ? "text-accent" : "text-muted"}`}>{d.id}</code>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
       </section>
     </div>
   );
