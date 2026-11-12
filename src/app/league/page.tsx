@@ -36,7 +36,7 @@ export default async function LeaguePage() {
               <li key={u.id}>
                 <Link
                   href={`/u/${encodeURIComponent(u.username)}`}
-                  className={`flex items-center gap-4 rounded-2xl border bg-panel/80 p-3 transition-colors hover:border-accent ${
+                  className={`flex items-center gap-4 rounded-md border bg-panel/80 p-3 transition-colors hover:border-accent ${
                     u.id === me.id ? "border-accent/50" : "border-line"
                   }`}
                 >

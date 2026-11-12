@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { FeedItem } from "@/lib/profile";
+import { PlusIcon, SwapIcon } from "./Icons";
 import { Card } from "./Card";
 
 const RARITY_TEXT: Record<string, string> = {
@@ -31,10 +32,10 @@ export function UserLink({ name }: { name: string }) {
 
 export function Feed({ items, empty = "Nothing here yet." }: { items: FeedItem[]; empty?: string }) {
   if (items.length === 0) {
-    return <p className="rounded-xl border border-dashed border-line px-4 py-6 text-center text-muted">{empty}</p>;
+    return <p className="rounded-md border border-dashed border-line px-4 py-6 text-center text-muted">{empty}</p>;
   }
   return (
-    <ul className="divide-y divide-line/60 rounded-2xl border border-line bg-panel/80">
+    <ul className="divide-y divide-line/60 rounded-md border border-line bg-panel/80">
       {items.map((it) => (
         <li key={it.id} className="flex items-center gap-3 px-4 py-3">
           {it.kind === "pull" ? (
@@ -43,10 +44,10 @@ export function Feed({ items, empty = "Nothing here yet." }: { items: FeedItem[]
             </div>
           ) : (
             <div
-              className="grid size-12 shrink-0 place-items-center rounded-xl bg-panel-2 font-display text-2xl text-muted"
+              className="grid size-12 shrink-0 place-items-center rounded-md bg-panel-2 font-display text-2xl text-muted"
               aria-hidden
             >
-              {it.kind === "trade" ? "⇄" : "+"}
+              {it.kind === "trade" ? <SwapIcon className="size-6" /> : <PlusIcon className="size-6" />}
             </div>
           )}
           <p className="min-w-0 flex-1 text-sm leading-snug">

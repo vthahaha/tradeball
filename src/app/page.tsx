@@ -1,7 +1,7 @@
 import { Card } from "@/components/Card";
 import { UserLink } from "@/components/Feed";
 import { LoginForm } from "@/components/LoginForm";
-import { PackHub } from "@/components/PackHub";
+import { PackArt, PackHub } from "@/components/PackHub";
 import { cardView, getDesign, type Finish } from "@/lib/catalog";
 import { db } from "@/lib/db";
 import { FINISH_SUPPLY } from "@/lib/odds";
@@ -15,7 +15,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
   const activity = await db.activity.findMany({
     where: { kind: "pull" },
     orderBy: { createdAt: "desc" },
-    take: 8,
+    take: 12,
     include: { user: { select: { username: true } } },
   });
 
@@ -27,28 +27,31 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
 
   return (
     <div>
-      <h1 className="font-display text-5xl leading-none sm:text-6xl">
-        Rip some <span className="text-accent">packs</span>
+      <h1 className="font-display text-[clamp(2.6rem,7vw,5rem)] leading-[0.9]">
+        Tonight&apos;s <span className="text-accent">tickets</span>
       </h1>
-      <p className="mt-2 max-w-xl text-muted">
-        One free pack every 4 hours, banked up to 3, plus a daily bonus. Every pack has at least one Rare or better.
+      <p className="mt-3 max-w-xl text-muted">
+        Tear a ticket to rip a pack. A new free ticket every 4 hours, up to 3 in your wallet, plus one daily.
       </p>
 
-      <div className="mt-6">
-        <PackHub initialStatus={packStatus(user)} />
+      <div className="mt-7">
+        <PackHub initialStatus={packStatus(user)} nextNo={user.packsOpened + 1} />
       </div>
 
-      <section className="mt-14">
-        <h2 className="font-display text-3xl">Big pulls</h2>
-        <p className="text-sm text-muted">Legendaries, Mythics, numbered cards and Gem Mint 10s, from everyone.</p>
+      <section className="mt-14" aria-labelledby="big-pulls">
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 id="big-pulls" className="font-display text-3xl">
+            Big pulls
+          </h2>
+          <p className="hidden text-sm text-muted sm:block">Legends, Mythics, numbered cards and Gem Mint 10s, from everyone</p>
+        </div>
+        <div className="perf mt-3" aria-hidden />
         {pulls.length === 0 ? (
-          <p className="mt-4 rounded-xl border border-dashed border-line px-4 py-6 text-center text-muted">
-            No big pulls yet. Be the first.
-          </p>
+          <p className="mt-6 text-muted">No big pulls yet. The first Legend in the league could be yours.</p>
         ) : (
-          <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
+          <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4 lg:grid-cols-6">
             {pulls.map((p) => (
-              <li key={p.id} className="space-y-1.5">
+              <li key={p.id}>
                 <Card
                   card={p.card}
                   finish={p.finish}
@@ -56,9 +59,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
                   supply={p.serialNo ? (FINISH_SUPPLY[p.finish] ?? null) : null}
                   grade={p.grade}
                 />
-                <div className="font-cond text-xs leading-tight text-muted">
-                  <UserLink name={p.who} /> ·{" "}
-                  {p.at.toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                <div className="mt-2 font-cond text-sm leading-tight text-muted">
+                  <UserLink name={p.who} /> · {p.at.toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                 </div>
               </li>
             ))}
@@ -70,43 +72,44 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
 }
 
 function Landing({ error }: { error?: string }) {
-  const showcase = [
-    { id: "fb-lionel-messi+fb-cristiano-ronaldo-duo-the-rivalry", finish: "holo" as Finish },
-    { id: "bb-michael-jordan-moment-the-last-shot", finish: "standard" as Finish },
-    { id: "fb-lamine-yamal-star", finish: "foil" as Finish },
+  const fan = [
+    { id: "fb-lamine-yamal-star", finish: "foil" as Finish, x: "-58%", r: -14 },
+    { id: "bb-michael-jordan-moment-the-last-shot", finish: "standard" as Finish, x: "0%", r: 0 },
+    { id: "fb-lionel-messi+fb-cristiano-ronaldo-duo-the-rivalry", finish: "holo" as Finish, x: "58%", r: 14 },
   ].filter((s) => getDesign(s.id));
 
   return (
-    <div className="grid items-center gap-10 py-6 md:grid-cols-[1.1fr_1fr] md:py-14">
+    <div className="grid items-center gap-12 py-4 md:grid-cols-[1fr_1.05fr] md:py-12">
       <div>
-        <h1 className="font-display text-6xl leading-[0.9] sm:text-8xl">
-          Collect.
+        <h1 className="font-display text-[clamp(3rem,8.5vw,6rem)] leading-[0.86]">
+          Free packs.
           <br />
-          Rip. <span className="text-accent">Trade.</span>
+          Real <span className="text-accent">chase.</span>
         </h1>
-        <p className="mt-4 max-w-md text-lg text-muted">
-          Free soccer & basketball card packs for you and your friends. Chase numbered Golds, one-of-one Masterpieces
-          and Gem Mint 10s.
+        <p className="mt-5 max-w-md text-lg text-muted">
+          Soccer and basketball cards for you and your friends. Tear a free ticket every few hours, chase numbered
+          Golds and one-of-one Masterpieces, and trade for the rest.
         </p>
         <div className="mt-8">
           <LoginForm error={error?.slice(0, 200)} />
         </div>
       </div>
-      <div className="relative mx-auto h-[420px] w-full max-w-md" aria-hidden>
-        {showcase.map((s, i) => (
-          <div
-            key={s.id}
-            className="absolute w-52 sm:w-60"
-            style={{
-              left: `${8 + i * 22}%`,
-              top: `${i === 1 ? 0 : 40}px`,
-              transform: `rotate(${(i - 1) * 9}deg)`,
-              zIndex: i === 1 ? 2 : 1,
-            }}
-          >
-            <Card card={cardView(s.id)} finish={s.finish} tilt={false} />
-          </div>
-        ))}
+
+      <div className="relative mx-auto w-full max-w-[520px] pb-4" aria-hidden>
+        <div className="relative mx-auto h-[300px] w-[46%] sm:h-[340px]">
+          {fan.map((s) => (
+            <div
+              key={s.id}
+              className="absolute inset-x-0 top-0"
+              style={{ transform: `translateX(${s.x}) rotate(${s.r}deg)`, transformOrigin: "50% 120%", zIndex: s.r === 0 ? 2 : 1 }}
+            >
+              <Card card={cardView(s.id)} finish={s.finish} tilt={false} />
+            </div>
+          ))}
+        </div>
+        <div className="relative z-10 -mt-16">
+          <PackArt type="soccer" no={1} />
+        </div>
       </div>
     </div>
   );

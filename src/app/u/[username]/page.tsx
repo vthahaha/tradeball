@@ -54,7 +54,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
 
       <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
         {statTiles.map((s) => (
-          <div key={s.label} className="rounded-xl border border-line bg-panel/80 px-4 py-3">
+          <div key={s.label} className="rounded-md border border-line bg-panel/80 px-4 py-3">
             <div className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">{s.label}</div>
             <div className="font-display text-3xl">{s.value}</div>
           </div>
@@ -71,7 +71,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
           </p>
         )}
         {shown.length === 0 ? (
-          <p className="mt-4 rounded-xl border border-dashed border-line px-4 py-8 text-center text-muted">No cards yet.</p>
+          <p className="mt-4 rounded-md border border-dashed border-line px-4 py-8 text-center text-muted">No cards yet.</p>
         ) : (
           <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {shown.map((c) => (

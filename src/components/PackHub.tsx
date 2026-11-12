@@ -1,28 +1,51 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import type { Rarity } from "@/lib/catalog/types";
 import type { PackStatus, PackType, PulledCard } from "@/lib/packs";
 import { Card, CardBack } from "./Card";
+import { CheckIcon, TicketIcon } from "./Icons";
 import { SportIcon } from "./SportIcon";
 
-const PACKS: { type: PackType; name: string; sub: string }[] = [
-  { type: "soccer", name: "Soccer", sub: "6 cards · 1 Rare+" },
-  { type: "basketball", name: "Hoops", sub: "6 cards · 1 Rare+" },
-  { type: "mixed", name: "Mixed", sub: "3 + 3 · 1 Rare+" },
+const PACKS: { type: PackType; name: string; gate: string; seat: string }[] = [
+  { type: "soccer", name: "Soccer", gate: "FB", seat: "6" },
+  { type: "basketball", name: "Hoops", gate: "BB", seat: "6" },
+  { type: "mixed", name: "Mixed", gate: "FB·BB", seat: "3+3" },
 ];
 
 const BIG: Rarity[] = ["legendary", "mythic"];
+const isBig = (c: PulledCard) => BIG.includes(c.rarity) || !!c.serialNo;
 
-function useNow(interval = 1000) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), interval);
-    return () => clearInterval(id);
-  }, [interval]);
-  return now;
+// One shared 1-second clock. The server snapshot is 0, so the countdown renders a
+// placeholder on the server and starts ticking only in the browser (no hydration mismatch).
+let clockNow = 0;
+const clockListeners = new Set<() => void>();
+let clockTimer: ReturnType<typeof setInterval> | null = null;
+function subscribeClock(cb: () => void) {
+  clockListeners.add(cb);
+  if (!clockTimer) {
+    clockNow = Date.now();
+    clockTimer = setInterval(() => {
+      clockNow = Date.now();
+      clockListeners.forEach((l) => l());
+    }, 1000);
+  }
+  return () => {
+    clockListeners.delete(cb);
+    if (clockListeners.size === 0 && clockTimer) {
+      clearInterval(clockTimer);
+      clockTimer = null;
+    }
+  };
+}
+function useNow() {
+  return useSyncExternalStore(
+    subscribeClock,
+    () => clockNow || Date.now(),
+    () => 0,
+  );
 }
 
 function fmt(ms: number) {
@@ -30,37 +53,83 @@ function fmt(ms: number) {
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
   const sec = s % 60;
-  return h > 0 ? `${h}h ${String(m).padStart(2, "0")}m` : `${m}:${String(sec).padStart(2, "0")}`;
+  return h > 0
+    ? `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
+    : `${m}:${String(sec).padStart(2, "0")}`;
 }
 
-export function PackArt({ type, small }: { type: PackType; small?: boolean }) {
+const pad = (n: number) => String(n).padStart(4, "0");
+
+/** A pack, printed as a match ticket. `no` is the player's next pack number. */
+export function PackArt({ type, no, torn = false }: { type: PackType; no: number; torn?: boolean }) {
   const p = PACKS.find((x) => x.type === type)!;
+  const reduce = useReducedMotion();
   return (
     <div className="tb-pack" data-pack={type}>
-      <div className="tb-pack__body">
-      <div className="tb-pack__brand">TRADEBALL</div>
-      {type === "mixed" ? (
-        <div className="flex" style={{ gap: "2cqw" }}>
-          <SportIcon sport="soccer" className="tb-pack__icon" />
-          <SportIcon sport="basketball" className="tb-pack__icon" />
+      <div className="tb-pack__ticket">
+        <div className="tb-pack__body">
+          <div className="tb-pack__brand">
+            {type === "mixed" ? (
+              <>
+                <SportIcon sport="soccer" />
+                <SportIcon sport="basketball" />
+              </>
+            ) : (
+              <SportIcon sport={type === "soccer" ? "soccer" : "basketball"} />
+            )}
+            <span className="truncate">Series 1</span>
+          </div>
+          <div className="tb-pack__name">{p.name}</div>
+          <div className="tb-pack__fields">
+            <div>
+              Gate<b>{p.gate}</b>
+            </div>
+            <div>
+              Row<b>Rare+</b>
+            </div>
+            <div>
+              Seat<b>{p.seat}</b>
+            </div>
+          </div>
         </div>
-      ) : (
-        <SportIcon sport={type === "soccer" ? "soccer" : "basketball"} className="tb-pack__icon" />
-      )}
-      <div className="tb-pack__name">{p.name}</div>
-      {!small && <div className="tb-pack__sub">Series 1</div>}
+        <motion.div
+          className="tb-pack__stub"
+          animate={torn ? (reduce ? { opacity: 0 } : { rotate: 16, x: "18%", y: "120%", opacity: 0 }) : {}}
+          transition={{ duration: 0.42, ease: [0.5, 0, 0.75, 0] }}
+          style={{ transformOrigin: "0% 0%" }}
+        >
+          <span className="tb-pack__tear">Tear here</span>
+          <span className="tb-pack__no">No. {pad(no)}</span>
+          <span className="tb-pack__barcode" />
+        </motion.div>
       </div>
     </div>
   );
 }
 
-export function PackHub({ initialStatus }: { initialStatus: PackStatus }) {
+/** The guarantee as fixed cells: filled = a pack opened since the last Legendary. */
+function PityCells({ value, limit }: { value: number; limit: number }) {
+  return (
+    <div className="mt-2 grid grid-cols-[repeat(20,minmax(0,1fr))] gap-[3px]" aria-hidden>
+      {Array.from({ length: limit }, (_, i) => (
+        <span
+          key={i}
+          className={`h-2.5 rounded-[1px] ${i < value ? "bg-hoops" : "border border-line"}`}
+          style={i === limit - 1 ? { background: "var(--stamp)", border: 0 } : undefined}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; nextNo: number }) {
   const router = useRouter();
   const now = useNow();
   const [status, setStatus] = useState(initialStatus);
   const [busy, setBusy] = useState<PackType | "daily" | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [opening, setOpening] = useState<{ type: PackType; cards: PulledCard[] } | null>(null);
+  const [opening, setOpening] = useState<{ type: PackType; cards: PulledCard[]; no: number } | null>(null);
+  const [opened, setOpened] = useState(0);
 
   // Take fresh server status after router.refresh() (adjust-state-during-render pattern).
   const [prevInitial, setPrevInitial] = useState(initialStatus);
@@ -71,8 +140,10 @@ export function PackHub({ initialStatus }: { initialStatus: PackStatus }) {
 
   // When the timer runs out, refresh from the server.
   useEffect(() => {
-    if (status.nextAt && now >= status.nextAt) router.refresh();
+    if (now && status.nextAt && now >= status.nextAt) router.refresh();
   }, [now, status.nextAt, router]);
+
+  const no = nextNo + opened;
 
   async function open(type: PackType) {
     setBusy(type);
@@ -86,7 +157,8 @@ export function PackHub({ initialStatus }: { initialStatus: PackStatus }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Something went wrong");
       setStatus(data.status);
-      setOpening({ type, cards: data.cards });
+      setOpening({ type, cards: data.cards, no });
+      setOpened((n) => n + 1);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -110,82 +182,89 @@ export function PackHub({ initialStatus }: { initialStatus: PackStatus }) {
   }
 
   const noPacks = status.total === 0;
+  const toGo = status.pityLimit - status.pity;
 
   return (
-    <>
-      {/* Pack wallet */}
-      <section className="flex flex-wrap items-center gap-x-8 gap-y-4 rounded-2xl border border-line bg-panel/80 px-5 py-4">
-        <div>
-          <div className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">Packs ready</div>
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-5xl leading-none text-accent">{status.total}</span>
-            <span className="font-cond text-sm text-muted">
-              {status.timed}/{status.max} free{status.bonus > 0 ? ` + ${status.bonus} bonus` : ""}
+    <div className="flex flex-col">
+      {/* Ticket shelf */}
+      <section aria-label="Packs" className="grid grid-cols-1 gap-5 md:grid-cols-3">
+        {PACKS.map((p) => (
+          <motion.button
+            key={p.type}
+            type="button"
+            aria-label={`Tear a ${p.name} ticket to open a pack`}
+            className="group block w-full cursor-pointer text-left disabled:cursor-not-allowed disabled:opacity-45"
+            whileHover={noPacks ? undefined : { y: -6, rotate: -0.8 }}
+            whileTap={noPacks ? undefined : { scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 420, damping: 26 }}
+            disabled={noPacks || busy !== null}
+            onClick={() => open(p.type)}
+          >
+            <PackArt type={p.type} no={no} />
+            <span className="mt-2 flex items-center justify-between font-cond text-sm font-bold text-muted">
+              <span>{p.type === "mixed" ? "3 soccer + 3 basketball" : "6 cards"} · 1 Rare or better</span>
+              <span className="text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                {busy === p.type ? "Tearing…" : "Tear →"}
+              </span>
             </span>
-          </div>
-        </div>
-        <div className="min-w-36">
-          <div className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">Next free pack</div>
-          <div className="font-display text-3xl leading-tight">
-            {status.nextAt ? fmt(status.nextAt - now) : <span className="text-muted">Bank full</span>}
-          </div>
-        </div>
-        <div className="min-w-44 flex-1">
-          <div className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">
-            Legendary guarantee
-          </div>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-bg-2">
-            <div
-              className="h-full rounded-full"
-              style={{
-                width: `${(status.pity / status.pityLimit) * 100}%`,
-                background: "linear-gradient(90deg, var(--r-epic), var(--r-legendary))",
-              }}
-            />
-          </div>
-          <div className="mt-1 font-cond text-xs text-muted">
-            {status.pityLimit - status.pity} pack{status.pityLimit - status.pity === 1 ? "" : "s"} until a guaranteed
-            Legendary+
-          </div>
-        </div>
-        <button className="btn btn-ghost" onClick={claimDaily} disabled={!status.dailyClaimable || busy !== null}>
-          {status.dailyClaimable ? "Claim daily pack" : "Daily claimed ✓"}
-        </button>
+          </motion.button>
+        ))}
       </section>
 
       {error && (
-        <p role="alert" className="mt-4 rounded-lg border border-danger/40 bg-danger/10 px-4 py-2 text-sm text-danger">
+        <p role="alert" className="mt-5 rounded-md border border-stamp/50 bg-stamp/10 px-4 py-2.5 text-sm font-semibold text-stamp">
           {error}
         </p>
       )}
 
-      {/* Pack shelf */}
-      <section className="mt-8 grid grid-cols-3 gap-3 sm:gap-6">
-        {PACKS.map((p) => (
-          <div key={p.type} className="flex flex-col items-center gap-3 sm:gap-4">
-            <motion.button
-              type="button"
-              aria-label={`Open ${p.name} pack`}
-              className="w-full max-w-60 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-              whileHover={noPacks ? undefined : { y: -8, rotate: -1.5 }}
-              whileTap={noPacks ? undefined : { scale: 0.97 }}
-              disabled={noPacks || busy !== null}
-              onClick={() => open(p.type)}
-            >
-              <PackArt type={p.type} />
-            </motion.button>
-            <div className="w-full text-center sm:w-auto">
-              <div className="hidden font-cond text-sm text-muted sm:block">{p.sub}</div>
-              <button
-                className="btn btn-primary mt-2 w-full px-2 text-xs sm:w-auto sm:min-w-40 sm:px-4 sm:text-[0.95rem]"
-                onClick={() => open(p.type)}
-                disabled={noPacks || busy !== null}
-              >
-                {busy === p.type ? "Opening…" : "Open"}
-              </button>
-            </div>
+      {/* Season-ticket wallet */}
+      <section
+        aria-label="Your ticket wallet"
+        className="ticket-panel order-first mb-6 grid grid-cols-2 gap-x-4 gap-y-4 px-5 py-4 sm:grid-cols-[auto_auto_auto_1fr_auto] sm:items-center sm:gap-x-8 sm:px-6 sm:py-5 md:order-none md:mb-0 md:mt-8"
+      >
+        <div>
+          <div className="field-label">Tickets in wallet</div>
+          <div className="mt-1 flex items-baseline gap-2">
+            <span className="font-display text-5xl leading-none text-accent">{status.total}</span>
+            <span className="font-cond text-sm font-semibold text-muted">
+              {status.timed}/{status.max} free{status.bonus > 0 ? ` + ${status.bonus} bonus` : ""}
+            </span>
           </div>
-        ))}
+        </div>
+        <div className="perf-v hidden self-stretch sm:block" aria-hidden />
+        <div>
+          <div className="field-label">Next free ticket</div>
+          <div className="mt-1 font-display text-3xl leading-none" style={{ fontStretch: "100%" }}>
+            {!status.nextAt ? (
+              <span className="text-muted">Wallet full</span>
+            ) : now ? (
+              fmt(status.nextAt - now)
+            ) : (
+              <span className="text-muted">–:––</span>
+            )}
+          </div>
+        </div>
+        <div className="col-span-2 sm:col-span-1">
+          <div className="field-label">
+            Legendary guarantee · <span className="text-text">{toGo} to go</span>
+          </div>
+          <PityCells value={status.pity} limit={status.pityLimit} />
+        </div>
+        <button
+          className={`btn col-span-2 sm:col-span-1 ${status.dailyClaimable ? "btn-paper" : "btn-ghost"}`}
+          onClick={claimDaily}
+          disabled={!status.dailyClaimable || busy !== null}
+        >
+          {status.dailyClaimable ? (
+            <>
+              <TicketIcon className="size-4" /> Claim daily ticket
+            </>
+          ) : (
+            <>
+              <CheckIcon className="size-4" /> Daily claimed
+            </>
+          )}
+        </button>
       </section>
 
       <AnimatePresence>
@@ -193,6 +272,7 @@ export function PackHub({ initialStatus }: { initialStatus: PackStatus }) {
           <PackOpening
             key={opening.cards[0]?.instanceId}
             type={opening.type}
+            no={opening.no}
             cards={opening.cards}
             canOpenAnother={status.total > 0}
             onAnother={() => {
@@ -207,7 +287,7 @@ export function PackHub({ initialStatus }: { initialStatus: PackStatus }) {
           />
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
 
@@ -215,27 +295,34 @@ export function PackHub({ initialStatus }: { initialStatus: PackStatus }) {
 
 function PackOpening({
   type,
+  no,
   cards,
   canOpenAnother,
   onAnother,
   onClose,
 }: {
   type: PackType;
+  no: number;
   cards: PulledCard[];
   canOpenAnother: boolean;
   onAnother: () => void;
   onClose: () => void;
 }) {
-  const [stage, setStage] = useState<"pack" | "cards">("pack");
+  const [stage, setStage] = useState<"pack" | "torn" | "cards">("pack");
   const [flipped, setFlipped] = useState<boolean[]>(() => cards.map(() => false));
   const [spotlight, setSpotlight] = useState<PulledCard | null>(null);
   const allFlipped = flipped.every(Boolean);
 
+  function tear() {
+    if (stage !== "pack") return;
+    setStage("torn");
+    setTimeout(() => setStage("cards"), 520);
+  }
+
   function flip(i: number) {
     if (flipped[i]) return;
     setFlipped((f) => f.map((v, j) => (j === i ? true : v)));
-    const c = cards[i];
-    if (BIG.includes(c.rarity) || c.serialNo) setTimeout(() => setSpotlight(c), 450);
+    if (isBig(cards[i])) setTimeout(() => setSpotlight(cards[i]), 450);
   }
 
   function revealAll() {
@@ -247,7 +334,7 @@ function PackOpening({
       flip(i);
       const c = cards[i];
       i++;
-      if (i < cards.length && !(BIG.includes(c.rarity) || c.serialNo)) setTimeout(step, 220);
+      if (i < cards.length && !isBig(c)) setTimeout(step, 200);
     };
     step();
   }
@@ -265,48 +352,50 @@ function PackOpening({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto bg-[#03050acc] px-4 py-8 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto bg-bg-2 px-4 py-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       role="dialog"
       aria-modal="true"
-      aria-label="Pack opening"
+      aria-label="Opening a pack"
     >
-      {stage === "pack" ? (
+      {stage !== "cards" ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-6">
           <motion.button
             type="button"
-            className="w-56 cursor-pointer sm:w-64"
-            aria-label="Tear open the pack"
-            initial={{ scale: 0.6, y: 80, opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1, rotate: [0, -2, 2, -2, 2, 0] }}
-            transition={{ duration: 0.6, rotate: { delay: 0.6, duration: 0.5, repeat: Infinity, repeatDelay: 1.2 } }}
-            whileHover={{ scale: 1.04 }}
-            onClick={() => setStage("cards")}
+            className="w-[min(92vw,520px)] cursor-pointer"
+            aria-label="Tear the ticket"
+            initial={{ scale: 0.7, y: 60, opacity: 0 }}
+            animate={stage === "torn" ? { scale: 1.02, y: -6, opacity: 1 } : { scale: 1, y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            onClick={tear}
+            autoFocus
           >
-            <PackArt type={type} />
+            <PackArt type={type} no={no} torn={stage === "torn"} />
           </motion.button>
-          <p className="font-cond text-sm font-bold uppercase tracking-[0.25em] text-muted">Tap the pack to tear it open</p>
+          <p className="font-cond text-sm font-bold uppercase tracking-[0.22em] text-muted">
+            {stage === "torn" ? "Admitted" : "Tap the ticket to tear the stub"}
+          </p>
         </div>
       ) : (
-        <>
+        <div className="my-auto flex w-full flex-col items-center">
           <div className="grid w-full max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6">
             {cards.map((c, i) => (
               <motion.button
                 type="button"
                 key={c.instanceId}
                 className="relative aspect-[5/7] w-full cursor-pointer [perspective:1000px]"
-                initial={{ y: -200, opacity: 0, rotate: (i - 2.5) * 6 }}
-                animate={{ y: 0, opacity: 1, rotate: 0 }}
-                transition={{ delay: i * 0.08, type: "spring", stiffness: 200, damping: 20 }}
+                initial={{ y: -40, x: -60, opacity: 0, rotate: -8 }}
+                animate={{ y: 0, x: 0, opacity: 1, rotate: 0 }}
+                transition={{ delay: i * 0.07, type: "spring", stiffness: 260, damping: 24 }}
                 onClick={() => flip(i)}
                 aria-label={flipped[i] ? c.players.map((p) => p.name).join(" & ") : `Flip card ${i + 1}`}
               >
                 <motion.div
                   className="absolute inset-0 [transform-style:preserve-3d]"
                   animate={{ rotateY: flipped[i] ? 180 : 0 }}
-                  transition={{ duration: 0.55, ease: [0.3, 1.4, 0.5, 1] }}
+                  transition={{ duration: 0.5, ease: [0.3, 1.3, 0.5, 1] }}
                 >
                   <div className="absolute inset-0 [backface-visibility:hidden]">
                     <CardBack rarity={c.rarity} />
@@ -322,13 +411,13 @@ function PackOpening({
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             {!allFlipped ? (
               <button className="btn btn-primary min-w-40" onClick={revealAll}>
-                Reveal all
+                Flip them all
               </button>
             ) : (
               <>
                 {canOpenAnother && (
                   <button className="btn btn-primary min-w-40" onClick={onAnother}>
-                    Open another
+                    Tear another
                   </button>
                 )}
                 <button className="btn btn-ghost min-w-32" onClick={onClose}>
@@ -338,7 +427,7 @@ function PackOpening({
             )}
           </div>
           {allFlipped && <PackSummary cards={cards} />}
-        </>
+        </div>
       )}
 
       <AnimatePresence>{spotlight && <Spotlight card={spotlight} onClose={() => setSpotlight(null)} />}</AnimatePresence>
@@ -350,50 +439,51 @@ function PackSummary({ cards }: { cards: PulledCard[] }) {
   const best = [...cards].sort((a, b) => b.ovr - a.ovr)[0];
   const shiny = cards.filter((c) => c.finish !== "standard").length;
   return (
-    <p className="mt-4 text-center font-cond text-sm text-muted">
+    <p className="mt-4 text-center font-cond text-sm font-semibold text-muted">
       Best pull: <span className="font-bold text-text">{best.players.map((p) => p.name).join(" & ")}</span> ({best.ovr})
       {shiny > 0 && ` · ${shiny} special finish${shiny > 1 ? "es" : ""}`}
     </p>
   );
 }
 
-const SPOT_LABEL: Partial<Record<Rarity, string>> = { legendary: "Legendary pull", mythic: "MYTHIC PULL" };
-
+/** A big pull gets stamped across the screen, serial first. */
 function Spotlight({ card, onClose }: { card: PulledCard; onClose: () => void }) {
+  const oneOfOne = card.supply === 1;
   const label = card.serialNo
-    ? card.supply === 1
-      ? "ONE OF ONE"
-      : `Numbered #${card.serialNo}/${card.supply}`
-    : (SPOT_LABEL[card.rarity] ?? "Big pull");
-  const color = card.rarity === "mythic" || card.supply === 1 ? "var(--r-mythic)" : "var(--r-legendary)";
+    ? oneOfOne
+      ? "One of one"
+      : `No. ${card.serialNo} of ${card.supply}`
+    : card.rarity === "mythic"
+      ? "Mythic pull"
+      : "Legend pull";
+  const color = card.rarity === "mythic" || oneOfOne ? "var(--r-mythic)" : "var(--r-legendary)";
   return (
     <motion.div
-      className="fixed inset-0 z-[60] flex cursor-pointer flex-col items-center justify-center gap-6 px-4"
-      style={{ background: `radial-gradient(circle at 50% 45%, color-mix(in oklab, ${color} 35%, transparent), #03050af2 60%)` }}
+      className="fixed inset-0 z-[60] flex cursor-pointer flex-col items-center justify-center gap-8 bg-bg-2 px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
     >
       <motion.div
-        className="font-display text-center text-5xl sm:text-7xl"
-        style={{ color, textShadow: `0 0 40px ${color}` }}
-        initial={{ scale: 2.4, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 18 }}
+        className="whitespace-nowrap rounded-md border-[4px] px-4 py-1.5 font-display text-[clamp(1.6rem,8.5vw,3.75rem)] sm:border-[5px] sm:px-6 sm:py-2"
+        style={{ color, borderColor: color }}
+        initial={{ scale: 2.6, rotate: -14, opacity: 0 }}
+        animate={{ scale: 1, rotate: -5, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 520, damping: 22 }}
       >
         {label}
       </motion.div>
       <motion.div
         className="w-64 sm:w-80"
-        initial={{ scale: 0.4, rotate: -12, opacity: 0 }}
-        animate={{ scale: 1, rotate: 0, opacity: 1 }}
-        transition={{ delay: 0.15, type: "spring", stiffness: 180, damping: 14 }}
+        initial={{ y: 40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.12, type: "spring", stiffness: 200, damping: 18 }}
         onClick={(e) => e.stopPropagation()}
       >
         <Card card={card} finish={card.finish} serialNo={card.serialNo} supply={card.supply} grade={card.grade} />
       </motion.div>
-      <p className="font-cond text-sm uppercase tracking-[0.25em] text-muted">Tap anywhere to continue</p>
+      <p className="font-cond text-sm font-bold uppercase tracking-[0.22em] text-muted">Tap anywhere to continue</p>
     </motion.div>
   );
 }

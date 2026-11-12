@@ -67,7 +67,7 @@ function Section({
       </h2>
       {note && <p className="text-sm text-muted">{note}</p>}
       {count === 0 ? (
-        <p className="mt-3 rounded-xl border border-dashed border-line px-4 py-6 text-center text-muted">{empty}</p>
+        <p className="mt-3 rounded-md border border-dashed border-line px-4 py-6 text-center text-muted">{empty}</p>
       ) : (
         <div className="mt-3 space-y-4">{children}</div>
       )}

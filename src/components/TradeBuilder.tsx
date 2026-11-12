@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { RARITIES, type Sport } from "@/lib/catalog/types";
 import type { PulledCard } from "@/lib/packs";
+import { CloseIcon, StarIcon } from "./Icons";
 import { Card } from "./Card";
 
 const MAX = 10;
@@ -59,7 +60,7 @@ function Side({
   });
 
   return (
-    <section className="flex min-w-0 flex-col rounded-2xl border border-line bg-panel/80 p-4">
+    <section className="flex min-w-0 flex-col rounded-md border border-line bg-panel/80 p-4">
       <div className="flex items-baseline justify-between">
         <h2 className="font-display text-3xl">{title}</h2>
         <span className="font-cond text-sm text-muted">
@@ -68,7 +69,7 @@ function Side({
       </div>
 
       {/* Selected tray */}
-      <div className="mt-3 min-h-28 rounded-xl border border-dashed border-line bg-bg-2/60 p-2">
+      <div className="mt-3 min-h-28 rounded-md border border-dashed border-line bg-bg-2/60 p-2">
         {picked.length === 0 ? (
           <p className="grid h-24 place-items-center text-center font-cond text-sm text-muted">
             Tap cards below to add them
@@ -87,7 +88,7 @@ function Side({
                     card={c}
                     badge={
                       <span className="absolute -right-1 -top-1 z-10 grid size-5 place-items-center rounded-full bg-danger text-xs font-bold text-white">
-                        ×
+                        <CloseIcon className="size-3" />
                       </span>
                     }
                   />
@@ -127,7 +128,7 @@ function Side({
               wantedOnly ? "border-transparent bg-[#ffd76a] text-bg" : "border-line text-muted"
             }`}
           >
-            ★ {highlightLabel}
+            <StarIcon filled className="mr-1 inline size-3.5 align-[-2px]" />{highlightLabel}
           </button>
         )}
       </div>
@@ -154,7 +155,7 @@ function Side({
                         className="absolute -left-1 -top-1 z-10 rounded-full bg-[#ffd76a] px-1.5 font-cond text-xs font-extrabold text-bg"
                         title={highlightLabel}
                       >
-                        ★
+                        <StarIcon filled className="size-3" />
                       </span>
                     )
                   }
@@ -216,7 +217,7 @@ export function TradeBuilder({
 
   if (users.length === 0) {
     return (
-      <p className="mt-8 rounded-xl border border-dashed border-line px-4 py-10 text-center text-muted">
+      <p className="mt-8 rounded-md border border-dashed border-line px-4 py-10 text-center text-muted">
         Nobody else has joined yet. Send your friends the link so they can sign up.
       </p>
     );

@@ -1,7 +1,7 @@
 // Sign-in is Google only. A plain link (not fetch) because the flow is full-page redirects.
 export function LoginForm({ error }: { error?: string }) {
   return (
-    <div className="w-full max-w-sm space-y-4 rounded-2xl border border-line bg-panel/90 p-6">
+    <div className="w-full max-w-sm space-y-4 rounded-md border border-line bg-panel/90 p-6">
       <a
         href="/api/auth/google"
         className="flex w-full items-center justify-center gap-3 rounded-lg bg-white px-4 py-3 font-semibold text-[#1f1f1f] transition-colors hover:bg-[#f1f3f4]"

@@ -7,6 +7,7 @@ import { NUMBERED_FINISHES, SHARDS_PER_PACK, shardValueFor } from "@/lib/odds";
 import { useEffect, useMemo, useState } from "react";
 import type { CardView } from "@/lib/catalog";
 import { RARITIES, type Finish, type Rarity, type Sport } from "@/lib/catalog/types";
+import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
 import { Card } from "./Card";
 
 export interface OwnedCopy {
@@ -43,7 +44,7 @@ function Chip({ active, onClick, children, color }: { active: boolean; onClick: 
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-full border px-3 py-1 font-cond text-sm font-bold uppercase tracking-wider transition-colors ${
+      className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1 font-cond text-sm font-bold uppercase tracking-wider transition-colors ${
         active ? "border-transparent bg-text text-bg" : "border-line text-muted hover:text-text"
       }`}
     >
@@ -177,43 +178,52 @@ export function CollectionView({
   return (
     <>
       {/* Completion */}
-      <section className="mt-5 grid gap-3 sm:grid-cols-3">
-        {(["soccer", "basketball"] as const).map((s) => {
-          const { owned, total } = stats[s];
-          return (
-            <div key={s} className="rounded-xl border border-line bg-panel/80 px-4 py-3">
-              <div className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">
-                {s === "soccer" ? "Soccer" : "Basketball"} set
+      {/* Completion, as one season-ticket strip */}
+      <section aria-label="Set completion" className="ticket-panel mt-5">
+        <div className="grid grid-cols-3">
+          {(
+            [
+              ["soccer", "Soccer"],
+              ["basketball", "Basketball"],
+            ] as const
+          ).map(([s, label]) => {
+            const { owned, total } = stats[s];
+            return (
+              <div key={s} className="border-r-2 border-dashed border-line px-3 py-3 sm:px-5 sm:py-4">
+                <div className="field-label">{label}</div>
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="font-display text-2xl leading-none sm:text-3xl">{owned}</span>
+                  <span className="font-cond text-sm text-muted">/{total}</span>
+                  <span className="ml-auto hidden font-cond text-sm text-muted sm:inline">{Math.round((owned / total) * 100)}%</span>
+                </div>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-bg-2">
+                  <div className="h-full rounded-full bg-accent" style={{ width: `${Math.max(2, (owned / total) * 100)}%` }} />
+                </div>
               </div>
-              <div className="mt-0.5 flex items-baseline gap-2">
-                <span className="font-display text-3xl">{owned}</span>
-                <span className="font-cond text-muted">/ {total}</span>
-                <span className="ml-auto font-cond text-sm text-muted">{Math.round((owned / total) * 100)}%</span>
-              </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-bg-2">
-                <div className="h-full rounded-full bg-accent" style={{ width: `${(owned / total) * 100}%` }} />
-              </div>
+            );
+          })}
+          <div className="px-3 py-3 sm:px-5 sm:py-4">
+            <div className="field-label">Cards</div>
+            <div className="mt-1 flex items-baseline gap-1.5">
+              <span className="font-display text-2xl leading-none sm:text-3xl">{copies.length}</span>
+              <span className="hidden font-cond text-sm text-muted sm:inline">from {packsOpened} packs</span>
             </div>
-          );
-        })}
-        <div className="rounded-xl border border-line bg-panel/80 px-4 py-3">
-          <div className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">Cards owned</div>
-          <div className="mt-0.5 flex items-baseline gap-2">
-            <span className="font-display text-3xl">{copies.length}</span>
-            <span className="font-cond text-sm text-muted">from {packsOpened} packs</span>
           </div>
-          <div className="mt-1 flex items-center justify-between gap-2">
-            <span className="font-cond text-sm text-muted" title={`${SHARDS_PER_PACK} shards = 1 bonus pack`}>
-              ◆ {shards}/{SHARDS_PER_PACK} shards
-            </span>
-            <button
-              type="button"
-              onClick={() => setRecycleOpen(true)}
-              className="font-cond text-sm font-bold uppercase tracking-wider text-accent hover:underline"
-            >
-              Recycle dupes
-            </button>
-          </div>
+        </div>
+        <div className="perf" aria-hidden />
+        <div className="flex items-center justify-between gap-3 px-3 py-2.5 sm:px-5">
+          <span className="font-cond text-sm font-semibold text-muted" title={`${SHARDS_PER_PACK} shards = 1 bonus pack`}>
+            <ShardIcon className="mr-1 inline size-4 align-[-3px]" />
+            {shards}/{SHARDS_PER_PACK} shards<span className="hidden sm:inline"> toward a bonus pack</span>
+          </span>
+          <button
+            type="button"
+            onClick={() => setRecycleOpen(true)}
+            className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-cond text-sm font-extrabold uppercase tracking-wider text-accent hover:underline"
+          >
+            <RecycleIcon className="size-4" />
+            Recycle dupes
+          </button>
         </div>
       </section>
 
@@ -247,7 +257,7 @@ export function CollectionView({
 
       {/* Filters */}
       <section className="mt-6 flex flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="-mx-4 flex items-center gap-2 no-scrollbar overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
           <Chip active={sport === "all"} onClick={() => setSport("all")}>All</Chip>
           <Chip active={sport === "soccer"} onClick={() => setSport("soccer")}>Soccer</Chip>
           <Chip active={sport === "basketball"} onClick={() => setSport("basketball")}>Basketball</Chip>
@@ -258,7 +268,7 @@ export function CollectionView({
             aria-label="Search player or team"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="min-w-0 flex-1 rounded-full border border-line bg-bg-2 px-4 py-1.5 text-sm outline-none focus:border-accent sm:max-w-64"
+            className="min-w-44 flex-1 shrink-0 rounded-full border border-line bg-bg-2 px-4 py-1.5 text-sm sm:min-w-0 outline-none focus:border-accent sm:max-w-64"
           />
           <select
             aria-label="Sort"
@@ -272,7 +282,7 @@ export function CollectionView({
             <option value="name">Name</option>
           </select>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="-mx-4 flex items-center gap-2 no-scrollbar overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
           <Chip active={rarity === "all"} onClick={() => setRarity("all")}>Any rarity</Chip>
           {RARITIES.map((r) => (
             <Chip key={r} active={rarity === r} onClick={() => setRarity(r)} color={RARITY_COLOR[r]}>
@@ -290,7 +300,7 @@ export function CollectionView({
 
       {/* Grid */}
       {list.length === 0 ? (
-        <p className="mt-10 rounded-xl border border-dashed border-line px-4 py-10 text-center text-muted">
+        <p className="mt-10 rounded-md border border-dashed border-line px-4 py-10 text-center text-muted">
           {copies.length === 0 ? "Your binder is empty. Go open a pack!" : "No cards match these filters."}
         </p>
       ) : (
@@ -324,7 +334,7 @@ export function CollectionView({
                       className="absolute -left-1.5 -top-1.5 z-10 rounded-full bg-[#ffd76a] px-2 py-0.5 font-cond text-sm font-extrabold text-bg shadow-lg"
                       aria-label="On your wishlist"
                     >
-                      ★
+                      <StarIcon filled className="size-3.5" />
                     </span>
                   )}
                 </button>
@@ -417,7 +427,7 @@ function RecycleDialog({ onClose, onDone }: { onClose: () => void; onDone: (msg:
       aria-label="Recycle duplicates"
     >
       <motion.div
-        className="w-full max-w-md rounded-2xl border border-line bg-panel p-6"
+        className="w-full max-w-md rounded-md border border-line bg-panel p-6"
         initial={{ scale: 0.95, y: 10 }}
         animate={{ scale: 1, y: 0 }}
         onClick={(e) => e.stopPropagation()}
@@ -435,14 +445,14 @@ function RecycleDialog({ onClose, onDone }: { onClose: () => void; onDone: (msg:
             </Chip>
           ))}
         </div>
-        <div className="mt-5 rounded-xl bg-bg-2 px-4 py-3 font-cond">
+        <div className="mt-5 rounded-md bg-bg-2 px-4 py-3 font-cond">
           {plan ? (
             plan.cards === 0 ? (
               <span className="text-muted">No spare duplicates at this level.</span>
             ) : (
               <>
                 <span className="font-display text-3xl text-accent">{plan.cards}</span> card{plan.cards === 1 ? "" : "s"} →{" "}
-                <span className="font-bold">◆ {plan.shards} shards</span>
+                <span className="font-bold"><ShardIcon className="mr-1 inline size-4 align-[-3px]" />{plan.shards} shards</span>
                 {packs > 0 && <span className="text-accent"> = {packs} bonus pack{packs === 1 ? "" : "s"}</span>}
               </>
             )
@@ -556,7 +566,7 @@ function CardDetail({
             aria-pressed={wished}
             className={`btn mt-4 ${wished ? "bg-[#ffd76a] text-bg" : "btn-ghost"}`}
           >
-            {wished ? "★ On your wishlist" : "☆ Add to wishlist"}
+            <StarIcon filled={wished} className="size-4" />{wished ? "On your wishlist" : "Add to wishlist"}
           </button>
 
           {owners.length > 0 && (
@@ -586,7 +596,7 @@ function CardDetail({
                     href={`/trades/new?to=${encodeURIComponent(u)}`}
                     className="rounded-full border border-[#ffd76a55] bg-panel px-3 py-1 font-cond text-sm font-bold text-[#ffd76a] hover:border-[#ffd76a]"
                   >
-                    ★ @{u} · Offer it →
+                    <StarIcon filled className="mr-1 inline size-3.5 align-[-2px]" />@{u} · Offer it →
                   </Link>
                 ))}
               </div>
@@ -613,7 +623,7 @@ function CardDetail({
                   }`}
                 >
                   <span className="font-bold capitalize">
-                    {showcase.includes(c.instanceId) && <span className="mr-1.5 text-accent" title="In your showcase">▲</span>}
+                    {showcase.includes(c.instanceId) && <PinIcon className="mr-1.5 inline size-4 align-[-3px] text-accent" title="In your showcase" />}
                     {c.finish}
                     {c.serialNo && c.supply ? (
                       <span className="ml-2 text-[#ffd76a]">{c.supply === 1 ? "1/1" : `#${c.serialNo}/${c.supply}`}</span>
@@ -630,7 +640,7 @@ function CardDetail({
           {copy && (
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" className="btn btn-ghost" onClick={() => onToggleShowcase(copy.instanceId)}>
-                {showcase.includes(copy.instanceId) ? "Remove from showcase" : "▲ Pin to showcase"}
+                <PinIcon className="size-4" />{showcase.includes(copy.instanceId) ? "Remove from showcase" : "Pin to showcase"}
               </button>
               {(() => {
                 const reason =
@@ -652,7 +662,7 @@ function CardDetail({
                     title={reason || undefined}
                     onClick={() => onRecycle(copy.instanceId)}
                   >
-                    Recycle this copy (+{shardValueFor(design.rarity, copy.finish)} ◆)
+                    <RecycleIcon className="size-4" />Recycle copy (+{shardValueFor(design.rarity, copy.finish)} shards)
                   </button>
                 );
               })()}

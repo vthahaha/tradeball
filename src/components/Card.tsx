@@ -40,6 +40,22 @@ function initials(name: string) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+/** True for light kit colours (white, cream, yellow) where paper-white print would vanish. */
+function isLightColor(color: string) {
+  const hex = color.match(/^#([0-9a-f]{6})$/i);
+  if (hex) {
+    const n = parseInt(hex[1], 16);
+    const lin = (c: number) => {
+      const v = c / 255;
+      return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+    };
+    const L = 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+    return L > 0.45;
+  }
+  const hsl = color.match(/hsl\(\s*[\d.]+\s+[\d.]+%\s+([\d.]+)%/);
+  return hsl ? Number(hsl[1]) > 62 : false;
+}
+
 function lastName(name: string) {
   const parts = name.split(" ");
   return parts.length > 1 ? parts.slice(1).join(" ") : name;
@@ -83,13 +99,14 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
       data-rarity={card.rarity}
       data-finish={finish}
       data-sport={card.sport}
+      data-art={isLightColor(t1) ? "light" : undefined}
       style={{ "--t1": t1, "--t2": t2 } as CSSProperties}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
       aria-label={`${name}, ${card.rarity} ${card.type}${finish !== "standard" ? `, ${finish}` : ""}`}
     >
-      <div className="tb-card__frame">
-        <div className="tb-card__inner">
+      <div className="tb-card__stock">
+        <div className="tb-card__face">
           <div className="tb-card__art">
             <div className={`tb-card__mono ${isDuo ? "is-duo" : ""}`}>
               {isDuo ? `${initials(p1.name)}·${initials(p2.name)}` : initials(p1.name)}
@@ -113,28 +130,28 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
               {isDuo ? `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}` : `${p1.team} · ${p1.nation}`}
             </div>
           </div>
-          <div className="tb-card__stats">
-            {statEntries.map(([k, v]) => (
-              <div key={k}>
-                <span>{k}</span>
-                <b>{v}</b>
-              </div>
-            ))}
-          </div>
-          <div className="tb-card__foot">
-            <span>
-              {serialNo && supply ? (
-                <span className="tb-card__serial">
-                  {supply === 1 ? "1 / 1" : `#${serialNo} / ${supply}`}
-                </span>
-              ) : (
-                <>
-                  {SET_NAME}
-                  {FINISH_LABEL[finish] ? ` · ${FINISH_LABEL[finish]}` : ""}
-                </>
-              )}
-            </span>
-            {grade != null && <span className={`tb-card__grade ${grade === 10 ? "is-gem" : ""}`}>G{grade}</span>}
+          <div className="tb-card__stub">
+            <div className="tb-card__stats">
+              {statEntries.map(([k, v]) => (
+                <div key={k}>
+                  <span>{k}</span>
+                  <b>{v}</b>
+                </div>
+              ))}
+            </div>
+            <div className="tb-card__foot">
+              <span>
+                {serialNo && supply ? (
+                  <span className="tb-card__serial">{supply === 1 ? "No. 1 of 1" : `No. ${serialNo}/${supply}`}</span>
+                ) : (
+                  <>
+                    {SET_NAME}
+                    {FINISH_LABEL[finish] ? ` · ${FINISH_LABEL[finish]}` : ""}
+                  </>
+                )}
+              </span>
+              {grade != null && <span className={`tb-card__grade ${grade === 10 ? "is-gem" : ""}`}>G{grade}</span>}
+            </div>
           </div>
         </div>
       </div>
@@ -144,16 +161,31 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
   );
 }
 
+const CLASS_LABEL: Record<string, string> = {
+  common: "General",
+  uncommon: "Reserved",
+  rare: "Club",
+  epic: "Premium",
+  legendary: "Legend",
+  mythic: "Mythic",
+};
+
+/** The back of the ticket. The stub's colour gives the class away before the flip. */
 export function CardBack({ rarity, className }: { rarity?: string; className?: string }) {
   return (
     <div className={`tb-back ${className ?? ""}`} data-rarity={rarity}>
       <div className="tb-back__face">
-        <div className="tb-back__logo">
-          TRADE
-          <br />
-          BALL
-          <small>{SET_NAME}</small>
+        <div className="tb-back__print">
+          <div>
+            <div className="tb-back__logo">
+              TRADE
+              <br />
+              BALL
+            </div>
+            <span className="tb-back__admit">Admit one</span>
+          </div>
         </div>
+        <div className="tb-back__stub">{(rarity && CLASS_LABEL[rarity]) ?? SET_NAME}</div>
       </div>
     </div>
   );

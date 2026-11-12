@@ -26,7 +26,7 @@ export function WelcomeForm({ suggestion }: { suggestion: string }) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4 rounded-2xl border border-line bg-panel/90 p-6">
+    <form onSubmit={submit} className="space-y-4 rounded-md border border-line bg-panel/90 p-6">
       <div>
         <label htmlFor="username" className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">
           Username

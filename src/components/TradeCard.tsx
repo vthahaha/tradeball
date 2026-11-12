@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { PulledCard } from "@/lib/packs";
 import type { TradeView } from "@/lib/trades";
+import { SwapIcon } from "./Icons";
 import { MiniCard } from "./TradeBuilder";
 
 const STATUS_STYLE: Record<string, string> = {
@@ -79,13 +80,13 @@ export function TradeCard({
 
   const headline =
     mode === "log"
-      ? `@${trade.from} ⇄ @${trade.to}`
+      ? `@${trade.from} and @${trade.to}`
       : iAmSender
         ? `To @${trade.to}`
         : `From @${trade.from}`;
 
   return (
-    <article className="rounded-2xl border border-line bg-panel/80 p-4">
+    <article className="rounded-md border border-line bg-panel/80 p-4">
       <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <h3 className="font-display text-2xl leading-none">{headline}</h3>
         {trade.isCounter && (
@@ -104,7 +105,7 @@ export function TradeCard({
       <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-start">
         <CardRow label={leftLabel} cards={leftCards} />
         <div className="hidden self-center font-display text-3xl text-muted md:block" aria-hidden>
-          ⇄
+          <SwapIcon className="size-7" />
         </div>
         <CardRow label={rightLabel} cards={rightCards} />
       </div>
