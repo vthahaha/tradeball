@@ -1,0 +1,10 @@
+# Never upload local secrets, tooling or local data
+.env
+.env.local
+.claude
+.impeccable
+.next
+node_modules
+prisma/*.db
+prisma/*.db-journal
+*.tsbuildinfo

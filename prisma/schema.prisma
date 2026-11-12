@@ -1,0 +1,107 @@
+// TradeBall database.
+// Players and card designs live in code (src/lib/catalog). The database only
+// stores people, the card copies they own, and activity.
+// Hosted on Neon Postgres (added through Vercel Storage).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // pooled connection (app)
+  directUrl = env("DATABASE_URL_UNPOOLED") // direct connection (migrations)
+}
+
+model User {
+  id          String   @id @default(cuid())
+  username    String   @unique
+  pinHash     String
+  createdAt   DateTime @default(now())
+
+  // Timed packs: `packs` were banked as of `packClock`; one more is earned
+  // every cooldown period after that, up to the bank cap.
+  packs       Int      @default(3)
+  packClock   DateTime @default(now())
+  bonusPacks  Int      @default(0)
+  lastDailyAt DateTime?
+
+  pityCounter Int      @default(0) // packs since last Legendary+
+  packsOpened Int      @default(0)
+  shards      Int      @default(0) // from recycled duplicates; 10 = 1 pack
+  showcase    String   @default("[]") // JSON array of up to 5 card instance ids
+
+  cards       CardInstance[]
+  activity    Activity[]
+  sentTrades  Trade[]    @relation("sent")
+  gotTrades   Trade[]    @relation("received")
+  wishlist    Wish[]
+}
+
+model Trade {
+  id         String      @id @default(cuid())
+  fromId     String
+  from       User        @relation("sent", fields: [fromId], references: [id])
+  toId       String
+  to         User        @relation("received", fields: [toId], references: [id])
+  // pending | accepted | declined | cancelled | countered | expired
+  status     String      @default("pending")
+  message    String?
+  parentId   String?     // the trade this one counters
+  createdAt  DateTime    @default(now())
+  resolvedAt DateTime?
+  items      TradeItem[]
+
+  @@index([toId, status])
+  @@index([fromId, status])
+}
+
+model TradeItem {
+  id         String       @id @default(cuid())
+  tradeId    String
+  trade      Trade        @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+  instanceId String
+  instance   CardInstance @relation(fields: [instanceId], references: [id])
+  side       String       // "from" = sender gives it, "to" = recipient gives it
+
+  @@index([instanceId])
+}
+
+model Wish {
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  designId  String
+  createdAt DateTime @default(now())
+
+  @@id([userId, designId])
+  @@index([designId])
+}
+
+model CardInstance {
+  id       String   @id @default(cuid())
+  designId String
+  ownerId  String
+  owner    User     @relation(fields: [ownerId], references: [id])
+  finish   String   // standard | foil | holo | gold | black | masterpiece
+  serialNo Int?     // only for numbered finishes
+  grade    Int
+  pulledBy String   // original puller's username
+  pulledAt DateTime @default(now())
+  // Recycled cards stay in the DB so trade history and serial numbers survive.
+  recycledAt DateTime?
+  tradeItems TradeItem[]
+
+  @@index([ownerId])
+  @@index([designId, finish])
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  kind      String   // "pull"
+  payload   String   // JSON
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
