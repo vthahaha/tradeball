@@ -664,6 +664,13 @@ select {
   line-height: 0.9;
   color: var(--paper);
 }
+.tb-back__seven {
+  display: block;
+  font-size: 26cqw;
+  font-stretch: 100%;
+  line-height: 0.85;
+  color: var(--stock-soccer);
+}
 .tb-back__admit {
   display: block;
   margin-top: 3cqw;

@@ -1,11 +1,13 @@
-# TradeBall
+# Gate 7
+
+Formerly TradeBall (repo, Vercel project and URL keep that name).
 
 Free soccer & basketball card packs for you and your friends. See [PLAN.md](PLAN.md) for the full design.
 
 ## Live
 
 **https://tradeball.vercel.app** — Vercel project `tradeball`, Neon Postgres in Sydney, functions in `syd1`.
-Invite code and other settings live in the Vercel project's Environment Variables.
+Google sign-in keys and other settings live in the Vercel project's Environment Variables.
 
 Redeploy after changes (the build runs `prisma migrate deploy` first):
 

@@ -11,7 +11,7 @@ const display = Anybody({ variable: "--font-display", subsets: ["latin", "latin-
 const body = Archivo({ variable: "--font-body", subsets: ["latin", "latin-ext"], axes: ["wdth"] });
 
 export const metadata: Metadata = {
-  title: "TradeBall",
+  title: "Gate 7",
   description: "Open free soccer & basketball card packs and trade with friends.",
 };
 

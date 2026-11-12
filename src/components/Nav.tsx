@@ -26,7 +26,7 @@ function Badge({ n }: { n: number }) {
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
     <span className={`font-display text-[1.45rem] leading-none tracking-tight ${className}`} style={{ fontStretch: "135%" }}>
-      Trade<span className="text-accent">ball</span>
+      Gate <span className="text-accent">7</span>
     </span>
   );
 }
@@ -46,7 +46,7 @@ export function Nav({ username, pendingTrades = 0 }: { username: string | null; 
     <>
       <header className="sticky top-0 z-40 bg-bg/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-8 px-4">
-          <Link href="/" aria-label="TradeBall home">
+          <Link href="/" aria-label="Gate 7 home">
             <Wordmark />
           </Link>
           {username && (

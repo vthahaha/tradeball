@@ -27,7 +27,7 @@ function clientSecret() {
   return s;
 }
 
-/** Public origin of the site, e.g. https://tradeball.vercel.app */
+/** Public origin of the site, e.g. https://tradeball.vercel.app (project URL) */
 export function appOrigin(req: Request) {
   if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
   const url = new URL(req.url);

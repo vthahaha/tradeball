@@ -34,13 +34,13 @@ Card-collecting thrills without spending money: every pack is free, so rarity co
 - Duplicates recycle into shards (10 shards = 1 bonus pack); numbered, showcased, and in-trade cards can't be recycled.
 - No player photos: card art is generated from team colors, initials, and sport markings. Player data and ratings are an editable snapshot.
 - Stack: Next.js 16 (App Router), React 19, Tailwind 4, Motion, Prisma on Neon Postgres, deployed on Vercel (Sydney).
-- Open decision: the product name. "TradeBall" is the working name and may change in the revamp.
+- Product name: Gate 7 (chosen in the Match Ticket revamp; formerly TradeBall). The repo, Vercel project and tradeball.vercel.app URL still carry the old name.
 
 ## Brand Commitments
 
 - Fun, casual, made for friends; this is a hobby project, not a commercial product.
 - Real player names, clubs, and famous moments are used as card subjects.
-- Working name "TradeBall"; open to a new name.
+- Name: Gate 7, as in the turnstile gate printed on a match ticket.
 
 ## Evidence on Hand
 

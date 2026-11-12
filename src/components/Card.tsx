@@ -178,9 +178,9 @@ export function CardBack({ rarity, className }: { rarity?: string; className?: s
         <div className="tb-back__print">
           <div>
             <div className="tb-back__logo">
-              TRADE
+              GATE
               <br />
-              BALL
+              <span className="tb-back__seven">7</span>
             </div>
             <span className="tb-back__admit">Admit one</span>
           </div>
