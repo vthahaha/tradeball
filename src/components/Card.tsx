@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type CSSProperties } from "react";
-import { headshotUrl, isInsert, SET_NAME, teamColors, type CardView, type Finish } from "@/lib/catalog";
+import { headshotUrl, INSERT_NAMES, isInsert, SET_NAME, teamColors, type CardView, type Finish } from "@/lib/catalog";
 import { SportIcon } from "./SportIcon";
 
 export interface CardProps {
@@ -15,13 +15,9 @@ export interface CardProps {
   className?: string;
 }
 
-const TYPE_LABEL: Record<CardView["type"], string | null> = {
+const TYPE_LABEL: Record<string, string | null> = {
   base: null,
   rookie: "Rookie",
-  champs: "Champs",
-  courtside: "Courtside",
-  hot: "Flamin' Hot",
-  arrival: "New Arrival",
   duo: "Duo",
 };
 
@@ -74,9 +70,9 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
   const imgSrc = insert ? card.art : !isDuo && p1.espnId ? headshotUrl(p1.espnId) : undefined;
   const showImg = !!imgSrc && !faceFailed;
   const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;
-  const artTitle = card.type === "arrival" ? card.team : card.title;
+  const artTitle = card.title;
   const showTitle = insert && (artTitle || card.kicker);
-  const typeLabel = TYPE_LABEL[card.type];
+  const typeLabel = insert ? (INSERT_NAMES[card.type] ?? card.type) : (TYPE_LABEL[card.type] ?? null);
 
   function onMove(e: React.PointerEvent) {
     if (!tilt || missing || !ref.current) return;
@@ -99,8 +95,8 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
   }
 
   const statEntries = card.stats ? Object.entries(card.stats) : [];
-  // A single game shows whole numbers; season averages and percentages show one decimal.
-  const fmtStat = (k: string, v: number) => (card.type === "hot" && !k.endsWith("%") ? String(v) : v.toFixed(1));
+  // Season averages and percentages show one decimal; whole numbers (single-game lines) stay whole.
+  const fmtStat = (k: string, v: number) => (Number.isInteger(v) && !k.endsWith("%") && insert ? String(v) : v.toFixed(1));
 
   return (
     <div
@@ -154,18 +150,16 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
             <div className="tb-card__meta">
               {isDuo
                 ? `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}`
-                : card.type === "arrival" && card.fromTeam
+                : card.fromTeam
                   ? `${card.fromTeam} → ${card.team}`
-                  : card.type === "hot"
-                    ? `${card.team} · 2025–26`
-                    : card.type === "rookie" && p1.pick
-                      ? `${p1.team} · Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}`
-                      : `${p1.team}${p1.nation ? ` · ${p1.nation}` : ""}`}
+                  : card.type === "rookie" && p1.pick
+                    ? `${p1.team} · Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}`
+                    : `${card.team}${p1.nation ? ` · ${p1.nation}` : ""}`}
             </div>
           </div>
           <div className="tb-card__stub">
             {statEntries.length > 0 ? (
-              <div className="tb-card__stats" title={card.statLine ? (card.type === "hot" ? card.statLine : `${card.statLine} per game`) : undefined}>
+              <div className="tb-card__stats" title={card.statLine ? (insert ? card.statLine : `${card.statLine} per game`) : undefined}>
                 {statEntries.map(([k, v]) => (
                   <div key={k}>
                     <span>{k}</span>

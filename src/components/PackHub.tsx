@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { INSERT_DESIGNS } from "@/lib/catalog";
 import type { Rarity } from "@/lib/catalog/types";
 import type { PackStatus, PackType, PulledCard } from "@/lib/packs";
 import { Card, CardBack } from "./Card";
@@ -193,7 +194,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
           >
             <PackArt type={p.type} no={no} />
             <span className="mt-2 flex items-center justify-between font-cond text-sm font-bold text-muted">
-              <span>8 cards · 1 Rare or better · 1 insert</span>
+              <span>8 cards · 1 Rare or better{INSERT_DESIGNS.length > 0 ? " · 1 insert" : ""}</span>
               <span className="text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                 {busy === p.type ? "Tearing…" : "Tear →"}
               </span>
@@ -383,7 +384,11 @@ function PackOpening({
                 animate={{ y: 0, x: 0, opacity: 1, rotate: 0 }}
                 transition={{ delay: i * 0.07, type: "spring", stiffness: 260, damping: 24 }}
                 onClick={() => flip(i)}
-                aria-label={flipped[i] ? c.players.map((p) => p.name).join(" & ") : `Flip card ${i + 1}`}
+                aria-label={
+                  flipped[i]
+                    ? `${c.players.map((p) => p.name).join(" & ")}${c.isNew ? ", new to your binder" : ""}`
+                    : `Flip card ${i + 1}`
+                }
               >
                 <motion.div
                   className="absolute inset-0 [transform-style:preserve-3d]"
@@ -397,6 +402,19 @@ function PackOpening({
                     <Card card={c} finish={c.finish} serialNo={c.serialNo} supply={c.supply} grade={c.grade} />
                   </div>
                 </motion.div>
+                <AnimatePresence>
+                  {flipped[i] && c.isNew && (
+                    <motion.span
+                      className="tb-new-stamp"
+                      aria-hidden
+                      initial={{ scale: 2.2, rotate: -22, opacity: 0 }}
+                      animate={{ scale: 1, rotate: -9, opacity: 1 }}
+                      transition={{ delay: 0.32, type: "spring", stiffness: 520, damping: 20 }}
+                    >
+                      New
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </motion.button>
             ))}
           </div>
@@ -431,9 +449,11 @@ function PackOpening({
 function PackSummary({ cards }: { cards: PulledCard[] }) {
   const best = [...cards].sort((a, b) => b.ovr - a.ovr)[0];
   const shiny = cards.filter((c) => c.finish !== "standard").length;
+  const fresh = cards.filter((c) => c.isNew).length;
   return (
     <p className="mt-4 text-center font-cond text-sm font-semibold text-muted">
       Best pull: <span className="font-bold text-text">{best.players.map((p) => p.name).join(" & ")}</span> ({best.ovr})
+      {fresh > 0 && ` · ${fresh} new to your binder`}
       {shiny > 0 && ` · ${shiny} special finish${shiny > 1 ? "es" : ""}`}
     </p>
   );

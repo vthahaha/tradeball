@@ -36,3 +36,27 @@ export async function wipeCollections() {
   ]);
   return { before, after: await count() };
 }
+
+/**
+ * Deletes every card one player owns (recycled ones too), the trades those cards
+ * were part of, and their pull activity; resets their binder counters.
+ * Their tickets, wishlist and account stay. Other players are not touched.
+ */
+export async function wipeUserCards(userId: string) {
+  const mine = await db.cardInstance.findMany({ where: { ownerId: userId }, select: { id: true } });
+  const ids = mine.map((c) => c.id);
+  const trades = await db.trade.findMany({
+    where: { items: { some: { instanceId: { in: ids } } } },
+    select: { id: true },
+  });
+  await db.$transaction([
+    db.trade.deleteMany({ where: { id: { in: trades.map((t) => t.id) } } }), // trade items cascade
+    db.cardInstance.deleteMany({ where: { id: { in: ids } } }),
+    db.activity.deleteMany({ where: { userId, kind: "pull" } }),
+    db.user.update({
+      where: { id: userId },
+      data: { showcase: "[]", shards: 0, pityCounter: 0, packsOpened: 0 },
+    }),
+  ]);
+  return { cards: ids.length, trades: trades.length };
+}

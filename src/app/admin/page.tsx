@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { WipePanel } from "@/components/WipePanel";
+import { ConfirmAction } from "@/components/ConfirmAction";
 import { isAdmin } from "@/lib/admin";
 import { cardView, INSERT_DESIGNS, INSERT_NAMES, INSERT_POOLS, INSERT_TYPES } from "@/lib/catalog";
 import { db } from "@/lib/db";
@@ -9,7 +9,12 @@ export default async function AdminPage() {
   const user = await getCurrentUser();
   if (!user || !isAdmin(user.username)) notFound();
 
-  const [users, cards, trades] = await Promise.all([db.user.count(), db.cardInstance.count(), db.trade.count()]);
+  const [users, cards, trades, myCards] = await Promise.all([
+    db.user.count(),
+    db.cardInstance.count(),
+    db.trade.count(),
+    db.cardInstance.count({ where: { ownerId: user.id } }),
+  ]);
   const withArt = INSERT_DESIGNS.filter((d) => cardView(d.id).art).length;
 
   return (
@@ -20,6 +25,22 @@ export default async function AdminPage() {
       <p className="mt-3 text-muted">Signed in as @{user.username}. Only admins can see this page.</p>
 
       <section className="ticket-panel mt-8 px-6 py-5">
+        <h2 className="font-display text-2xl">Delete my cards</h2>
+        <p className="mt-2 text-sm text-muted">
+          Deletes every card in your own binder ({myCards} right now, recycled ones included), the trades they were part
+          of and your big-pull feed entries, and resets your showcase, shards, pack count and Legendary guarantee. Your
+          tickets, wishlist and account stay. Other players are not affected. This cannot be undone.
+        </p>
+        <ConfirmAction
+          endpoint="/api/admin/my-cards"
+          keyword="DELETE"
+          label="Delete my cards"
+          busyLabel="Deleting…"
+          done="mine"
+        />
+      </section>
+
+      <section className="ticket-panel mt-6 px-6 py-5">
         <h2 className="font-display text-2xl">Relaunch wipe</h2>
         <p className="mt-2 text-sm text-muted">
           Deletes every card, trade, wishlist and activity entry for all {users} players, resets binders, shards and
@@ -29,7 +50,13 @@ export default async function AdminPage() {
         <p className="mt-3 font-cond text-sm font-semibold text-muted">
           Right now: {cards} cards · {trades} trades
         </p>
-        <WipePanel />
+        <ConfirmAction
+          endpoint="/api/admin/wipe"
+          keyword="WIPE"
+          label="Wipe and relaunch"
+          busyLabel="Wiping…"
+          done="wipe"
+        />
       </section>
 
       <section className="mt-10">

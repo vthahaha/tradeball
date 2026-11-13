@@ -1,7 +1,5 @@
 import { INSERT_ART } from "./insert-art";
-import { ARRIVALS, CHAMPS } from "./inserts";
 import { NBA_PLAYERS, NBA_TEAMS } from "./nba";
-import { HOT_GAMES } from "./nba-hot";
 import type { CardDesign, InsertType, Player, Rarity, Sport, StatLine } from "./types";
 import { INSERT_TYPES, RARITIES } from "./types";
 
@@ -34,12 +32,7 @@ export function slug(s: string) {
 }
 
 /** Insert class display names. */
-export const INSERT_NAMES: Record<InsertType, string> = {
-  champs: "Champs",
-  courtside: "Courtside",
-  hot: "Flamin' Hot",
-  arrival: "New Arrivals",
-};
+export const INSERT_NAMES: Record<InsertType, string> = {};
 
 // ── Players (one per person; base and rookie rows share nothing) ──
 
@@ -59,7 +52,6 @@ export const PLAYERS: Player[] = NBA_PLAYERS.map((r) => ({
   pick: r.pick,
   college: r.college,
 }));
-const rowById = new Map(NBA_PLAYERS.map((r) => [r.id, r]));
 
 // ── Base set + rookies ──
 
@@ -74,83 +66,10 @@ const BASE_DESIGNS: CardDesign[] = NBA_PLAYERS.map((r) => ({
 }));
 
 // ── Inserts ──
-
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const fmtDate = (iso: string) => {
-  const [y, m, d] = iso.split("-").map(Number);
-  return `${MONTHS[m - 1]} ${d}, ${y}`;
-};
-const bump = (ovr: number, by: number) => Math.min(99, ovr + by);
-
-function need(id: string) {
-  const r = rowById.get(id);
-  if (!r) throw new Error(`Insert references a player not in the set: ${id}`);
-  return r;
-}
-
-const CHAMP_DESIGNS: CardDesign[] = CHAMPS.map((c) => {
-  const r = need(c.id);
-  return {
-    id: `nba-${r.id}-champs`,
-    sport: "basketball",
-    set: SET_ID,
-    type: "champs",
-    rarity: "legendary",
-    playerIds: [`nba-${r.id}`],
-    ovr: bump(r.ovr, 2),
-    title: c.years.length > 1 ? `${c.years.length}× Finals MVP` : "Finals MVP",
-    kicker: c.years.join(" · "),
-  };
-});
-
-// Courtside: the 25 best players in the base set (nba.ts lists base rows best-first).
-const COURTSIDE_DESIGNS: CardDesign[] = NBA_PLAYERS.filter((r) => r.type === "base")
-  .slice(0, 25)
-  .map((r, i) => ({
-    id: `nba-${r.id}-courtside`,
-    sport: "basketball",
-    set: SET_ID,
-    type: "courtside",
-    rarity: "epic",
-    playerIds: [`nba-${r.id}`],
-    ovr: bump(r.ovr, 1),
-    kicker: `Row A · Seat ${i + 1}`,
-  }));
-
-const HOT_DESIGNS: CardDesign[] = HOT_GAMES.map((g) => {
-  const r = need(g.id);
-  return {
-    id: `nba-${r.id}-hot`,
-    sport: "basketball",
-    set: SET_ID,
-    type: "hot",
-    rarity: "rare",
-    playerIds: [`nba-${r.id}`],
-    ovr: bump(r.ovr, 1),
-    title: `${g.stats.PTS} PTS`,
-    kicker: `${g.home ? "vs" : "@"} ${g.opp} · ${fmtDate(g.date)}`,
-    team: nick(g.team),
-    stats: g.stats,
-    statLine: `Game, ${fmtDate(g.date)}`,
-  };
-});
-
-const ARRIVAL_DESIGNS: CardDesign[] = ARRIVALS.map((a) => {
-  const r = need(a.id);
-  return {
-    id: `nba-${r.id}-arrival`,
-    sport: "basketball",
-    set: SET_ID,
-    type: "arrival",
-    rarity: "rare",
-    playerIds: [`nba-${r.id}`],
-    ovr: r.ovr,
-    kicker: `From the ${nick(a.from)}`,
-    fromTeam: nick(a.from),
-  };
-});
-
-export const INSERT_DESIGNS: CardDesign[] = [...CHAMP_DESIGNS, ...COURTSIDE_DESIGNS, ...HOT_DESIGNS, ...ARRIVAL_DESIGNS];
+// Insert classes are added here: build one CardDesign per card with `type` set to the
+// class id (see INSERT_TYPES in types.ts), e.g. id `nba-<espnId>-<class>`. Optional fields:
+// title, kicker, team, fromTeam, stats, statLine. Splash art goes in insert-art.ts.
+export const INSERT_DESIGNS: CardDesign[] = [];
 export const DESIGNS: CardDesign[] = [...BASE_DESIGNS, ...INSERT_DESIGNS];
 
 const playerById = new Map(PLAYERS.map((p) => [p.id, p]));

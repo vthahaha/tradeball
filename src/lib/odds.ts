@@ -1,4 +1,4 @@
-import type { Finish, Rarity } from "./catalog/types";
+import type { Finish, InsertType, Rarity } from "./catalog/types";
 
 /** Chance per normal card slot. Sums to 100. */
 export const RARITY_WEIGHTS: Record<Rarity, number> = {
@@ -51,13 +51,12 @@ export const GRADE_WEIGHTS: [number, number][] = [
 
 export const CARDS_PER_PACK = 8;
 
-/** The last slot of every pack is an insert; which class it comes from: */
-export const INSERT_CLASS_WEIGHTS = {
-  hot: 40, // Flamin' Hot (Rare)
-  arrival: 35, // New Arrivals (Rare)
-  courtside: 20, // Courtside (Epic)
-  champs: 5, // Champs (Legendary)
-} as const;
+/**
+ * The last slot of every pack is an insert; which class it comes from, by weight.
+ * Empty until insert classes exist; the slot then rolls a normal base/rookie card.
+ * Example: { champs: 5, courtside: 20 }
+ */
+export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {};
 export const MAX_BANKED_PACKS = 3;
 
 export function cooldownMs() {

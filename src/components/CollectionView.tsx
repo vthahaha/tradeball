@@ -144,6 +144,7 @@ export function CollectionView({
     };
     return { base: per("base"), rookie: per("rookie"), insert: per("insert") };
   }, [designs, byDesign]);
+  const hasInserts = stats.insert.total > 0;
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -179,14 +180,16 @@ export function CollectionView({
     <>
       {/* Completion, as one season-ticket strip */}
       <section aria-label="Set completion" className="ticket-panel mt-5">
-        <div className="grid grid-cols-3">
+        <div className={`grid ${hasInserts ? "grid-cols-3" : "grid-cols-2"}`}>
           {(
             [
               ["base", "Base set"],
               ["rookie", "Rookies"],
               ["insert", "Inserts"],
             ] as const
-          ).map(([s, label]) => {
+          )
+            .filter(([s]) => s !== "insert" || hasInserts)
+            .map(([s, label]) => {
             const { owned, total } = stats[s];
             return (
               <div key={s} className="border-r-2 border-dashed border-line px-3 py-3 last:border-r-0 sm:px-5 sm:py-4">
@@ -257,7 +260,11 @@ export function CollectionView({
           <Chip active={kind === "all"} onClick={() => setKind("all")}>All</Chip>
           <Chip active={kind === "base"} onClick={() => setKind("base")}>Base</Chip>
           <Chip active={kind === "rookie"} onClick={() => setKind("rookie")}>Rookies</Chip>
-          <Chip active={kind === "insert"} onClick={() => setKind("insert")}>Inserts</Chip>
+          {hasInserts && (
+            <Chip active={kind === "insert"} onClick={() => setKind("insert")}>
+              Inserts
+            </Chip>
+          )}
           <span className="mx-1 hidden h-5 w-px bg-line sm:block" />
           <input
             type="search"

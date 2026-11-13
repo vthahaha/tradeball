@@ -83,8 +83,11 @@ function rollDesign(sport: Sport, weights: Partial<Record<Rarity, number>>) {
   return pick(POOLS[sport][rarity]);
 }
 
-function rollInsert() {
-  const cls = weightedPick(INSERT_CLASS_WEIGHTS as Partial<Record<InsertType, number>>) as InsertType;
+/** The insert slot. With no insert classes defined yet, it rolls a normal card instead. */
+function rollInsert(sport: Sport) {
+  const classes = (Object.keys(INSERT_CLASS_WEIGHTS) as InsertType[]).filter((c) => INSERT_POOLS[c]?.length);
+  if (classes.length === 0) return rollDesign(sport, RARITY_WEIGHTS);
+  const cls = weightedPick(classes.map((c) => [c, INSERT_CLASS_WEIGHTS[c] ?? 0] as [InsertType, number])) as InsertType;
   return pick(INSERT_POOLS[cls]);
 }
 
@@ -96,6 +99,8 @@ export interface PulledCard extends CardView {
   serialNo: number | null;
   supply: number | null;
   grade: number;
+  /** True when this pull is the first copy of the card in the owner's binder. */
+  isNew?: boolean;
 }
 
 export class PackError extends Error {}
@@ -130,13 +135,27 @@ export async function openPack(userId: string, type: PackType): Promise<{ cards:
     const pityHit = user.pityCounter >= PITY_LIMIT - 1;
     // Slots: 1..n-2 normal base/rookie rolls, n-1 guaranteed Rare+ (pity applies), n = insert.
     const designs = sports.map((sport, i) => {
-      if (i === CARDS_PER_PACK - 1) return rollInsert();
+      if (i === CARDS_PER_PACK - 1) return rollInsert(sport);
       if (i === CARDS_PER_PACK - 2) return rollDesign(pick(pack.sports), pityHit ? PITY_WEIGHTS : GUARANTEED_WEIGHTS);
       return rollDesign(sport, RARITY_WEIGHTS);
     });
 
+    // Which of these cards does the player already own? Anything else is NEW
+    // (only the first copy if the same new card comes twice in one pack).
+    const owned = new Set(
+      (
+        await tx.cardInstance.findMany({
+          where: { ownerId: user.id, recycledAt: null, designId: { in: designs.map((d) => d.id) } },
+          select: { designId: true },
+          distinct: ["designId"],
+        })
+      ).map((c) => c.designId),
+    );
+
     const cards: PulledCard[] = [];
     for (const design of designs) {
+      const isNew = !owned.has(design.id);
+      owned.add(design.id);
       let finish = rollFinish();
       let serialNo: number | null = null;
       const supply = FINISH_SUPPLY[finish] ?? null;
@@ -156,6 +175,7 @@ export async function openPack(userId: string, type: PackType): Promise<{ cards:
         serialNo,
         supply: serialNo ? (FINISH_SUPPLY[finish] ?? null) : null,
         grade,
+        isNew,
       });
     }
 

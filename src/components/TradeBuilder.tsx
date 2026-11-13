@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { INSERT_DESIGNS } from "@/lib/catalog";
 import { isInsert, RARITIES } from "@/lib/catalog/types";
 import type { PulledCard } from "@/lib/packs";
 import { CloseIcon, StarIcon } from "./Icons";
@@ -118,7 +119,7 @@ function Side({
           <option value="all">All</option>
           <option value="base">Base</option>
           <option value="rookie">Rookies</option>
-          <option value="insert">Inserts</option>
+          {INSERT_DESIGNS.length > 0 && <option value="insert">Inserts</option>}
         </select>
         {highlight.size > 0 && (
           <button
