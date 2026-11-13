@@ -1454,20 +1454,25 @@ select {
 /* Time Wizards: two faint cyan echoes of the player shifted ahead, on deep teal */
 .tb-ins--wizards,
 .tb-ins--wizards .tb-ins__photo { background: #0e2a33; }
+/* The echoes sit behind the player as cyan silhouettes, shifted ahead, so the player stays
+   sharp and the trail shows only round their outline (works on cut-out art) */
 .tb-ins__echo {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 50% 20%;
-  filter: grayscale(1) brightness(1.3) sepia(1) hue-rotate(150deg) saturate(3);
-  mix-blend-mode: screen;
+  filter: brightness(0) invert(1) sepia(1) saturate(6) hue-rotate(150deg) brightness(0.95);
   pointer-events: none;
 }
-.tb-ins__echo.is-near { opacity: 0.3; transform: translateX(4cqw); }
-.tb-ins__echo.is-far { opacity: 0.16; transform: translateX(8.5cqw); }
+.tb-ins__echo.is-near { opacity: 0.5; transform: translateX(3.2cqw); }
+.tb-ins__echo.is-far {
+  opacity: 0.22;
+  transform: translateX(6.8cqw);
+  filter: brightness(0) invert(1) sepia(1) saturate(6) hue-rotate(150deg) brightness(0.95) blur(0.35cqw);
+}
 .tb-ins__echo-mono span {
   position: absolute;
   inset: 0;
