@@ -95,16 +95,16 @@ const NEW_BLOOD: InsertCard[] = [
 
 // 2. Hard Goodbyes: retired in 2026
 const HARD_GOODBYES: InsertCard[] = [
-  { id: "HG1", legend: L("Garrett Temple", "G", "USA", 78) },
-  { id: "HG2", legend: L("Chris Paul", "G", "USA", 93) },
-  { id: "HG3", legend: L("Kyle Lowry", "G", "USA", 88) },
-  { id: "HG4", legend: L("Taj Gibson", "F", "USA", 80) },
-  { id: "HG5", legend: L("Nicolas Batum", "F", "France", 82) },
-  { id: "HG6", legend: L("Isaiah Whitehead", "G", "USA", 74) },
-  { id: "HG7", legend: L("Malcolm Brogdon", "G", "USA", 82) },
-  { id: "HG8", legend: L("Danilo Gallinari", "F", "Italy", 83) },
-  { id: "HG9", legend: L("P.J. Tucker", "F", "USA", 79) },
-  { id: "HG10", legend: L("Russell Westbrook", "G", "USA", 92) },
+  { id: "HG1", team: "Kings", legend: L("Garrett Temple", "G", "USA", 78) },
+  { id: "HG2", team: "Clippers", legend: L("Chris Paul", "G", "USA", 93) },
+  { id: "HG3", team: "Raptors", legend: L("Kyle Lowry", "G", "USA", 88) },
+  { id: "HG4", team: "Knicks", legend: L("Taj Gibson", "F", "USA", 80) },
+  { id: "HG5", team: "Hornets", legend: L("Nicolas Batum", "F", "France", 82) },
+  { id: "HG6", team: "Nets", legend: L("Isaiah Whitehead", "G", "USA", 74) },
+  { id: "HG7", team: "Pacers", legend: L("Malcolm Brogdon", "G", "USA", 82) },
+  { id: "HG8", team: "Nuggets", legend: L("Danilo Gallinari", "F", "Italy", 83) },
+  { id: "HG9", team: "Rockets", legend: L("P.J. Tucker", "F", "USA", 79) },
+  { id: "HG10", team: "Thunder", legend: L("Russell Westbrook", "G", "USA", 92) },
 ].map((c) => ({
   ...c,
   cls: "goodbyes",
