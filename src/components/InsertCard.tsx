@@ -197,11 +197,10 @@ export function InsertFront(props: InsertFrontProps) {
               <div className="tb-ins__old" aria-hidden />
             </>,
           )}
-          <div className="tb-ins__arrow" aria-hidden>
-            →
-          </div>
-          <div className="tb-ins__seam" aria-hidden>
-            <span>New Blood · 2026 offseason</span>
+          <div className="tb-ins__seam" aria-hidden />
+          <div className="tb-ins__set">
+            New Blood
+            <span>2026 offseason</span>
           </div>
           <div className="tb-ins__codes" aria-hidden>
             <span className="is-from">{from}</span>

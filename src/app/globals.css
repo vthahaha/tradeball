@@ -623,21 +623,6 @@ select {
   width: 0.7cqw;
   background: #fff;
 }
-.tb-ins__seam span {
-  position: absolute;
-  top: 4cqw;
-  left: 1.8cqw;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  font-stretch: 90%;
-  font-size: 3cqw;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  writing-mode: vertical-rl;
-  color: #fff;
-  text-shadow: 0 0 0.8cqw #0007;
-}
 .tb-ins--newblood .tb-ins__foot {
   display: flex;
   height: 26cqw;
@@ -874,6 +859,31 @@ select {
   filter: drop-shadow(0 1.2cqw 1.6cqw #00000066);
 }
 
+/* New Blood, final: the portrait split down the middle, old team's hue on the left half and the
+   new team's on the right, blended softly so nothing crosses the face. The seam is only two
+   ticks at the top and bottom edges; the set name sits in the empty top-left corner. */
+.tb-ins--newblood .tb-ins__old {
+  width: 50%;
+  -webkit-mask: linear-gradient(90deg, #000 calc(100% - 4cqw), transparent);
+  mask: linear-gradient(90deg, #000 calc(100% - 4cqw), transparent);
+}
+.tb-ins--newblood .tb-ins__pin {
+  left: 50%;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 6cqw);
+  mask: linear-gradient(90deg, transparent, #000 6cqw);
+}
+.tb-ins--newblood .tb-ins__seam {
+  left: 50%;
+  width: 0.6cqw;
+  background:
+    linear-gradient(#fff, #fff) top / 100% 4cqw no-repeat,
+    linear-gradient(#fff, #fff) bottom / 100% 4cqw no-repeat;
+  transform: translateX(-50%);
+}
+.tb-ins--newblood .tb-ins__set { text-shadow: 0 0.3cqw 1cqw #0008; }
+.tb-ins--newblood .tb-ins__set span { opacity: 0.85; }
+.tb-ins--newblood .tb-ins__codes .is-from { width: 50%; text-align: left; padding-left: 4cqw; }
+
 /* ── insert details: fine print, card numbers, stat lines ── */
 .tb-ins__fine {
   display: flex;
@@ -942,7 +952,7 @@ select {
 .tb-ins__corners i:nth-child(3) { bottom: 0; left: 0; transform: scaleY(-1); }
 .tb-ins__corners i:nth-child(4) { right: 0; bottom: 0; transform: scale(-1); }
 
-/* New Blood: pinstripe on the new side, halftone on the old, a ghost arrow over the seam,
+/* New Blood: pinstripe on the new side, halftone on the old,
    team codes either side */
 .tb-ins__pin {
   position: absolute;
@@ -956,21 +966,6 @@ select {
   background:
     radial-gradient(circle, #0000002e 0 0.45cqw, transparent 0.55cqw) 0 0 / 1.6cqw 1.6cqw,
     var(--f1);
-}
-.tb-ins__arrow {
-  position: absolute;
-  top: 34%;
-  left: 34%;
-  z-index: 3;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 70%;
-  font-size: 40cqw;
-  line-height: 0.6;
-  color: transparent;
-  -webkit-text-stroke: 0.35cqw #ffffffa6;
-  transform: translate(-30%, -50%);
-  pointer-events: none;
 }
 .tb-ins__codes {
   position: absolute;
@@ -1244,7 +1239,6 @@ select {
   .tb-base__plate > span,
   .tb-ins__line,
   .tb-ins__set span,
-  .tb-ins__seam span,
   .tb-ins__fine,
   .tb-ins__thanks,
   .tb-ins__codes,
