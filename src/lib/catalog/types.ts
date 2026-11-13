@@ -83,6 +83,8 @@ export interface CardDesign {
   team?: string;
   /** New Blood: the team they came from (nickname). */
   fromTeam?: string;
+  /** Two-player inserts (Rivalries): the second player's team (nickname). */
+  team2?: string;
   /** Stat line override (Generational shows the game's box score). */
   stats?: StatLine;
   statLine?: string;

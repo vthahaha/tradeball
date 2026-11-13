@@ -59,14 +59,16 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  light: 20, // The Light (uncommon)
-  shadow: 20, // The Shadow (uncommon)
-  newblood: 13, // New Blood (rare)
-  goldenboy: 11, // Golden Boy (rare)
-  fortress: 11, // Stone Fortress (rare)
-  cult: 10, // Cult Classic (epic)
-  goodbyes: 8, // Hard Goodbyes (epic)
+  light: 18, // The Light (uncommon)
+  shadow: 18, // The Shadow (uncommon)
+  newblood: 12, // New Blood (rare)
+  goldenboy: 10, // Golden Boy (rare)
+  fortress: 10, // Stone Fortress (rare)
+  cult: 9, // Cult Classic (epic)
+  goodbyes: 7, // Hard Goodbyes (epic)
+  rivalries: 6, // Rivalries (epic)
   stardom: 4, // Ultimate Stardom (legendary)
+  botb: 3, // Best of the Best (legendary)
   generational: 3, // Generational (mythic)
 };
 export const MAX_BANKED_PACKS = 3;

@@ -21,14 +21,20 @@ export const headshotUrl = (espnId: string) => `https://a.espncdn.com/i/headshot
 const ABBR_FIX: Record<string, string> = { NY: "NYK", GS: "GSW", SA: "SAS", NO: "NOP", UTAH: "UTA", WSH: "WAS" };
 
 /** Three-letter code for a team nickname, as printed on cards (NYK, GSW, SAS...). */
+/** Franchises that no longer play under the name a card prints. */
+const HISTORIC: Record<string, { abbr: string; colors: [string, string] }> = {
+  SuperSonics: { abbr: "SEA", colors: ["#00653a", "#ffc200"] },
+};
+
 export function teamCode(team: string): string {
+  if (HISTORIC[team]) return HISTORIC[team].abbr;
   const abbr = teamByName.get(team)?.abbr ?? "";
   return ABBR_FIX[abbr] ?? abbr;
 }
 
 export function teamColors(team: string): [string, string] {
   const t = teamByName.get(team);
-  return t ? [t.color, t.alt] : ["#233862", "#a9b6d3"];
+  return t ? [t.color, t.alt] : (HISTORIC[team]?.colors ?? ["#233862", "#a9b6d3"]);
 }
 
 export function slug(s: string) {
@@ -81,39 +87,55 @@ const baseById = new Map(PLAYERS.map((p) => [p.espnId, p]));
 const classById = new Map(INSERT_CLASSES.map((c) => [c.id, c]));
 
 /** Retired players and legends: no roster row, no headshot, no season stats. */
-const LEGEND_PLAYERS: Player[] = INSERT_CARDS.filter((c) => c.legend).map((c) => ({
-  id: `legend-${slug(c.legend!.name)}`,
-  espnId: "",
-  sport: "basketball",
-  name: c.legend!.name,
-  team: c.team ?? "",
-  teamAbbr: "",
-  pos: c.legend!.pos,
-  nation: c.legend!.nation,
-  jersey: "",
-  ovr: c.legend!.ovr,
-  stats: null,
-  statLine: null,
-}));
+const legendId = (name: string) => `legend-${slug(name)}`;
+const LEGEND_PLAYERS: Player[] = INSERT_CARDS.flatMap((c) =>
+  [
+    [c.legend, c.team],
+    [c.legend2, c.team2],
+  ] as const,
+)
+  .filter(([l]) => l)
+  .map(([l, team]) => ({
+    id: legendId(l!.name),
+    espnId: "",
+    sport: "basketball",
+    name: l!.name,
+    team: team ?? "",
+    teamAbbr: "",
+    pos: l!.pos,
+    nation: l!.nation,
+    jersey: "",
+    ovr: l!.ovr,
+    stats: null,
+    statLine: null,
+  }));
 
 export const INSERT_DESIGNS: CardDesign[] = INSERT_CARDS.map((c) => {
   const cls = classById.get(c.cls);
   if (!cls) throw new Error(`Insert ${c.id}: unknown class ${c.cls}`);
-  const p = c.player ? baseById.get(c.player) : undefined;
-  if (c.player && !p) throw new Error(`Insert ${c.id}: ESPN id ${c.player} is not in the base set`);
-  const playerId = p ? p.id : `legend-${slug(c.legend!.name)}`;
-  const ovr = c.ovr ?? (p ? Math.min(99, p.ovr + cls.boost) : c.legend!.ovr);
+  const slot = (id: string | undefined, legend: typeof c.legend, n: 1 | 2) => {
+    const p = id ? baseById.get(id) : undefined;
+    if (id && !p) throw new Error(`Insert ${c.id}: ESPN id ${id} is not in the base set`);
+    if (!p && !legend) return null;
+    return { id: p ? p.id : legendId(legend!.name), ovr: p ? Math.min(99, p.ovr + cls.boost) : legend!.ovr, n };
+  };
+  const one = slot(c.player, c.legend, 1);
+  if (!one) throw new Error(`Insert ${c.id}: no player`);
+  const two = slot(c.player2, c.legend2, 2);
+  // a two-player card rates the pair: the average of the two
+  const ovr = c.ovr ?? (two ? Math.round((one.ovr + two.ovr) / 2) : one.ovr);
   return {
     id: c.id,
     sport: "basketball",
     set: SET_ID,
     type: cls.id,
     rarity: cls.rarity,
-    playerIds: [playerId],
+    playerIds: two ? [one.id, two.id] : [one.id],
     ovr,
     title: c.title,
     kicker: c.kicker,
     team: c.team,
+    team2: c.team2,
     fromTeam: c.fromTeam,
     stats: c.stats,
     statLine: c.stats ? c.note : undefined,
@@ -158,6 +180,7 @@ export interface CardView {
   /** Team nickname to colour the card by (defaults to the player's team). */
   team: string;
   fromTeam?: string;
+  team2?: string;
   meta?: string;
   note?: string;
   /** Splash art for inserts, once one has been chosen. */
@@ -192,6 +215,7 @@ export function cardView(designId: string): CardView {
     statLine: d.statLine ?? ps[0].statLine,
     team: d.team ?? ps[0].team,
     fromTeam: d.fromTeam,
+    team2: d.team2,
     meta: d.meta,
     note: d.note,
     art: INSERT_ART[d.id] || undefined,

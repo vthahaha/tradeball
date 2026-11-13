@@ -130,6 +130,36 @@ export function SetIcon({ type }: { type: string }) {
           transform="rotate(-6 12 12)"
         />,
       );
+    case "botb":
+      return s(
+        <>
+          <path d="M5 21 V3" stroke="currentColor" strokeWidth="2.6" />
+          <rect
+            x="9"
+            y="5"
+            width="11"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+        </>,
+      );
+    case "rivalries":
+      return s(
+        <>
+          <rect x="2" y="5" width="9" height="14" fill="currentColor" />
+          <rect
+            x="13"
+            y="5"
+            width="9"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+        </>,
+      );
     default:
       return null;
   }

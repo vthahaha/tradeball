@@ -149,4 +149,33 @@ export const INSERT_ART: Record<string, string> = {
   CC28: "", // Damon Stoudamire
   CC29: "", // Mark Eaton
   CC30: "", // Brendan Haywood
+
+  // Set 2: A. Best of the Best
+  BOTB1: "", // Jalen Brunson
+  BOTB2: "", // Shai Gilgeous-Alexander
+  BOTB3: "", // Jaylen Brown
+  BOTB4: "", // LeBron James
+  BOTB5: "", // Dirk Nowitzki
+  BOTB6: "", // Kobe Bryant
+  BOTB7: "", // Tim Duncan
+  BOTB8: "", // Chauncey Billups
+  BOTB9: "", // Dennis Johnson
+  BOTB10: "", // Hakeem Olajuwon
+  BOTB11: "", // Michael Jordan
+  BOTB12: "", // Joe Dumars
+  BOTB13: "", // Moses Malone
+  BOTB14: "", // Bill Walton
+  BOTB15: "", // Rick Barry
+
+  // Set 2: B. Rivalries
+  RV1: "", // Larry Bird & Magic Johnson
+  RV2: "", // Michael Jordan & Isiah Thomas
+  RV3: "", // LeBron James & Stephen Curry
+  RV4: "", // Tim Duncan & Dirk Nowitzki
+  RV5: "", // Charles Barkley & Karl Malone
+  RV6: "", // Anthony Edwards & Shai Gilgeous-Alexander
+  RV7: "", // Bill Russell & Wilt Chamberlain
+  RV8: "", // Kareem Abdul-Jabbar & Bob Lanier
+  RV9: "", // Allen Iverson & Kobe Bryant
+  RV10: "", // Shaquille O'Neal & Dwight Howard
 };

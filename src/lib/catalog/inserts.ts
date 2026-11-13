@@ -1,4 +1,4 @@
-// Series 1 insert classes, from "Insert Categories Set 1".
+// Series 1 insert classes, from "Insert Categories Set 1" and "Set 2 - Classic".
 // Every card's id is the id from that document (NB1, HG2, GE9, ...): that is the
 // key to use in insert-art.ts and what /admin lists.
 //
@@ -26,6 +26,9 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "shadow", name: "The Shadow", rarity: "uncommon", boost: 3 },
   { id: "fortress", name: "Stone Fortress", rarity: "rare", boost: 3 },
   { id: "cult", name: "Cult Classic", rarity: "epic", boost: 0 },
+  // Set 2, "Classic"
+  { id: "botb", name: "Best of the Best", rarity: "legendary", boost: 3 },
+  { id: "rivalries", name: "Rivalries", rarity: "epic", boost: 2 },
 ];
 
 export interface Legend {
@@ -42,6 +45,10 @@ export interface InsertCard {
   player?: string;
   /** Retired players and legends, not on a 2026-27 roster. */
   legend?: Legend;
+  /** Two-player cards (Rivalries): the second player, and the team they are coloured by. */
+  player2?: string;
+  legend2?: Legend;
+  team2?: string;
   /** Team nickname to show and colour by, when not the player's current team. */
   team?: string;
   fromTeam?: string;
@@ -315,6 +322,160 @@ const CULT_CLASSIC: InsertCard[] = [
   { id: "CC30", team: "Wizards", legend: L("Brendan Haywood", "C", "USA", 79) },
 ].map((c) => ({ ...c, cls: "cult", note: "Franchise cult hero" }));
 
+// ── Set 2, "Classic" ──
+
+// A. Best of the Best: Finals MVPs, coloured by the team they won it with
+const BEST_OF_THE_BEST: InsertCard[] = (
+  [
+    { id: "BOTB1", player: "3934672", team: "Knicks", kicker: "2026" }, // Jalen Brunson
+    { id: "BOTB2", player: "4278073", team: "Thunder", kicker: "2025" }, // Shai Gilgeous-Alexander
+    { id: "BOTB3", player: "3917376", team: "Celtics", kicker: "2024" }, // Jaylen Brown
+    { id: "BOTB4", player: "1966", team: "Cavaliers", kicker: "2016" }, // LeBron James
+    {
+      id: "BOTB5",
+      team: "Mavericks",
+      kicker: "2011",
+      legend: L("Dirk Nowitzki", "F", "Germany", 95),
+    },
+    {
+      id: "BOTB6",
+      team: "Lakers",
+      kicker: "2009",
+      legend: L("Kobe Bryant", "G", "USA", 97),
+    },
+    {
+      id: "BOTB7",
+      team: "Spurs",
+      kicker: "2005",
+      legend: L("Tim Duncan", "F", "USA", 97),
+    },
+    {
+      id: "BOTB8",
+      team: "Pistons",
+      kicker: "2004",
+      legend: L("Chauncey Billups", "G", "USA", 90),
+    },
+    {
+      id: "BOTB9",
+      team: "SuperSonics",
+      kicker: "1979",
+      legend: L("Dennis Johnson", "G", "USA", 89),
+    },
+    {
+      id: "BOTB10",
+      team: "Rockets",
+      kicker: "1994",
+      legend: L("Hakeem Olajuwon", "C", "Nigeria", 97),
+    },
+    {
+      id: "BOTB11",
+      team: "Bulls",
+      kicker: "1991",
+      legend: L("Michael Jordan", "G", "USA", 99),
+    },
+    {
+      id: "BOTB12",
+      team: "Pistons",
+      kicker: "1989",
+      legend: L("Joe Dumars", "G", "USA", 90),
+    },
+    {
+      id: "BOTB13",
+      team: "76ers",
+      kicker: "1983",
+      legend: L("Moses Malone", "C", "USA", 95),
+    },
+    {
+      id: "BOTB14",
+      team: "Trail Blazers",
+      kicker: "1977",
+      legend: L("Bill Walton", "C", "USA", 92),
+    },
+    {
+      id: "BOTB15",
+      team: "Warriors",
+      kicker: "1975",
+      legend: L("Rick Barry", "F", "USA", 94),
+    },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "botb", title: "Finals MVP", note: "Finals MVP" }));
+
+// B. Rivalries: two players, each coloured by the team they fought it out for
+const RIVALRIES: InsertCard[] = (
+  [
+    {
+      id: "RV1",
+      team: "Celtics",
+      legend: L("Larry Bird", "F", "USA", 98),
+      team2: "Lakers",
+      legend2: L("Magic Johnson", "G", "USA", 98),
+    },
+    {
+      id: "RV2",
+      team: "Bulls",
+      legend: L("Michael Jordan", "G", "USA", 99),
+      team2: "Pistons",
+      legend2: L("Isiah Thomas", "G", "USA", 94),
+    },
+    {
+      id: "RV3",
+      team: "Cavaliers",
+      player: "1966",
+      team2: "Warriors",
+      player2: "3975",
+    }, // LeBron James & Stephen Curry
+    {
+      id: "RV4",
+      team: "Spurs",
+      legend: L("Tim Duncan", "F", "USA", 97),
+      team2: "Mavericks",
+      legend2: L("Dirk Nowitzki", "F", "Germany", 95),
+    },
+    {
+      id: "RV5",
+      team: "Suns",
+      legend: L("Charles Barkley", "F", "USA", 95),
+      team2: "Jazz",
+      legend2: L("Karl Malone", "F", "USA", 95),
+    },
+    {
+      id: "RV6",
+      team: "Timberwolves",
+      player: "4594268",
+      team2: "Thunder",
+      player2: "4278073",
+    }, // Anthony Edwards & Shai Gilgeous-Alexander
+    {
+      id: "RV7",
+      team: "Celtics",
+      legend: L("Bill Russell", "C", "USA", 97),
+      team2: "76ers",
+      legend2: L("Wilt Chamberlain", "C", "USA", 98),
+    },
+    {
+      id: "RV8",
+      team: "Bucks",
+      legend: L("Kareem Abdul-Jabbar", "C", "USA", 98),
+      team2: "Pistons",
+      legend2: L("Bob Lanier", "C", "USA", 90),
+    },
+    {
+      id: "RV9",
+      team: "76ers",
+      legend: L("Allen Iverson", "G", "USA", 95),
+      team2: "Lakers",
+      legend2: L("Kobe Bryant", "G", "USA", 97),
+    },
+    {
+      id: "RV10",
+      team: "Lakers",
+      legend: L("Shaquille O'Neal", "C", "USA", 98),
+      team2: "Magic",
+      legend2: L("Dwight Howard", "C", "USA", 92),
+    },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "rivalries", note: "Rivalries" }));
+
 export const INSERT_CARDS: InsertCard[] = [
   ...NEW_BLOOD,
   ...HARD_GOODBYES,
@@ -325,4 +486,6 @@ export const INSERT_CARDS: InsertCard[] = [
   ...THE_SHADOW,
   ...STONE_FORTRESS,
   ...CULT_CLASSIC,
+  ...BEST_OF_THE_BEST,
+  ...RIVALRIES,
 ];

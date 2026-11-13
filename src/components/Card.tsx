@@ -62,10 +62,18 @@ function cardNo(card: CardView) {
 function useLook(card: CardView) {
   const [t1, t2] = teamColors(card.team);
   const [f1] = card.fromTeam ? teamColors(card.fromTeam) : [t1];
+  // Rivalries: the second player's team, as --u1 / --u2
+  const [u1, u2] = card.team2 ? teamColors(card.team2) : [t1, t2];
   const insert = isInsert(card.type);
-  const isDuo = card.type === "duo" && !!card.players[1];
+  const isDuo = !!card.players[1];
   return {
-    style: { "--t1": t1, "--t2": t2, "--f1": f1 } as CSSProperties,
+    style: {
+      "--t1": t1,
+      "--t2": t2,
+      "--f1": f1,
+      "--u1": u1,
+      "--u2": u2,
+    } as CSSProperties,
     insert,
     isDuo,
     singleGame: !!card.statLine?.endsWith(" game"),
@@ -243,7 +251,9 @@ export function CardReverse({
       "Team",
       card.fromTeam
         ? `${card.fromTeam} → ${card.team}`
-        : card.team || undefined,
+        : card.team2
+          ? `${card.team} / ${card.team2}`
+          : card.team || undefined,
     ],
     ["Pos", isDuo ? "Duo" : p1.pos],
     ["No.", p1.jersey ? `#${p1.jersey}` : undefined],
