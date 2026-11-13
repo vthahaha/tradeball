@@ -6,13 +6,14 @@ import {
   headshotUrl,
   INSERT_NAMES,
   isInsert,
+  NBA_SEASON,
   SET_NAME,
   teamColors,
   type CardView,
   type Finish,
   type Rarity,
 } from "@/lib/catalog";
-import { TeamScene } from "./CardArt";
+import { BaseScene } from "./CardArt";
 import { fmtStat, initials, lastName, nameSize } from "./cardText";
 import { InsertFront } from "./InsertCard";
 
@@ -46,17 +47,14 @@ const FINISH_LABEL: Record<Finish, string | null> = {
   masterpiece: "Masterpiece",
 };
 
-function metaLine(card: CardView) {
-  const [p1, p2] = card.players;
-  if (card.type === "duo" && p2)
-    return `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}`;
-  if (card.meta) return card.meta;
-  if (card.fromTeam) return `${card.fromTeam} → ${card.team}`;
-  if (card.type === "rookie" && p1.pick) return `${p1.team} · Pick ${p1.pick}`;
-  return `${card.team}${p1.nation ? ` · ${p1.nation}` : ""}`;
+/** The small print under a base card's name: draft pick for rookies, nation for everyone else. */
+function baseMeta(card: CardView) {
+  const p = card.players[0];
+  if (card.type === "rookie" && p.pick)
+    return `Pick ${p.pick}${p.college ? ` · ${p.college}` : ""}`;
+  return p.nation || card.team;
 }
 
-/** Card number printed on the back: the insert id, or a short base code. */
 function cardNo(card: CardView) {
   if (isInsert(card.type)) return card.designId;
   const m = card.designId.match(/^nba-(\d+)-(\w+)$/);
@@ -115,7 +113,7 @@ export function Card({
   const uid = useId().replace(/:/g, "");
   const [imgFailed, setImgFailed] = useState(false);
   const [p1, p2] = card.players;
-  const { style, insert, isDuo, singleGame, setName } = useLook(card);
+  const { style, insert, isDuo, setName } = useLook(card);
   // Base and rookie cards show the ESPN headshot. Inserts show their splash art once one is
   // chosen (insert-art.ts); until then the set's scene carries the card with the initials.
   const imgSrc = insert
@@ -125,7 +123,6 @@ export function Card({
       : undefined;
   const showImg = !!imgSrc && !imgFailed;
   const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;
-  const box = singleGame && card.stats ? Object.entries(card.stats) : [];
   const ini = isDuo
     ? `${initials(p1.name)}·${initials(p2.name)}`
     : initials(p1.name);
@@ -179,11 +176,15 @@ export function Card({
             grade={grade}
           />
         ) : (
-          <>
-            <div className="tb-card__panel">
-              <TeamScene id={uid} />
-              {!showImg && <div className="tb-card__mono">{ini}</div>}
-              {showImg && (
+          <div className="tb-base">
+            <div className="tb-base__spine" aria-hidden>
+              <b>Gate 7</b>
+              <span>{NBA_SEASON} Basketball</span>
+            </div>
+            <div className="tb-base__photo">
+              <BaseScene id={uid} />
+              {p1.jersey && <div className="tb-base__num">{p1.jersey}</div>}
+              {showImg ? (
                 // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs, hotlinked on purpose
                 <img
                   className="tb-card__face-img"
@@ -195,52 +196,36 @@ export function Card({
                   referrerPolicy="no-referrer"
                   onError={() => setImgFailed(true)}
                 />
+              ) : (
+                <div className="tb-card__mono">{ini}</div>
               )}
-              <div className="tb-card__ovr">
-                <b>{card.ovr}</b>
-                <span>{isDuo ? "Duo" : p1.pos}</span>
-              </div>
-              <div className="tb-card__mark">
-                Gate 7<span>{SET_NAME}</span>
-              </div>
               {card.type === "rookie" && (
-                <div className="tb-card__rc" title="Rookie card">
+                <div className="tb-base__rc" title="Rookie card">
                   RC
                 </div>
               )}
             </div>
-            <div className="tb-card__plate">
-              <div
-                className="tb-card__name"
-                style={{ fontSize: `${nameSize(name)}cqw` }}
-              >
-                {name}
-              </div>
-              {box.length > 0 ? (
-                <div
-                  className="tb-card__box"
-                  title={card.statLine ?? undefined}
-                >
-                  {box.map(([k, v]) => (
-                    <div key={k}>
-                      <b>{fmtStat(true, v)}</b>
-                      <span>{k}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="tb-card__meta">
-                  <span>{metaLine(card)}</span>
-                  <SerialLine
-                    finish={finish}
-                    serialNo={serialNo}
-                    supply={supply}
-                    grade={grade}
-                  />
-                </div>
-              )}
+            <div className="tb-base__bar">
+              <span className="tb-base__pos">{isDuo ? "Duo" : p1.pos}</span>
+              <span className="tb-base__ovr">
+                <b>{card.ovr}</b>
+                <small>OVR</small>
+              </span>
+              <span className="tb-base__team">{card.team}</span>
             </div>
-          </>
+            <div className="tb-base__name">
+              <b style={{ fontSize: `${nameSize(name, 0.56)}cqw` }}>{name}</b>
+              <span>
+                <i>{baseMeta(card)}</i>
+                <SerialLine
+                  finish={finish}
+                  serialNo={serialNo}
+                  supply={supply}
+                  grade={grade}
+                />
+              </span>
+            </div>
+          </div>
         )}
       </div>
       <div className="tb-card__shine" />

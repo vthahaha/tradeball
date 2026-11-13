@@ -293,15 +293,7 @@ select {
 .tb-card[data-rarity="legendary"] .tb-card__frame { animation: tb-chrome 6s ease-in-out infinite; }
 .tb-card[data-rarity="mythic"] .tb-card__frame { background-size: 100% 100%; animation: tb-spin 5s linear infinite; }
 
-/* the art panel: drawn scene, player, scene pieces in front, badges */
-.tb-card__panel {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  border-radius: 2cqw 2cqw 0 0;
-  background: var(--t1);
-  box-shadow: inset 0 0 0 0.35cqw #0000004d;
-}
+/* ── shared art pieces ── */
 .tb-art {
   position: absolute;
   inset: 0;
@@ -310,46 +302,18 @@ select {
   height: 100%;
   pointer-events: none;
 }
-.tb-art.is-front {
-  z-index: 3;
-}
-.tb-art__banner {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 75%;
-  font-size: 15px;
-  fill: #e9d3a8;
-}
-.tb-art__banner-sub {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 3.2px;
-  letter-spacing: 0.4px;
-  fill: #e9d3a8;
-}
-.tb-art__big {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 75%;
-  fill: #2a0a0a;
-  stroke: #ff8a1f;
-  stroke-width: 0.9px;
-  stroke-opacity: 0.75;
-}
 .tb-card__face-img {
   position: absolute;
-  left: 0;
-  right: 0;
   bottom: 0;
+  left: -6%;
   z-index: 2;
-  width: 100%;
-  height: 86%;
+  width: 112%;
+  height: 92%;
   object-fit: cover;
   object-position: 50% 100%;
   pointer-events: none;
-  filter: drop-shadow(0 1.2cqw 1.6cqw #00000066);
+  filter: drop-shadow(0 1.2cqw 1.6cqw #00000073);
 }
-/* chosen splash art: the whole panel, headshot to full body */
 .tb-card__splash,
 .tb-card__ghost {
   position: absolute;
@@ -361,220 +325,41 @@ select {
   object-position: 50% 22%;
   pointer-events: none;
 }
-/* The Shadow: the player's own silhouette, thrown long behind them */
 .tb-card__ghost {
   z-index: 1;
   filter: brightness(0);
-  opacity: 0.6;
-  transform: translate(8cqw, 1cqw) skewX(-10deg);
+  opacity: 0.55;
+  transform: translate(7cqw, 1cqw) skewX(-10deg);
   transform-origin: 50% 100%;
 }
-/* no art yet: initials, set in the scene's own ink */
 .tb-card__mono {
   position: absolute;
   inset: 0;
   z-index: 2;
   display: grid;
   place-items: center;
-  padding-top: 12cqw;
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 75%;
-  font-size: 36cqw;
+  font-size: 30cqw;
   line-height: 1;
   color: #ffffffe6;
   text-shadow: 0 1cqw 2cqw #00000066;
-}
-.tb-card[data-type="generational"] .tb-card__mono {
-  display: none;
-}
-
-/* OVR badge, top left */
-.tb-card__ovr {
-  position: absolute;
-  top: 3cqw;
-  left: 3cqw;
-  z-index: 4;
-  min-width: 14cqw;
-  padding: 1.4cqw 1.8cqw 1.2cqw;
-  border: 0.45cqw solid var(--rc);
-  border-radius: 1.6cqw;
-  background: #0b0d14d9;
-  color: var(--paper);
-  text-align: center;
-}
-.tb-card__ovr b {
-  display: block;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 75%;
-  font-size: 9.6cqw;
-  line-height: 0.9;
-  font-variant-numeric: tabular-nums;
-}
-.tb-card__ovr span {
-  display: block;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.7cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-/* base set mark, top right */
-.tb-card__mark {
-  position: absolute;
-  top: 3.4cqw;
-  right: 3.6cqw;
-  z-index: 4;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 70%;
-  font-size: 5cqw;
-  line-height: 1;
-  text-transform: uppercase;
-  color: var(--paper);
-  text-shadow: 0 0.4cqw 1cqw #0009;
-}
-.tb-card__mark span {
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.4cqw;
-  letter-spacing: 0.16em;
-}
-/* insert set logo, top right: each set prints its own */
-.tb-card__set {
-  --set-bg: #0b0d14;
-  --set-fg: var(--paper);
-  position: absolute;
-  top: 3cqw;
-  right: 3cqw;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  gap: 1.2cqw;
-  max-width: 62cqw;
-  padding: 1.2cqw 2.4cqw 1.2cqw 1.6cqw;
-  border-radius: 99px;
-  background: var(--set-bg);
-  color: var(--set-fg);
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 3.8cqw;
-  line-height: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
-  box-shadow: 0 0.6cqw 1.2cqw #00000066;
 }
 .tb-card__seticon {
   flex: none;
   width: 4.6cqw;
   height: 4.6cqw;
 }
-/* the rookie card shield */
-.tb-card__rc {
-  position: absolute;
-  top: 22cqw;
-  left: 3cqw;
-  z-index: 4;
-  display: grid;
-  place-items: center;
-  width: 11cqw;
-  height: 8cqw;
-  border: 0.6cqw solid var(--ink);
-  border-radius: 1.2cqw;
-  background: #f2c200;
-  color: var(--ink);
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 75%;
-  font-size: 5cqw;
-  box-shadow: 0 0.5cqw 1cqw #00000059;
-}
-/* insert kicker: the moment, as a caption strip at the foot of the panel */
-.tb-card__kicker {
-  position: absolute;
-  left: 3cqw;
-  bottom: 3cqw;
-  z-index: 4;
-  max-width: 72%;
-  padding: 1cqw 2.2cqw;
-  border-radius: 0.8cqw;
-  background: #000000c2;
-  color: var(--paper);
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 3cqw;
-  line-height: 1.15;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-/* the nameplate */
-.tb-card__plate {
-  position: relative;
-  display: flex;
-  min-height: 27cqw;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1.3cqw;
-  padding: 3.2cqw 3.4cqw 2.6cqw;
-  border-radius: 0 0 2cqw 2cqw;
-  background: var(--plate);
-  color: var(--plate-ink);
-}
-.tb-card__plate::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 1.4cqw;
-  background: linear-gradient(90deg, var(--t1) 0 68%, var(--t2) 68% 84%, var(--rc) 84%);
-}
-.tb-card__name {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 68%;
-  line-height: 0.9;
-  letter-spacing: -0.005em;
-  text-transform: uppercase;
-  text-wrap: balance;
-  overflow-wrap: break-word;
-}
-.tb-card__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2cqw;
-  min-width: 0;
-}
-.tb-card__meta > span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 3cqw;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--plate-soft);
-}
 .tb-card__serial {
-  display: flex;
+  display: inline-flex;
   flex: none;
   align-items: center;
-  gap: 1.2cqw;
+  gap: 1.1cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.8cqw;
+  font-size: 2.4cqw;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
@@ -583,13 +368,13 @@ select {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 80%;
-  font-size: 3.8cqw;
+  font-size: 3.4cqw;
   color: var(--r-legendary);
 }
 .tb-card__serial i {
-  padding: 0 1cqw;
-  border: 0.35cqw solid currentColor;
-  border-radius: 0.6cqw;
+  padding: 0 0.9cqw;
+  border: 0.3cqw solid currentColor;
+  border-radius: 0.5cqw;
   font-style: normal;
 }
 .tb-card__serial i.is-gem {
@@ -597,40 +382,179 @@ select {
   background: var(--r-legendary);
   color: var(--ink);
 }
-/* Generational: the night's box score on the nameplate, scoreboard style */
-.tb-card__box {
+
+/* ── base set: white border, a vertical set spine, the jersey number behind the player,
+   a colour-block bar (position, OVR in the rarity colour, team in script), a black name strip ── */
+.tb-card:not([data-insert]):not(.is-reverse):not(.is-facedown) .tb-card__frame {
+  grid-template-rows: minmax(0, 1fr);
+  padding: 3.6cqw;
+}
+.tb-base {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 10cqw minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  overflow: hidden;
+  border-radius: 1cqw;
+  background: #fbfaf6;
+}
+.tb-base__spine {
   display: flex;
-  gap: 1.4cqw;
-  font-variant-numeric: tabular-nums;
+  grid-row: 1 / -1;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.4cqw 0;
+  background: #efe6cf;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
 }
-.tb-card__box div {
-  flex: 1;
-  padding: 0.8cqw 0 0.6cqw;
-  border-radius: 0.6cqw;
-  background:
-    radial-gradient(circle, #ffffff0d 0 0.25cqw, transparent 0.3cqw) 0 0 / 0.9cqw 0.9cqw,
-    #000;
-  text-align: center;
-}
-.tb-card__box b {
-  display: block;
+.tb-base__spine b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 78%;
-  font-size: 6.4cqw;
-  line-height: 0.95;
-  color: #ffb12b;
+  font-stretch: 72%;
+  font-size: 7.4cqw;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--t1) 70%, #1b1b1b);
 }
-.tb-card__box span {
+.tb-base__spine span {
   font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
   font-weight: 800;
   font-size: 2.3cqw;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #7a6a4f;
+}
+.tb-base__photo {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+.tb-base__num {
+  position: absolute;
+  right: -3cqw;
+  bottom: 4cqw;
+  z-index: 1;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 68%;
+  font-size: 64cqw;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: var(--t2);
+  opacity: 0.85;
+}
+.tb-base__rc {
+  position: absolute;
+  top: 2.4cqw;
+  right: 2.4cqw;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 10.5cqw;
+  height: 7.6cqw;
+  border: 0.55cqw solid var(--ink);
+  border-radius: 1.1cqw;
+  background: #f2c200;
+  color: var(--ink);
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: 4.8cqw;
+  box-shadow: 0 0.5cqw 1cqw #00000059;
+}
+.tb-base__bar {
+  display: flex;
+  height: 11cqw;
+}
+.tb-base__pos,
+.tb-base__ovr {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 12cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+}
+.tb-base__pos {
+  background: #14161c;
+  color: var(--paper);
+  font-size: 5cqw;
+}
+.tb-base__ovr {
+  width: 13cqw;
+  background: var(--rc);
+  color: var(--ink);
+}
+.tb-base__ovr b {
+  font-size: 6.4cqw;
+  line-height: 0.9;
+}
+.tb-base__ovr small {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 800;
+  font-size: 2cqw;
+  letter-spacing: 0.14em;
+}
+.tb-base__team {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 3cqw 0.6cqw;
+  overflow: hidden;
+  font-family: var(--font-script), cursive;
+  font-size: 8cqw;
+  line-height: 1;
+  white-space: nowrap;
+  color: color-mix(in oklab, var(--t1) 85%, #000);
+}
+.tb-base__name {
+  grid-column: 2;
+  padding: 1.8cqw 2.6cqw 2cqw;
+  background: #14161c;
+  color: var(--paper);
+}
+.tb-base__name > b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-stretch: 90%;
+  line-height: 1.05;
   letter-spacing: 0.12em;
-  color: #ffd9a0;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.tb-base__name > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+  margin-top: 0.8cqw;
+}
+.tb-base__name i {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 2.4cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9aa3b5;
 }
 
-/* ── insert sets: each owns its layout (InsertCard.tsx) over its printed material (CardArt.tsx).
-   The parallel border stays (thinner) so rarity still reads at a glance.               ── */
+/* ── insert sets (InsertCard.tsx over CardArt.tsx). The parallel border stays, thinner. ── */
 .tb-card[data-insert] .tb-card__frame {
   grid-template-rows: minmax(0, 1fr);
   padding: 3cqw;
@@ -639,36 +563,23 @@ select {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border-radius: 2cqw;
+  border-radius: 1.6cqw;
   background: #111;
-}
-.tb-ins > .tb-art {
-  z-index: 0;
 }
 .tb-ins__art {
   position: absolute;
   inset: 0;
   z-index: 2;
 }
-.tb-ins .tb-card__mono {
-  padding-top: 0;
-  font-size: 30cqw;
-}
-.tb-art__led {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-}
 .tb-ins__serial {
   display: inline-flex;
   flex: none;
   align-items: center;
   gap: 1cqw;
-  margin-left: auto;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.6cqw;
+  font-size: 2.4cqw;
   letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
 }
@@ -676,7 +587,7 @@ select {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 80%;
-  font-size: 3.4cqw;
+  font-size: 3.2cqw;
 }
 .tb-ins__serial i {
   padding: 0 0.9cqw;
@@ -689,879 +600,736 @@ select {
   background: var(--r-legendary);
   color: var(--ink);
 }
-/* the shared plain OVR (The Light, The Shadow) */
-.tb-ins__plainovr {
-  position: absolute;
-  top: 4cqw;
-  left: 4cqw;
-  z-index: 5;
-  text-align: center;
-  color: #fff;
-  text-shadow: 0 0.4cqw 1.2cqw #0009;
-}
-.tb-ins__plainovr b {
-  display: block;
+.tb-ins__name {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 75%;
-  font-size: 10cqw;
-  line-height: 0.9;
-}
-.tb-ins__plainovr small,
-.tb-ins__stampovr small,
-.tb-ins__ledovr small,
-.tb-ins__shield small {
-  display: block;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.4cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-/* 1. New Blood: newsprint, a torn label, a stamped rating, the name as a headline */
-.tb-ins--newblood .tb-ins__art { inset: 13cqw 0 31cqw; }
-.tb-ins--newblood .tb-card__mono { color: #fff; text-shadow: 0 1cqw 0 #0006; }
-.tb-ins__strip {
-  position: absolute;
-  top: 3.4cqw;
-  left: -2cqw;
-  z-index: 5;
-  padding: 1.6cqw 4.4cqw 1.4cqw 5.4cqw;
-  background: #121212;
-  color: #f7f3e8;
-  transform: rotate(-2.5deg);
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 70%;
-  font-size: 7.6cqw;
-  line-height: 0.95;
-  text-transform: uppercase;
-  box-shadow: 0 0.8cqw 1.4cqw #0006;
-}
-.tb-ins__strip small {
-  display: block;
-  margin-top: 0.4cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.3cqw;
-  letter-spacing: 0.22em;
-  color: #bdb6a4;
-}
-.tb-ins__stampovr {
-  position: absolute;
-  top: 4cqw;
-  right: 4cqw;
-  z-index: 5;
-  display: grid;
-  place-content: center;
-  width: 16cqw;
-  aspect-ratio: 1;
-  border: 1cqw double var(--stamp-ink);
-  border-radius: 50%;
-  background: #f7f3e8d9;
-  color: var(--stamp-ink);
-  text-align: center;
-  transform: rotate(11deg);
-}
-.tb-ins__stampovr b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 7cqw;
-  line-height: 0.9;
-}
-.tb-ins__news {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 5;
-  padding: 3cqw 4cqw 3.4cqw;
-  border-top: 0.6cqw solid #121212;
-  background: #f2ecdc;
-  color: #121212;
-  box-shadow: 0 -1cqw 2cqw #0005;
-}
-.tb-ins__headline {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 64%;
+  font-stretch: 68%;
   line-height: 0.9;
   text-transform: uppercase;
   text-wrap: balance;
 }
-.tb-ins__move {
-  display: flex;
-  align-items: center;
-  gap: 1.4cqw;
-  margin-top: 1.8cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.8cqw;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.tb-ins__move span {
-  padding: 0.6cqw 1.6cqw;
-  border-radius: 0.4cqw;
-  color: #fff;
-  text-shadow: 0 0 0.4cqw #000c;
-}
-.tb-ins__move i {
-  font-style: normal;
-}
 
-/* 2. Hard Goodbyes: a cream-bordered photo, a ribbon, an autograph */
-.tb-card[data-type="goodbyes"] .tb-card__frame {
-  background: #e9dfc8;
-  box-shadow: inset 0 0 0 0.6cqw var(--rc), inset 0 0 0 1.1cqw #e9dfc8;
-  animation: none;
-}
-.tb-ins--goodbyes {
-  background: #efe6d2;
-  border-radius: 1cqw;
-}
-.tb-ins__photo {
+/* 1. New Blood (after Mosaic): line field, italic title, hex rating, notched white plate */
+.tb-ins--newblood .tb-ins__art { inset: 16cqw 0 27cqw; }
+.tb-ins__title {
   position: absolute;
   top: 3cqw;
-  right: 3cqw;
-  bottom: 33cqw;
-  left: 12.5cqw;
-  overflow: hidden;
-  border-radius: 0.6cqw;
-  box-shadow: inset 0 0 0 0.4cqw #0005;
-  filter: sepia(0.35) contrast(1.05);
-}
-.tb-ins--goodbyes .tb-card__splash { filter: sepia(0.5) saturate(0.8); }
-.tb-ins--goodbyes .tb-card__mono {
-  color: transparent;
-  -webkit-text-stroke: 0.6cqw #f4e2c0;
-  text-shadow: none;
-}
-.tb-ins__ribbon {
-  position: absolute;
-  top: 3cqw;
-  bottom: 33cqw;
-  left: 3cqw;
+  left: 4cqw;
   z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 7.5cqw;
-  background: #7a1f1f;
-  color: #efe6d2;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 72%;
-  font-size: 3.8cqw;
-  letter-spacing: 0.22em;
+  font-style: italic;
+  font-stretch: 80%;
+  font-size: 9.6cqw;
+  line-height: 0.85;
   text-transform: uppercase;
+  color: #fff;
 }
-.tb-ins__sticker {
+.tb-ins__title small {
+  display: block;
+  margin-top: 0.8cqw;
+  font-family: var(--font-body), sans-serif;
+  font-style: normal;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.4cqw;
+  letter-spacing: 0.3em;
+  color: #9aa3b5;
+}
+.tb-ins__hex {
   position: absolute;
-  top: 2.6cqw;
-  right: 2.6cqw;
+  top: 3cqw;
+  right: 3.4cqw;
   z-index: 5;
-  display: grid;
-  place-content: center;
-  width: 13cqw;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #efe6d2;
-  color: #2a2018;
-  text-align: center;
+  display: flex;
+  width: 14cqw;
+  height: 16cqw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--t1);
+  color: #fff;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  text-shadow: 0 0.3cqw 0.6cqw #0008;
+}
+.tb-ins__hex b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 6.2cqw;
+  line-height: 0.9;
+}
+.tb-ins__hex small,
+.tb-ins__medal small,
+.tb-ins__dot small {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
   font-size: 2.2cqw;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  box-shadow: 0 0.6cqw 1.2cqw #0007;
-}
-.tb-ins__sticker b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 6cqw;
-  line-height: 0.9;
-  letter-spacing: 0;
-}
-.tb-ins__sign {
-  position: absolute;
-  right: 3cqw;
-  bottom: 2cqw;
-  left: 3cqw;
-  z-index: 5;
-  display: flex;
-  height: 30cqw;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.tb-ins__autograph {
-  font-family: var(--font-hand), cursive;
-  font-weight: 700;
-  line-height: 0.95;
-  color: #1f2f6b;
-  transform: rotate(-4deg);
-  text-wrap: balance;
-}
-.tb-ins__caption {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.4cqw;
-  margin-top: 2cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.4cqw;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #6b5a45;
-}
-.tb-ins__caption .tb-ins__serial { margin-left: 0; }
-
-/* 3. Golden Boy: brushed-foil wordmark behind, a gold bar along the foot */
-.tb-ins__foil {
-  position: absolute;
-  top: 5cqw;
-  left: 4cqw;
-  z-index: 1;
-  width: calc(100% - 8cqw);
-}
-.tb-ins__foil text {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 70%;
-  font-size: 50px;
-  fill: #fff;
-}
-.tb-ins--goldenboy .tb-ins__art { inset: 4cqw 0 20cqw; }
-.tb-ins--goldenboy .tb-card__mono { color: #fff7dc; text-shadow: 0 1cqw 0 #6b4606; }
-.tb-ins__under {
-  position: absolute;
-  right: 0;
-  bottom: 21cqw;
-  left: 0;
-  z-index: 5;
-  text-align: center;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.7cqw;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #f7dc95;
-  text-shadow: 0 0.4cqw 1cqw #000;
-}
-.tb-ins__goldbar {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 5;
-  display: flex;
-  height: 19cqw;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2cqw;
-  padding: 0 4cqw;
-  background: linear-gradient(115deg, #f7d774, #d9a62a 45%, #fff0b0 60%, #c08a17);
-  color: #1b1203;
-}
-.tb-ins__goldbar span {
-  min-width: 0;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 66%;
-  line-height: 0.9;
-  text-transform: uppercase;
-  overflow-wrap: break-word;
-}
-.tb-ins__goldbar b {
-  flex: none;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 75%;
-  font-size: 10cqw;
-}
-.tb-ins__corner {
-  position: absolute;
-  top: 3cqw;
-  right: 3cqw;
-  z-index: 5;
-  color: #f7dc95;
-}
-
-/* 4. Generational: scoreboard bulbs; name up the side; box score along the foot */
-.tb-ins--generational .tb-ins__art { inset: 10cqw 0 22cqw 12cqw; }
-.tb-ins__ledtitle {
-  position: absolute;
-  top: 3.6cqw;
-  right: 19cqw;
-  left: 4cqw;
-  z-index: 5;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 80%;
-  font-size: 5cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #ffb12b;
-  text-shadow: 0 0 1.2cqw #ff8a1f99;
-}
-.tb-ins__ledovr {
-  position: absolute;
-  top: 3cqw;
-  right: 3cqw;
-  z-index: 5;
-  padding: 1cqw 1.8cqw;
-  border: 0.35cqw solid #2a2420;
-  border-radius: 0.8cqw;
-  background: #000;
-  color: #ffb12b;
-  text-align: center;
-  text-shadow: 0 0 1cqw #ff8a1f88;
-}
-.tb-ins__ledovr b {
-  display: block;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 8cqw;
-  line-height: 0.9;
-}
-.tb-ins__vname {
-  position: absolute;
-  top: 12cqw;
-  bottom: 24cqw;
-  left: 2cqw;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 66%;
-  line-height: 0.9;
-  text-align: center;
-  text-transform: uppercase;
-  color: #fff;
-  text-shadow: 0 0.6cqw 1.6cqw #000;
-}
-.tb-ins__kicker {
-  position: absolute;
-  top: 15cqw;
-  right: 3cqw;
-  z-index: 5;
-  max-width: 44cqw;
-  padding: 0.8cqw 1.6cqw;
-  border-radius: 0.6cqw;
-  background: #000c;
-  color: #ffd9a0;
-  text-align: right;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  line-height: 1.2;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.tb-ins__board {
-  position: absolute;
-  right: 3cqw;
-  bottom: 3cqw;
-  left: 3cqw;
-  z-index: 5;
-  display: flex;
-  align-items: stretch;
-  gap: 1.2cqw;
-  color: #ffd9a0;
-  font-variant-numeric: tabular-nums;
-}
-.tb-ins__board > div {
-  flex: 1;
-  padding: 1cqw 0 0.8cqw;
-  border: 0.35cqw solid #2a2420;
-  border-radius: 0.6cqw;
-  background: #000;
-  text-align: center;
-}
-.tb-ins__board b {
-  display: block;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 7cqw;
-  line-height: 0.95;
-  color: #ffb12b;
-  text-shadow: 0 0 1cqw #ff8a1f88;
-}
-.tb-ins__board span {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 2.3cqw;
-  letter-spacing: 0.12em;
-}
-.tb-ins__board .tb-ins__serial { align-self: center; margin-left: 0.6cqw; }
-
-/* 5. Ultimate Stardom: a marquee sign of bulbs; the name in letter tiles */
-.tb-ins--stardom .tb-ins__art { inset: 20cqw 0 30cqw; }
-.tb-ins--stardom .tb-card__mono { color: #ffd36b; text-shadow: 0 1cqw 0 #3a0509; }
-.tb-ins__marquee {
-  position: absolute;
-  top: 3cqw;
-  right: 6cqw;
-  left: 6cqw;
-  z-index: 5;
-  padding: 1.8cqw 3cqw 1.6cqw;
-  border: 1.3cqw dotted #ffd36b;
-  border-radius: 1.4cqw;
-  background: #120c06;
-  color: #ffe8b0;
-  text-align: center;
-  box-shadow: 0 1cqw 2cqw #000a, inset 0 0 0 0.4cqw #120c06;
-}
-.tb-ins__marquee span {
-  display: block;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-}
-.tb-ins__marquee b {
-  display: block;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 72%;
-  font-size: 8.4cqw;
-  line-height: 0.9;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #ffd36b;
-  text-shadow: 0 0 1.4cqw #ffb12b88;
-}
-.tb-ins__star {
-  position: absolute;
-  top: 17cqw;
-  left: 2.4cqw;
-  z-index: 6;
-  display: grid;
-  place-items: center;
-  width: 16cqw;
-  aspect-ratio: 1;
-}
-.tb-ins__star svg {
-  position: absolute;
-  inset: 0;
-  fill: #e8b83a;
-  stroke: #5a3f06;
-  stroke-width: 0.7;
-  filter: drop-shadow(0 0.6cqw 0.8cqw #0009);
-}
-.tb-ins__star b {
-  position: relative;
-  margin-top: 1cqw;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 5.4cqw;
-  color: #1b1203;
-}
-.tb-ins__billing {
-  position: absolute;
-  right: 3cqw;
-  bottom: 3cqw;
-  left: 3cqw;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2cqw;
-  padding: 2.2cqw 2cqw 2cqw;
-  border-radius: 1.2cqw;
-  background: #120c06eb;
-}
-.tb-ins__first {
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.8cqw;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #ffe8b0;
-}
-.tb-ins__tiles {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.25em 0.22em;
-}
-.tb-ins__tiles span {
-  display: grid;
-  place-items: center;
-  width: 0.98em;
-  height: 1.22em;
-  border-radius: 0.08em;
-  background: #f4efe2;
-  color: #111;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 72%;
-  line-height: 1;
-  box-shadow: 0 0.08em 0.12em #000a;
-}
-.tb-ins__tiles span.is-gap {
-  width: 0.45em;
-  background: none;
-  box-shadow: none;
-}
-.tb-ins__team {
-  display: flex;
-  align-items: center;
-  gap: 1.4cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #c7b98a;
-}
-.tb-ins__team .tb-ins__serial { margin-left: 0; }
-
-/* 6. The Light (East): thin type in the glare, the name coming out of a white haze */
-.tb-ins__thin {
-  position: absolute;
-  top: 5cqw;
-  right: 4cqw;
-  left: 4cqw;
-  z-index: 1;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 200;
-  font-stretch: 80%;
-  font-size: 30cqw;
-  line-height: 0.82;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: #fff;
-  opacity: 0.72;
-}
-.tb-ins--light .tb-ins__art { inset: 14cqw 0 24cqw; }
-.tb-ins--light .tb-card__mono { color: var(--t1); text-shadow: 0 1cqw 0 #ffffffb3; }
-.tb-ins__east {
-  position: absolute;
-  top: 4cqw;
-  right: 4cqw;
-  z-index: 5;
-  padding: 0.6cqw 1.8cqw;
-  border: 0.35cqw solid #fffc;
-  border-radius: 99px;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: #fff;
-}
-.tb-ins__lightname {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 5;
-  padding: 11cqw 4cqw 3.4cqw;
-  background: linear-gradient(180deg, transparent, #fff8ecf2 46%);
-  color: var(--ink);
-}
-.tb-ins__lightname > div,
-.tb-ins__noir > div {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 66%;
-  line-height: 0.9;
-  text-transform: uppercase;
-  text-wrap: balance;
-}
-.tb-ins__lightname > span,
-.tb-ins__noir > span,
-.tb-ins__slab > span {
-  display: flex;
-  align-items: center;
-  gap: 1.4cqw;
-  margin-top: 1.3cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.7cqw;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.tb-ins__lightname > span { color: var(--ink-soft); }
-
-/* 7. The Shadow (West): huge outlined letters behind, a noir title card in front */
-.tb-ins__outline {
-  position: absolute;
-  top: 28cqw;
-  right: -3cqw;
-  left: -3cqw;
-  z-index: 1;
-  text-align: center;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 70%;
-  font-size: 30cqw;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: transparent;
-  -webkit-text-stroke: 0.45cqw color-mix(in oklab, var(--t1) 65%, white);
-  opacity: 0.6;
-}
-.tb-ins--shadow .tb-ins__art { inset: 10cqw 0 26cqw; }
-.tb-ins--shadow .tb-card__mono {
-  color: #000;
-  -webkit-text-stroke: 0.5cqw color-mix(in oklab, var(--t1) 70%, white);
-  text-shadow: 6cqw 1cqw 0 #00000080;
-}
-.tb-ins__west {
-  position: absolute;
-  top: 5cqw;
-  right: 4cqw;
-  z-index: 5;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--t1) 50%, white);
-}
-.tb-ins__noir {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 5;
-  padding: 8cqw 5cqw 4cqw;
-  background: linear-gradient(180deg, transparent, #000 42%);
-  color: #f4f2ea;
-  text-align: center;
-}
-.tb-ins__noir > div {
-  padding: 1.4cqw 0;
-  border-block: 0.3cqw solid #f4f2ea66;
-  font-weight: 600;
-  font-stretch: 90%;
-  line-height: 1.1;
-  letter-spacing: 0.3em;
-}
-.tb-ins__noir > span {
-  justify-content: center;
-  letter-spacing: 0.3em;
-  color: #aab4cc;
-}
-.tb-ins__noir .tb-ins__serial { margin-left: 0; }
-
-/* 8. Stone Fortress: carved set name, a shield, the name cut into a slab */
-.tb-ins__carve {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 72%;
-  line-height: 0.92;
-  text-transform: uppercase;
-  color: #393c42;
-  text-shadow: 0 0.3cqw 0 #ffffff47, 0 -0.3cqw 0 #00000080;
-}
-.tb-ins__carve--set {
-  position: absolute;
-  top: 4.4cqw;
-  right: 4cqw;
-  left: 19cqw;
-  z-index: 5;
-  font-size: 6cqw;
-  letter-spacing: 0.06em;
-  text-align: right;
-}
-.tb-ins--fortress .tb-ins__art { inset: 13cqw 0 27cqw; }
-.tb-ins--fortress .tb-card__mono { color: #d9dce1; text-shadow: 0 0.8cqw 0 #2b2d31; }
-.tb-ins__shield {
-  position: absolute;
-  top: 3cqw;
-  left: 3cqw;
-  z-index: 5;
-  display: flex;
-  width: 14cqw;
-  height: 15.5cqw;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  text-shadow: 0 0.3cqw 0.6cqw #0009;
-}
-.tb-ins__shield svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  fill: var(--t1);
-  stroke: #d8dbe0;
-  stroke-width: 1;
-  filter: drop-shadow(0 0.6cqw 0.8cqw #0009);
-}
-.tb-ins__shield b {
-  position: relative;
-  margin-top: -1cqw;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 75%;
-  font-size: 6.4cqw;
-  line-height: 0.9;
-}
-.tb-ins__shield small { position: relative; }
-.tb-ins__slab {
-  position: absolute;
-  right: 3cqw;
-  bottom: 3cqw;
-  left: 3cqw;
-  z-index: 5;
-  padding: 2.6cqw 3cqw 2.4cqw;
-  border-radius: 0.6cqw;
-  background: linear-gradient(170deg, #a3a7ae, #7a7e86);
-  text-align: center;
-  box-shadow: inset 0 0.5cqw 0 #ffffff38, inset 0 -0.6cqw 0 #0005, 0 1cqw 2cqw #0007;
-}
-.tb-ins__slab > span {
-  justify-content: center;
-  color: #26282c;
-}
-.tb-ins__slab .tb-ins__serial { margin-left: 0; }
-
-/* 9. Cult Classic: fan memorabilia: felt, a sewn pennant, a stitched patch, a chain-stitched name */
-.tb-ins--cult::after {
-  content: "";
-  position: absolute;
-  inset: 1.6cqw;
-  z-index: 6;
-  border: 0.4cqw dashed color-mix(in oklab, #efe4cb 70%, transparent);
-  border-radius: 1.2cqw;
-  pointer-events: none;
-}
-.tb-art__pennant {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 9px;
-  letter-spacing: 0.04em;
-  fill: color-mix(in oklab, var(--t1) 85%, #000);
-  stroke: #efe4cb;
-  stroke-width: 0.35px;
-  paint-order: stroke fill;
-}
-.tb-ins--cult .tb-ins__art { inset: 30cqw 0 30cqw; }
-.tb-ins--cult .tb-card__mono {
-  color: #efe4cb;
-  text-shadow: 0 0.8cqw 0 #0005;
-  font-family: var(--font-hand), cursive;
-  font-weight: 700;
-}
-.tb-ins__patch {
-  position: absolute;
-  top: 25cqw;
-  right: 4cqw;
-  z-index: 5;
-  display: flex;
-  width: 17cqw;
-  aspect-ratio: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #efe4cb;
-  color: color-mix(in oklab, var(--t1) 85%, #000);
-  box-shadow:
-    0 0 0 0.9cqw var(--t2),
-    0 0.8cqw 1.6cqw #0007;
-  outline: 0.35cqw dashed color-mix(in oklab, var(--t1) 60%, transparent);
-  outline-offset: -1.6cqw;
-  text-align: center;
-}
-.tb-ins__patch b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 6.6cqw;
-  line-height: 0.9;
-}
-.tb-ins__patch small {
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.3cqw;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.tb-ins__felt {
+.tb-ins__plate {
   position: absolute;
   right: 4cqw;
   bottom: 4cqw;
   left: 4cqw;
   z-index: 5;
-  padding: 2.4cqw 3cqw 2.6cqw;
-  border-radius: 1cqw;
-  background: #efe4cb;
-  color: color-mix(in oklab, var(--t1) 85%, #000);
-  text-align: center;
-  box-shadow: 0 0.8cqw 1.6cqw #0007;
-  outline: 0.35cqw dashed color-mix(in oklab, var(--t1) 55%, transparent);
-  outline-offset: -1.2cqw;
+  padding: 2cqw 3cqw 2.6cqw;
+  background: #f7f7f4;
+  color: #111;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 4cqw 100%, 0 calc(100% - 4cqw));
 }
-.tb-ins__stitch {
-  font-family: var(--font-hand), cursive;
+.tb-ins__move {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b6f78;
+}
+.tb-ins__move s {
+  text-decoration-color: var(--stamp-ink);
+  text-decoration-thickness: 0.35cqw;
+}
+.tb-ins__move b { color: #111; }
+.tb-ins__move .tb-ins__serial { margin-left: auto; }
+.tb-ins--newblood .tb-ins__name { margin-top: 0.9cqw; }
+
+/* 2. Hard Goodbyes (after the black-border "off the court" cards): spaced name, sepia photo */
+.tb-card[data-type="goodbyes"] .tb-card__frame {
+  background: #0b0b0c;
+  box-shadow: inset 0 0 0 0.6cqw var(--rc);
+  animation: none;
+}
+.tb-ins--goodbyes { background: #0b0b0c; }
+.tb-ins__spaced {
+  position: absolute;
+  top: 4cqw;
+  right: 3cqw;
+  left: 4cqw;
+  z-index: 5;
+  overflow: hidden;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.5em;
+  white-space: nowrap;
+  color: #f4f2ea;
+}
+.tb-ins__caption {
+  position: absolute;
+  top: 10.4cqw;
+  right: 4cqw;
+  z-index: 5;
+  font-family: var(--font-body), sans-serif;
+  font-style: italic;
   font-weight: 700;
-  line-height: 0.95;
-  text-wrap: balance;
-  transform: rotate(-3deg);
-  text-shadow: 0 0.3cqw 0 #0002;
+  font-size: 2.8cqw;
+  letter-spacing: 0.06em;
+  color: #b9b2a6;
 }
-.tb-ins__felt > span {
+.tb-ins__photo {
+  position: absolute;
+  top: 15cqw;
+  right: 4cqw;
+  bottom: 13cqw;
+  left: 4cqw;
+  overflow: hidden;
+  filter: sepia(0.55) contrast(1.05);
+}
+.tb-ins--goodbyes .tb-card__mono {
+  color: transparent;
+  -webkit-text-stroke: 0.5cqw #f4e2c0;
+  text-shadow: none;
+}
+.tb-ins__foot {
+  position: absolute;
+  right: 4cqw;
+  bottom: 4cqw;
+  left: 4cqw;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f4f2ea;
+}
+.tb-ins__foot b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 4.6cqw;
+  letter-spacing: 0;
+}
+.tb-ins__plaque {
+  margin-left: auto;
+  padding: 0.6cqw 1.6cqw;
+  border-radius: 0.4cqw;
+  background: linear-gradient(180deg, #e8c870, #b98a2a);
+  color: #1b1203;
+  font-size: 2.3cqw;
+}
+
+/* 3. Golden Boy (after the gold medal foils): engraved gold, medallion rating, black tablet */
+.tb-art__ring {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 4.3px;
+  letter-spacing: 0.55px;
+  fill: #7a5408;
+}
+.tb-ins--goldenboy .tb-ins__art { inset: 8cqw 0 26cqw; }
+.tb-ins--goldenboy .tb-card__mono { color: #7a5408; text-shadow: 0 0.5cqw 0 #fff3c4; }
+.tb-ins__medal {
+  position: absolute;
+  top: 3cqw;
+  left: 3cqw;
+  z-index: 5;
+  display: flex;
+  width: 15cqw;
+  aspect-ratio: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3c4, #d6a11a 55%, #8a6206);
+  color: #3a2603;
+  box-shadow: 0 0.6cqw 1.2cqw #0006, inset 0 0 0 0.5cqw #7a5408;
+}
+.tb-ins__medal b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 6.2cqw;
+  line-height: 0.9;
+}
+.tb-ins__tablet {
+  position: absolute;
+  right: 4cqw;
+  bottom: 4cqw;
+  z-index: 5;
+  min-width: 52cqw;
+  max-width: 82cqw;
+  padding: 2.2cqw 3cqw 2.4cqw;
+  border: 0.5cqw solid #c99a2e;
+  background: #121009;
+  color: #f3d27a;
+  text-align: right;
+  box-shadow: 0 1cqw 2cqw #0007;
+}
+.tb-ins__tablet > span {
+  display: block;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #d9c08a;
+}
+.tb-ins__tablet > b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 68%;
+  line-height: 0.9;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.tb-ins__tablet > small {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.2cqw;
+  margin-top: 1cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #b8a272;
+}
+
+/* 4. Generational (after the comic-burst inserts): brush-script logo, headline sticker */
+.tb-ins--generational .tb-ins__art { inset: 15cqw 0 30cqw; }
+.tb-ins--generational .tb-card__mono {
+  color: #fff;
+  -webkit-text-stroke: 0.8cqw #111;
+  paint-order: stroke fill;
+  text-shadow: none;
+}
+.tb-ins__script {
+  position: absolute;
+  top: 2cqw;
+  right: 2cqw;
+  left: 2cqw;
+  z-index: 5;
+  font-family: var(--font-script), cursive;
+  font-size: 15cqw;
+  line-height: 1.05;
+  text-align: center;
+  color: #fff;
+  -webkit-text-stroke: 1.6cqw #111;
+  paint-order: stroke fill;
+  transform: rotate(-6deg);
+  filter: drop-shadow(0 0.8cqw 0.2cqw #0009);
+}
+.tb-ins__sticker {
+  position: absolute;
+  top: 54cqw;
+  right: 3cqw;
+  z-index: 5;
+  max-width: 30cqw;
+  padding: 1.8cqw 2.2cqw;
+  border: 0.7cqw solid #111;
+  border-radius: 1cqw;
+  background: #ffd23f;
+  color: #111;
+  text-align: center;
+  transform: rotate(8deg);
+  box-shadow: 0 0.8cqw 1.4cqw #0007;
+}
+.tb-ins__sticker b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 6.4cqw;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+.tb-ins__ovrchip {
+  position: absolute;
+  top: 24cqw;
+  left: 3cqw;
+  z-index: 5;
+  padding: 0.8cqw 1.8cqw;
+  border-radius: 99px;
+  background: #111;
+  color: #ffd23f;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 5cqw;
+}
+.tb-ins__ovrchip small {
+  font-family: var(--font-body), sans-serif;
+  font-size: 2.2cqw;
+  letter-spacing: 0.12em;
+  color: #fff;
+}
+.tb-ins__bottom {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 5;
+  padding: 6cqw 4cqw 3.4cqw;
+  background: linear-gradient(180deg, transparent, #000000e0 40%);
+  color: #fff;
+}
+.tb-ins__kicker {
+  margin-top: 0.9cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.5cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffd23f;
+}
+.tb-ins__box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1cqw 2.4cqw;
+  margin-top: 1cqw;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 800;
+  font-size: 2.4cqw;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #d8d8d8;
+  font-variant-numeric: tabular-nums;
+}
+.tb-ins__box b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 4.2cqw;
+  letter-spacing: 0;
+  color: #fff;
+}
+
+/* 5. Ultimate Stardom (after the cosmic line-frame inserts): arch-framed art, spaced title */
+.tb-ins--stardom .tb-ins__art {
+  inset: 13cqw 9cqw 22cqw;
+  overflow: hidden;
+  border-radius: 40cqw 40cqw 0 0 / 34cqw 34cqw 0 0;
+}
+.tb-ins--stardom .tb-card__mono { color: #e8f1ff; text-shadow: 0 0 3cqw #8fb8ff; }
+.tb-ins__cosmos {
+  position: absolute;
+  top: 4.6cqw;
+  right: 0;
+  left: 0;
+  z-index: 5;
+  text-align: center;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 300;
+  font-stretch: 115%;
+  font-size: 3.4cqw;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #e8f1ff;
+  text-shadow: 0 0 1.6cqw #8fb8ff;
+}
+.tb-ins__node {
+  position: absolute;
+  bottom: 22cqw;
+  left: 2.4cqw;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 12cqw;
+  aspect-ratio: 1;
+  border: 0.5cqw solid #e8f1ff;
+  border-radius: 50%;
+  background: #05040f;
+  color: #e8f1ff;
+  box-shadow: 0 0 2cqw #8fb8ff88;
+}
+.tb-ins__node b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 5cqw;
+}
+.tb-ins__rail {
+  position: absolute;
+  right: 6cqw;
+  bottom: 4cqw;
+  left: 6cqw;
+  z-index: 5;
+  padding-top: 2cqw;
+  border-top: 0.35cqw solid #e8f1ff99;
+  text-align: center;
+  color: #f4f6ff;
+}
+.tb-ins--stardom .tb-ins__name {
+  font-weight: 700;
+  font-stretch: 115%;
+  line-height: 1.1;
+  letter-spacing: 0.2em;
+}
+.tb-ins__rail > span {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1.2cqw;
+  margin-top: 1cqw;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 700;
+  font-size: 2.4cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #a9b9e0;
+}
+
+/* 6–7. The Light / The Shadow (after the giant-type inserts): a mirrored pair */
+.tb-ins--light { --giant: color-mix(in oklab, var(--t1) 80%, white); --side: var(--ink); --soft: var(--ink-soft); }
+.tb-ins--shadow { --giant: color-mix(in oklab, var(--t1) 50%, #1d1f26); --side: var(--paper); --soft: #9aa3b5; }
+.tb-ins__giant {
+  position: absolute;
+  top: 2cqw;
+  bottom: 2cqw;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  writing-mode: vertical-rl;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 44cqw;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--giant);
+}
+.tb-ins__giant span {
+  font-size: 0.32em;
+  letter-spacing: 0.08em;
+}
+.tb-ins--light .tb-ins__giant { right: -1cqw; }
+.tb-ins--shadow .tb-ins__giant { left: -1cqw; font-size: 38cqw; transform: rotate(180deg); }
+.tb-ins--light .tb-ins__art { inset: 4cqw 4cqw 0 0; }
+.tb-ins--shadow .tb-ins__art { inset: 4cqw 0 0 4cqw; }
+.tb-ins--light .tb-card__mono { color: var(--t1); text-shadow: none; }
+.tb-ins--shadow .tb-card__mono {
+  color: #000;
+  -webkit-text-stroke: 0.5cqw color-mix(in oklab, var(--t1) 70%, white);
+  text-shadow: 6cqw 1cqw 0 #00000080;
+}
+.tb-ins__side {
+  position: absolute;
+  bottom: 4cqw;
+  z-index: 5;
+  display: flex;
+  max-height: 96cqw;
+  gap: 1.4cqw;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.tb-ins--light .tb-ins__side { left: 3.4cqw; }
+.tb-ins--shadow .tb-ins__side { right: 3.4cqw; }
+.tb-ins__side b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 68%;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--side);
+}
+.tb-ins__side span {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.5cqw;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+.tb-ins__dot {
+  position: absolute;
+  bottom: 4cqw;
+  z-index: 5;
+  display: flex;
+  width: 13cqw;
+  aspect-ratio: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--t1);
+  color: #fff;
+  box-shadow: 0 0.6cqw 1.2cqw #0006, inset 0 0 0 0.45cqw #ffffff59;
+}
+.tb-ins--light .tb-ins__dot { right: 4cqw; }
+.tb-ins--shadow .tb-ins__dot { left: 4cqw; }
+.tb-ins__dot b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 5.4cqw;
+  line-height: 0.9;
+}
+.tb-ins__corner {
+  position: absolute;
+  top: 3cqw;
+  z-index: 5;
+  color: var(--side);
+}
+.tb-ins--light .tb-ins__corner { left: 3.4cqw; }
+.tb-ins--shadow .tb-ins__corner { right: 3.4cqw; }
+
+/* 8. Stone Fortress (after the 8-bit inserts): pixel castle, pixel title and DEF stat box */
+.tb-ins--fortress .tb-ins__art { inset: 17cqw 0 22cqw; }
+.tb-ins--fortress .tb-card__mono {
+  font-family: var(--font-pixel), monospace;
+  font-weight: 400;
+  font-size: 16cqw;
+  color: #fff;
+  text-shadow: 0.9cqw 0.9cqw 0 #1b2a52;
+}
+.tb-ins__pixel {
+  position: absolute;
+  top: 4cqw;
+  left: 4cqw;
+  z-index: 5;
+  font-family: var(--font-pixel), monospace;
+  font-size: 4.4cqw;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: #ffe066;
+  text-shadow: 0.6cqw 0.6cqw 0 #1b2a52;
+}
+.tb-ins__def {
+  position: absolute;
+  top: 4cqw;
+  right: 4cqw;
+  z-index: 5;
+  padding: 1.2cqw 1.8cqw 1.4cqw;
+  border: 0.7cqw solid #fff;
+  background: #1b2a52;
+  color: #fff;
+  text-align: center;
+  font-family: var(--font-pixel), monospace;
+  box-shadow: 0 0 0 0.7cqw #1b2a52;
+}
+.tb-ins__def small {
+  display: block;
+  font-size: 1.9cqw;
+  color: #ffe066;
+}
+.tb-ins__def b {
+  display: block;
+  margin-top: 1cqw;
+  font-weight: 400;
+  font-size: 4.8cqw;
+}
+.tb-ins__stone {
+  position: absolute;
+  right: 4cqw;
+  bottom: 4cqw;
+  left: 4cqw;
+  z-index: 5;
+  padding: 2.2cqw 3cqw 2.4cqw;
+  border: 0.8cqw solid #fff;
+  background: #2b2f36;
+  color: #fff;
+  box-shadow: 0 0 0 0.8cqw #2b2f36;
+}
+.tb-ins--fortress .tb-ins__name {
+  font-family: var(--font-pixel), monospace;
+  font-weight: 400;
+  line-height: 1.35;
+}
+.tb-ins__stone > span {
+  display: flex;
+  align-items: center;
   gap: 1.4cqw;
   margin-top: 1.4cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.6cqw;
+  font-size: 2.5cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c9d3e8;
+}
+
+/* 9. Cult Classic (after the late-80s base cards): plain name up top, arched window, team band */
+.tb-ins--cult { background: #f7f5ef; }
+.tb-ins__topname {
+  position: absolute;
+  top: 3.6cqw;
+  right: 4cqw;
+  left: 4cqw;
+  z-index: 5;
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-stretch: 95%;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #141414;
+}
+.tb-ins__arch {
+  position: absolute;
+  top: 12cqw;
+  right: 6cqw;
+  bottom: 24cqw;
+  left: 6cqw;
+  z-index: 2;
+  overflow: hidden;
+  border: 1cqw solid var(--t1);
+  border-radius: 42cqw 42cqw 1cqw 1cqw / 34cqw 34cqw 1cqw 1cqw;
+  background: color-mix(in oklab, var(--t1) 22%, #efeae0);
+}
+.tb-ins--cult .tb-card__mono { color: var(--t1); text-shadow: none; }
+.tb-ins__badge {
+  position: absolute;
+  bottom: 15cqw;
+  left: 4cqw;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 0.8cqw 1.8cqw;
+  border-radius: 0.6cqw;
+  background: #141414;
+  color: #fff;
+}
+.tb-ins__badge small {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.2cqw;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #5b4a37;
 }
-.tb-ins__felt .tb-ins__serial { margin-left: 0; }
+.tb-ins__badge b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 4.6cqw;
+}
+.tb-ins__band {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 4;
+  display: flex;
+  height: 13cqw;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+  padding: 0 4cqw;
+  border-top: 0.8cqw solid var(--t1);
+  background: color-mix(in oklab, var(--t1) 16%, #fbf8f1);
+}
+.tb-ins__band b {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 112%;
+  line-height: 1;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--t1) 85%, #000);
+}
+.tb-ins__band span {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 1.2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #141414;
+}
 
-/* small cards: keep name, rating and the set's wordmark; drop the fine print */
+/* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
 @container (max-width: 170px) {
+  .tb-base__spine span,
+  .tb-base__name > span,
+  .tb-ins__title small,
   .tb-ins__move,
   .tb-ins__caption,
-  .tb-ins__under,
-  .tb-ins__team,
+  .tb-ins__foot,
+  .tb-ins__tablet > small,
+  .tb-ins__tablet > span,
   .tb-ins__kicker,
-  .tb-ins__west,
-  .tb-ins__east,
-  .tb-ins__strip small,
-  .tb-ins__first,
-  .tb-ins__lightname > span,
-  .tb-ins__noir > span,
-  .tb-ins__slab > span,
-  .tb-ins__felt > span,
-  .tb-ins__board span,
-  .tb-ins__marquee span {
+  .tb-ins__box,
+  .tb-ins__rail > span,
+  .tb-ins__side span,
+  .tb-ins__stone > span,
+  .tb-ins__band span,
+  .tb-ins__badge small {
     display: none;
   }
 }
@@ -1756,33 +1524,6 @@ select {
   font-size: 2.8cqw;
   letter-spacing: 0.24em;
   color: var(--muted);
-}
-
-/* small cards (8-up reveal grid, phones): who, OVR, rarity; the fine print goes */
-@container (max-width: 170px) {
-  .tb-card__meta,
-  .tb-card__kicker,
-  .tb-card__mark span,
-  .tb-card__set span,
-  .tb-card__stamp small {
-    display: none;
-  }
-  .tb-card__set {
-    padding: 1.4cqw;
-  }
-  .tb-card__seticon {
-    width: 7cqw;
-    height: 7cqw;
-  }
-  .tb-card__name {
-    font-size: max(7.4cqw, 1em) !important;
-  }
-  .tb-card__plate {
-    min-height: 20cqw;
-  }
-  .tb-card__box span {
-    display: none;
-  }
 }
 
 /* finish overlays */
