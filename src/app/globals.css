@@ -1249,12 +1249,12 @@ select {
   color: #e9c46a;
 }
 .tb-ins__plate-year {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 72%;
-  font-size: 11cqw;
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 11.5cqw;
   line-height: 0.85;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   color: #e9c46a;
   font-variant-numeric: tabular-nums;
 }
