@@ -1,29 +1,15 @@
 "use client";
 
-// Drawn scenes for the card's art panel (viewBox 92 x 102, the panel's own shape).
-// Backdrop sits behind the player, Foreground in front of them. Colours come from the
-// card's CSS variables (--t1 / --t2 / --f1), so every team paints its own scene.
+// Printed and photographic materials for the cards, drawn with SVG filters (grain, torn
+// edges, halftone, lit stone, brushed foil, velvet, light leaks, misregistration) rather
+// than clean vector shapes. Colours come from the card's CSS variables (--t1 / --t2 / --f1).
+//   TeamScene:   the base-set art panel (viewBox 92 x 102)
+//   InsertScene: the whole inside of an insert card (viewBox 92 x 132)
 import type { CSSProperties, ReactNode } from "react";
 
-const W = 92;
-const H = 102;
 const fill = (c: string, opacity?: number): CSSProperties => ({ fill: c, ...(opacity != null ? { opacity } : {}) });
-const stroke = (c: string, w: number, opacity?: number): CSSProperties => ({
-  fill: "none",
-  stroke: c,
-  strokeWidth: w,
-  ...(opacity != null ? { opacity } : {}),
-});
 
-function Svg({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <svg className={className} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden>
-      {children}
-    </svg>
-  );
-}
-
-/** Small deterministic PRNG so scattered stars/embers land the same on every render. */
+/** Small deterministic PRNG so scattered marks land the same on every render. */
 function rand(seed: number) {
   let s = seed >>> 0;
   return () => {
@@ -33,12 +19,401 @@ function rand(seed: number) {
   };
 }
 
-const rays = (cx: number, cy: number, n: number, r: number, spread = 0.5) =>
-  Array.from({ length: n }, (_, i) => {
-    const a = (i / n) * Math.PI * 2;
-    const b = a + ((Math.PI * 2) / n) * spread;
-    return `M${cx} ${cy} L${cx + Math.cos(a) * r} ${cy + Math.sin(a) * r} L${cx + Math.cos(b) * r} ${cy + Math.sin(b) * r} Z`;
-  }).join(" ");
+function Svg({ w, h, children }: { w: number; h: number; children: ReactNode }) {
+  return (
+    <svg className="tb-art" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="xMidYMid slice" aria-hidden>
+      {children}
+    </svg>
+  );
+}
+
+/** Paper/film grain: monochrome noise, laid over a scene at low opacity. */
+function Grain({ id, w, h, opacity = 0.22, freq = 0.95 }: { id: string; w: number; h: number; opacity?: number; freq?: number }) {
+  return (
+    <>
+      <filter id={`${id}-grain`} x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="2" stitchTiles="stitch" />
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+      <rect width={w} height={h} filter={`url(#${id}-grain)`} style={{ opacity, mixBlendMode: "overlay" }} />
+    </>
+  );
+}
+
+/** Rough edges: displaces whatever it is applied to, like torn paper or a worn print. */
+function Rough({ id, scale = 2.4, freq = 0.07 }: { id: string; scale?: number; freq?: number }) {
+  return (
+    <filter id={id} x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="3" result="n" />
+      <feDisplacementMap in="SourceGraphic" in2="n" scale={scale} xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  );
+}
+
+function Vignette({ id, w, h, strength = 0.6 }: { id: string; w: number; h: number; strength?: number }) {
+  return (
+    <>
+      <radialGradient id={`${id}-vig`} cx="0.5" cy="0.45" r="0.75">
+        <stop offset="0.5" stopColor="#000" stopOpacity="0" />
+        <stop offset="1" stopColor="#000" stopOpacity={strength} />
+      </radialGradient>
+      <rect width={w} height={h} fill={`url(#${id}-vig)`} />
+    </>
+  );
+}
+
+// ── base set: a pebbled leather ball, worn halftone slashes, paper grain ──
+
+export function TeamScene({ id }: { id: string }) {
+  const W = 92;
+  const H = 102;
+  return (
+    <Svg w={W} h={H}>
+      <defs>
+        <filter id={`${id}-leather`} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="2" result="n" />
+          <feDiffuseLighting in="n" surfaceScale="1.2" lightingColor="#fff" result="l">
+            <feDistantLight azimuth="235" elevation="55" />
+          </feDiffuseLighting>
+          <feComposite in="l" in2="SourceGraphic" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" />
+        </filter>
+        <pattern id={`${id}-dots`} width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(20)">
+          <circle cx="1.2" cy="1.2" r="0.55" style={fill("var(--t2)")} />
+        </pattern>
+        <clipPath id={`${id}-ball`}>
+          <circle cx="72" cy="22" r="34" />
+        </clipPath>
+        <Rough id={`${id}-rough`} scale={1.6} />
+      </defs>
+      <rect width={W} height={H} style={fill("var(--t1)")} />
+      <rect width={W} height={H} style={fill("#000", 0.16)} />
+      {/* the ball, in leather, a little worn */}
+      <g clipPath={`url(#${id}-ball)`} opacity="0.28">
+        <rect x="30" y="-20" width="80" height="80" style={fill("var(--t2)")} />
+        <rect x="30" y="-20" width="80" height="80" filter={`url(#${id}-leather)`} style={{ mixBlendMode: "multiply" }} />
+        <g filter={`url(#${id}-rough)`} style={{ fill: "none", stroke: "#000", strokeWidth: 1.6 }}>
+          <path d="M72 -14 V58 M36 22 H108 M46 -6 C58 8 58 36 46 50 M98 -6 C86 8 86 36 98 50" />
+        </g>
+      </g>
+      {/* halftone slashes, printed slightly off */}
+      <g filter={`url(#${id}-rough)`}>
+        <path d="M-10 74 L44 42 L52 48 L-2 80 Z" fill={`url(#${id}-dots)`} />
+        <path d="M-10 90 L60 50 L64 56 L-6 96 Z" fill={`url(#${id}-dots)`} opacity="0.6" />
+      </g>
+      <Grain id={id} w={W} h={H} opacity={0.28} />
+    </Svg>
+  );
+}
+
+// ── insert scenes (viewBox 92 x 132: the whole inside of the card) ──
+
+const IW = 92;
+const IH = 132;
+
+/** 1. New Blood: a newspaper transactions page with team colours torn and pasted on. */
+function NewBlood({ id }: { id: string }) {
+  const r = rand(19);
+  const lines: ReactNode[] = [];
+  for (let col = 0; col < 4; col++) {
+    for (let y = 30; y < 128; y += 2.3) {
+      if (r() < 0.06) continue;
+      lines.push(<rect key={`${col}-${y}`} x={3 + col * 22.5} y={y} width={10 + r() * 9.5} height="0.75" />);
+    }
+  }
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <Rough id={`${id}-tear`} scale={4.5} freq={0.09} />
+      </defs>
+      <rect width={IW} height={IH} style={fill("#e8e2d2")} />
+      <g style={fill("#2a2a2a", 0.5)}>{lines}</g>
+      {/* old team: torn off and pasted low, slightly faded */}
+      <g filter={`url(#${id}-tear)`} transform="rotate(-7 20 100)">
+        <path d="M-8 78 L52 70 L56 140 L-8 140 Z" style={fill("#f7f3e8")} />
+        <path d="M-6 80 L50 72.5 L54 140 L-6 140 Z" style={fill("var(--f1)")} />
+      </g>
+      <rect x="-8" y="70" width="64" height="70" transform="rotate(-7 20 100)" style={{ fill: "#e8e2d2", opacity: 0.35, mixBlendMode: "screen" }} />
+      {/* new team: a bigger, fresher piece pasted over the top */}
+      <g filter={`url(#${id}-tear)`} transform="rotate(5 70 60)">
+        <path d="M34 22 L104 18 L104 108 L40 112 Z" style={fill("#f7f3e8")} />
+        <path d="M36 24 L104 20 L104 106 L42 110 Z" style={fill("var(--t1)")} />
+      </g>
+      <Grain id={id} w={IW} h={IH} opacity={0.35} />
+    </Svg>
+  );
+}
+
+/** 2. Hard Goodbyes: an old arena photo, out-of-focus lights, film grain and a vignette. */
+function Goodbyes({ id }: { id: string }) {
+  const r = rand(7);
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <filter id={`${id}-bokeh`} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.6" />
+        </filter>
+        <linearGradient id={`${id}-floor`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#3a2c1f" />
+          <stop offset="1" stopColor="#140f0a" />
+        </linearGradient>
+      </defs>
+      <rect width={IW} height={IH} fill={`url(#${id}-floor)`} />
+      <g filter={`url(#${id}-bokeh)`}>
+        {Array.from({ length: 22 }, (_, i) => (
+          <circle key={i} cx={r() * IW} cy={6 + r() * 60} r={2 + r() * 6} style={fill(r() < 0.3 ? "#ffd9a0" : "#f4e2c0", 0.12 + r() * 0.35)} />
+        ))}
+      </g>
+      <Vignette id={id} w={IW} h={IH} strength={0.75} />
+      <Grain id={id} w={IW} h={IH} opacity={0.5} freq={1.2} />
+    </Svg>
+  );
+}
+
+/** 3. Golden Boy: matte black card stock with a faint brushed sheen; the foil is the wordmark. */
+function GoldenBoy({ id }: { id: string }) {
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <filter id={`${id}-brush`} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.004 0.45" numOctaves="2" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+      </defs>
+      <rect width={IW} height={IH} style={fill("#1b1307")} />
+      <rect width={IW} height={IH} filter={`url(#${id}-brush)`} style={{ opacity: 0.18, mixBlendMode: "screen" }} />
+      <Vignette id={id} w={IW} h={IH} strength={0.55} />
+    </Svg>
+  );
+}
+
+/** Brushed gold foil, as a filter for text: grain stretched one way, mapped to gold. */
+export function FoilFilter({ id }: { id: string }) {
+  return (
+    <filter id={id} x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.55" numOctaves="2" result="n" />
+      <feComponentTransfer in="n" result="g">
+        <feFuncR type="table" tableValues="0.55 1 0.78 1" />
+        <feFuncG type="table" tableValues="0.36 0.86 0.6 0.9" />
+        <feFuncB type="table" tableValues="0.06 0.42 0.18 0.5" />
+        <feFuncA type="table" tableValues="1 1" />
+      </feComponentTransfer>
+      <feComposite in="g" in2="SourceAlpha" operator="in" />
+    </filter>
+  );
+}
+
+/** 4. Generational: a scoreboard face, unlit bulbs everywhere and the number burning amber. */
+function Generational({ id, big }: { id: string; big: string }) {
+  const fs = big.length > 2 ? 54 : 78;
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <pattern id={`${id}-off`} width="1.8" height="1.8" patternUnits="userSpaceOnUse">
+          <circle cx="0.9" cy="0.9" r="0.55" style={fill("#1c1714")} />
+        </pattern>
+        <pattern id={`${id}-on`} width="1.8" height="1.8" patternUnits="userSpaceOnUse">
+          <circle cx="0.9" cy="0.9" r="0.62" style={fill("#ffb12b")} />
+        </pattern>
+        <mask id={`${id}-num`}>
+          <text x="50" y="86" textAnchor="middle" className="tb-art__led" style={{ fontSize: fs, fill: "#fff" }}>
+            {big}
+          </text>
+        </mask>
+        <filter id={`${id}-glow`} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.8" />
+        </filter>
+      </defs>
+      <rect width={IW} height={IH} style={fill("#070605")} />
+      <rect width={IW} height={IH} fill={`url(#${id}-off)`} />
+      <rect width={IW} height={IH} mask={`url(#${id}-num)`} style={fill("#ff8a1f", 0.55)} filter={`url(#${id}-glow)`} />
+      <rect width={IW} height={IH} fill={`url(#${id}-on)`} mask={`url(#${id}-num)`} />
+      <Grain id={id} w={IW} h={IH} opacity={0.18} />
+    </Svg>
+  );
+}
+
+/** 5. Ultimate Stardom: a velvet stage curtain and a follow-spot through the haze. */
+function Stardom({ id }: { id: string }) {
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <filter id={`${id}-velvet`} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.11 0.004" numOctaves="3" result="n" />
+          <feDiffuseLighting in="n" surfaceScale="6" lightingColor="#c4202e" result="l">
+            <feDistantLight azimuth="180" elevation="40" />
+          </feDiffuseLighting>
+        </filter>
+        <filter id={`${id}-haze`} x="-30%" y="-30%" width="160%" height="160%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 0.95  0 0 0 0 0.82  0 0 0 0.9 -0.25" result="smoke" />
+          <feComposite in="smoke" in2="SourceGraphic" operator="in" result="s" />
+          <feGaussianBlur in="s" stdDeviation="2" />
+        </filter>
+        <radialGradient id={`${id}-spot`} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#fff6dc" stopOpacity="0.85" />
+          <stop offset="1" stopColor="#fff6dc" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width={IW} height={IH} style={fill("#3a0509")} />
+      <rect width={IW} height={IH} filter={`url(#${id}-velvet)`} style={{ mixBlendMode: "multiply" }} />
+      <ellipse cx="46" cy="78" rx="40" ry="52" fill={`url(#${id}-spot)`} style={{ mixBlendMode: "screen" }} />
+      <path d="M30 0 L62 0 L86 132 L6 132 Z" filter={`url(#${id}-haze)`} style={fill("#fff")} opacity="0.55" />
+      <Vignette id={id} w={IW} h={IH} strength={0.7} />
+      <Grain id={id} w={IW} h={IH} opacity={0.2} />
+    </Svg>
+  );
+}
+
+/** 6. The Light (East): a sunrise shot straight into the glare: blown highlights, light leaks, flare. */
+function Light({ id }: { id: string }) {
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="color-mix(in oklab, var(--t1) 55%, #1b2a52)" />
+          <stop offset="0.55" stopColor="color-mix(in oklab, var(--t1) 30%, #f2a65a)" />
+          <stop offset="1" stopColor="#fbe3b8" />
+        </linearGradient>
+        <filter id={`${id}-soft`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
+        <filter id={`${id}-softer`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2.4" />
+        </filter>
+      </defs>
+      <rect width={IW} height={IH} fill={`url(#${id}-sky)`} />
+      <g filter={`url(#${id}-soft)`} style={{ mixBlendMode: "screen" }}>
+        <circle cx="66" cy="36" r="22" style={fill("#fff4d6")} />
+        <circle cx="66" cy="36" r="38" style={fill("#ffd38a", 0.55)} />
+        <ellipse cx="-4" cy="104" rx="20" ry="34" style={fill("#ff6a3d", 0.55)} />
+        <ellipse cx="96" cy="120" rx="18" ry="22" style={fill("#ff9bd0", 0.35)} />
+      </g>
+      <g filter={`url(#${id}-softer)`} style={{ mixBlendMode: "screen" }}>
+        <circle cx="50" cy="58" r="4" style={fill("#bfe3ff", 0.4)} />
+        <circle cx="38" cy="76" r="7" style={fill("#ffe6b0", 0.25)} />
+        <circle cx="22" cy="100" r="3" style={fill("#d6c4ff", 0.35)} />
+      </g>
+      <Grain id={id} w={IW} h={IH} opacity={0.32} />
+    </Svg>
+  );
+}
+
+/** 7. The Shadow (West): a dark room, hard light through venetian blinds, a little smoke. */
+function Shadow({ id }: { id: string }) {
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <filter id={`${id}-blind`} x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="2" xChannelSelector="R" yChannelSelector="G" result="d" />
+          <feGaussianBlur in="d" stdDeviation="0.5" />
+        </filter>
+      </defs>
+      <rect width={IW} height={IH} style={fill("#07070b")} />
+      <g filter={`url(#${id}-blind)`} transform="rotate(-24 46 66) skewX(-12)">
+        {Array.from({ length: 9 }, (_, i) => (
+          <rect key={i} x="-40" y={10 + i * 12} width="200" height="6.4" style={fill("color-mix(in oklab, var(--t1) 55%, #ffe9c2)", 0.5 - i * 0.035)} />
+        ))}
+      </g>
+      <Vignette id={id} w={IW} h={IH} strength={0.85} />
+      <Grain id={id} w={IW} h={IH} opacity={0.35} />
+    </Svg>
+  );
+}
+
+/** 8. Stone Fortress: cut stone, lit from the top left, mortar worn in by hand. */
+function Fortress({ id }: { id: string }) {
+  const rows = 9;
+  const mortar: string[] = [];
+  for (let row = 1; row < rows; row++) mortar.push(`M0 ${row * 15} H${IW}`);
+  for (let row = 0; row < rows; row++) {
+    const off = row % 2 ? 13 : 0;
+    for (let x = off + 26; x < IW; x += 26) mortar.push(`M${x} ${row * 15} V${row * 15 + 15}`);
+  }
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <filter id={`${id}-stone`} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="5" result="n" />
+          <feDiffuseLighting in="n" surfaceScale="3.5" lightingColor="#c9ccd2" result="l">
+            <feDistantLight azimuth="225" elevation="48" />
+          </feDiffuseLighting>
+        </filter>
+        <Rough id={`${id}-worn`} scale={2.2} freq={0.12} />
+      </defs>
+      <rect width={IW} height={IH} filter={`url(#${id}-stone)`} />
+      <rect width={IW} height={IH} style={{ fill: "var(--t1)", opacity: 0.12, mixBlendMode: "color" }} />
+      <g filter={`url(#${id}-worn)`} style={{ fill: "none", stroke: "#26282c", strokeWidth: 1.4, opacity: 0.85 }}>
+        <path d={mortar.join(" ")} />
+      </g>
+      <g filter={`url(#${id}-worn)`} style={{ fill: "none", stroke: "#ffffff", strokeWidth: 0.5, opacity: 0.25 }} transform="translate(0.6 0.8)">
+        <path d={mortar.join(" ")} />
+      </g>
+      <Vignette id={id} w={IW} h={IH} strength={0.45} />
+    </Svg>
+  );
+}
+
+/** 9. Cult Classic: a two-ink risograph, halftone shapes hand-cut and printed off-register. */
+function Cult({ id }: { id: string }) {
+  const shapes = (
+    <>
+      <path d="M-6 20 L30 2 L36 40 Z" />
+      <path d="M58 92 L100 76 L96 122 Z" />
+      <path d="M74 14 m-12 0 a12 12 0 1 0 24 0 a12 12 0 1 0 -24 0 m5 0 a7 7 0 1 1 14 0 a7 7 0 1 1 -14 0" fillRule="evenodd" />
+      <path d="M4 66 l6 -6 l6 6 l6 -6 l6 6 l6 -6 l0 4 l-6 6 l-6 -6 l-6 6 l-6 -6 l-6 6 Z" />
+      <circle cx="16" cy="112" r="9" />
+      <path d="M40 124 L92 100 L92 108 L40 132 Z" />
+    </>
+  );
+  return (
+    <Svg w={IW} h={IH}>
+      <defs>
+        <pattern id={`${id}-h1`} width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+          <circle cx="1.3" cy="1.3" r="0.95" style={fill("var(--t1)")} />
+        </pattern>
+        <pattern id={`${id}-h2`} width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
+          <circle cx="1.3" cy="1.3" r="0.95" style={fill("#14a8a0")} />
+        </pattern>
+        <Rough id={`${id}-cut`} scale={2.8} freq={0.08} />
+      </defs>
+      <rect width={IW} height={IH} style={fill("#f2e9d4")} />
+      <g filter={`url(#${id}-cut)`} fill={`url(#${id}-h2)`} style={{ mixBlendMode: "multiply" }} transform="translate(1.4 1)">
+        {shapes}
+      </g>
+      <g filter={`url(#${id}-cut)`} fill={`url(#${id}-h1)`} style={{ mixBlendMode: "multiply" }}>
+        {shapes}
+      </g>
+      <Grain id={id} w={IW} h={IH} opacity={0.4} freq={1.3} />
+    </Svg>
+  );
+}
+
+/** The material behind an insert card, by set. */
+export function InsertScene({ type, id, big }: { type: string; id: string; big: string }) {
+  switch (type) {
+    case "newblood":
+      return <NewBlood id={id} />;
+    case "goodbyes":
+      return <Goodbyes id={id} />;
+    case "goldenboy":
+      return <GoldenBoy id={id} />;
+    case "generational":
+      return <Generational id={id} big={big} />;
+    case "stardom":
+      return <Stardom id={id} />;
+    case "light":
+      return <Light id={id} />;
+    case "shadow":
+      return <Shadow id={id} />;
+    case "fortress":
+      return <Fortress id={id} />;
+    case "cult":
+      return <Cult id={id} />;
+    default:
+      return null;
+  }
+}
 
 const starPath = (cx: number, cy: number, R: number, r: number, points = 5) =>
   Array.from({ length: points * 2 }, (_, i) => {
@@ -47,356 +422,7 @@ const starPath = (cx: number, cy: number, R: number, r: number, points = 5) =>
     return `${i ? "L" : "M"}${(cx + Math.cos(a) * rad).toFixed(2)} ${(cy + Math.sin(a) * rad).toFixed(2)}`;
   }).join(" ") + " Z";
 
-const sparkle = (x: number, y: number, s: number) =>
-  `M${x} ${y - s} Q${x} ${y} ${x + s} ${y} Q${x} ${y} ${x} ${y + s} Q${x} ${y} ${x - s} ${y} Q${x} ${y} ${x} ${y - s} Z`;
-
-// The flame line, tongues of uneven height across the panel floor.
-const FLAMES =
-  "M0 102 L0 84 C5 78 4 70 9 63 C11 71 15 74 16 80 C19 70 24 65 23 54 C30 63 32 71 31 80 C35 73 39 71 40 62 C45 71 46 78 45 84 C49 77 54 75 55 66 C60 75 60 81 59 86 C64 79 68 77 68 68 C74 77 75 84 73 88 C78 83 82 81 83 72 C88 79 90 85 92 87 L92 102 Z";
-
-// ── base set: team colours, a drawn ball, speed slashes, halftone ──
-
-function TeamScene({ id }: { id: string }) {
-  return (
-    <Svg className="tb-art">
-      <defs>
-        <pattern id={`${id}-dots`} width="3" height="3" patternUnits="userSpaceOnUse">
-          <circle cx="1.5" cy="1.5" r="0.55" style={fill("#000", 0.18)} />
-        </pattern>
-        <linearGradient id={`${id}-fade`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0.45" stopColor="#fff" stopOpacity="0" />
-          <stop offset="1" stopColor="#fff" stopOpacity="1" />
-        </linearGradient>
-        <mask id={`${id}-m`}>
-          <rect width={W} height={H} fill={`url(#${id}-fade)`} />
-        </mask>
-      </defs>
-      <rect width={W} height={H} style={fill("var(--t1)")} />
-      <rect width={W} height={H} style={fill("#000", 0.18)} />
-      {/* the ball, top right, seams and all */}
-      <g style={stroke("var(--t2)", 2.2, 0.32)}>
-        <circle cx="70" cy="26" r="36" />
-        <path d="M70 -10 V62 M34 26 H106" />
-        <path d="M44 0 C58 14 58 38 44 52 M96 0 C82 14 82 38 96 52" />
-      </g>
-      {/* speed slashes */}
-      <g style={fill("var(--t2)", 0.55)}>
-        <path d="M-10 70 L40 40 L46 46 L-4 76 Z" />
-        <path d="M-10 84 L52 48 L56 53 L-6 89 Z" style={fill("var(--t2)", 0.35)} />
-        <path d="M-10 96 L64 54 L67 58 L-8 100 Z" style={fill("var(--t2)", 0.22)} />
-      </g>
-      <rect width={W} height={H} fill={`url(#${id}-dots)`} mask={`url(#${id}-m)`} />
-    </Svg>
-  );
-}
-
-// ── 1. New Blood: a jersey torn down a seam, old colours left, new right ──
-
-const SEAM = "M46 0 L52 9 L44 20 L55 31 L45 44 L56 56 L46 70 L57 83 L48 102";
-
-function NewBlood({ id }: { id: string }) {
-  return (
-    <Svg className="tb-art">
-      <defs>
-        <pattern id={`${id}-hatch`} width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="0.9" height="2.6" style={fill("#000", 0.22)} />
-        </pattern>
-        <pattern id={`${id}-chev`} width="12" height="12" patternUnits="userSpaceOnUse">
-          <path d="M3 2 L9 6 L3 10" style={stroke("var(--t2)", 2, 0.45)} />
-        </pattern>
-      </defs>
-      <rect width={W} height={H} style={fill("var(--f1)")} />
-      <rect width={W} height={H} style={{ fill: "#808080", mixBlendMode: "saturation", opacity: 0.75 }} />
-      <rect width={W} height={H} fill={`url(#${id}-hatch)`} />
-      <path d={`${SEAM} L92 102 L92 0 Z`} style={fill("var(--t1)")} />
-      <path d={`${SEAM} L92 102 L92 0 Z`} fill={`url(#${id}-chev)`} />
-      <path d={SEAM} style={stroke("#f7f7f2", 1.6)} />
-      <path d={SEAM} transform="translate(-1.6 0)" style={stroke("#000", 0.8, 0.35)} />
-    </Svg>
-  );
-}
-
-// ── 2. Hard Goodbyes: a banner raised to the rafters under one spotlight ──
-
-function Goodbyes({ id, banner }: { id: string; banner: string }) {
-  const r = rand(7);
-  return (
-    <Svg className="tb-art">
-      <defs>
-        <linearGradient id={`${id}-beam`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f4e2b8" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#f4e2b8" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <rect width={W} height={H} style={fill("#1c1712")} />
-      {/* roof trusses */}
-      <g style={stroke("#4a3f33", 1)}>
-        <path d="M0 5 H92 M0 15 H92" />
-        <path d={Array.from({ length: 12 }, (_, i) => `M${i * 8} 5 L${i * 8 + 4} 15 L${i * 8 + 8} 5`).join(" ")} />
-      </g>
-      <path d="M38 15 L54 15 L82 102 L10 102 Z" fill={`url(#${id}-beam)`} />
-      {/* the banner */}
-      <path d="M46 15 V20" style={stroke("#8c7a60", 0.6)} />
-      <path d="M31 20 H61 V60 L46 68 L31 60 Z" style={fill("var(--t1)")} />
-      <path d="M31 20 H61 V60 L46 68 L31 60 Z" style={fill("#3b2a1a", 0.35)} />
-      <path d="M33 22 H59 V59 L46 65.5 L33 59 Z" style={stroke("#e9d3a8", 0.6)} />
-      <text x="46" y="45" textAnchor="middle" className="tb-art__banner">
-        {banner}
-      </text>
-      <text x="46" y="54" textAnchor="middle" className="tb-art__banner-sub">
-        THANK YOU
-      </text>
-      {/* dust in the light */}
-      <g style={fill("#f4e2b8", 0.5)}>
-        {Array.from({ length: 22 }, (_, i) => (
-          <circle key={i} cx={30 + r() * 34} cy={20 + r() * 80} r={0.25 + r() * 0.45} />
-        ))}
-      </g>
-    </Svg>
-  );
-}
-
-// ── 3. Golden Boy: a gold burst, a halo, sparkles ──
-
-function GoldenBoy() {
-  return (
-    <Svg className="tb-art">
-      <rect width={W} height={H} style={fill("#b5790c")} />
-      <path d={rays(46, 40, 28, 140)} style={fill("#f5c542")} />
-      <circle cx="46" cy="40" r="30" style={fill("#fff2c2", 0.35)} />
-      <circle cx="46" cy="36" r="21" style={stroke("#fff6cf", 1.6, 0.9)} />
-      <circle cx="46" cy="36" r="25" style={{ ...stroke("#fff6cf", 0.7, 0.7), strokeDasharray: "1.4 2.2" }} />
-      <g style={fill("#fffbe8")}>
-        <path d={sparkle(14, 18, 4)} />
-        <path d={sparkle(78, 14, 3)} />
-        <path d={sparkle(82, 58, 2.4)} />
-        <path d={sparkle(9, 62, 2)} />
-      </g>
-    </Svg>
-  );
-}
-
-function GoldenBoyFront() {
-  return (
-    <Svg className="tb-art is-front">
-      <g style={fill("#fffbe8")}>
-        <path d={sparkle(70, 30, 2.6)} />
-        <path d={sparkle(20, 44, 1.8)} />
-      </g>
-    </Svg>
-  );
-}
-
-// ── 4. Generational: the number, giant, and the floor on fire ──
-
-function Generational({ id, big }: { id: string; big: string }) {
-  const r = rand(83);
-  return (
-    <Svg className="tb-art">
-      <defs>
-        <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#120404" />
-          <stop offset="1" stopColor="#4a0d06" />
-        </linearGradient>
-      </defs>
-      <rect width={W} height={H} fill={`url(#${id}-sky)`} />
-      <text x="46" y="74" textAnchor="middle" className="tb-art__big" style={{ fontSize: big.length > 2 ? 52 : 74 }}>
-        {big}
-      </text>
-      <g style={fill("#ffb12b")}>
-        {Array.from({ length: 26 }, (_, i) => (
-          <circle key={i} cx={r() * W} cy={20 + r() * 70} r={0.3 + r() * 0.6} opacity={0.3 + r() * 0.6} />
-        ))}
-      </g>
-      <path d={FLAMES} transform="translate(0 -14) scale(1 1.1)" style={fill("#8a1408")} />
-    </Svg>
-  );
-}
-
-function GenerationalFront() {
-  return (
-    <Svg className="tb-art is-front">
-      <path d={FLAMES} style={fill("#e8331c")} />
-      <path d={FLAMES} transform="translate(4 8) scale(0.92 0.9)" style={fill("#ff8a1f")} />
-      <path d={FLAMES} transform="translate(10 16) scale(0.8 0.82)" style={fill("#ffd23f")} />
-    </Svg>
-  );
-}
-
-// ── 5. Ultimate Stardom: night sky, two spotlights, a star on the walk ──
-
-function Stardom({ id }: { id: string }) {
-  const r = rand(11);
-  return (
-    <Svg className="tb-art">
-      <defs>
-        <linearGradient id={`${id}-spot`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fff3c4" stopOpacity="0.6" />
-          <stop offset="1" stopColor="#fff3c4" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <rect width={W} height={H} style={fill("#0a0820")} />
-      <g style={fill("#ffffff")}>
-        {Array.from({ length: 40 }, (_, i) => (
-          <circle key={i} cx={r() * W} cy={r() * H} r={0.2 + r() * 0.5} opacity={0.3 + r() * 0.7} />
-        ))}
-      </g>
-      <path d="M2 102 L-6 102 L20 0 L28 0 Z" fill={`url(#${id}-spot)`} transform="rotate(-14 10 102)" />
-      <path d="M90 102 L98 102 L72 0 L64 0 Z" fill={`url(#${id}-spot)`} transform="rotate(14 82 102)" />
-      <path d={starPath(46, 50, 34, 14)} style={fill("#2a1f5c")} />
-      <path d={starPath(46, 50, 34, 14)} style={stroke("#e8b83a", 1.4)} />
-      <path d={starPath(46, 50, 30, 12)} style={stroke("#e8b83a", 0.5, 0.6)} />
-    </Svg>
-  );
-}
-
-// ── 6. The Light (East): the sun coming up over the court ──
-
-function Light() {
-  const lines = Array.from({ length: 9 }, (_, i) => -60 + i * 26);
-  return (
-    <Svg className="tb-art">
-      <rect width={W} height={H} style={fill("color-mix(in oklab, var(--t1) 30%, #fff4dc)")} />
-      <path d={rays(46, 72, 20, 130, 0.45)} style={fill("#ffffff", 0.55)} />
-      <circle cx="46" cy="72" r="22" style={fill("#fff7df")} />
-      <circle cx="46" cy="72" r="22" style={stroke("color-mix(in oklab, var(--t1) 60%, #f5c542)", 1.2)} />
-      {/* the floor: court lines running to the horizon */}
-      <rect y="72" width={W} height="30" style={fill("color-mix(in oklab, var(--t1) 55%, #e8c890)")} />
-      <g style={stroke("#ffffff", 0.7, 0.7)}>
-        {lines.map((x) => (
-          <path key={x} d={`M46 72 L${x} 102`} />
-        ))}
-        <path d="M0 80 H92 M0 90 H92" />
-      </g>
-      <path d="M0 72 H92" style={stroke("#ffffff", 1.2)} />
-    </Svg>
-  );
-}
-
-// ── 7. The Shadow (West): an eclipse at dusk ──
-
-function Shadow({ id }: { id: string }) {
-  return (
-    <Svg className="tb-art">
-      <defs>
-        <linearGradient id={`${id}-dusk`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#06060c" />
-          <stop offset="0.7" stopColor="#1a1430" />
-          <stop offset="1" stopColor="color-mix(in oklab, var(--t1) 45%, #1a1430)" />
-        </linearGradient>
-        <filter id={`${id}-blur`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="2.2" />
-        </filter>
-      </defs>
-      <rect width={W} height={H} fill={`url(#${id}-dusk)`} />
-      <circle cx="46" cy="36" r="25" filter={`url(#${id}-blur)`} style={stroke("color-mix(in oklab, var(--t1) 70%, white)", 4, 0.9)} />
-      <circle cx="46" cy="36" r="24" style={fill("#030305")} />
-      <circle cx="46" cy="36" r="24" style={stroke("color-mix(in oklab, var(--t1) 60%, white)", 0.6)} />
-      <g style={fill("#000", 0.35)}>
-        <path d="M-10 102 L40 60 L52 60 L10 102 Z" />
-        <path d="M30 102 L64 72 L72 72 L46 102 Z" />
-      </g>
-    </Svg>
-  );
-}
-
-// ── 8. Stone Fortress: a stone wall, a shield, battlements in front ──
-
-function Fortress() {
-  const r = rand(5);
-  const greys = ["#7d818a", "#737780", "#868a93", "#6c7078"];
-  const bricks: ReactNode[] = [];
-  for (let row = 0; row < 13; row++) {
-    const off = row % 2 ? -8 : 0;
-    for (let x = off; x < W; x += 16) {
-      bricks.push(<rect key={`${row}-${x}`} x={x + 0.4} y={row * 8 + 0.4} width="15.2" height="7.2" rx="0.6" style={fill(greys[Math.floor(r() * 4)])} />);
-    }
-  }
-  return (
-    <Svg className="tb-art">
-      <rect width={W} height={H} style={fill("#3d4047")} />
-      {bricks}
-      <path d="M46 20 L72 27 L72 52 C72 70 60 81 46 88 C32 81 20 70 20 52 L20 27 Z" style={fill("var(--t1)")} />
-      <path d="M46 20 L72 27 L72 52 C72 70 60 81 46 88 C32 81 20 70 20 52 L20 27 Z" style={stroke("#d8dbe0", 1.6)} />
-      <path d="M20 40 L46 54 L72 40 L72 47 L46 61 L20 47 Z" style={fill("var(--t2)", 0.9)} />
-    </Svg>
-  );
-}
-
-function FortressFront() {
-  const merlon = Array.from({ length: 8 }, (_, i) => `M${i * 12} 0 H${i * 12 + 8} V9 H${i * 12} Z`).join(" ");
-  return (
-    <Svg className="tb-art is-front">
-      <path d={`M0 0 H${W} V4 H0 Z ${merlon}`} style={fill("#4b4f57")} />
-      <path d={`M0 4 H${W}`} style={stroke("#2b2d31", 0.6)} />
-    </Svg>
-  );
-}
-
-// ── 9. Cult Classic: a 90s card pattern, shapes and squiggles on cream ──
-
-function Cult({ id }: { id: string }) {
-  return (
-    <Svg className="tb-art">
-      <defs>
-        <pattern id={`${id}-half`} width="3.2" height="3.2" patternUnits="userSpaceOnUse">
-          <circle cx="1.6" cy="1.6" r="0.7" style={fill("var(--t1)", 0.22)} />
-        </pattern>
-      </defs>
-      <rect width={W} height={H} style={fill("#f4ecd8")} />
-      <rect width={W} height={H} fill={`url(#${id}-half)`} />
-      <path d="M-4 30 L28 6 L36 38 Z" style={fill("#1fb5ad")} />
-      <path d="M62 70 L98 56 L92 96 Z" style={fill("#6b3fa0")} />
-      <circle cx="78" cy="20" r="11" style={stroke("var(--t1)", 3.4)} />
-      <circle cx="14" cy="84" r="7" style={fill("var(--t2)")} />
-      <path d="M8 56 l6 -6 l6 6 l6 -6 l6 6 l6 -6" style={stroke("#f2b33d", 2.6)} />
-      <path d="M54 8 l4 0 m-2 -2 l0 4 M86 46 l4 0 m-2 -2 l0 4 M30 96 l4 0 m-2 -2 l0 4" style={stroke("#14213d", 1.4)} />
-      <path d="M0 100 L92 66 L92 74 L0 108 Z" style={fill("var(--t1)", 0.9)} />
-    </Svg>
-  );
-}
-
-/** The scene behind the player. */
-export function Backdrop({ type, id, initials, title }: { type: string; id: string; initials: string; title?: string }) {
-  switch (type) {
-    case "newblood":
-      return <NewBlood id={id} />;
-    case "goodbyes":
-      return <Goodbyes id={id} banner={initials} />;
-    case "goldenboy":
-      return <GoldenBoy />;
-    case "generational":
-      return <Generational id={id} big={title?.match(/\d+/)?.[0] ?? initials} />;
-    case "stardom":
-      return <Stardom id={id} />;
-    case "light":
-      return <Light />;
-    case "shadow":
-      return <Shadow id={id} />;
-    case "fortress":
-      return <Fortress />;
-    case "cult":
-      return <Cult id={id} />;
-    default:
-      return <TeamScene id={id} />;
-  }
-}
-
-/** Scene pieces that sit in front of the player. */
-export function Foreground({ type }: { type: string }) {
-  switch (type) {
-    case "generational":
-      return <GenerationalFront />;
-    case "fortress":
-      return <FortressFront />;
-    case "goldenboy":
-      return <GoldenBoyFront />;
-    default:
-      return null;
-  }
-}
-
-/** Small set marks for the top-right corner. */
+/** Small set marks (binder headers, card badges). */
 export function SetIcon({ type }: { type: string }) {
   const s = (d: ReactNode) => (
     <svg viewBox="0 0 24 24" className="tb-card__seticon" aria-hidden>
@@ -417,16 +443,15 @@ export function SetIcon({ type }: { type: string }) {
         </>,
       );
     case "shadow":
-      return s(
-        <>
-          <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
-          <circle cx="12" cy="12" r="6.5" fill="currentColor" />
-        </>,
-      );
+      return s(<path d="M3 6 H21 M3 10 H21 M3 14 H21 M3 18 H21" stroke="currentColor" strokeWidth="2.4" />);
     case "fortress":
       return s(<path d="M12 2 L21 5 V11 C21 17 17 20.5 12 22 C7 20.5 3 17 3 11 V5 Z" fill="currentColor" />);
     case "generational":
-      return s(<path d="M12 2 C14 7 19 9 18 15 C17.5 19 15 22 12 22 C8 22 5.5 19 6 15 C6.5 12 9 11 9 8 C11 9.5 12 7 12 2 Z" fill="currentColor" />);
+      return s(
+        <g fill="currentColor">
+          {[4, 8, 12, 16, 20].flatMap((x) => [4, 8, 12, 16, 20].map((y) => <circle key={`${x}${y}`} cx={x} cy={y} r={(x + y) % 8 ? 1.6 : 1} />))}
+        </g>,
+      );
     case "newblood":
       return s(<path d="M3 12 H17 M12 6 L18 12 L12 18" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />);
     case "goodbyes":
@@ -437,5 +462,3 @@ export function SetIcon({ type }: { type: string }) {
       return null;
   }
 }
-
-export { W as ART_W, H as ART_H };

@@ -629,147 +629,914 @@ select {
   color: #ffd9a0;
 }
 
-/* ── insert sets: logo, nameplate and the odd scene piece in each set's own ink ── */
-
-/* 1. New Blood: a contract stamp on the torn jersey */
-.tb-card[data-type="newblood"] .tb-card__set { --set-bg: var(--paper); --set-fg: var(--stamp-ink); font-style: italic; }
-.tb-card[data-type="newblood"] .tb-card__stamp {
+/* ── insert sets: each owns its layout (InsertCard.tsx) over its printed material (CardArt.tsx).
+   The parallel border stays (thinner) so rarity still reads at a glance.               ── */
+.tb-card[data-insert] .tb-card__frame {
+  grid-template-rows: minmax(0, 1fr);
+  padding: 3cqw;
+}
+.tb-ins {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 2cqw;
+  background: #111;
+}
+.tb-ins > .tb-art {
+  z-index: 0;
+}
+.tb-ins__art {
   position: absolute;
-  right: 4cqw;
-  bottom: 14cqw;
-  z-index: 4;
-  padding: 1cqw 2.6cqw 1.2cqw;
-  border: 1cqw double var(--stamp-ink);
-  border-radius: 1cqw;
-  background: #f7f7f2e6;
-  color: var(--stamp-ink);
-  transform: rotate(-12deg);
+  inset: 0;
+  z-index: 2;
+}
+.tb-ins .tb-card__mono {
+  padding-top: 0;
+  font-size: 30cqw;
+}
+.tb-art__led {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+}
+.tb-ins__serial {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 1cqw;
+  margin-left: auto;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.tb-ins__serial b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 80%;
-  font-size: 6.4cqw;
-  line-height: 1;
-  text-align: center;
-  text-transform: uppercase;
-  box-shadow: 0 0.6cqw 1.2cqw #00000059;
+  font-size: 3.4cqw;
 }
-.tb-card[data-type="newblood"] .tb-card__stamp small {
+.tb-ins__serial i {
+  padding: 0 0.9cqw;
+  border: 0.3cqw solid currentColor;
+  border-radius: 0.5cqw;
+  font-style: normal;
+}
+.tb-ins__serial i.is-gem {
+  border-color: var(--r-legendary);
+  background: var(--r-legendary);
+  color: var(--ink);
+}
+/* the shared plain OVR (The Light, The Shadow) */
+.tb-ins__plainovr {
+  position: absolute;
+  top: 4cqw;
+  left: 4cqw;
+  z-index: 5;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0.4cqw 1.2cqw #0009;
+}
+.tb-ins__plainovr b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: 10cqw;
+  line-height: 0.9;
+}
+.tb-ins__plainovr small,
+.tb-ins__stampovr small,
+.tb-ins__ledovr small,
+.tb-ins__shield small {
   display: block;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
-  font-size: 2.3cqw;
+  font-weight: 800;
+  font-size: 2.4cqw;
   letter-spacing: 0.14em;
-}
-.tb-card[data-type="newblood"] .tb-card__plate::before {
-  background: linear-gradient(90deg, var(--f1) 0 45%, var(--paper) 45% 48%, var(--t1) 48%);
+  text-transform: uppercase;
 }
 
-/* 2. Hard Goodbyes: sepia, film grain, the banner says it */
-.tb-card[data-type="goodbyes"] {
-  --plate: linear-gradient(180deg, #241d16, #15110d);
-  --plate-ink: #e9d3a8;
-  --plate-soft: #b09a76;
-}
-.tb-card[data-type="goodbyes"] .tb-card__panel::after {
-  content: "";
+/* 1. New Blood: newsprint, a torn label, a stamped rating, the name as a headline */
+.tb-ins--newblood .tb-ins__art { inset: 13cqw 0 31cqw; }
+.tb-ins--newblood .tb-card__mono { color: #fff; text-shadow: 0 1cqw 0 #0006; }
+.tb-ins__strip {
   position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background:
-    radial-gradient(circle, #ffffff0a 0 0.2cqw, transparent 0.3cqw) 0 0 / 1.3cqw 1.3cqw,
-    radial-gradient(120% 90% at 50% 40%, transparent 55%, #000000a6);
+  top: 3.4cqw;
+  left: -2cqw;
+  z-index: 5;
+  padding: 1.6cqw 4.4cqw 1.4cqw 5.4cqw;
+  background: #121212;
+  color: #f7f3e8;
+  transform: rotate(-2.5deg);
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: 7.6cqw;
+  line-height: 0.95;
+  text-transform: uppercase;
+  box-shadow: 0 0.8cqw 1.4cqw #0006;
 }
-.tb-card[data-type="goodbyes"] .tb-card__splash { filter: sepia(0.65) saturate(0.75) contrast(1.05); }
-.tb-card[data-type="goodbyes"] .tb-card__set { --set-bg: #15110d; --set-fg: #e9d3a8; border: 0.4cqw solid #e9d3a8; }
+.tb-ins__strip small {
+  display: block;
+  margin-top: 0.4cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.22em;
+  color: #bdb6a4;
+}
+.tb-ins__stampovr {
+  position: absolute;
+  top: 4cqw;
+  right: 4cqw;
+  z-index: 5;
+  display: grid;
+  place-content: center;
+  width: 16cqw;
+  aspect-ratio: 1;
+  border: 1cqw double var(--stamp-ink);
+  border-radius: 50%;
+  background: #f7f3e8d9;
+  color: var(--stamp-ink);
+  text-align: center;
+  transform: rotate(11deg);
+}
+.tb-ins__stampovr b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 7cqw;
+  line-height: 0.9;
+}
+.tb-ins__news {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 5;
+  padding: 3cqw 4cqw 3.4cqw;
+  border-top: 0.6cqw solid #121212;
+  background: #f2ecdc;
+  color: #121212;
+  box-shadow: 0 -1cqw 2cqw #0005;
+}
+.tb-ins__headline {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 64%;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.tb-ins__move {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  margin-top: 1.8cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.8cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tb-ins__move span {
+  padding: 0.6cqw 1.6cqw;
+  border-radius: 0.4cqw;
+  color: #fff;
+  text-shadow: 0 0 0.4cqw #000c;
+}
+.tb-ins__move i {
+  font-style: normal;
+}
 
-/* 3. Golden Boy: gold on gold, dark ink nameplate with gold letters */
-.tb-card[data-type="goldenboy"] {
-  --plate: linear-gradient(180deg, #2f1f02, #1a1101);
-  --plate-ink: #f5c542;
-  --plate-soft: #d8b469;
-}
-.tb-card[data-type="goldenboy"] .tb-card__mono { color: #fffbe8; text-shadow: 0 1cqw 0 #7a4e05; }
-.tb-card[data-type="goldenboy"] .tb-card__set { --set-bg: #2f1f02; --set-fg: #f5c542; }
-
-/* 4. Generational: night, fire, the number */
-.tb-card[data-type="generational"] {
-  --plate: linear-gradient(180deg, #1c0605, #0c0202);
-  --plate-ink: var(--paper);
-}
-.tb-card[data-type="generational"] .tb-card__set { --set-bg: #120404; --set-fg: #ffb12b; }
-.tb-card[data-type="generational"] .tb-card__kicker { bottom: auto; top: 22cqw; background: #120404d9; color: #ffd9a0; }
-
-/* 5. Ultimate Stardom: a marquee border of bulbs round a midnight card */
-.tb-card[data-type="stardom"] {
-  --plate: linear-gradient(180deg, #120e33, #07061a);
-  --plate-ink: #e8b83a;
-  --plate-soft: #c7b98a;
-}
-.tb-card[data-type="stardom"] .tb-card__frame {
-  padding: 5cqw;
-  background:
-    radial-gradient(circle, #fff6d6 0 0.7cqw, #e8b83a 1cqw, #e8b83a00 1.6cqw) 0 0 / 5cqw 5cqw,
-    linear-gradient(135deg, #2a1f5c, #0a0820);
+/* 2. Hard Goodbyes: a cream-bordered photo, a ribbon, an autograph */
+.tb-card[data-type="goodbyes"] .tb-card__frame {
+  background: #e9dfc8;
+  box-shadow: inset 0 0 0 0.6cqw var(--rc), inset 0 0 0 1.1cqw #e9dfc8;
   animation: none;
 }
-.tb-card[data-type="stardom"] .tb-card__mono { color: #e8b83a; text-shadow: 0 1cqw 0 #5a3f06; }
-.tb-card[data-type="stardom"] .tb-card__set { --set-bg: #0a0820; --set-fg: #e8b83a; border: 0.4cqw solid #e8b83a; }
-
-/* 6. The Light (East): a sunlit card, white nameplate */
-.tb-card[data-type="light"] {
-  --plate: linear-gradient(180deg, #fbf8f0, #ece6d6);
-  --plate-ink: var(--ink);
-  --plate-soft: var(--ink-soft);
+.tb-ins--goodbyes {
+  background: #efe6d2;
+  border-radius: 1cqw;
 }
-.tb-card[data-type="light"] .tb-card__mono { color: var(--t1); text-shadow: 0 1cqw 0 #ffffffb3; }
-.tb-card[data-type="light"] .tb-card__mark,
-.tb-card[data-type="light"] .tb-card__set { --set-bg: #fbf8f0; --set-fg: var(--ink); }
-
-/* 7. The Shadow (West): the eclipse, the silhouette */
-.tb-card[data-type="shadow"] {
-  --plate: linear-gradient(180deg, #0b0a14, #030305);
-  --plate-soft: color-mix(in oklab, var(--t1) 45%, #aab4cc);
+.tb-ins__photo {
+  position: absolute;
+  top: 3cqw;
+  right: 3cqw;
+  bottom: 33cqw;
+  left: 12.5cqw;
+  overflow: hidden;
+  border-radius: 0.6cqw;
+  box-shadow: inset 0 0 0 0.4cqw #0005;
+  filter: sepia(0.35) contrast(1.05);
 }
-.tb-card[data-type="shadow"] .tb-card__mono {
+.tb-ins--goodbyes .tb-card__splash { filter: sepia(0.5) saturate(0.8); }
+.tb-ins--goodbyes .tb-card__mono {
+  color: transparent;
+  -webkit-text-stroke: 0.6cqw #f4e2c0;
+  text-shadow: none;
+}
+.tb-ins__ribbon {
+  position: absolute;
+  top: 3cqw;
+  bottom: 33cqw;
+  left: 3cqw;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 7.5cqw;
+  background: #7a1f1f;
+  color: #efe6d2;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  font-size: 3.8cqw;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.tb-ins__sticker {
+  position: absolute;
+  top: 2.6cqw;
+  right: 2.6cqw;
+  z-index: 5;
+  display: grid;
+  place-content: center;
+  width: 13cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #efe6d2;
+  color: #2a2018;
+  text-align: center;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.2cqw;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 0.6cqw 1.2cqw #0007;
+}
+.tb-ins__sticker b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 6cqw;
+  line-height: 0.9;
+  letter-spacing: 0;
+}
+.tb-ins__sign {
+  position: absolute;
+  right: 3cqw;
+  bottom: 2cqw;
+  left: 3cqw;
+  z-index: 5;
+  display: flex;
+  height: 30cqw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.tb-ins__autograph {
+  font-family: var(--font-hand), cursive;
+  font-weight: 700;
+  line-height: 0.95;
+  color: #1f2f6b;
+  transform: rotate(-4deg);
+  text-wrap: balance;
+}
+.tb-ins__caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4cqw;
+  margin-top: 2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.4cqw;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6b5a45;
+}
+.tb-ins__caption .tb-ins__serial { margin-left: 0; }
+
+/* 3. Golden Boy: brushed-foil wordmark behind, a gold bar along the foot */
+.tb-ins__foil {
+  position: absolute;
+  top: 5cqw;
+  left: 4cqw;
+  z-index: 1;
+  width: calc(100% - 8cqw);
+}
+.tb-ins__foil text {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: 50px;
+  fill: #fff;
+}
+.tb-ins--goldenboy .tb-ins__art { inset: 4cqw 0 20cqw; }
+.tb-ins--goldenboy .tb-card__mono { color: #fff7dc; text-shadow: 0 1cqw 0 #6b4606; }
+.tb-ins__under {
+  position: absolute;
+  right: 0;
+  bottom: 21cqw;
+  left: 0;
+  z-index: 5;
+  text-align: center;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.7cqw;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f7dc95;
+  text-shadow: 0 0.4cqw 1cqw #000;
+}
+.tb-ins__goldbar {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 5;
+  display: flex;
+  height: 19cqw;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+  padding: 0 4cqw;
+  background: linear-gradient(115deg, #f7d774, #d9a62a 45%, #fff0b0 60%, #c08a17);
+  color: #1b1203;
+}
+.tb-ins__goldbar span {
+  min-width: 0;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 66%;
+  line-height: 0.9;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.tb-ins__goldbar b {
+  flex: none;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: 10cqw;
+}
+.tb-ins__corner {
+  position: absolute;
+  top: 3cqw;
+  right: 3cqw;
+  z-index: 5;
+  color: #f7dc95;
+}
+
+/* 4. Generational: scoreboard bulbs; name up the side; box score along the foot */
+.tb-ins--generational .tb-ins__art { inset: 10cqw 0 22cqw 12cqw; }
+.tb-ins__ledtitle {
+  position: absolute;
+  top: 3.6cqw;
+  right: 19cqw;
+  left: 4cqw;
+  z-index: 5;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 5cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffb12b;
+  text-shadow: 0 0 1.2cqw #ff8a1f99;
+}
+.tb-ins__ledovr {
+  position: absolute;
+  top: 3cqw;
+  right: 3cqw;
+  z-index: 5;
+  padding: 1cqw 1.8cqw;
+  border: 0.35cqw solid #2a2420;
+  border-radius: 0.8cqw;
+  background: #000;
+  color: #ffb12b;
+  text-align: center;
+  text-shadow: 0 0 1cqw #ff8a1f88;
+}
+.tb-ins__ledovr b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 8cqw;
+  line-height: 0.9;
+}
+.tb-ins__vname {
+  position: absolute;
+  top: 12cqw;
+  bottom: 24cqw;
+  left: 2cqw;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 66%;
+  line-height: 0.9;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0.6cqw 1.6cqw #000;
+}
+.tb-ins__kicker {
+  position: absolute;
+  top: 15cqw;
+  right: 3cqw;
+  z-index: 5;
+  max-width: 44cqw;
+  padding: 0.8cqw 1.6cqw;
+  border-radius: 0.6cqw;
+  background: #000c;
+  color: #ffd9a0;
+  text-align: right;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tb-ins__board {
+  position: absolute;
+  right: 3cqw;
+  bottom: 3cqw;
+  left: 3cqw;
+  z-index: 5;
+  display: flex;
+  align-items: stretch;
+  gap: 1.2cqw;
+  color: #ffd9a0;
+  font-variant-numeric: tabular-nums;
+}
+.tb-ins__board > div {
+  flex: 1;
+  padding: 1cqw 0 0.8cqw;
+  border: 0.35cqw solid #2a2420;
+  border-radius: 0.6cqw;
+  background: #000;
+  text-align: center;
+}
+.tb-ins__board b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 7cqw;
+  line-height: 0.95;
+  color: #ffb12b;
+  text-shadow: 0 0 1cqw #ff8a1f88;
+}
+.tb-ins__board span {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.12em;
+}
+.tb-ins__board .tb-ins__serial { align-self: center; margin-left: 0.6cqw; }
+
+/* 5. Ultimate Stardom: a marquee sign of bulbs; the name in letter tiles */
+.tb-ins--stardom .tb-ins__art { inset: 20cqw 0 30cqw; }
+.tb-ins--stardom .tb-card__mono { color: #ffd36b; text-shadow: 0 1cqw 0 #3a0509; }
+.tb-ins__marquee {
+  position: absolute;
+  top: 3cqw;
+  right: 6cqw;
+  left: 6cqw;
+  z-index: 5;
+  padding: 1.8cqw 3cqw 1.6cqw;
+  border: 1.3cqw dotted #ffd36b;
+  border-radius: 1.4cqw;
+  background: #120c06;
+  color: #ffe8b0;
+  text-align: center;
+  box-shadow: 0 1cqw 2cqw #000a, inset 0 0 0 0.4cqw #120c06;
+}
+.tb-ins__marquee span {
+  display: block;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.5cqw;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+}
+.tb-ins__marquee b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  font-size: 8.4cqw;
+  line-height: 0.9;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #ffd36b;
+  text-shadow: 0 0 1.4cqw #ffb12b88;
+}
+.tb-ins__star {
+  position: absolute;
+  top: 17cqw;
+  left: 2.4cqw;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  width: 16cqw;
+  aspect-ratio: 1;
+}
+.tb-ins__star svg {
+  position: absolute;
+  inset: 0;
+  fill: #e8b83a;
+  stroke: #5a3f06;
+  stroke-width: 0.7;
+  filter: drop-shadow(0 0.6cqw 0.8cqw #0009);
+}
+.tb-ins__star b {
+  position: relative;
+  margin-top: 1cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 5.4cqw;
+  color: #1b1203;
+}
+.tb-ins__billing {
+  position: absolute;
+  right: 3cqw;
+  bottom: 3cqw;
+  left: 3cqw;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2cqw;
+  padding: 2.2cqw 2cqw 2cqw;
+  border-radius: 1.2cqw;
+  background: #120c06eb;
+}
+.tb-ins__first {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.8cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ffe8b0;
+}
+.tb-ins__tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25em 0.22em;
+}
+.tb-ins__tiles span {
+  display: grid;
+  place-items: center;
+  width: 0.98em;
+  height: 1.22em;
+  border-radius: 0.08em;
+  background: #f4efe2;
+  color: #111;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  line-height: 1;
+  box-shadow: 0 0.08em 0.12em #000a;
+}
+.tb-ins__tiles span.is-gap {
+  width: 0.45em;
+  background: none;
+  box-shadow: none;
+}
+.tb-ins__team {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.5cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c7b98a;
+}
+.tb-ins__team .tb-ins__serial { margin-left: 0; }
+
+/* 6. The Light (East): thin type in the glare, the name coming out of a white haze */
+.tb-ins__thin {
+  position: absolute;
+  top: 5cqw;
+  right: 4cqw;
+  left: 4cqw;
+  z-index: 1;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 200;
+  font-stretch: 80%;
+  font-size: 30cqw;
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0.72;
+}
+.tb-ins--light .tb-ins__art { inset: 14cqw 0 24cqw; }
+.tb-ins--light .tb-card__mono { color: var(--t1); text-shadow: 0 1cqw 0 #ffffffb3; }
+.tb-ins__east {
+  position: absolute;
+  top: 4cqw;
+  right: 4cqw;
+  z-index: 5;
+  padding: 0.6cqw 1.8cqw;
+  border: 0.35cqw solid #fffc;
+  border-radius: 99px;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.5cqw;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.tb-ins__lightname {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 5;
+  padding: 11cqw 4cqw 3.4cqw;
+  background: linear-gradient(180deg, transparent, #fff8ecf2 46%);
+  color: var(--ink);
+}
+.tb-ins__lightname > div,
+.tb-ins__noir > div,
+.tb-ins__ribbon90 > div {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 66%;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.tb-ins__lightname > span,
+.tb-ins__noir > span,
+.tb-ins__slab > span,
+.tb-ins__ribbon90 > span {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  margin-top: 1.3cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.7cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.tb-ins__lightname > span { color: var(--ink-soft); }
+
+/* 7. The Shadow (West): huge outlined letters behind, a noir title card in front */
+.tb-ins__outline {
+  position: absolute;
+  top: 28cqw;
+  right: -3cqw;
+  left: -3cqw;
+  z-index: 1;
+  text-align: center;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: 30cqw;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 0.45cqw color-mix(in oklab, var(--t1) 65%, white);
+  opacity: 0.6;
+}
+.tb-ins--shadow .tb-ins__art { inset: 10cqw 0 26cqw; }
+.tb-ins--shadow .tb-card__mono {
   color: #000;
   -webkit-text-stroke: 0.5cqw color-mix(in oklab, var(--t1) 70%, white);
   text-shadow: 6cqw 1cqw 0 #00000080;
 }
-.tb-card[data-type="shadow"] .tb-card__set { --set-bg: #030305; --set-fg: color-mix(in oklab, var(--t1) 60%, white); }
+.tb-ins__west {
+  position: absolute;
+  top: 5cqw;
+  right: 4cqw;
+  z-index: 5;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.5cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--t1) 50%, white);
+}
+.tb-ins__noir {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 5;
+  padding: 8cqw 5cqw 4cqw;
+  background: linear-gradient(180deg, transparent, #000 42%);
+  color: #f4f2ea;
+  text-align: center;
+}
+.tb-ins__noir > div {
+  padding: 1.4cqw 0;
+  border-block: 0.3cqw solid #f4f2ea66;
+  font-weight: 600;
+  font-stretch: 90%;
+  line-height: 1.1;
+  letter-spacing: 0.3em;
+}
+.tb-ins__noir > span {
+  justify-content: center;
+  letter-spacing: 0.3em;
+  color: #aab4cc;
+}
+.tb-ins__noir .tb-ins__serial { margin-left: 0; }
 
-/* 8. Stone Fortress: a carved stone nameplate */
-.tb-card[data-type="fortress"] {
-  --plate:
-    linear-gradient(#0000 calc(100% - 0.4cqw), #23252a 0) 0 0 / 100% 7cqw,
-    linear-gradient(170deg, #5d6169, #3a3d43);
-  --plate-ink: #eceef1;
-  --plate-soft: #c0c4cb;
+/* 8. Stone Fortress: carved set name, a shield, the name cut into a slab */
+.tb-ins__carve {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: #393c42;
+  text-shadow: 0 0.3cqw 0 #ffffff47, 0 -0.3cqw 0 #00000080;
 }
-.tb-card[data-type="fortress"] .tb-card__name { text-shadow: 0 0.5cqw 0 #1d1f23; }
-.tb-card[data-type="fortress"] .tb-card__mono { color: #e7e9ec; text-shadow: 0 0.8cqw 0 #23252a; }
-.tb-card[data-type="fortress"] .tb-card__set { --set-bg: #2b2d31; --set-fg: #e7e9ec; border-radius: 0.6cqw; }
-.tb-card[data-type="fortress"] .tb-card__ovr { top: 11cqw; }
-.tb-card[data-type="fortress"] .tb-card__set { top: 11cqw; }
-
-/* 9. Cult Classic: a 90s card, cream nameplate, slanted retro type */
-.tb-card[data-type="cult"] {
-  --plate: linear-gradient(180deg, #f4ecd8, #e6dbc0);
-  --plate-ink: var(--t1);
-  --plate-soft: var(--ink);
+.tb-ins__carve--set {
+  position: absolute;
+  top: 4.4cqw;
+  right: 4cqw;
+  left: 19cqw;
+  z-index: 5;
+  font-size: 6cqw;
+  letter-spacing: 0.06em;
+  text-align: right;
 }
-.tb-card[data-type="cult"] .tb-card__name {
-  font-style: italic;
-  -webkit-text-stroke: 0.3cqw var(--ink);
-  text-shadow: 0.8cqw 0.8cqw 0 var(--t2);
+.tb-ins--fortress .tb-ins__art { inset: 13cqw 0 27cqw; }
+.tb-ins--fortress .tb-card__mono { color: #d9dce1; text-shadow: 0 0.8cqw 0 #2b2d31; }
+.tb-ins__shield {
+  position: absolute;
+  top: 3cqw;
+  left: 3cqw;
+  z-index: 5;
+  display: flex;
+  width: 14cqw;
+  height: 15.5cqw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-shadow: 0 0.3cqw 0.6cqw #0009;
 }
-.tb-card[data-type="cult"] .tb-card__mono { color: var(--t1); text-shadow: 1cqw 1cqw 0 var(--t2); }
-.tb-card[data-type="cult"] .tb-card__set {
-  --set-bg: #6b3fa0;
-  --set-fg: #f4ecd8;
+.tb-ins__shield svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--t1);
+  stroke: #d8dbe0;
+  stroke-width: 1;
+  filter: drop-shadow(0 0.6cqw 0.8cqw #0009);
+}
+.tb-ins__shield b {
+  position: relative;
+  margin-top: -1cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: 6.4cqw;
+  line-height: 0.9;
+}
+.tb-ins__shield small { position: relative; }
+.tb-ins__slab {
+  position: absolute;
+  right: 3cqw;
+  bottom: 3cqw;
+  left: 3cqw;
+  z-index: 5;
+  padding: 2.6cqw 3cqw 2.4cqw;
   border-radius: 0.6cqw;
+  background: linear-gradient(170deg, #a3a7ae, #7a7e86);
+  text-align: center;
+  box-shadow: inset 0 0.5cqw 0 #ffffff38, inset 0 -0.6cqw 0 #0005, 0 1cqw 2cqw #0007;
+}
+.tb-ins__slab > span {
+  justify-content: center;
+  color: #26282c;
+}
+.tb-ins__slab .tb-ins__serial { margin-left: 0; }
+
+/* 9. Cult Classic: slanted wordmark, starburst rating, a two-colour ribbon */
+.tb-ins__cultmark {
+  position: absolute;
+  top: 3cqw;
+  left: 4cqw;
+  z-index: 5;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
   font-style: italic;
-  transform: skewX(-10deg);
+  font-stretch: 85%;
+  font-size: 9cqw;
+  line-height: 0.82;
+  text-transform: uppercase;
+  color: #fff;
+  -webkit-text-stroke: 0.5cqw var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 1cqw 1cqw 0 var(--t1);
+  transform: rotate(-8deg);
+}
+.tb-ins--cult .tb-ins__art { inset: 15cqw 0 24cqw; }
+.tb-ins--cult .tb-card__mono { color: var(--t1); text-shadow: 1cqw 1cqw 0 var(--t2); }
+.tb-ins__burst {
+  position: absolute;
+  top: 3cqw;
+  right: 3cqw;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 17cqw;
+  aspect-ratio: 1;
+}
+.tb-ins__burst svg {
+  position: absolute;
+  inset: 0;
+  fill: #f2b33d;
+  stroke: var(--ink);
+  stroke-width: 0.7;
+}
+.tb-ins__burst b {
+  position: relative;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 80%;
+  font-size: 6.4cqw;
+  color: var(--ink);
+}
+.tb-ins__ribbon90 {
+  position: absolute;
+  right: 7cqw;
+  bottom: 5cqw;
+  left: -2cqw;
+  z-index: 5;
+  padding: 2.2cqw 4cqw 2cqw 6cqw;
+  background: var(--t1);
+  color: #fff;
+  transform: rotate(-4deg);
+  box-shadow: 0 1cqw 1.6cqw #0006;
+}
+.tb-ins__ribbon90::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--t2);
+  transform: translate(1.6cqw, 1.6cqw);
+}
+.tb-ins__ribbon90 > div {
+  font-style: italic;
+  font-stretch: 75%;
+  -webkit-text-stroke: 0.25cqw var(--ink);
+  paint-order: stroke fill;
+}
+
+/* small cards: keep name, rating and the set's wordmark; drop the fine print */
+@container (max-width: 170px) {
+  .tb-ins__move,
+  .tb-ins__caption,
+  .tb-ins__under,
+  .tb-ins__team,
+  .tb-ins__kicker,
+  .tb-ins__west,
+  .tb-ins__east,
+  .tb-ins__strip small,
+  .tb-ins__first,
+  .tb-ins__lightname > span,
+  .tb-ins__noir > span,
+  .tb-ins__slab > span,
+  .tb-ins__ribbon90 > span,
+  .tb-ins__board span,
+  .tb-ins__marquee span {
+    display: none;
+  }
 }
 
 /* ── the back: stats, bio, card number ── */

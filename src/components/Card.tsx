@@ -2,8 +2,19 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { useId, useRef, useState, type CSSProperties } from "react";
-import { headshotUrl, INSERT_NAMES, isInsert, SET_NAME, teamColors, type CardView, type Finish, type Rarity } from "@/lib/catalog";
-import { Backdrop, Foreground, SetIcon } from "./CardArt";
+import {
+  headshotUrl,
+  INSERT_NAMES,
+  isInsert,
+  SET_NAME,
+  teamColors,
+  type CardView,
+  type Finish,
+  type Rarity,
+} from "@/lib/catalog";
+import { TeamScene } from "./CardArt";
+import { fmtStat, initials, lastName, nameSize } from "./cardText";
+import { InsertFront } from "./InsertCard";
 
 export interface CardProps {
   card: CardView;
@@ -35,26 +46,10 @@ const FINISH_LABEL: Record<Finish, string | null> = {
   masterpiece: "Masterpiece",
 };
 
-function initials(name: string) {
-  const parts = name.replace(/[^\p{L}\s'-]/gu, "").split(/\s+/).filter(Boolean);
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-const lastName = (name: string) => {
-  const parts = name.split(" ");
-  return parts.length > 1 ? parts.slice(1).join(" ") : name;
-};
-
-/** The nameplate steps the size down with length and wraps to two lines; it never clips. */
-function nameSize(name: string) {
-  const longest = Math.max(...name.split(/\s+/).map((w) => w.length));
-  const n = Math.max(name.length / 1.75, longest);
-  return n <= 7 ? 10.5 : n <= 9 ? 9 : n <= 11 ? 7.8 : n <= 13 ? 6.8 : n <= 16 ? 5.8 : 5;
-}
-
 function metaLine(card: CardView) {
   const [p1, p2] = card.players;
-  if (card.type === "duo" && p2) return `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}`;
+  if (card.type === "duo" && p2)
+    return `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}`;
   if (card.meta) return card.meta;
   if (card.fromTeam) return `${card.fromTeam} → ${card.team}`;
   if (card.type === "rookie" && p1.pick) return `${p1.team} · Pick ${p1.pick}`;
@@ -67,8 +62,6 @@ function cardNo(card: CardView) {
   const m = card.designId.match(/^nba-(\d+)-(\w+)$/);
   return m ? `${m[2] === "rookie" ? "RC" : "B"}-${m[1]}` : card.designId;
 }
-
-const fmtStat = (singleGame: boolean, v: number) => (singleGame && Number.isInteger(v) ? String(v) : v.toFixed(1));
 
 function useLook(card: CardView) {
   const [t1, t2] = teamColors(card.team);
@@ -84,20 +77,40 @@ function useLook(card: CardView) {
   };
 }
 
-function SerialLine({ finish, serialNo, supply, grade }: Pick<CardProps, "finish" | "serialNo" | "supply" | "grade">) {
+function SerialLine({
+  finish,
+  serialNo,
+  supply,
+  grade,
+}: Pick<CardProps, "finish" | "serialNo" | "supply" | "grade">) {
   const fin = finish && FINISH_LABEL[finish];
   if (!(serialNo && supply) && !fin && grade == null) return null;
   return (
     <span className="tb-card__serial">
-      {serialNo && supply ? <b>{supply === 1 ? "1/1" : `${serialNo}/${supply}`}</b> : fin ? <span>{fin}</span> : null}
-      {grade != null && <i className={grade === 10 ? "is-gem" : ""}>G{grade}</i>}
+      {serialNo && supply ? (
+        <b>{supply === 1 ? "1/1" : `${serialNo}/${supply}`}</b>
+      ) : fin ? (
+        <span>{fin}</span>
+      ) : null}
+      {grade != null && (
+        <i className={grade === 10 ? "is-gem" : ""}>G{grade}</i>
+      )}
     </span>
   );
 }
 
 // ── front ──
 
-export function Card({ card, finish = "standard", serialNo, supply, grade, missing, tilt = true, className }: CardProps) {
+export function Card({
+  card,
+  finish = "standard",
+  serialNo,
+  supply,
+  grade,
+  missing,
+  tilt = true,
+  className,
+}: CardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const uid = useId().replace(/:/g, "");
   const [imgFailed, setImgFailed] = useState(false);
@@ -105,11 +118,17 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
   const { style, insert, isDuo, singleGame, setName } = useLook(card);
   // Base and rookie cards show the ESPN headshot. Inserts show their splash art once one is
   // chosen (insert-art.ts); until then the set's scene carries the card with the initials.
-  const imgSrc = insert ? card.art : !isDuo && p1.espnId ? headshotUrl(p1.espnId) : undefined;
+  const imgSrc = insert
+    ? card.art
+    : !isDuo && p1.espnId
+      ? headshotUrl(p1.espnId)
+      : undefined;
   const showImg = !!imgSrc && !imgFailed;
   const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;
   const box = singleGame && card.stats ? Object.entries(card.stats) : [];
-  const ini = isDuo ? `${initials(p1.name)}·${initials(p2.name)}` : initials(p1.name);
+  const ini = isDuo
+    ? `${initials(p1.name)}·${initials(p2.name)}`
+    : initials(p1.name);
 
   function onMove(e: React.PointerEvent) {
     if (!tilt || missing || !ref.current) return;
@@ -138,6 +157,7 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
       data-rarity={card.rarity}
       data-finish={finish}
       data-type={card.type}
+      data-insert={insert ? "" : undefined}
       data-art={showImg ? (insert ? "splash" : "headshot") : "none"}
       style={style}
       onPointerMove={onMove}
@@ -146,74 +166,82 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
       aria-label={`${name}, ${card.rarity}${setName ? ` ${setName} insert` : ` ${card.type}`}${finish !== "standard" ? `, ${finish}` : ""}, ${card.ovr} overall`}
     >
       <div className="tb-card__frame">
-        <div className="tb-card__panel">
-          <Backdrop type={card.type} id={uid} initials={ini} title={card.title} />
-          {!showImg && card.type !== "goodbyes" && <div className="tb-card__mono">{ini}</div>}
-          {showImg && card.type === "shadow" && (
-            // eslint-disable-next-line @next/next/no-img-element -- the player's own shadow, from the same splash art
-            <img className="tb-card__ghost" src={imgSrc} alt="" aria-hidden draggable={false} referrerPolicy="no-referrer" />
-          )}
-          {showImg && (
-            // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs / chosen splash art, hotlinked on purpose
-            <img
-              className={insert ? "tb-card__splash" : "tb-card__face-img"}
-              src={imgSrc}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              draggable={false}
-              referrerPolicy="no-referrer"
-              onError={() => setImgFailed(true)}
-            />
-          )}
-          <Foreground type={card.type} />
-          {card.type === "newblood" && (
-            <div className="tb-card__stamp">
-              Signed
-              <small>2026 offseason</small>
-            </div>
-          )}
-          {insert && card.kicker && <div className="tb-card__kicker">{card.kicker}</div>}
-          <div className="tb-card__ovr">
-            <b>{card.ovr}</b>
-            <span>{isDuo ? "Duo" : p1.pos}</span>
-          </div>
-          {setName ? (
-            <div className="tb-card__set">
-              <SetIcon type={card.type} />
-              <span>{setName}</span>
-            </div>
-          ) : (
-            <div className="tb-card__mark">
-              Gate 7<span>{SET_NAME}</span>
-            </div>
-          )}
-          {card.type === "rookie" && (
-            <div className="tb-card__rc" title="Rookie card">
-              RC
-            </div>
-          )}
-        </div>
-        <div className="tb-card__plate">
-          <div className="tb-card__name" style={{ fontSize: `${nameSize(name)}cqw` }}>
-            {name}
-          </div>
-          {box.length > 0 ? (
-            <div className="tb-card__box" title={card.statLine ?? undefined}>
-              {box.map(([k, v]) => (
-                <div key={k}>
-                  <b>{fmtStat(true, v)}</b>
-                  <span>{k}</span>
+        {insert ? (
+          <InsertFront
+            card={card}
+            uid={uid}
+            imgSrc={imgSrc}
+            showImg={showImg}
+            onImgError={() => setImgFailed(true)}
+            finish={finish}
+            serialNo={serialNo}
+            supply={supply}
+            grade={grade}
+          />
+        ) : (
+          <>
+            <div className="tb-card__panel">
+              <TeamScene id={uid} />
+              {!showImg && <div className="tb-card__mono">{ini}</div>}
+              {showImg && (
+                // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs, hotlinked on purpose
+                <img
+                  className="tb-card__face-img"
+                  src={imgSrc}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                  referrerPolicy="no-referrer"
+                  onError={() => setImgFailed(true)}
+                />
+              )}
+              <div className="tb-card__ovr">
+                <b>{card.ovr}</b>
+                <span>{isDuo ? "Duo" : p1.pos}</span>
+              </div>
+              <div className="tb-card__mark">
+                Gate 7<span>{SET_NAME}</span>
+              </div>
+              {card.type === "rookie" && (
+                <div className="tb-card__rc" title="Rookie card">
+                  RC
                 </div>
-              ))}
+              )}
             </div>
-          ) : (
-            <div className="tb-card__meta">
-              <span>{metaLine(card)}</span>
-              <SerialLine finish={finish} serialNo={serialNo} supply={supply} grade={grade} />
+            <div className="tb-card__plate">
+              <div
+                className="tb-card__name"
+                style={{ fontSize: `${nameSize(name)}cqw` }}
+              >
+                {name}
+              </div>
+              {box.length > 0 ? (
+                <div
+                  className="tb-card__box"
+                  title={card.statLine ?? undefined}
+                >
+                  {box.map(([k, v]) => (
+                    <div key={k}>
+                      <b>{fmtStat(true, v)}</b>
+                      <span>{k}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="tb-card__meta">
+                  <span>{metaLine(card)}</span>
+                  <SerialLine
+                    finish={finish}
+                    serialNo={serialNo}
+                    supply={supply}
+                    grade={grade}
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
       <div className="tb-card__shine" />
       <div className="tb-card__glare" />
@@ -223,28 +251,60 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
 
 // ── back: the stat side ──
 
-export function CardReverse({ card, finish = "standard", serialNo, supply, grade, className }: CardProps) {
+export function CardReverse({
+  card,
+  finish = "standard",
+  serialNo,
+  supply,
+  grade,
+  className,
+}: CardProps) {
   const [p1, p2] = card.players;
   const { style, insert, isDuo, singleGame, setName } = useLook(card);
   const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;
   const stats = card.stats ? Object.entries(card.stats) : [];
   const bio: [string, string | undefined][] = [
-    ["Team", card.fromTeam ? `${card.fromTeam} → ${card.team}` : card.team || undefined],
+    [
+      "Team",
+      card.fromTeam
+        ? `${card.fromTeam} → ${card.team}`
+        : card.team || undefined,
+    ],
     ["Pos", isDuo ? "Duo" : p1.pos],
     ["No.", p1.jersey ? `#${p1.jersey}` : undefined],
     ["From", p1.nation || undefined],
-    ["Draft", card.type === "rookie" && p1.pick ? `Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}` : undefined],
+    [
+      "Draft",
+      card.type === "rookie" && p1.pick
+        ? `Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}`
+        : undefined,
+    ],
   ];
   return (
-    <div className={`tb-card is-reverse ${className ?? ""}`} data-rarity={card.rarity} data-finish={finish} data-type={card.type} style={style} role="img" aria-label={`Back of ${name}`}>
+    <div
+      className={`tb-card is-reverse ${className ?? ""}`}
+      data-rarity={card.rarity}
+      data-finish={finish}
+      data-type={card.type}
+      style={style}
+      role="img"
+      aria-label={`Back of ${name}`}
+    >
       <div className="tb-card__frame">
         <div className="tb-card__back">
           <div className="tb-card__back-head">
             <div>
-              <div className="tb-card__back-name" style={{ fontSize: `${nameSize(name) * 0.72}cqw` }}>
+              <div
+                className="tb-card__back-name"
+                style={{ fontSize: `${nameSize(name) * 0.72}cqw` }}
+              >
                 {name}
               </div>
-              <div className="tb-card__back-set">{setName ? `${setName} · ${SET_NAME}` : `${SET_NAME} · ${card.type === "rookie" ? "Rookie" : "Base"}`}</div>
+              <div className="tb-card__back-set">
+                {setName
+                  ? `${setName} · ${SET_NAME}`
+                  : `${SET_NAME} · ${card.type === "rookie" ? "Rookie" : "Base"}`}
+              </div>
             </div>
             <div className="tb-card__back-no">{cardNo(card)}</div>
           </div>
@@ -263,11 +323,19 @@ export function CardReverse({ card, finish = "standard", serialNo, supply, grade
               ))}
           </dl>
           {insert && (card.title || card.kicker) && (
-            <p className="tb-card__back-blurb">{[card.title, card.kicker].filter(Boolean).join(" · ")}</p>
+            <p className="tb-card__back-blurb">
+              {[card.title, card.kicker].filter(Boolean).join(" · ")}
+            </p>
           )}
           {stats.length > 0 ? (
             <table className="tb-card__table">
-              <caption>{singleGame ? card.statLine : card.statLine ? `${card.statLine} per game` : "Stats"}</caption>
+              <caption>
+                {singleGame
+                  ? card.statLine
+                  : card.statLine
+                    ? `${card.statLine} per game`
+                    : "Stats"}
+              </caption>
               <thead>
                 <tr>
                   {stats.map(([k]) => (
@@ -292,7 +360,12 @@ export function CardReverse({ card, finish = "standard", serialNo, supply, grade
             <span>
               {PARALLEL[card.rarity]} parallel · {card.rarity}
             </span>
-            <SerialLine finish={finish} serialNo={serialNo} supply={supply} grade={grade} />
+            <SerialLine
+              finish={finish}
+              serialNo={serialNo}
+              supply={supply}
+              grade={grade}
+            />
           </div>
         </div>
       </div>
@@ -311,17 +384,32 @@ export function TurnableCard(props: CardProps) {
         <motion.div
           className="absolute inset-0 [transform-style:preserve-3d]"
           animate={{ rotateY: back ? 180 : 0 }}
-          transition={reduce ? { duration: 0 } : { duration: 0.42, ease: [0.3, 1.25, 0.5, 1] }}
+          transition={
+            reduce
+              ? { duration: 0 }
+              : { duration: 0.42, ease: [0.3, 1.25, 0.5, 1] }
+          }
         >
-          <div className="absolute inset-0 [backface-visibility:hidden]" aria-hidden={back}>
+          <div
+            className="absolute inset-0 [backface-visibility:hidden]"
+            aria-hidden={back}
+          >
             <Card {...props} />
           </div>
-          <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]" aria-hidden={!back}>
+          <div
+            className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]"
+            aria-hidden={!back}
+          >
             <CardReverse {...props} />
           </div>
         </motion.div>
       </div>
-      <button type="button" className="btn btn-ghost px-4 py-1.5 text-sm" onClick={() => setBack((b) => !b)} aria-pressed={back}>
+      <button
+        type="button"
+        className="btn btn-ghost px-4 py-1.5 text-sm"
+        onClick={() => setBack((b) => !b)}
+        aria-pressed={back}
+      >
         {back ? "Show the front" : "Flip the card"}
       </button>
     </div>
@@ -331,9 +419,18 @@ export function TurnableCard(props: CardProps) {
 // ── face-down (pack reveal) ──
 
 /** The Gate 7 card back. Its border is already the parallel, so the rarity shows before the flip. */
-export function CardBack({ rarity, className }: { rarity?: string; className?: string }) {
+export function CardBack({
+  rarity,
+  className,
+}: {
+  rarity?: string;
+  className?: string;
+}) {
   return (
-    <div className={`tb-card is-facedown ${className ?? ""}`} data-rarity={rarity ?? "common"}>
+    <div
+      className={`tb-card is-facedown ${className ?? ""}`}
+      data-rarity={rarity ?? "common"}
+    >
       <div className="tb-card__frame">
         <div className="tb-card__cover">
           <div className="tb-card__cover-mark">
