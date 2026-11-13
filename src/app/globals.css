@@ -864,21 +864,21 @@ select {
   filter: drop-shadow(0 1.2cqw 1.6cqw #00000066);
 }
 
-/* New Blood, final: the portrait split down the middle, old team's hue on the left half and the
-   new team's on the right, blended softly so nothing crosses the face. The seam is only two
+/* New Blood, final: the portrait split 40 / 60, the old team's hue on the left and the new team's
+   on the larger right (headshots sit left of centre, so a centre split favoured the old team), blended softly so nothing crosses the face. The seam is only two
    ticks at the top and bottom edges; the set name sits in the empty top-left corner. */
 .tb-ins--newblood .tb-ins__old {
-  width: 50%;
+  width: 40%;
   -webkit-mask: linear-gradient(90deg, #000 calc(100% - 4cqw), transparent);
   mask: linear-gradient(90deg, #000 calc(100% - 4cqw), transparent);
 }
 .tb-ins--newblood .tb-ins__pin {
-  left: 50%;
+  left: 40%;
   -webkit-mask: linear-gradient(90deg, transparent, #000 6cqw);
   mask: linear-gradient(90deg, transparent, #000 6cqw);
 }
 .tb-ins--newblood .tb-ins__seam {
-  left: 50%;
+  left: 40%;
   width: 0.6cqw;
   background:
     linear-gradient(#fff, #fff) top / 100% 4cqw no-repeat,
@@ -887,7 +887,7 @@ select {
 }
 .tb-ins--newblood .tb-ins__set { text-shadow: 0 0.3cqw 1cqw #0008; }
 .tb-ins--newblood .tb-ins__set span { opacity: 0.85; }
-.tb-ins--newblood .tb-ins__codes .is-from { width: 50%; text-align: left; padding-left: 4cqw; }
+.tb-ins--newblood .tb-ins__codes .is-from { width: 40%; text-align: left; padding-left: 4cqw; }
 
 /* ── insert details: fine print, card numbers, stat lines ── */
 .tb-ins__fine {
