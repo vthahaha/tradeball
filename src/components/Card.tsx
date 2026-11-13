@@ -7,12 +7,14 @@ import {
   INSERT_NAMES,
   isInsert,
   SET_NAME,
+  teamCode,
   teamColors,
+  teamLogo,
   type CardView,
   type Finish,
   type Rarity,
 } from "@/lib/catalog";
-import { fmtStat, initials, lastName, nameSize } from "./cardText";
+import { initials, lastName, nameSize } from "./cardText";
 import { InsertFront } from "./InsertCard";
 
 export interface CardProps {
@@ -232,7 +234,30 @@ export function Card({
   );
 }
 
-// ── back: the stat side ──
+// ── back: the Gate 7 mark and the team's logo; each insert set prints its own back ──
+
+function TeamMedal({ team }: { team: string }) {
+  const [failed, setFailed] = useState(false);
+  const src = teamLogo(team);
+  return (
+    <span className="tb-rev__medal">
+      {src && !failed ? (
+        // eslint-disable-next-line @next/next/no-img-element -- ESPN team logo, hotlinked like the headshots
+        <img
+          src={src}
+          alt={`${team} logo`}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          referrerPolicy="no-referrer"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <b>{teamCode(team) || team.slice(0, 3).toUpperCase()}</b>
+      )}
+    </span>
+  );
+}
 
 export function CardReverse({
   card,
@@ -243,28 +268,9 @@ export function CardReverse({
   className,
 }: CardProps) {
   const [p1, p2] = card.players;
-  const { style, insert, isDuo, singleGame, setName } = useLook(card);
-  const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;
-  const stats = card.stats ? Object.entries(card.stats) : [];
-  const bio: [string, string | undefined][] = [
-    [
-      "Team",
-      card.fromTeam
-        ? `${card.fromTeam} → ${card.team}`
-        : card.team2
-          ? `${card.team} / ${card.team2}`
-          : card.team || undefined,
-    ],
-    ["Pos", isDuo ? "Duo" : p1.pos],
-    ["No.", p1.jersey ? `#${p1.jersey}` : undefined],
-    ["From", p1.nation || undefined],
-    [
-      "Draft",
-      card.type === "rookie" && p1.pick
-        ? `Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}`
-        : undefined,
-    ],
-  ];
+  const { style, setName } = useLook(card);
+  const name = p2 ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;
+  const teams = [card.team, card.team2].filter((t): t is string => !!t);
   return (
     <div
       className={`tb-card is-reverse ${className ?? ""}`}
@@ -273,77 +279,27 @@ export function CardReverse({
       data-type={card.type}
       style={style}
       role="img"
-      aria-label={`Back of ${name}`}
+      aria-label={`Back of ${name}${teams.length ? `, ${teams.join(" and ")}` : ""}`}
     >
       <div className="tb-card__frame">
-        <div className="tb-card__back">
-          <div className="tb-card__back-head">
-            <div>
-              <div
-                className="tb-card__back-name"
-                style={{ fontSize: `${nameSize(name) * 0.72}cqw` }}
-              >
-                {name}
-              </div>
-              <div className="tb-card__back-set">
-                {setName
-                  ? `${setName} · ${SET_NAME}`
-                  : `${SET_NAME} · ${card.type === "rookie" ? "Rookie" : "Base"}`}
-              </div>
-            </div>
-            <div className="tb-card__back-no">{cardNo(card)}</div>
+        <div className="tb-rev" data-set={card.type}>
+          <div className="tb-rev__deco" aria-hidden />
+          <div className="tb-rev__mark" aria-hidden>
+            G7
           </div>
-          <dl className="tb-card__bio">
-            <div>
-              <dt>OVR</dt>
-              <dd>{card.ovr}</dd>
-            </div>
-            {bio
-              .filter(([, v]) => v)
-              .map(([k, v]) => (
-                <div key={k}>
-                  <dt>{k}</dt>
-                  <dd>{v}</dd>
-                </div>
+          {teams.length > 0 && (
+            <div
+              className={`tb-rev__logos ${teams.length > 1 ? "is-pair" : ""}`}
+            >
+              {teams.map((t) => (
+                <TeamMedal key={t} team={t} />
               ))}
-          </dl>
-          {insert && (card.title || card.kicker) && (
-            <p className="tb-card__back-blurb">
-              {[card.title, card.kicker].filter(Boolean).join(" · ")}
-            </p>
+            </div>
           )}
-          {stats.length > 0 ? (
-            <table className="tb-card__table">
-              <caption>
-                {singleGame
-                  ? card.statLine
-                  : card.statLine
-                    ? `${card.statLine} per game`
-                    : "Stats"}
-              </caption>
-              <thead>
-                <tr>
-                  {stats.map(([k]) => (
-                    <th key={k} scope="col">
-                      {k}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {stats.map(([k, v]) => (
-                    <td key={k}>{fmtStat(singleGame, v)}</td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          ) : (
-            <p className="tb-card__back-note">{card.note ?? "No stats yet"}</p>
-          )}
-          <div className="tb-card__back-foot">
+          <div className="tb-rev__foot">
             <span>
-              {PARALLEL[card.rarity]} parallel · {card.rarity}
+              {setName ??
+                `${SET_NAME} · ${card.type === "rookie" ? "Rookie" : "Base"}`}
             </span>
             <SerialLine
               finish={finish}
@@ -351,6 +307,7 @@ export function CardReverse({
               supply={supply}
               grade={grade}
             />
+            <span>{cardNo(card)}</span>
           </div>
         </div>
       </div>

@@ -1639,150 +1639,281 @@ select {
   }
 }
 
-/* ── the back: stats, bio, card number ── */
-.tb-card__back {
-  display: flex;
-  min-height: 0;
-  flex-direction: column;
-  gap: 2.6cqw;
-  padding: 4cqw 4.2cqw 3.6cqw;
-  border-radius: 2cqw;
-  background:
-    repeating-linear-gradient(135deg, #14213d08 0 0.6cqw, transparent 0.6cqw 2.4cqw),
-    #ece9df;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
+/* ── the back: the G7 mark, the team's logo on a medallion, a small set line. Every set prints
+   its own back in the colours and material of its front (vars on .tb-rev[data-set]). ── */
 .is-reverse .tb-card__frame {
   grid-template-rows: minmax(0, 1fr);
+  padding: 3.6cqw;
 }
-.tb-card__back-head {
+.tb-rev {
+  --rev-bg: var(--t1);
+  --rev-ink: #fff;
+  --rev-mark: #fff;
+  --rev-medal: #f6f4ee;
+  --rev-rule: #ffffff40;
+  position: relative;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 2cqw;
-  padding-bottom: 2cqw;
-  border-bottom: 0.7cqw solid var(--t1);
-}
-.tb-card__back-name {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 68%;
-  line-height: 0.92;
-  text-transform: uppercase;
-  text-wrap: balance;
-}
-.tb-card__back-set {
-  margin-top: 0.8cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.tb-card__back-no {
-  flex: none;
-  padding: 0.8cqw 1.8cqw;
-  border-radius: 0.8cqw;
-  background: var(--ink);
-  color: var(--paper);
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 3.6cqw;
-}
-.tb-card__bio {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1cqw 3.4cqw;
-}
-.tb-card__bio div {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1.6cqw;
-  min-width: 0;
-  padding-bottom: 0.8cqw;
-  border-bottom: 0.3cqw dashed #14213d40;
-}
-.tb-card__bio dt {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.tb-card__bio dd {
-  min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6cqw;
+  border-radius: 1.4cqw;
+  background: var(--rev-bg);
+  color: var(--rev-ink);
+  isolation: isolate;
+}
+.tb-rev__deco {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.tb-rev__mark {
+  margin-top: -4cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  font-size: 36cqw;
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  color: var(--rev-mark);
+}
+.tb-rev__logos {
+  display: flex;
+  gap: 4cqw;
+}
+.tb-rev__medal {
+  display: grid;
+  width: 27cqw;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--rev-medal);
+  box-shadow: 0 0.8cqw 1.6cqw #0000004d, inset 0 0 0 0.5cqw #00000014;
+}
+.tb-rev__logos.is-pair .tb-rev__medal { width: 23cqw; }
+.tb-rev__medal img {
+  width: 74%;
+  height: 74%;
+  object-fit: contain;
+}
+.tb-rev__medal b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 80%;
-  font-size: 3.5cqw;
+  font-size: 6cqw;
+  color: var(--ink);
 }
-.tb-card__back-blurb {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 700;
-  font-style: italic;
-  font-size: 3.2cqw;
-  line-height: 1.3;
-}
-.tb-card__table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.tb-card__table caption {
-  caption-side: top;
-  padding-bottom: 1cqw;
-  text-align: left;
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.tb-card__table th {
-  padding: 1cqw 0;
-  background: var(--ink);
-  color: var(--paper);
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.06em;
-}
-.tb-card__table td {
-  padding: 1.4cqw 0 1.2cqw;
-  border-bottom: 0.4cqw solid var(--ink);
-  text-align: center;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 80%;
-  font-size: 4.6cqw;
-}
-.tb-card__back-note {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 3.4cqw;
-}
-.tb-card__back-foot {
+.tb-rev__foot {
+  position: absolute;
+  right: 4cqw;
+  bottom: 3.6cqw;
+  left: 4cqw;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2cqw;
-  margin-top: auto;
+  padding-top: 1.2cqw;
+  border-top: 0.25cqw solid var(--rev-rule);
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
-  font-weight: 700;
-  font-size: 2.5cqw;
-  letter-spacing: 0.1em;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  opacity: 0.85;
+}
+.tb-rev__foot .tb-card__serial { margin-left: 0; }
+
+/* base and rookies: the team colour, the second colour as the angled band from the front */
+.tb-rev[data-set="base"] .tb-rev__deco,
+.tb-rev[data-set="rookie"] .tb-rev__deco {
+  background: linear-gradient(-12deg, transparent 0 22%, var(--t2) 22% 36%, transparent 36%);
+  opacity: 0.85;
+}
+
+/* New Blood: old colour left, new right, split 40 / 60 with the white seam ticks */
+.tb-rev[data-set="newblood"] { --rev-bg: var(--t1); }
+.tb-rev[data-set="newblood"] .tb-rev__deco {
+  background:
+    linear-gradient(#fff, #fff) 40% 0 / 0.6cqw 4cqw no-repeat,
+    linear-gradient(#fff, #fff) 40% 100% / 0.6cqw 4cqw no-repeat,
+    linear-gradient(90deg, var(--f1) 0 40%, transparent 40%);
+}
+
+/* Hard Goodbyes: warm cream stock, the mark in signing-ink blue */
+.tb-rev[data-set="goodbyes"] {
+  --rev-bg: #f3ecdc;
+  --rev-ink: #2a2118;
+  --rev-mark: #1f3a8a;
+  --rev-medal: #fff;
+  --rev-rule: #2a211833;
+}
+
+/* Golden Boy: black, gold, an engraved line border */
+.tb-rev[data-set="goldenboy"] {
+  --rev-bg: #0c0b08;
+  --rev-ink: #e2b64f;
+  --rev-mark: #e2b64f;
+  --rev-rule: #e2b64f55;
+}
+.tb-rev[data-set="goldenboy"] .tb-rev__deco {
+  inset: 2.4cqw;
+  border: 0.3cqw solid #e2b64f66;
+  background:
+    repeating-linear-gradient(45deg, #e2b64f12 0 0.2cqw, transparent 0.2cqw 1.1cqw),
+    repeating-linear-gradient(-45deg, #e2b64f12 0 0.2cqw, transparent 0.2cqw 1.1cqw);
+}
+
+/* Generational: night black inside a thin rainbow foil line, the mark in seal gold */
+.tb-rev[data-set="generational"] {
+  --rev-bg: #0b0b0e;
+  --rev-mark: #d9a62a;
+  --rev-rule: #ffffff33;
+}
+.tb-rev[data-set="generational"] .tb-rev__deco {
+  inset: 2.4cqw;
+  border: 0.5cqw solid transparent;
+  border-radius: 1cqw;
+  background: conic-gradient(from 30deg, #ff5fd2, #4fc3ff, #c6ff3d, #ffe14f, #ff7a45, #ff5fd2) border-box;
+  -webkit-mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0);
+}
+
+/* Ultimate Stardom: the holo foil all over, a white mark */
+.tb-rev[data-set="stardom"] { --rev-bg: #16161a; }
+.tb-rev[data-set="stardom"] .tb-rev__deco {
+  background:
+    repeating-linear-gradient(45deg, #ffffff2e 0 0.3cqw, transparent 0.3cqw 0.9cqw),
+    repeating-linear-gradient(calc(115deg + var(--ry, 0deg) * 4), #ff8ad9 0 6%, #8ad7ff 12%, #c2ff8a 18%, #ffe68a 24%, #ff8ad9 30%);
+  opacity: 0.85;
+}
+.tb-rev[data-set="stardom"] .tb-rev__mark { text-shadow: 0 0.6cqw 1.6cqw #0007; }
+
+/* The Light: high key, a light mark; The Shadow: low key, a heavy mark, a rim of team colour */
+.tb-rev[data-set="light"] {
+  --rev-bg: #f6f6f3;
+  --rev-ink: var(--ink);
+  --rev-mark: var(--t1);
+  --rev-rule: #14213d33;
+}
+.tb-rev[data-set="light"] .tb-rev__mark { font-weight: 300; }
+.tb-rev[data-set="shadow"] {
+  --rev-bg: #050506;
+  --rev-mark: #f2f2f2;
+  --rev-rule: #ffffff33;
+}
+.tb-rev[data-set="shadow"] .tb-rev__deco {
+  background: linear-gradient(270deg, color-mix(in oklab, var(--t1) 70%, transparent), transparent 12%);
+}
+
+/* Stone Fortress: speckled granite, the mark carved in */
+.tb-rev[data-set="fortress"] {
+  --rev-bg: #6c6f75;
+  --rev-mark: #4b4e54;
+  --rev-rule: #ffffff40;
+}
+.tb-rev[data-set="fortress"] .tb-rev__deco {
+  background:
+    radial-gradient(circle, #ffffff14 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.3cqw 1.3cqw,
+    radial-gradient(circle, #00000024 0 0.3cqw, transparent 0.4cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw;
+  box-shadow: inset 0 0 0 2.4cqw #5d6066, inset 0.7cqw 0.7cqw 0 2.4cqw #ffffff22;
+}
+.tb-rev[data-set="fortress"] .tb-rev__mark { text-shadow: 0 0.4cqw 0 #ffffff33, 0 -0.4cqw 0 #00000066; }
+
+/* Cult Classic: yellowed vintage stock, the mark in the team colour, a two-colour stripe */
+.tb-rev[data-set="cult"] {
+  --rev-bg: #efe3c4;
+  --rev-ink: #2a2118;
+  --rev-mark: color-mix(in oklab, var(--t1) 85%, #000);
+  --rev-medal: #fbf6e8;
+  --rev-rule: #2a211833;
+}
+.tb-rev[data-set="cult"] .tb-rev__deco {
+  background:
+    linear-gradient(90deg, var(--t1) 0 62%, var(--t2) 62%) 50% 22% / 44% 1cqw no-repeat,
+    radial-gradient(130% 100% at 50% 40%, transparent 55%, #b8964f40);
+}
+.tb-rev[data-set="cult"] .tb-rev__mark { font-style: italic; }
+
+/* Best of the Best: black, the team stripe along the top, the mark in Bodoni gold */
+.tb-rev[data-set="botb"] {
+  --rev-bg: #0d0c0a;
+  --rev-ink: #e9c46a;
+  --rev-mark: #e9c46a;
+  --rev-rule: #e9c46a55;
+}
+.tb-rev[data-set="botb"] .tb-rev__deco {
+  background: linear-gradient(var(--t1) 0 2.4cqw, var(--t2) 2.4cqw 3.4cqw, transparent 3.4cqw);
+}
+.tb-rev[data-set="botb"] .tb-rev__mark {
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* Rivalries: ticket paper, perforated across the middle, both teams' logos */
+.tb-rev[data-set="rivalries"] {
+  --rev-bg: #f4efe2;
+  --rev-ink: #16171c;
+  --rev-mark: #16171c;
+  --rev-medal: #fff;
+  --rev-rule: #16171c33;
+}
+.tb-rev[data-set="rivalries"] .tb-rev__deco {
+  background:
+    linear-gradient(90deg, var(--t1) 0 50%, var(--u1) 50%) 0 0 / 100% 2.4cqw no-repeat,
+    repeating-linear-gradient(90deg, #9a9ca4 0 1.6cqw, transparent 1.6cqw 3cqw) 0 50% / 100% 0.35cqw no-repeat;
+}
+
+/* Flash of Brilliance: the team colour, one flash glint, a slanted mark */
+.tb-rev[data-set="flash"] .tb-rev__deco {
+  background: linear-gradient(-28deg, transparent 18%, #ffffff00 30%, #ffffffbf 36%, #ffffff00 42%, transparent 54%);
+  mix-blend-mode: screen;
+}
+.tb-rev[data-set="flash"] .tb-rev__mark { font-style: italic; transform: skewX(-8deg); }
+
+/* Time Wizards: deep teal, the mark trailed by cyan echoes */
+.tb-rev[data-set="wizards"] {
+  --rev-bg: #0e2a33;
+  --rev-mark: #e9fbff;
+  --rev-rule: #7fe7ff44;
+  --rev-ink: #9fdde6;
+}
+.tb-rev[data-set="wizards"] .tb-rev__mark { text-shadow: 3cqw 0 0 #7fe7ff66, 6cqw 0 0.4cqw #7fe7ff2e; }
+
+/* Founding Father: certificate cream, the engraved double rule, the mark in Bodoni brown */
+.tb-rev[data-set="founders"] {
+  --rev-bg: #f6f0e1;
+  --rev-ink: #6a5a44;
+  --rev-mark: #5a4528;
+  --rev-medal: #fff;
+  --rev-rule: #8a6a3a55;
+}
+.tb-rev[data-set="founders"] .tb-rev__deco {
+  inset: 2.4cqw;
+  border: 0.35cqw solid #8a6a3a;
+  box-shadow: inset 0 0 0 1.1cqw #f6f0e1, inset 0 0 0 1.45cqw #8a6a3a;
+}
+.tb-rev[data-set="founders"] .tb-rev__mark {
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* The Dream Team: navy, the stripes along the foot */
+.tb-rev[data-set="dreamteam"] {
+  --rev-bg: #0f1f45;
+  --rev-rule: #ffffff40;
+}
+.tb-rev[data-set="dreamteam"] .tb-rev__deco {
+  background: repeating-linear-gradient(180deg, #b3132b 0 2.2cqw, #f4f4f4 2.2cqw 4.4cqw) 0 100% / 100% 13cqw no-repeat;
+}
+.tb-rev[data-set="dreamteam"] .tb-rev__foot {
+  bottom: 15cqw;
 }
 
 /* ── face-down: the Gate 7 card back inside the parallel border ── */

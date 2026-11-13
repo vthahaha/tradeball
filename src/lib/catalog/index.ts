@@ -36,6 +36,21 @@ export function teamCode(team: string): string {
   return ABBR_FIX[abbr] ?? abbr;
 }
 
+/** Historic and non-NBA teams on cards, mapped to the franchise that carries them today. */
+const LOGO_FRANCHISE: Record<string, string> = {
+  SuperSonics: "OKC",
+  Braves: "LAC",
+  "Vancouver Grizzlies": "MEM",
+  "New Orleans Hornets": "NO",
+  Duke: "MIN", // Laettner: drafted by Minnesota in 1992
+};
+
+/** ESPN's logo for the team's current franchise (hotlinked like the headshots). */
+export function teamLogo(team: string): string | undefined {
+  const abbr = LOGO_FRANCHISE[team] ?? teamByName.get(team)?.abbr;
+  return abbr ? `https://a.espncdn.com/i/teamlogos/nba/500/${abbr.toLowerCase()}.png` : undefined;
+}
+
 export function teamColors(team: string): [string, string] {
   const t = teamByName.get(team);
   return t ? [t.color, t.alt] : (HISTORIC[team]?.colors ?? ["#233862", "#a9b6d3"]);
