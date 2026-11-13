@@ -229,31 +229,28 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
-    // Hard Goodbyes: black and white on matte black, the photo held by album corners
+    // Hard Goodbyes: a farewell autograph card. The full-colour photo on warm cream stock,
+    // the name signed in blue ink on a white sticker panel, a thank-you line above it.
     case "goodbyes":
       return (
         <div className="tb-ins tb-ins--goodbyes">
           {photo()}
-          <Corners kind="mount" />
-          <div className="tb-ins__sprockets" aria-hidden />
-          <div className="tb-ins__keyline" aria-hidden />
-          <div className="tb-ins__set">Hard Goodbyes</div>
-          <div className="tb-ins__foot">
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__thanks">Hard Goodbyes · Thank you</div>
+          <div className="tb-ins__auto">
             <div
-              className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.62)}cqw` }}
+              className="tb-ins__sig"
+              style={{ fontSize: `${nameSize(name, 1.35)}cqw` }}
             >
               {name}
             </div>
-            <div className="tb-ins__thanks">Thank you</div>
-            <div className="tb-ins__line">
+          </div>
+          <div className="tb-ins__foot">
+            <div className="tb-ins__fine">
               <span>{card.meta ?? "Retired"}</span>
-              <span>
-                {card.ovr} {p.pos}
-              </span>
               {serial}
+              {no}
             </div>
-            <div className="tb-ins__fine is-center">{no}</div>
           </div>
         </div>
       );

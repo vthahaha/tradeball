@@ -634,33 +634,6 @@ select {
 .tb-ins--newblood .tb-ins__line s { text-decoration-color: var(--stamp); text-decoration-thickness: 0.35cqw; }
 .tb-ins--newblood .tb-ins__line b { color: #fff; }
 
-/* Hard Goodbyes: black and white on matte black, a silver keyline, quiet spaced type */
-.tb-card[data-type="goodbyes"] .tb-card__frame {
-  background: #0d0d0e;
-  box-shadow: inset 0 0 0 0.6cqw var(--rc);
-  animation: none;
-}
-.tb-ins--goodbyes { background: #0d0d0e; color: #e9e6df; }
-.tb-ins--goodbyes .tb-ins__photo { inset: 6cqw 6cqw 28cqw; background: #2a2a2c; }
-.tb-ins--goodbyes .tb-card__splash { filter: grayscale(1) contrast(1.1) brightness(0.95); }
-.tb-ins--goodbyes .tb-card__mono { color: #d9d6cf; }
-.tb-ins__keyline {
-  position: absolute;
-  inset: 3.6cqw 3.6cqw 25.6cqw;
-  z-index: 3;
-  border: 0.35cqw solid #b9bcc2;
-  pointer-events: none;
-}
-.tb-ins--goodbyes .tb-ins__foot { padding-bottom: 5cqw; text-align: center; }
-.tb-ins--goodbyes .tb-ins__name {
-  font-weight: 700;
-  font-stretch: 100%;
-  line-height: 1.15;
-  letter-spacing: 0.26em;
-}
-.tb-ins--goodbyes .tb-ins__line { justify-content: center; color: #9a9da3; }
-.tb-ins--goodbyes .tb-ins__line .tb-ins__serial { margin-left: 0; }
-
 /* Golden Boy: two inks; black stock, the photo as a gold duotone, gold type */
 .tb-ins--goldenboy { background: #0c0b08; color: #e2b64f; }
 .tb-ins--goldenboy .tb-ins__photo { inset: 14cqw 6cqw 30cqw; background: #2a2010; }
@@ -1026,46 +999,59 @@ select {
   text-align: right;
 }
 
-/* Hard Goodbyes: album mounting corners, film sprockets inside the keyline, a quiet thank you */
-.tb-ins--goodbyes .tb-ins__photo { inset: 12cqw 9cqw 36cqw; }
-.tb-ins--goodbyes .tb-ins__keyline { inset: 3.6cqw; }
-.tb-ins--goodbyes .tb-ins__set {
-  top: 6cqw;
-  right: 0;
-  left: 0;
-  max-width: none;
-  font-size: 2.8cqw;
-  text-align: center;
-  color: #b9bcc2;
-}
-.tb-ins__corners.is-mount { inset: 11.2cqw 8.2cqw 35.2cqw; }
-.tb-ins__corners.is-mount i {
-  background: #1c1c1e;
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-  filter: drop-shadow(0 0 0.25cqw #b9bcc2);
-}
-.tb-ins__sprockets {
-  position: absolute;
-  top: 12cqw;
-  bottom: 36cqw;
-  z-index: 2;
-  left: 5cqw;
-  right: 5cqw;
+/* Hard Goodbyes: a farewell autograph card; full-colour photo on warm cream stock, the name
+   signed in blue ink on a white sticker panel */
+.tb-ins--goodbyes {
   background:
-    repeating-linear-gradient(180deg, #2a2a2d 0 1.6cqw, transparent 1.6cqw 3.4cqw) left / 2cqw 100% no-repeat,
-    repeating-linear-gradient(180deg, #2a2a2d 0 1.6cqw, transparent 1.6cqw 3.4cqw) right / 2cqw 100% no-repeat;
-  pointer-events: none;
+    radial-gradient(130% 100% at 50% 30%, transparent 60%, #c8ad7a33),
+    #f3ecdc;
+  color: #2a2118;
 }
-.tb-ins--goodbyes .tb-ins__foot { padding-bottom: 6cqw; }
+.tb-ins--goodbyes .tb-ins__photo {
+  inset: 4cqw 4cqw 42cqw;
+  border-radius: 1cqw;
+  box-shadow: inset 0 0 0 0.35cqw #0002;
+}
+.tb-ins--goodbyes .tb-ins__ovr { top: 6.4cqw; right: 6.6cqw; color: #fff; }
 .tb-ins__thanks {
-  margin-top: 0.8cqw;
+  position: absolute;
+  right: 4cqw;
+  bottom: 36.4cqw;
+  left: 4cqw;
+  z-index: 4;
   font-family: var(--font-body), sans-serif;
-  font-style: italic;
-  font-weight: 600;
-  font-size: 3cqw;
-  letter-spacing: 0.04em;
-  color: #b9bcc2;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #7a6a4f;
 }
+.tb-ins__auto {
+  position: absolute;
+  right: 6cqw;
+  bottom: 12cqw;
+  left: 6cqw;
+  z-index: 4;
+  display: grid;
+  height: 22cqw;
+  place-items: center;
+  padding: 0 3cqw;
+  border-radius: 1.4cqw;
+  background:
+    linear-gradient(180deg, #ffffff, #f7f6f2);
+  box-shadow: 0 0.4cqw 1cqw #0000002e, inset 0 0 0 0.3cqw #e5e0d3;
+}
+.tb-ins__sig {
+  font-family: var(--font-sign), cursive;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  color: #1f3a8a;
+  transform: rotate(-5deg);
+}
+.tb-ins--goodbyes .tb-ins__foot { padding: 0 6cqw 4.4cqw; }
+.tb-ins--goodbyes .tb-ins__fine { border-top-color: #2a211833; }
 
 /* Golden Boy: an engraved line border on the black, foil brackets, the U-23 tag */
 .tb-ins__engrave {
@@ -1503,9 +1489,7 @@ select {
   .tb-ins__line,
   .tb-ins__set span,
   .tb-ins__fine,
-  .tb-ins__thanks,
   .tb-ins__codes,
-  .tb-ins__sprockets,
   .tb-ins__moment,
   .tb-ins__side small,
   .tb-ins__fields,
