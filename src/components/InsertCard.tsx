@@ -292,27 +292,22 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // 9. Cult Classic: a 90s card, slanted wordmark, a starburst and a ribbon
+    // 9. Cult Classic: a felt pennant up top, a stitched rating patch, the name chain-stitched on felt
     case "cult":
       return (
         <div className="tb-ins tb-ins--cult">
           {scene}
-          <div className="tb-ins__cultmark" aria-hidden>
-            Cult
-            <br />
-            Classic
-          </div>
           {art}
-          <div className="tb-ins__burst">
-            <svg viewBox="0 0 24 24" aria-hidden>
-              <path d={starPath(12, 12, 12, 8.4, 14)} />
-            </svg>
+          <div className="tb-ins__patch">
             <b>{card.ovr}</b>
+            <small>{p.pos}</small>
           </div>
-          <div className="tb-ins__ribbon90">
-            <div style={{ fontSize: `${nameSize(name, 0.92)}cqw` }}>{name}</div>
+          <div className="tb-ins__felt">
+            <div className="tb-ins__stitch" style={{ fontSize: `${nameSize(name, 1.3)}cqw` }}>
+              {name}
+            </div>
             <span>
-              {card.team} · {p.pos} {serial}
+              {card.team} {serial}
             </span>
           </div>
         </div>

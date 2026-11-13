@@ -354,37 +354,43 @@ function Fortress({ id }: { id: string }) {
   );
 }
 
-/** 9. Cult Classic: a two-ink risograph, halftone shapes hand-cut and printed off-register. */
+/** 9. Cult Classic: fan memorabilia. Wool felt in the team's colour, a felt pennant sewn across the top. */
 function Cult({ id }: { id: string }) {
-  const shapes = (
-    <>
-      <path d="M-6 20 L30 2 L36 40 Z" />
-      <path d="M58 92 L100 76 L96 122 Z" />
-      <path d="M74 14 m-12 0 a12 12 0 1 0 24 0 a12 12 0 1 0 -24 0 m5 0 a7 7 0 1 1 14 0 a7 7 0 1 1 -14 0" fillRule="evenodd" />
-      <path d="M4 66 l6 -6 l6 6 l6 -6 l6 6 l6 -6 l0 4 l-6 6 l-6 -6 l-6 6 l-6 -6 l-6 6 Z" />
-      <circle cx="16" cy="112" r="9" />
-      <path d="M40 124 L92 100 L92 108 L40 132 Z" />
-    </>
-  );
+  const pennant = "M3 8 L90 23 L3 38 Z";
   return (
     <Svg w={IW} h={IH}>
       <defs>
-        <pattern id={`${id}-h1`} width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
-          <circle cx="1.3" cy="1.3" r="0.95" style={fill("var(--t1)")} />
-        </pattern>
-        <pattern id={`${id}-h2`} width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(75)">
-          <circle cx="1.3" cy="1.3" r="0.95" style={fill("#14a8a0")} />
-        </pattern>
-        <Rough id={`${id}-cut`} scale={2.8} freq={0.08} />
+        <filter id={`${id}-felt`} x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="1.7" numOctaves="3" result="n" />
+          <feDiffuseLighting in="n" surfaceScale="0.9" lightingColor="#ffffff" result="l">
+            <feDistantLight azimuth="235" elevation="62" />
+          </feDiffuseLighting>
+        </filter>
+        <filter id={`${id}-edge`} x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="0.9" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        <clipPath id={`${id}-pen`}>
+          <path d={pennant} />
+        </clipPath>
       </defs>
-      <rect width={IW} height={IH} style={fill("#f2e9d4")} />
-      <g filter={`url(#${id}-cut)`} fill={`url(#${id}-h2)`} style={{ mixBlendMode: "multiply" }} transform="translate(1.4 1)">
-        {shapes}
+      {/* wool felt, the team colour a little faded */}
+      <rect width={IW} height={IH} style={fill("color-mix(in oklab, var(--t1) 78%, #4a3b2c)")} />
+      <rect width={IW} height={IH} filter={`url(#${id}-felt)`} style={{ mixBlendMode: "multiply", opacity: 0.55 }} />
+      {/* the pennant: cream felt, a binding strip at the pole, sewn letters */}
+      <g filter={`url(#${id}-edge)`}>
+        <path d={pennant} transform="translate(0.8 1.2)" style={fill("#000", 0.3)} />
+        <path d={pennant} style={fill("#efe4cb")} />
+        <g clipPath={`url(#${id}-pen)`}>
+          <rect width={IW} height={IH} filter={`url(#${id}-felt)`} style={{ mixBlendMode: "multiply", opacity: 0.4 }} />
+        </g>
+        <rect x="1" y="7.4" width="5" height="31.2" rx="0.6" style={fill("var(--t2)")} />
       </g>
-      <g filter={`url(#${id}-cut)`} fill={`url(#${id}-h1)`} style={{ mixBlendMode: "multiply" }}>
-        {shapes}
-      </g>
-      <Grain id={id} w={IW} h={IH} opacity={0.4} freq={1.3} />
+      <path d="M7.5 11.6 L80 23 L7.5 34.4" style={{ fill: "none", stroke: "color-mix(in oklab, var(--t1) 70%, #000)", strokeWidth: 0.35, strokeDasharray: "1.1 0.8", opacity: 0.7 }} />
+      <text x="10" y="26" className="tb-art__pennant" textLength="58" lengthAdjust="spacingAndGlyphs">
+        CULT CLASSIC
+      </text>
+      <Vignette id={id} w={IW} h={IH} strength={0.5} />
     </Svg>
   );
 }
