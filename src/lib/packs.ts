@@ -16,6 +16,7 @@ import { isAdmin } from "./admin";
 import { db } from "./db";
 import {
   CARDS_PER_PACK,
+  INSERTS_PER_PACK,
   cooldownMs,
   FINISH_SUPPLY,
   GUARANTEED_WEIGHTS,
@@ -135,8 +136,8 @@ export async function openPack(userId: string, type: PackType): Promise<{ cards:
     const pityHit = user.pityCounter >= PITY_LIMIT - 1;
     // Slots: 1..n-2 normal base/rookie rolls, n-1 guaranteed Rare+ (pity applies), n = insert.
     const designs = sports.map((sport, i) => {
-      if (i === CARDS_PER_PACK - 1) return rollInsert(sport);
-      if (i === CARDS_PER_PACK - 2) return rollDesign(pick(pack.sports), pityHit ? PITY_WEIGHTS : GUARANTEED_WEIGHTS);
+      if (i >= CARDS_PER_PACK - INSERTS_PER_PACK) return rollInsert(sport);
+      if (i === CARDS_PER_PACK - INSERTS_PER_PACK - 1) return rollDesign(pick(pack.sports), pityHit ? PITY_WEIGHTS : GUARANTEED_WEIGHTS);
       return rollDesign(sport, RARITY_WEIGHTS);
     });
 

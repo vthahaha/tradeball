@@ -50,10 +50,12 @@ export const GRADE_WEIGHTS: [number, number][] = [
 ];
 
 export const CARDS_PER_PACK = 8;
+/** The last slots of every pack are inserts (the slot before them is the guaranteed Rare+). */
+export const INSERTS_PER_PACK = 2;
 
 /**
- * The last slot of every pack is an insert; which class it comes from, by weight.
- * The weights add up to 100, so each one is that class's % chance per pack.
+ * Each insert slot picks its class by these weights (rolled separately per slot).
+ * The weights add up to 100, so each one is that class's % chance per insert slot.
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {

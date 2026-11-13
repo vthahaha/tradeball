@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { INSERT_DESIGNS } from "@/lib/catalog";
+import { INSERTS_PER_PACK } from "@/lib/odds";
 import type { Rarity } from "@/lib/catalog/types";
 import type { PackStatus, PackType, PulledCard } from "@/lib/packs";
 import { Card, CardBack } from "./Card";
@@ -194,7 +195,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
           >
             <PackArt type={p.type} no={no} />
             <span className="mt-2 flex items-center justify-between font-cond text-sm font-bold text-muted">
-              <span>8 cards · 1 Rare or better{INSERT_DESIGNS.length > 0 ? " · 1 insert" : ""}</span>
+              <span>8 cards · 1 Rare or better{INSERT_DESIGNS.length > 0 ? ` · ${INSERTS_PER_PACK} inserts` : ""}</span>
               <span className="text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                 {busy === p.type ? "Tearing…" : "Tear →"}
               </span>
