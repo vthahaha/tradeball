@@ -31,8 +31,8 @@ export default async function PreviewPage({ searchParams }: { searchParams: Prom
         Insert <span className="text-accent">preview</span>
       </h1>
       <p className="mt-3 text-muted">
-        Splash art comes from <code className="text-text">src/lib/catalog/insert-art.ts</code>. A card showing only its
-        jersey number (or initials) has no art yet, or its image failed to load. Turn a card around to see its back.
+        Splash art comes from <code className="text-text">src/lib/catalog/insert-art.ts</code>. A card showing initials
+        in its window has no art yet, or its image failed to load. Open a box to see the back of the card.
       </p>
       <nav className="mt-4 flex gap-2 font-cond text-sm font-semibold">
         {(["all", "art", "missing"] as const).map((k) => (

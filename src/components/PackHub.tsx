@@ -60,7 +60,7 @@ function fmt(ms: number) {
 
 const pad = (n: number) => String(n).padStart(4, "0");
 
-/** A pack: a folded jersey in a polybag, with a hang tag to tear. `no` is the player's next pack number. */
+/** A pack: a shoebox with a store receipt taped on to tear. `no` is the player's next pack number. */
 export function PackArt({ type, no, torn = false }: { type: PackType; no: number; torn?: boolean }) {
   const p = PACKS.find((x) => x.type === type)!;
   const reduce = useReducedMotion();
@@ -68,8 +68,9 @@ export function PackArt({ type, no, torn = false }: { type: PackType; no: number
     <div className="tb-pack" data-pack={type}>
       <div className="tb-pack__ticket">
         <div className="tb-pack__body">
-          <span className="tb-pack__jersey" aria-hidden>
-            7
+          <div className="tb-pack__lid" aria-hidden />
+          <span className="tb-pack__print" aria-hidden>
+            Gate 7
           </span>
           <div className="tb-pack__label">
             <div className="tb-pack__brand">
