@@ -1,11 +1,10 @@
 "use client";
 
-// One layout per insert set, each taking a cue from a different corner of the hobby:
-// Mosaic-style line fields, a black-bordered photo card, a gold medal foil, a comic burst,
-// an ornate cosmic frame, giant condensed type, 8-bit pixels, and an arched 80s window.
+// One layout per insert set. Each set is one print or photo technique plus its name set
+// as type; there are no drawn scenes. The photo (splash art) leads every card.
+import { useId } from "react";
 import type { CardView, Finish } from "@/lib/catalog";
-import { InsertScene } from "./CardArt";
-import { fmtStat, initials, nameSize, splitName } from "./cardText";
+import { fmtStat, initials, nameSize } from "./cardText";
 
 export interface InsertFrontProps {
   card: CardView;
@@ -49,26 +48,19 @@ function Serial({
   );
 }
 
-/** The player: the chosen splash art, or the initials in the set's ink until there is some. */
-function Art({
+/** The photo window: chosen splash art, or the initials until there is some. */
+function Photo({
   card,
   imgSrc,
   showImg,
   onImgError,
-}: Pick<InsertFrontProps, "card" | "imgSrc" | "showImg" | "onImgError">) {
+  children,
+}: Pick<InsertFrontProps, "card" | "imgSrc" | "showImg" | "onImgError"> & {
+  children?: React.ReactNode;
+}) {
   return (
-    <div className="tb-ins__art">
-      {showImg && card.type === "shadow" && (
-        // eslint-disable-next-line @next/next/no-img-element -- the player's own shadow, from the same splash art
-        <img
-          className="tb-card__ghost"
-          src={imgSrc}
-          alt=""
-          aria-hidden
-          draggable={false}
-          referrerPolicy="no-referrer"
-        />
-      )}
+    <div className="tb-ins__photo">
+      {children}
       {showImg ? (
         // eslint-disable-next-line @next/next/no-img-element -- chosen splash art, hotlinked on purpose
         <img
@@ -88,124 +80,154 @@ function Art({
   );
 }
 
-const spaced = (s: string) => s.toUpperCase();
+function Rating({
+  ovr,
+  pos,
+  label,
+}: {
+  ovr: number;
+  pos: string;
+  label?: string;
+}) {
+  return (
+    <div className="tb-ins__ovr">
+      {label && <small>{label}</small>}
+      <b>{ovr}</b>
+      <span>{pos}</span>
+    </div>
+  );
+}
+
+/** Stone Fortress: a closed rectangle of type, the set name running round the frame. */
+function Wall({ id }: { id: string }) {
+  const phrase = "STONE FORTRESS  ·  ";
+  return (
+    <svg
+      className="tb-ins__wall"
+      viewBox="0 0 94 134"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <path id={id} d="M4.6 4.6 H89.4 V129.4 H4.6 Z" fill="none" />
+      <text>
+        <textPath href={`#${id}`}>{phrase.repeat(12)}</textPath>
+      </text>
+    </svg>
+  );
+}
 
 export function InsertFront(props: InsertFrontProps) {
-  const { card, uid } = props;
+  const { card } = props;
+  const wallId = useId().replace(/:/g, "");
   const p = card.players[0];
   const name = p.name;
-  const [first, last] = splitName(name);
-  const art = <Art {...props} />;
   const serial = <Serial {...props} />;
-  const scene = <InsertScene type={card.type} id={uid} />;
+  const photo = (children?: React.ReactNode) => (
+    <Photo {...props}>{children}</Photo>
+  );
 
   switch (card.type) {
-    // 1. New Blood: a line field, an italic set title, a white plate with the move on it
+    // New Blood: a split-tone photo, old team's colour on the left of a seam, new on the right
     case "newblood":
       return (
         <div className="tb-ins tb-ins--newblood">
-          {scene}
-          {art}
-          <div className="tb-ins__title">
-            New Blood
-            <small>2026 offseason</small>
+          {photo(<div className="tb-ins__old" aria-hidden />)}
+          <div className="tb-ins__seam" aria-hidden>
+            <span>New Blood</span>
           </div>
-          <div className="tb-ins__hex">
-            <b>{card.ovr}</b>
-            <small>{p.pos}</small>
-          </div>
-          <div className="tb-ins__plate">
-            <div className="tb-ins__move">
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.82)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__line">
               <s>{card.fromTeam}</s>
               <span aria-hidden>→</span>
               <b>{card.team}</b>
               {serial}
             </div>
-            <div
-              className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.86)}cqw` }}
-            >
-              {name}
-            </div>
           </div>
         </div>
       );
 
-    // 2. Hard Goodbyes: a black-bordered photo card, the name spaced out across the top
+    // Hard Goodbyes: black and white on matte black, a silver keyline, quiet type
     case "goodbyes":
       return (
         <div className="tb-ins tb-ins--goodbyes">
-          <div
-            className="tb-ins__spaced"
-            style={{
-              fontSize: `${Math.min(5, 78 / Math.max(name.length, 8))}cqw`,
-            }}
-          >
-            {spaced(name)}
-          </div>
-          <div className="tb-ins__caption">Hard Goodbyes</div>
-          <div className="tb-ins__photo">
-            {scene}
-            {art}
-          </div>
+          {photo()}
+          <div className="tb-ins__keyline" aria-hidden />
           <div className="tb-ins__foot">
-            <span>
-              <b>{card.ovr}</b> {p.pos}
-            </span>
-            {serial}
-            <span className="tb-ins__plaque">{card.meta ?? "Retired"}</span>
-          </div>
-        </div>
-      );
-
-    // 3. Golden Boy: engraved gold foil with a medallion; the name on a small black tablet
-    case "goldenboy":
-      return (
-        <div className="tb-ins tb-ins--goldenboy">
-          {scene}
-          {art}
-          <div className="tb-ins__medal">
-            <b>{card.ovr}</b>
-            <small>{p.pos}</small>
-          </div>
-          <div className="tb-ins__tablet">
-            <span>{first}</span>
-            <b style={{ fontSize: `${nameSize(last || name, 0.72)}cqw` }}>
-              {last || name}
-            </b>
-            <small>
-              {card.team} {serial}
-            </small>
-          </div>
-        </div>
-      );
-
-    // 4. Generational: a comic burst, a brush-script set logo, the number on a jagged sticker
-    case "generational": {
-      const box = card.stats ? Object.entries(card.stats) : [];
-      const headline = card.title ?? "";
-      return (
-        <div className="tb-ins tb-ins--generational">
-          {scene}
-          {art}
-          <div className="tb-ins__script" aria-hidden>
-            Generational
-          </div>
-          <div className="tb-ins__sticker">
-            <b>{headline}</b>
-          </div>
-          <div className="tb-ins__ovrchip">
-            {card.ovr} <small>{p.pos}</small>
-          </div>
-          <div className="tb-ins__bottom">
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.88)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.62)}cqw` }}
             >
               {name}
             </div>
-            {card.kicker && <div className="tb-ins__kicker">{card.kicker}</div>}
-            <div className="tb-ins__box" title={card.statLine ?? undefined}>
+            <div className="tb-ins__line">
+              <i>Hard Goodbyes</i>
+              <span>{card.meta ?? "Retired"}</span>
+              <span>
+                {card.ovr} {p.pos}
+              </span>
+              {serial}
+            </div>
+          </div>
+        </div>
+      );
+
+    // Golden Boy: two inks, black and gold; the photo printed as a gold duotone
+    case "goldenboy":
+      return (
+        <div className="tb-ins tb-ins--goldenboy">
+          {photo()}
+          <div className="tb-ins__set">Golden Boy</div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.78)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__line">
+              <span>{card.team}</span>
+              {p.nation && <span>{p.nation}</span>}
+              {serial}
+            </div>
+          </div>
+        </div>
+      );
+
+    // Generational: the night's number in outline, half behind the player and half over them
+    case "generational": {
+      const big = card.title?.match(/\d+/)?.[0] ?? "";
+      const box = card.stats ? Object.entries(card.stats) : [];
+      return (
+        <div className="tb-ins tb-ins--generational">
+          {photo(
+            <div className="tb-ins__big" aria-hidden>
+              {big}
+            </div>,
+          )}
+          <div className="tb-ins__big is-front" aria-hidden>
+            {big}
+          </div>
+          <div className="tb-ins__set">
+            Generational
+            {card.kicker && <span>{card.kicker}</span>}
+          </div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.82)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__line" title={card.statLine ?? undefined}>
               {box.map(([k, v]) => (
                 <span key={k}>
                   <b>{fmtStat(true, v)}</b> {k}
@@ -218,113 +240,96 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
-    // 5. Ultimate Stardom: an ornate frame on a nebula; spaced title, name in the base rail
+    // Ultimate Stardom: holographic foil behind the player, moving with the tilt
     case "stardom":
       return (
         <div className="tb-ins tb-ins--stardom">
-          {scene}
-          {art}
-          <div className="tb-ins__cosmos">Ultimate Stardom</div>
-          <div className="tb-ins__node">
-            <b>{card.ovr}</b>
-          </div>
-          <div className="tb-ins__rail">
+          {photo(<div className="tb-ins__holo" aria-hidden />)}
+          <div className="tb-ins__set">Ultimate Stardom</div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.62)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}
             >
               {name}
             </div>
-            <span>
-              {card.team} · {p.pos} {serial}
-            </span>
+            <div className="tb-ins__line">
+              <span>{card.team}</span>
+              {serial}
+            </div>
           </div>
         </div>
       );
 
-    // 6–7. The Light / The Shadow: giant condensed type running up the card, a mirrored pair
+    // The Light / The Shadow: one photo lit two ways, high key in the East and low key in the West
     case "light":
-    case "shadow": {
-      const word = card.type === "light" ? "Light" : "Shadow";
+    case "shadow":
       return (
         <div className={`tb-ins tb-ins--${card.type}`}>
-          {scene}
-          <div className="tb-ins__giant" aria-hidden>
-            <span>The</span>
-            {word}
+          {photo()}
+          <div className="tb-ins__set">
+            {card.type === "light" ? "The Light" : "The Shadow"}
+            <span>{card.type === "light" ? "East" : "West"}</span>
           </div>
-          {art}
-          <div className="tb-ins__side">
-            <b style={{ fontSize: `${nameSize(name, 0.72)}cqw` }}>{name}</b>
-            <span>
-              {card.team} · {card.type === "light" ? "East" : "West"}
-            </span>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.78)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__line">
+              <span>{card.team}</span>
+              {serial}
+            </div>
           </div>
-          <div className="tb-ins__dot">
-            <b>{card.ovr}</b>
-            <small>{p.pos}</small>
-          </div>
-          {serial && <div className="tb-ins__corner">{serial}</div>}
         </div>
       );
-    }
 
-    // 8. Stone Fortress: an 8-bit castle; pixel title, the name on a stone plate
+    // Stone Fortress: a granite frame, the set name running round it like a wall
     case "fortress":
       return (
         <div className="tb-ins tb-ins--fortress">
-          {scene}
-          {art}
-          <div className="tb-ins__pixel">
-            Stone
-            <br />
-            Fortress
-          </div>
-          <div className="tb-ins__def">
-            <small>DEF</small>
-            <b>{card.ovr}</b>
-          </div>
-          <div className="tb-ins__stone">
+          <Wall id={`${wallId}-wall`} />
+          {photo()}
+          <Rating ovr={card.ovr} pos={p.pos} label="DEF" />
+          <div className="tb-ins__foot">
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.58)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.72)}cqw` }}
             >
               {name}
             </div>
-            <span>
-              {card.team} · {p.pos} {serial}
-            </span>
+            <div className="tb-ins__line">
+              <span>{card.team}</span>
+              {serial}
+            </div>
           </div>
         </div>
       );
 
-    // 9. Cult Classic: an 80s card: plain name up top, an arched photo window, a team band
+    // Cult Classic: yellowed vintage stock, the photo window printed a little off-centre
     case "cult":
       return (
         <div className="tb-ins tb-ins--cult">
-          {scene}
-          <div
-            className="tb-ins__topname"
-            style={{ fontSize: `${nameSize(name, 0.62)}cqw` }}
-          >
-            {name}
-          </div>
-          <div className="tb-ins__arch">{art}</div>
-          <div className="tb-ins__badge">
-            <small>Cult Classic</small>
-            <b>{card.ovr}</b>
-          </div>
-          <div className="tb-ins__band">
-            <b
-              style={{
-                fontSize: `${Math.min(10, 74 / Math.max(card.team.length, 5))}cqw`,
-              }}
+          {photo()}
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.7)}cqw` }}
             >
-              {card.team}
-            </b>
-            <span>
-              {p.pos} {serial}
-            </span>
+              {name}
+            </div>
+            <div className="tb-ins__line">
+              <span>{card.team}</span>
+              <span>
+                {p.pos} · {card.ovr}
+              </span>
+              <i>Cult Classic</i>
+              {serial}
+            </div>
           </div>
         </div>
       );

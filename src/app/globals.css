@@ -293,69 +293,54 @@ select {
 .tb-card[data-rarity="legendary"] .tb-card__frame { animation: tb-chrome 6s ease-in-out infinite; }
 .tb-card[data-rarity="mythic"] .tb-card__frame { background-size: 100% 100%; animation: tb-spin 5s linear infinite; }
 
-/* ── shared art pieces ── */
-.tb-art {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
+/* ── shared pieces ── */
 .tb-card__face-img {
   position: absolute;
   bottom: 0;
   left: -6%;
-  z-index: 2;
+  z-index: 1;
   width: 112%;
   height: 92%;
   object-fit: cover;
   object-position: 50% 100%;
   pointer-events: none;
-  filter: drop-shadow(0 1.2cqw 1.6cqw #00000073);
+  filter: drop-shadow(0 1.2cqw 1.6cqw #00000066);
 }
-.tb-card__splash,
-.tb-card__ghost {
+.tb-card__splash {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 22%;
+  object-position: 50% 20%;
   pointer-events: none;
-}
-.tb-card__ghost {
-  z-index: 1;
-  filter: brightness(0);
-  opacity: 0.55;
-  transform: translate(7cqw, 1cqw) skewX(-10deg);
-  transform-origin: 50% 100%;
 }
 .tb-card__mono {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 1;
   display: grid;
   place-items: center;
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 75%;
+  font-stretch: 72%;
   font-size: 30cqw;
   line-height: 1;
-  color: #ffffffe6;
-  text-shadow: 0 1cqw 2cqw #00000066;
+  color: #ffffffd9;
 }
 .tb-card__seticon {
   flex: none;
   width: 4.6cqw;
   height: 4.6cqw;
 }
-.tb-card__serial {
+.tb-card__serial,
+.tb-ins__serial {
   display: inline-flex;
   flex: none;
   align-items: center;
-  gap: 1.1cqw;
+  gap: 1cqw;
+  margin-left: auto;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
@@ -364,27 +349,29 @@ select {
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
 }
-.tb-card__serial b {
+.tb-card__serial b,
+.tb-ins__serial b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 80%;
   font-size: 3.4cqw;
-  color: var(--r-legendary);
 }
-.tb-card__serial i {
+.tb-card__serial i,
+.tb-ins__serial i {
   padding: 0 0.9cqw;
   border: 0.3cqw solid currentColor;
   border-radius: 0.5cqw;
   font-style: normal;
 }
-.tb-card__serial i.is-gem {
+.tb-card__serial i.is-gem,
+.tb-ins__serial i.is-gem {
   border-color: var(--r-legendary);
   background: var(--r-legendary);
   color: var(--ink);
 }
 
-/* ── base set: white border, a vertical set spine, the jersey number behind the player,
-   a colour-block bar (position, OVR in the rarity colour, team in script), a black name strip ── */
+/* ── base set: white stock, the player on the team colour with one angled band of the
+   second colour, OVR set straight on the photo, the name in black on the white ── */
 .tb-card:not([data-insert]):not(.is-reverse):not(.is-facedown) .tb-card__frame {
   grid-template-rows: minmax(0, 1fr);
   padding: 3.6cqw;
@@ -392,169 +379,121 @@ select {
 .tb-base {
   display: grid;
   min-height: 0;
-  grid-template-columns: 10cqw minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr) auto auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   overflow: hidden;
   border-radius: 1cqw;
   background: #fbfaf6;
-}
-.tb-base__spine {
-  display: flex;
-  grid-row: 1 / -1;
-  align-items: center;
-  justify-content: space-between;
-  padding: 2.4cqw 0;
-  background: #efe6cf;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-.tb-base__spine b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 72%;
-  font-size: 7.4cqw;
-  line-height: 1;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--t1) 70%, #1b1b1b);
-}
-.tb-base__spine span {
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.3cqw;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: #7a6a4f;
 }
 .tb-base__photo {
   position: relative;
   min-height: 0;
   overflow: hidden;
   isolation: isolate;
+  background:
+    radial-gradient(120% 80% at 30% 15%, #ffffff1f, transparent 60%),
+    var(--t1);
 }
-.tb-base__num {
+.tb-base__band {
   position: absolute;
-  right: -3cqw;
-  bottom: 4cqw;
-  z-index: 1;
+  right: -10%;
+  bottom: 12%;
+  left: -10%;
+  z-index: 0;
+  height: 28%;
+  background: var(--t2);
+  transform: skewY(-12deg);
+}
+.tb-base__ovr {
+  position: absolute;
+  top: 3cqw;
+  left: 3.4cqw;
+  z-index: 2;
+  color: #fff;
+  text-shadow: 0 0.4cqw 1.2cqw #0009;
+}
+.tb-base__ovr b {
+  display: block;
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 68%;
-  font-size: 64cqw;
-  line-height: 0.8;
-  letter-spacing: -0.04em;
-  color: var(--t2);
-  opacity: 0.85;
+  font-stretch: 72%;
+  font-size: 11cqw;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.tb-base__ovr span {
+  display: block;
+  margin-top: 0.6cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.8cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 .tb-base__rc {
   position: absolute;
-  top: 2.4cqw;
-  right: 2.4cqw;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 10.5cqw;
-  height: 7.6cqw;
-  border: 0.55cqw solid var(--ink);
-  border-radius: 1.1cqw;
-  background: #f2c200;
+  top: 3cqw;
+  right: 3cqw;
+  z-index: 2;
+  padding: 0.6cqw 1.6cqw;
+  border-radius: 0.6cqw;
+  background: #fff;
   color: var(--ink);
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 75%;
-  font-size: 4.8cqw;
-  box-shadow: 0 0.5cqw 1cqw #00000059;
+  font-stretch: 78%;
+  font-size: 4cqw;
+  letter-spacing: 0.04em;
 }
-.tb-base__bar {
-  display: flex;
-  height: 11cqw;
+.tb-base__plate {
+  padding: 2.6cqw 3cqw 2.8cqw;
+  border-top: 0.8cqw solid var(--t1);
+  background: #fbfaf6;
+  color: #111;
 }
-.tb-base__pos,
-.tb-base__ovr {
-  display: flex;
-  flex: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 12cqw;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 80%;
-}
-.tb-base__pos {
-  background: #14161c;
-  color: var(--paper);
-  font-size: 5cqw;
-}
-.tb-base__ovr {
-  width: 13cqw;
-  background: var(--rc);
-  color: var(--ink);
-}
-.tb-base__ovr b {
-  font-size: 6.4cqw;
-  line-height: 0.9;
-}
-.tb-base__ovr small {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 2cqw;
-  letter-spacing: 0.14em;
-}
-.tb-base__team {
-  display: flex;
-  min-width: 0;
-  flex: 1;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 0 3cqw 0.6cqw;
-  overflow: hidden;
-  font-family: var(--font-script), cursive;
-  font-size: 8cqw;
-  line-height: 1;
-  white-space: nowrap;
-  color: color-mix(in oklab, var(--t1) 85%, #000);
-}
-.tb-base__name {
-  grid-column: 2;
-  padding: 1.8cqw 2.6cqw 2cqw;
-  background: #14161c;
-  color: var(--paper);
-}
-.tb-base__name > b {
+.tb-base__plate > b {
   display: block;
   font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  font-stretch: 90%;
-  line-height: 1.05;
-  letter-spacing: 0.12em;
+  font-weight: 900;
+  font-stretch: 66%;
+  line-height: 0.92;
   text-transform: uppercase;
   text-wrap: balance;
 }
-.tb-base__name > span {
+.tb-base__plate > span {
   display: flex;
+  min-width: 0;
   align-items: center;
-  justify-content: space-between;
-  gap: 2cqw;
-  margin-top: 0.8cqw;
+  gap: 1.6cqw;
+  margin-top: 1.2cqw;
 }
-.tb-base__name i {
+.tb-base__plate em {
+  flex: none;
+  font-family: var(--font-body), sans-serif;
+  font-style: normal;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.7cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--t1) 85%, #000);
+}
+.tb-base__plate i {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
   font-style: normal;
-  font-weight: 700;
-  font-size: 2.4cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #9aa3b5;
+  font-weight: 600;
+  font-size: 2.6cqw;
+  color: #6b6f78;
 }
+.tb-base__plate .tb-card__serial b { color: #8a5f00; }
 
-/* ── insert sets (InsertCard.tsx over CardArt.tsx). The parallel border stays, thinner. ── */
+/* ── insert sets: one photo or print technique each, the set's name set as type.
+   The parallel border stays, thinner. ── */
 .tb-card[data-insert] .tb-card__frame {
   grid-template-rows: minmax(0, 1fr);
   padding: 3cqw;
@@ -563,774 +502,379 @@ select {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border-radius: 1.6cqw;
+  border-radius: 1.4cqw;
   background: #111;
+  color: #fff;
 }
-.tb-ins__art {
+.tb-ins__photo {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--t1);
 }
-.tb-ins__serial {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: 1cqw;
+.tb-ins__ovr {
+  position: absolute;
+  top: 4cqw;
+  right: 4cqw;
+  z-index: 4;
+  text-align: right;
+  text-shadow: 0 0.4cqw 1.2cqw #0008;
+}
+.tb-ins__ovr small,
+.tb-ins__ovr span {
+  display: block;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.4cqw;
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
+  font-size: 2.5cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
-.tb-ins__serial b {
+.tb-ins__ovr b {
+  display: block;
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 80%;
-  font-size: 3.2cqw;
+  font-stretch: 72%;
+  font-size: 10cqw;
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
 }
-.tb-ins__serial i {
-  padding: 0 0.9cqw;
-  border: 0.3cqw solid currentColor;
-  border-radius: 0.5cqw;
-  font-style: normal;
+.tb-ins__set {
+  position: absolute;
+  top: 4.4cqw;
+  left: 4cqw;
+  z-index: 4;
+  max-width: 62cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-stretch: 90%;
+  font-size: 3.3cqw;
+  line-height: 1.1;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
 }
-.tb-ins__serial i.is-gem {
-  border-color: var(--r-legendary);
-  background: var(--r-legendary);
-  color: var(--ink);
+.tb-ins__set span {
+  display: block;
+  margin-top: 0.8cqw;
+  font-family: var(--font-body), sans-serif;
+  font-weight: 700;
+  font-size: 2.3cqw;
+  letter-spacing: 0.12em;
+  opacity: 0.8;
+}
+.tb-ins__foot {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 4;
+  padding: 3cqw 4cqw 3.6cqw;
 }
 .tb-ins__name {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 68%;
-  line-height: 0.9;
+  font-stretch: 66%;
+  line-height: 0.92;
   text-transform: uppercase;
   text-wrap: balance;
 }
-
-/* 1. New Blood (after Mosaic): line field, italic title, hex rating, notched white plate */
-.tb-ins--newblood .tb-ins__art { inset: 16cqw 0 27cqw; }
-.tb-ins__title {
-  position: absolute;
-  top: 3cqw;
-  left: 4cqw;
-  z-index: 5;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-style: italic;
-  font-stretch: 80%;
-  font-size: 9.6cqw;
-  line-height: 0.85;
-  text-transform: uppercase;
-  color: #fff;
-}
-.tb-ins__title small {
-  display: block;
-  margin-top: 0.8cqw;
-  font-family: var(--font-body), sans-serif;
-  font-style: normal;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.4cqw;
-  letter-spacing: 0.3em;
-  color: #9aa3b5;
-}
-.tb-ins__hex {
-  position: absolute;
-  top: 3cqw;
-  right: 3.4cqw;
-  z-index: 5;
-  display: flex;
-  width: 14cqw;
-  height: 16cqw;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--t1);
-  color: #fff;
-  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  text-shadow: 0 0.3cqw 0.6cqw #0008;
-}
-.tb-ins__hex b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 6.2cqw;
-  line-height: 0.9;
-}
-.tb-ins__hex small,
-.tb-ins__medal small,
-.tb-ins__dot small {
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.2cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.tb-ins__plate {
-  position: absolute;
-  right: 4cqw;
-  bottom: 4cqw;
-  left: 4cqw;
-  z-index: 5;
-  padding: 2cqw 3cqw 2.6cqw;
-  background: #f7f7f4;
-  color: #111;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 4cqw 100%, 0 calc(100% - 4cqw));
-}
-.tb-ins__move {
-  display: flex;
-  align-items: center;
-  gap: 1.2cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #6b6f78;
-}
-.tb-ins__move s {
-  text-decoration-color: var(--stamp-ink);
-  text-decoration-thickness: 0.35cqw;
-}
-.tb-ins__move b { color: #111; }
-.tb-ins__move .tb-ins__serial { margin-left: auto; }
-.tb-ins--newblood .tb-ins__name { margin-top: 0.9cqw; }
-
-/* 2. Hard Goodbyes (after the black-border "off the court" cards): spaced name, sepia photo */
-.tb-card[data-type="goodbyes"] .tb-card__frame {
-  background: #0b0b0c;
-  box-shadow: inset 0 0 0 0.6cqw var(--rc);
-  animation: none;
-}
-.tb-ins--goodbyes { background: #0b0b0c; }
-.tb-ins__spaced {
-  position: absolute;
-  top: 4cqw;
-  right: 3cqw;
-  left: 4cqw;
-  z-index: 5;
-  overflow: hidden;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.5em;
-  white-space: nowrap;
-  color: #f4f2ea;
-}
-.tb-ins__caption {
-  position: absolute;
-  top: 10.4cqw;
-  right: 4cqw;
-  z-index: 5;
-  font-family: var(--font-body), sans-serif;
-  font-style: italic;
-  font-weight: 700;
-  font-size: 2.8cqw;
-  letter-spacing: 0.06em;
-  color: #b9b2a6;
-}
-.tb-ins__photo {
-  position: absolute;
-  top: 15cqw;
-  right: 4cqw;
-  bottom: 13cqw;
-  left: 4cqw;
-  overflow: hidden;
-  filter: sepia(0.55) contrast(1.05);
-}
-.tb-ins--goodbyes .tb-card__mono {
-  color: transparent;
-  -webkit-text-stroke: 0.5cqw #f4e2c0;
-  text-shadow: none;
-}
-.tb-ins__foot {
-  position: absolute;
-  right: 4cqw;
-  bottom: 4cqw;
-  left: 4cqw;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 2cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #f4f2ea;
-}
-.tb-ins__foot b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-size: 4.6cqw;
-  letter-spacing: 0;
-}
-.tb-ins__plaque {
-  margin-left: auto;
-  padding: 0.6cqw 1.6cqw;
-  border-radius: 0.4cqw;
-  background: linear-gradient(180deg, #e8c870, #b98a2a);
-  color: #1b1203;
-  font-size: 2.3cqw;
-}
-
-/* 3. Golden Boy (after the gold medal foils): engraved gold, medallion rating, black tablet */
-.tb-art__ring {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 80%;
-  font-size: 4.3px;
-  letter-spacing: 0.55px;
-  fill: #7a5408;
-}
-.tb-ins--goldenboy .tb-ins__art { inset: 8cqw 0 26cqw; }
-.tb-ins--goldenboy .tb-card__mono { color: #7a5408; text-shadow: 0 0.5cqw 0 #fff3c4; }
-.tb-ins__medal {
-  position: absolute;
-  top: 3cqw;
-  left: 3cqw;
-  z-index: 5;
-  display: flex;
-  width: 15cqw;
-  aspect-ratio: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff3c4, #d6a11a 55%, #8a6206);
-  color: #3a2603;
-  box-shadow: 0 0.6cqw 1.2cqw #0006, inset 0 0 0 0.5cqw #7a5408;
-}
-.tb-ins__medal b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 6.2cqw;
-  line-height: 0.9;
-}
-.tb-ins__tablet {
-  position: absolute;
-  right: 4cqw;
-  bottom: 4cqw;
-  z-index: 5;
-  min-width: 52cqw;
-  max-width: 82cqw;
-  padding: 2.2cqw 3cqw 2.4cqw;
-  border: 0.5cqw solid #c99a2e;
-  background: #121009;
-  color: #f3d27a;
-  text-align: right;
-  box-shadow: 0 1cqw 2cqw #0007;
-}
-.tb-ins__tablet > span {
-  display: block;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #d9c08a;
-}
-.tb-ins__tablet > b {
-  display: block;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 68%;
-  line-height: 0.9;
-  text-transform: uppercase;
-  overflow-wrap: break-word;
-}
-.tb-ins__tablet > small {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 1.2cqw;
-  margin-top: 1cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.3cqw;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #b8a272;
-}
-
-/* 4. Generational (after the comic-burst inserts): brush-script logo, headline sticker */
-.tb-ins--generational .tb-ins__art { inset: 15cqw 0 30cqw; }
-.tb-ins--generational .tb-card__mono {
-  color: #fff;
-  -webkit-text-stroke: 0.8cqw #111;
-  paint-order: stroke fill;
-  text-shadow: none;
-}
-.tb-ins__script {
-  position: absolute;
-  top: 2cqw;
-  right: 2cqw;
-  left: 2cqw;
-  z-index: 5;
-  font-family: var(--font-script), cursive;
-  font-size: 15cqw;
-  line-height: 1.05;
-  text-align: center;
-  color: #fff;
-  -webkit-text-stroke: 1.6cqw #111;
-  paint-order: stroke fill;
-  transform: rotate(-6deg);
-  filter: drop-shadow(0 0.8cqw 0.2cqw #0009);
-}
-.tb-ins__sticker {
-  position: absolute;
-  top: 54cqw;
-  right: 3cqw;
-  z-index: 5;
-  max-width: 30cqw;
-  padding: 1.8cqw 2.2cqw;
-  border: 0.7cqw solid #111;
-  border-radius: 1cqw;
-  background: #ffd23f;
-  color: #111;
-  text-align: center;
-  transform: rotate(8deg);
-  box-shadow: 0 0.8cqw 1.4cqw #0007;
-}
-.tb-ins__sticker b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 6.4cqw;
-  line-height: 0.9;
-  text-transform: uppercase;
-}
-.tb-ins__ovrchip {
-  position: absolute;
-  top: 24cqw;
-  left: 3cqw;
-  z-index: 5;
-  padding: 0.8cqw 1.8cqw;
-  border-radius: 99px;
-  background: #111;
-  color: #ffd23f;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 5cqw;
-}
-.tb-ins__ovrchip small {
-  font-family: var(--font-body), sans-serif;
-  font-size: 2.2cqw;
-  letter-spacing: 0.12em;
-  color: #fff;
-}
-.tb-ins__bottom {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 5;
-  padding: 6cqw 4cqw 3.4cqw;
-  background: linear-gradient(180deg, transparent, #000000e0 40%);
-  color: #fff;
-}
-.tb-ins__kicker {
-  margin-top: 0.9cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #ffd23f;
-}
-.tb-ins__box {
+.tb-ins__line {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1cqw 2.4cqw;
-  margin-top: 1cqw;
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 2.4cqw;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #d8d8d8;
-  font-variant-numeric: tabular-nums;
-}
-.tb-ins__box b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-size: 4.2cqw;
-  letter-spacing: 0;
-  color: #fff;
-}
-
-/* 5. Ultimate Stardom (after the cosmic line-frame inserts): arch-framed art, spaced title */
-.tb-ins--stardom .tb-ins__art {
-  inset: 13cqw 9cqw 22cqw;
-  overflow: hidden;
-  border-radius: 40cqw 40cqw 0 0 / 34cqw 34cqw 0 0;
-}
-.tb-ins--stardom .tb-card__mono { color: #e8f1ff; text-shadow: 0 0 3cqw #8fb8ff; }
-.tb-ins__cosmos {
-  position: absolute;
-  top: 4.6cqw;
-  right: 0;
-  left: 0;
-  z-index: 5;
-  text-align: center;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 300;
-  font-stretch: 115%;
-  font-size: 3.4cqw;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: #e8f1ff;
-  text-shadow: 0 0 1.6cqw #8fb8ff;
-}
-.tb-ins__node {
-  position: absolute;
-  bottom: 22cqw;
-  left: 2.4cqw;
-  z-index: 5;
-  display: grid;
-  place-items: center;
-  width: 12cqw;
-  aspect-ratio: 1;
-  border: 0.5cqw solid #e8f1ff;
-  border-radius: 50%;
-  background: #05040f;
-  color: #e8f1ff;
-  box-shadow: 0 0 2cqw #8fb8ff88;
-}
-.tb-ins__node b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 80%;
-  font-size: 5cqw;
-}
-.tb-ins__rail {
-  position: absolute;
-  right: 6cqw;
-  bottom: 4cqw;
-  left: 6cqw;
-  z-index: 5;
-  padding-top: 2cqw;
-  border-top: 0.35cqw solid #e8f1ff99;
-  text-align: center;
-  color: #f4f6ff;
-}
-.tb-ins--stardom .tb-ins__name {
-  font-weight: 700;
-  font-stretch: 115%;
-  line-height: 1.1;
-  letter-spacing: 0.2em;
-}
-.tb-ins__rail > span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.2cqw;
-  margin-top: 1cqw;
-  font-family: var(--font-body), sans-serif;
-  font-weight: 700;
-  font-size: 2.4cqw;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #a9b9e0;
-}
-
-/* 6–7. The Light / The Shadow (after the giant-type inserts): a mirrored pair */
-.tb-ins--light { --giant: color-mix(in oklab, var(--t1) 80%, white); --side: var(--ink); --soft: var(--ink-soft); }
-.tb-ins--shadow { --giant: color-mix(in oklab, var(--t1) 50%, #1d1f26); --side: var(--paper); --soft: #9aa3b5; }
-.tb-ins__giant {
-  position: absolute;
-  top: 2cqw;
-  bottom: 2cqw;
-  z-index: 1;
-  display: flex;
-  align-items: flex-start;
-  writing-mode: vertical-rl;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 62%;
-  font-size: 44cqw;
-  line-height: 0.8;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: var(--giant);
-}
-.tb-ins__giant span {
-  font-size: 0.32em;
-  letter-spacing: 0.08em;
-}
-.tb-ins--light .tb-ins__giant { right: -1cqw; }
-.tb-ins--shadow .tb-ins__giant { left: -1cqw; font-size: 38cqw; transform: rotate(180deg); }
-.tb-ins--light .tb-ins__art { inset: 4cqw 4cqw 0 0; }
-.tb-ins--shadow .tb-ins__art { inset: 4cqw 0 0 4cqw; }
-.tb-ins--light .tb-card__mono { color: var(--t1); text-shadow: none; }
-.tb-ins--shadow .tb-card__mono {
-  color: #000;
-  -webkit-text-stroke: 0.5cqw color-mix(in oklab, var(--t1) 70%, white);
-  text-shadow: 6cqw 1cqw 0 #00000080;
-}
-.tb-ins__side {
-  position: absolute;
-  bottom: 4cqw;
-  z-index: 5;
-  display: flex;
-  max-height: 96cqw;
-  gap: 1.4cqw;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-.tb-ins--light .tb-ins__side { left: 3.4cqw; }
-.tb-ins--shadow .tb-ins__side { right: 3.4cqw; }
-.tb-ins__side b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 68%;
-  line-height: 0.9;
-  text-transform: uppercase;
-  color: var(--side);
-}
-.tb-ins__side span {
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--soft);
-}
-.tb-ins__dot {
-  position: absolute;
-  bottom: 4cqw;
-  z-index: 5;
-  display: flex;
-  width: 13cqw;
-  aspect-ratio: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--t1);
-  color: #fff;
-  box-shadow: 0 0.6cqw 1.2cqw #0006, inset 0 0 0 0.45cqw #ffffff59;
-}
-.tb-ins--light .tb-ins__dot { right: 4cqw; }
-.tb-ins--shadow .tb-ins__dot { left: 4cqw; }
-.tb-ins__dot b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 78%;
-  font-size: 5.4cqw;
-  line-height: 0.9;
-}
-.tb-ins__corner {
-  position: absolute;
-  top: 3cqw;
-  z-index: 5;
-  color: var(--side);
-}
-.tb-ins--light .tb-ins__corner { left: 3.4cqw; }
-.tb-ins--shadow .tb-ins__corner { right: 3.4cqw; }
-
-/* 8. Stone Fortress (after the 8-bit inserts): pixel castle, pixel title and DEF stat box */
-.tb-ins--fortress .tb-ins__art { inset: 17cqw 0 22cqw; }
-.tb-ins--fortress .tb-card__mono {
-  font-family: var(--font-pixel), monospace;
-  font-weight: 400;
-  font-size: 16cqw;
-  color: #fff;
-  text-shadow: 0.9cqw 0.9cqw 0 #1b2a52;
-}
-.tb-ins__pixel {
-  position: absolute;
-  top: 4cqw;
-  left: 4cqw;
-  z-index: 5;
-  font-family: var(--font-pixel), monospace;
-  font-size: 4.4cqw;
-  line-height: 1.3;
-  text-transform: uppercase;
-  color: #ffe066;
-  text-shadow: 0.6cqw 0.6cqw 0 #1b2a52;
-}
-.tb-ins__def {
-  position: absolute;
-  top: 4cqw;
-  right: 4cqw;
-  z-index: 5;
-  padding: 1.2cqw 1.8cqw 1.4cqw;
-  border: 0.7cqw solid #fff;
-  background: #1b2a52;
-  color: #fff;
-  text-align: center;
-  font-family: var(--font-pixel), monospace;
-  box-shadow: 0 0 0 0.7cqw #1b2a52;
-}
-.tb-ins__def small {
-  display: block;
-  font-size: 1.9cqw;
-  color: #ffe066;
-}
-.tb-ins__def b {
-  display: block;
-  margin-top: 1cqw;
-  font-weight: 400;
-  font-size: 4.8cqw;
-}
-.tb-ins__stone {
-  position: absolute;
-  right: 4cqw;
-  bottom: 4cqw;
-  left: 4cqw;
-  z-index: 5;
-  padding: 2.2cqw 3cqw 2.4cqw;
-  border: 0.8cqw solid #fff;
-  background: #2b2f36;
-  color: #fff;
-  box-shadow: 0 0 0 0.8cqw #2b2f36;
-}
-.tb-ins--fortress .tb-ins__name {
-  font-family: var(--font-pixel), monospace;
-  font-weight: 400;
-  line-height: 1.35;
-}
-.tb-ins__stone > span {
-  display: flex;
-  align-items: center;
-  gap: 1.4cqw;
-  margin-top: 1.4cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #c9d3e8;
-}
-
-/* 9. Cult Classic (after the late-80s base cards): plain name up top, arched window, team band */
-.tb-ins--cult { background: #f7f5ef; }
-.tb-ins__topname {
-  position: absolute;
-  top: 3.6cqw;
-  right: 4cqw;
-  left: 4cqw;
-  z-index: 5;
-  overflow: hidden;
-  text-align: center;
-  white-space: nowrap;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  font-stretch: 95%;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: #141414;
-}
-.tb-ins__arch {
-  position: absolute;
-  top: 12cqw;
-  right: 6cqw;
-  bottom: 24cqw;
-  left: 6cqw;
-  z-index: 2;
-  overflow: hidden;
-  border: 1cqw solid var(--t1);
-  border-radius: 42cqw 42cqw 1cqw 1cqw / 34cqw 34cqw 1cqw 1cqw;
-  background: color-mix(in oklab, var(--t1) 22%, #efeae0);
-}
-.tb-ins--cult .tb-card__mono { color: var(--t1); text-shadow: none; }
-.tb-ins__badge {
-  position: absolute;
-  bottom: 15cqw;
-  left: 4cqw;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  gap: 1.4cqw;
-  padding: 0.8cqw 1.8cqw;
-  border-radius: 0.6cqw;
-  background: #141414;
-  color: #fff;
-}
-.tb-ins__badge small {
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.2cqw;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.tb-ins__badge b {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 80%;
-  font-size: 4.6cqw;
-}
-.tb-ins__band {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 4;
-  display: flex;
-  height: 13cqw;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2cqw;
-  padding: 0 4cqw;
-  border-top: 0.8cqw solid var(--t1);
-  background: color-mix(in oklab, var(--t1) 16%, #fbf8f1);
-}
-.tb-ins__band b {
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-style: italic;
-  font-stretch: 112%;
-  line-height: 1;
-  text-transform: uppercase;
-  color: color-mix(in oklab, var(--t1) 85%, #000);
-}
-.tb-ins__band span {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 1.2cqw;
+  gap: 0.8cqw 1.8cqw;
+  margin-top: 1.2cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
   font-size: 2.6cqw;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #141414;
+  font-variant-numeric: tabular-nums;
 }
+.tb-ins__line b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 3.6cqw;
+  letter-spacing: 0;
+}
+.tb-ins__line i {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* New Blood: split-tone photo; the old team's hue left of a seam, the new team's right */
+.tb-ins--newblood .tb-ins__photo { bottom: 26cqw; }
+.tb-ins__old {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 2;
+  width: 34%;
+  background: var(--f1);
+  mix-blend-mode: color;
+  opacity: 0.92;
+}
+.tb-ins__seam {
+  position: absolute;
+  top: 0;
+  bottom: 26cqw;
+  left: 34%;
+  z-index: 3;
+  width: 0.7cqw;
+  background: #fff;
+}
+.tb-ins__seam span {
+  position: absolute;
+  top: 4cqw;
+  left: 1.8cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-stretch: 90%;
+  font-size: 3cqw;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  color: #fff;
+  text-shadow: 0 0 0.8cqw #0007;
+}
+.tb-ins--newblood .tb-ins__foot {
+  display: flex;
+  height: 26cqw;
+  flex-direction: column;
+  justify-content: center;
+  background: #0e0f12;
+}
+.tb-ins--newblood .tb-ins__line { color: #8a8f99; }
+.tb-ins--newblood .tb-ins__line s { text-decoration-color: var(--stamp); text-decoration-thickness: 0.35cqw; }
+.tb-ins--newblood .tb-ins__line b { color: #fff; }
+
+/* Hard Goodbyes: black and white on matte black, a silver keyline, quiet spaced type */
+.tb-card[data-type="goodbyes"] .tb-card__frame {
+  background: #0d0d0e;
+  box-shadow: inset 0 0 0 0.6cqw var(--rc);
+  animation: none;
+}
+.tb-ins--goodbyes { background: #0d0d0e; color: #e9e6df; }
+.tb-ins--goodbyes .tb-ins__photo { inset: 6cqw 6cqw 28cqw; background: #2a2a2c; }
+.tb-ins--goodbyes .tb-card__splash { filter: grayscale(1) contrast(1.1) brightness(0.95); }
+.tb-ins--goodbyes .tb-card__mono { color: #d9d6cf; }
+.tb-ins__keyline {
+  position: absolute;
+  inset: 3.6cqw 3.6cqw 25.6cqw;
+  z-index: 3;
+  border: 0.35cqw solid #b9bcc2;
+  pointer-events: none;
+}
+.tb-ins--goodbyes .tb-ins__foot { padding-bottom: 5cqw; text-align: center; }
+.tb-ins--goodbyes .tb-ins__name {
+  font-weight: 700;
+  font-stretch: 100%;
+  line-height: 1.15;
+  letter-spacing: 0.26em;
+}
+.tb-ins--goodbyes .tb-ins__line { justify-content: center; color: #9a9da3; }
+.tb-ins--goodbyes .tb-ins__line .tb-ins__serial { margin-left: 0; }
+
+/* Golden Boy: two inks; black stock, the photo as a gold duotone, gold type */
+.tb-ins--goldenboy { background: #0c0b08; color: #e2b64f; }
+.tb-ins--goldenboy .tb-ins__photo { inset: 14cqw 6cqw 30cqw; background: #2a2010; }
+.tb-ins--goldenboy .tb-ins__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #d9a62a;
+  mix-blend-mode: multiply;
+}
+.tb-ins--goldenboy .tb-card__splash { filter: grayscale(1) contrast(1.2) brightness(1.15); }
+.tb-ins--goldenboy .tb-card__mono { color: #fff3c4; }
+.tb-ins--goldenboy .tb-ins__set {
+  top: 5cqw;
+  left: 6cqw;
+  padding-bottom: 1.2cqw;
+  border-bottom: 0.35cqw solid currentColor;
+}
+.tb-ins--goldenboy .tb-ins__ovr { top: 4cqw; right: 6cqw; text-shadow: none; }
+.tb-ins--goldenboy .tb-ins__foot { padding: 0 6cqw 5cqw; }
+.tb-ins--goldenboy .tb-ins__line { color: #a88a45; }
+
+/* Generational: the night's number in outline, half behind the player and half over them */
+.tb-ins--generational { background: var(--t1); }
+.tb-ins--generational .tb-ins__photo { bottom: 24cqw; }
+.tb-ins__big {
+  position: absolute;
+  bottom: 3cqw;
+  left: -3cqw;
+  z-index: 0;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: 74cqw;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: color-mix(in oklab, var(--t1) 62%, #000);
+  pointer-events: none;
+}
+.tb-ins__big.is-front {
+  bottom: 27cqw;
+  z-index: 3;
+  color: transparent;
+  -webkit-text-stroke: 0.45cqw #fff;
+}
+.tb-ins--generational .tb-ins__foot {
+  display: flex;
+  height: 24cqw;
+  flex-direction: column;
+  justify-content: center;
+  background: #0e0f12;
+}
+.tb-ins--generational .tb-ins__line { color: #b8bcc6; }
+.tb-ins--generational .tb-ins__line b { color: #fff; }
+
+/* Ultimate Stardom: holographic foil behind the player, shifting as the card tilts */
+.tb-ins--stardom { background: #0b0b0e; }
+.tb-ins--stardom .tb-ins__photo { bottom: 24cqw; background: #16161a; }
+.tb-ins__holo,
+.tb-ins--stardom .tb-ins__foot::before {
+  background:
+    repeating-linear-gradient(45deg, #ffffff2e 0 0.3cqw, transparent 0.3cqw 0.9cqw),
+    repeating-linear-gradient(calc(115deg + var(--ry, 0deg) * 4), #ff8ad9 0 6%, #8ad7ff 12%, #c2ff8a 18%, #ffe68a 24%, #ff8ad9 30%);
+}
+.tb-ins__holo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.85;
+}
+.tb-ins--stardom .tb-ins__set { color: #fff; text-shadow: 0 0.3cqw 1cqw #0009; }
+.tb-ins--stardom .tb-ins__foot {
+  display: flex;
+  height: 24cqw;
+  flex-direction: column;
+  justify-content: center;
+  background: #0b0b0e;
+}
+.tb-ins--stardom .tb-ins__foot::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.7cqw;
+}
+.tb-ins--stardom .tb-ins__line { color: #9aa3b5; }
+
+/* The Light / The Shadow: one photo lit two ways. East is high key and light type;
+   West is low key, a rim of team colour, heavy type. */
+.tb-ins--light { background: #f6f6f3; color: var(--ink); }
+.tb-ins--light .tb-ins__photo { bottom: 24cqw; background: #eeede8; }
+.tb-ins--light .tb-card__splash { filter: brightness(1.12) contrast(0.92) saturate(0.85); }
+.tb-ins--light .tb-card__mono { color: color-mix(in oklab, var(--t1) 55%, white); font-weight: 300; }
+.tb-ins--light .tb-ins__ovr { text-shadow: none; }
+.tb-ins--light .tb-ins__ovr b { font-weight: 300; }
+.tb-ins--light .tb-ins__set { font-weight: 400; }
+.tb-ins--light .tb-ins__foot {
+  display: flex;
+  height: 24cqw;
+  flex-direction: column;
+  justify-content: center;
+  border-top: 0.5cqw solid var(--t1);
+  background: #f6f6f3;
+}
+.tb-ins--light .tb-ins__name { font-weight: 300; font-stretch: 80%; }
+.tb-ins--light .tb-ins__line { color: var(--ink-soft); }
+
+.tb-ins--shadow { background: #050506; color: #f2f2f2; }
+.tb-ins--shadow .tb-ins__photo { bottom: 24cqw; background: #0c0c0e; }
+.tb-ins--shadow .tb-ins__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(270deg, color-mix(in oklab, var(--t1) 75%, transparent), transparent 10%),
+    linear-gradient(90deg, #000000d9, transparent 60%);
+}
+.tb-ins--shadow .tb-card__splash { filter: brightness(0.82) contrast(1.25) saturate(0.9); }
+.tb-ins--shadow .tb-card__mono { color: color-mix(in oklab, var(--t1) 45%, #1c1d22); }
+.tb-ins--shadow .tb-ins__foot {
+  display: flex;
+  height: 24cqw;
+  flex-direction: column;
+  justify-content: center;
+  background: #050506;
+}
+.tb-ins--shadow .tb-ins__line { color: #8b8f99; }
+
+/* Stone Fortress: a granite frame, the set name running round it like a wall */
+.tb-ins--fortress {
+  background:
+    radial-gradient(circle, #ffffff14 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.3cqw 1.3cqw,
+    radial-gradient(circle, #00000024 0 0.3cqw, transparent 0.4cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw,
+    #6c6f75;
+}
+.tb-ins__wall {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+.tb-ins__wall text {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-stretch: 90%;
+  font-size: 3.4px;
+  letter-spacing: 0.6px;
+  fill: #dcdee2;
+}
+.tb-ins--fortress .tb-ins__photo {
+  inset: 9cqw;
+  background: color-mix(in oklab, var(--t1) 80%, #000);
+  box-shadow: inset 0 0 0 0.5cqw #00000066;
+}
+.tb-ins--fortress .tb-ins__ovr { top: 12cqw; right: 12cqw; }
+.tb-ins--fortress .tb-ins__foot {
+  right: 9cqw;
+  bottom: 9cqw;
+  left: 9cqw;
+  padding: 8cqw 3cqw 3cqw;
+  background: linear-gradient(180deg, transparent, #000000c7 45%);
+}
+.tb-ins--fortress .tb-ins__line { color: #c5c8ce; }
+
+/* Cult Classic: yellowed vintage stock, the photo window printed a little off-centre */
+.tb-ins--cult {
+  background:
+    radial-gradient(130% 100% at 50% 40%, transparent 55%, #b8964f40),
+    #efe3c4;
+  color: #2a2118;
+}
+.tb-ins--cult .tb-ins__photo {
+  inset: 5cqw 7.4cqw 30cqw 4.2cqw;
+  border-radius: 2.4cqw;
+  background: color-mix(in oklab, var(--t1) 55%, #8a7a5a);
+  box-shadow: inset 0 0 0 0.4cqw #0003;
+}
+.tb-ins--cult .tb-card__splash { filter: sepia(0.28) saturate(0.82) contrast(0.95); }
+.tb-ins--cult .tb-ins__foot { padding: 2.6cqw 7.4cqw 4cqw 4.2cqw; }
+.tb-ins--cult .tb-ins__name {
+  font-style: italic;
+  font-stretch: 100%;
+  color: color-mix(in oklab, var(--t1) 85%, #000);
+}
+.tb-ins--cult .tb-ins__line { color: #6a5a44; }
 
 /* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
 @container (max-width: 170px) {
-  .tb-base__spine span,
-  .tb-base__name > span,
-  .tb-ins__title small,
-  .tb-ins__move,
-  .tb-ins__caption,
-  .tb-ins__foot,
-  .tb-ins__tablet > small,
-  .tb-ins__tablet > span,
-  .tb-ins__kicker,
-  .tb-ins__box,
-  .tb-ins__rail > span,
-  .tb-ins__side span,
-  .tb-ins__stone > span,
-  .tb-ins__band span,
-  .tb-ins__badge small {
+  .tb-base__plate > span,
+  .tb-ins__line,
+  .tb-ins__set span,
+  .tb-ins__seam span {
     display: none;
+  }
+  .tb-ins__set {
+    font-size: 4cqw;
+    letter-spacing: 0.16em;
   }
 }
 

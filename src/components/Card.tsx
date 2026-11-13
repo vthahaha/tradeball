@@ -6,14 +6,12 @@ import {
   headshotUrl,
   INSERT_NAMES,
   isInsert,
-  NBA_SEASON,
   SET_NAME,
   teamColors,
   type CardView,
   type Finish,
   type Rarity,
 } from "@/lib/catalog";
-import { BaseScene } from "./CardArt";
 import { fmtStat, initials, lastName, nameSize } from "./cardText";
 import { InsertFront } from "./InsertCard";
 
@@ -177,13 +175,8 @@ export function Card({
           />
         ) : (
           <div className="tb-base">
-            <div className="tb-base__spine" aria-hidden>
-              <b>Gate 7</b>
-              <span>{NBA_SEASON} Basketball</span>
-            </div>
             <div className="tb-base__photo">
-              <BaseScene id={uid} />
-              {p1.jersey && <div className="tb-base__num">{p1.jersey}</div>}
+              <div className="tb-base__band" aria-hidden />
               {showImg ? (
                 // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs, hotlinked on purpose
                 <img
@@ -199,23 +192,20 @@ export function Card({
               ) : (
                 <div className="tb-card__mono">{ini}</div>
               )}
+              <div className="tb-base__ovr">
+                <b>{card.ovr}</b>
+                <span>{isDuo ? "Duo" : p1.pos}</span>
+              </div>
               {card.type === "rookie" && (
                 <div className="tb-base__rc" title="Rookie card">
                   RC
                 </div>
               )}
             </div>
-            <div className="tb-base__bar">
-              <span className="tb-base__pos">{isDuo ? "Duo" : p1.pos}</span>
-              <span className="tb-base__ovr">
-                <b>{card.ovr}</b>
-                <small>OVR</small>
-              </span>
-              <span className="tb-base__team">{card.team}</span>
-            </div>
-            <div className="tb-base__name">
-              <b style={{ fontSize: `${nameSize(name, 0.56)}cqw` }}>{name}</b>
+            <div className="tb-base__plate">
+              <b style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}>{name}</b>
               <span>
+                <em>{card.team}</em>
                 <i>{baseMeta(card)}</i>
                 <SerialLine
                   finish={finish}
