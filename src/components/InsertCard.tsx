@@ -487,43 +487,28 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // Best of the Best: the photo in a notch-cornered gold frame, the Finals year running down
-    // its edge in outline, a team badge, and an engraved trophy plate at the foot
+    // Best of the Best: a big notch-cornered photo (the trophies carry the gold), the rating on
+    // the photo, a plate with a team-colour stripe, the name, the Finals line and the year
     case "botb":
       return (
         <div className="tb-ins tb-ins--botb">
-          <div className="tb-ins__goldframe" aria-hidden />
           {photo()}
-          <div className="tb-ins__year" aria-hidden>
-            {card.kicker}
-          </div>
-          <div className="tb-ins__badge" aria-hidden>
-            {teamCode(card.team)}
-          </div>
+          <Rating ovr={card.ovr} pos={p.pos} />
           <div className="tb-ins__plate">
             <div className="tb-ins__plate-main">
               <div
                 className="tb-ins__name"
-                style={{ fontSize: `${nameSize(name, 0.72)}cqw` }}
+                style={{ fontSize: `${nameSize(name, 0.78)}cqw` }}
               >
                 {name}
               </div>
               <div className="tb-ins__line">
                 <b>Finals MVP</b>
-                <span>
-                  {card.kicker} · {card.team}
-                </span>
-              </div>
-              <div className="tb-ins__fine">
-                <span>Best of the Best</span>
+                <span>{card.team}</span>
                 {serial}
-                {no}
               </div>
             </div>
-            <div className="tb-ins__plate-ovr">
-              <b>{card.ovr}</b>
-              <small>{p.pos}</small>
-            </div>
+            <div className="tb-ins__plate-year">{card.kicker}</div>
           </div>
         </div>
       );
