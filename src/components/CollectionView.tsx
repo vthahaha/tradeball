@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { CardView } from "@/lib/catalog";
 import { isInsert, RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
-import { Card } from "./Card";
+import { Card, TurnableCard } from "./Card";
 
 export interface OwnedCopy {
   instanceId: string;
@@ -539,7 +539,7 @@ function CardDetail({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-64 shrink-0 sm:w-80">
-          <Card
+          <TurnableCard
             card={design}
             finish={copy?.finish}
             serialNo={copy?.serialNo}

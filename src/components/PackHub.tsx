@@ -60,7 +60,7 @@ function fmt(ms: number) {
 
 const pad = (n: number) => String(n).padStart(4, "0");
 
-/** A pack, printed as a match ticket. `no` is the player's next pack number. */
+/** A pack: a folded jersey in a polybag, with a hang tag to tear. `no` is the player's next pack number. */
 export function PackArt({ type, no, torn = false }: { type: PackType; no: number; torn?: boolean }) {
   const p = PACKS.find((x) => x.type === type)!;
   const reduce = useReducedMotion();
@@ -68,20 +68,27 @@ export function PackArt({ type, no, torn = false }: { type: PackType; no: number
     <div className="tb-pack" data-pack={type}>
       <div className="tb-pack__ticket">
         <div className="tb-pack__body">
-          <div className="tb-pack__brand">
-            <SportIcon />
-            <span className="truncate">Series 1</span>
-          </div>
-          <div className="tb-pack__name">{p.name}</div>
-          <div className="tb-pack__fields">
-            <div>
-              Gate<b>{p.gate}</b>
+          <span className="tb-pack__jersey" aria-hidden>
+            7
+          </span>
+          <div className="tb-pack__label">
+            <div className="tb-pack__brand">
+              <SportIcon />
+              <span className="truncate">Gate 7 · Series 1</span>
             </div>
-            <div>
-              Row<b>Rare+</b>
-            </div>
-            <div>
-              Seat<b>{p.seat}</b>
+            <div className="tb-pack__name">{p.name}</div>
+            <div className="tb-pack__fields">
+              <div>
+                Cards<b>{p.seat}</b>
+              </div>
+              <div>
+                Floor<b>Rare+</b>
+              </div>
+              {INSERT_DESIGNS.length > 0 && (
+                <div>
+                  Inserts<b>{INSERTS_PER_PACK}</b>
+                </div>
+              )}
             </div>
           </div>
         </div>

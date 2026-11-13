@@ -221,17 +221,23 @@ select {
     radial-gradient(var(--notch) at 100% var(--notch-y), #0000 98%, #000) right / 51% 100% no-repeat;
 }
 
-/* ───────────────────────────── Card ─────────────────────────────
-   Each card is a ticket: printed art and name above a perforation,
-   a white paper stub below it with stats, serial and grade.
-   The stock (border) colour is the rarity class.            */
+/* ───────────────────────────── Card: the jersey ─────────────────────────────
+   Every card is cut from a jersey: mesh fabric, a tank-top cut (armholes and a
+   scoop neck bound in trim), a tackle-twill number behind the player, the surname
+   arched across the chest, and a hem with a woven jock tag (OVR) and an edition
+   hang tag (rarity). Rarity is the edition: Home, Away, Alternate, City, Classic,
+   Game-worn. Colours arrive as --fab / --num / --edge / --trim / --on-fab /
+   --on-trim from Card.tsx; insert classes restitch them below.
+   Note: .tb-card is its own size container, so its own rules use px and %, and
+   everything inside it measures in cqw (1cqw = 1% of the card's width).        */
 .tb-card {
   --rc: var(--r-common);
-  --t1: #333;
-  --t2: #999;
-  --stub-h: 29cqw;
-  /* stock padding (2.4cqw) + stub height, measured up from the bottom */
-  --perf-y: calc(100% - 2.4cqw - var(--stub-h));
+  --fab: #1b2a52;
+  --num: var(--paper);
+  --edge: var(--ink);
+  --trim: var(--ink);
+  --on-fab: var(--paper);
+  --on-trim: var(--paper);
   position: relative;
   container-type: inline-size;
   aspect-ratio: 5 / 7;
@@ -239,7 +245,7 @@ select {
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
   user-select: none;
-  filter: drop-shadow(0 8px 14px #0009);
+  filter: drop-shadow(0 6px 10px #000a);
 }
 .tb-card[data-rarity="uncommon"] { --rc: var(--r-uncommon); }
 .tb-card[data-rarity="rare"] { --rc: var(--r-rare); }
@@ -247,336 +253,535 @@ select {
 .tb-card[data-rarity="legendary"] { --rc: var(--r-legendary); }
 .tb-card[data-rarity="mythic"] { --rc: var(--r-mythic); }
 
+/* the cut: armholes at both top corners, a scoop neck between them */
 .tb-card__stock {
   position: absolute;
   inset: 0;
-  border-radius: 3.5cqw;
-  padding: 2.4cqw;
-  background: var(--rc);
-  -webkit-mask:
-    radial-gradient(4cqw at 0 var(--perf-y), #0000 97%, #000) left / 51% 100% no-repeat,
-    radial-gradient(4cqw at 100% var(--perf-y), #0000 97%, #000) right / 51% 100% no-repeat;
-  mask:
-    radial-gradient(4cqw at 0 var(--perf-y), #0000 97%, #000) left / 51% 100% no-repeat,
-    radial-gradient(4cqw at 100% var(--perf-y), #0000 97%, #000) right / 51% 100% no-repeat;
+  overflow: hidden;
+  border-radius: 0 0 4cqw 4cqw;
+  -webkit-mask-image:
+    radial-gradient(19% 16% at 0 0, #0000 98%, #000 100%),
+    radial-gradient(19% 16% at 100% 0, #0000 98%, #000 100%),
+    radial-gradient(17% 7.5% at 50% 0, #0000 98%, #000 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(19% 16% at 0 0, #0000 98%, #000 100%),
+    radial-gradient(19% 16% at 100% 0, #0000 98%, #000 100%),
+    radial-gradient(17% 7.5% at 50% 0, #0000 98%, #000 100%);
+  mask-composite: intersect;
 }
-.tb-card[data-rarity="legendary"] .tb-card__stock {
-  background: linear-gradient(115deg, #ffe7a3, #f2b33d 28%, #b87a12 52%, #ffd772 74%, #c98f1c);
-  background-size: 260% 260%;
-  animation: tb-gold 5s ease-in-out infinite;
-}
-.tb-card[data-rarity="mythic"] .tb-card__stock {
-  background: conic-gradient(from var(--ang, 0deg), #ff5fd2, #4fc3ff, #c6ff3d, #ffe14f, #ff7a45, #ff5fd2);
-  animation: tb-spin 4.5s linear infinite;
-}
-.tb-card[data-finish="gold"] .tb-card__stock {
-  background: linear-gradient(115deg, #fff2c4, #d6a11a 35%, #8a6206 60%, #f5d878);
-}
-.tb-card[data-finish="black"] .tb-card__stock {
-  background: linear-gradient(150deg, #3a3a3a, #050505 55%, #222);
-}
-
-@property --ang {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-@keyframes tb-spin {
-  to { --ang: 360deg; }
-}
-@keyframes tb-gold {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
 .tb-card__face {
   position: relative;
   height: 100%;
-  border-radius: 2cqw;
-  overflow: hidden;
   display: grid;
-  grid-template-rows: 1fr auto var(--stub-h);
-  background: var(--paper);
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+/* binding on the armholes and neck, in trim */
+.tb-card__collar {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background:
+    radial-gradient(calc(19% + 2.8cqw) calc(16% + 2.8cqw) at 0 0, var(--trim) 99%, transparent 100%),
+    radial-gradient(calc(19% + 2.8cqw) calc(16% + 2.8cqw) at 100% 0, var(--trim) 99%, transparent 100%),
+    radial-gradient(calc(17% + 2.8cqw) calc(7.5% + 2.8cqw) at 50% 0, var(--trim) 99%, transparent 100%);
 }
 
-/* Printed art: team colours, kit stripes, initials as shirt lettering */
+/* fabric: the edition's colour under a mesh weave, lit from above, with a soft drape */
 .tb-card__art {
   position: relative;
   overflow: hidden;
-  background:
-    repeating-linear-gradient(90deg, #ffffff12 0 6cqw, transparent 6cqw 12cqw),
-    linear-gradient(170deg, var(--t1), color-mix(in oklab, var(--t1) 55%, black));
+  isolation: isolate;
+  background: var(--fab);
 }
-.tb-card__art::after {
-  /* the second team colour as a shoulder band */
+.tb-card__art::before {
   content: "";
   position: absolute;
+  inset: 0;
   z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, #0000001f 0 0.3cqw, transparent 0.42cqw) 0 0 / 1.5cqw 1.5cqw,
+    radial-gradient(circle, #ffffff14 0 0.22cqw, transparent 0.34cqw) 0.75cqw 0.75cqw / 1.5cqw 1.5cqw,
+    linear-gradient(100deg, transparent 28%, #ffffff12 38%, transparent 48%, #0000001a 62%, transparent 74%),
+    radial-gradient(130% 70% at 50% 0%, #ffffff24, transparent 62%),
+    linear-gradient(90deg, #00000033, transparent 16% 84%, #00000033);
+}
+/* edition details */
+.tb-card[data-edition="home"] .tb-card__art {
+  background: linear-gradient(90deg, var(--trim) 0 2.2cqw, transparent 2.2cqw calc(100% - 2.2cqw), var(--trim) 0), var(--fab);
+}
+.tb-card[data-edition="away"] .tb-card__art {
+  background:
+    linear-gradient(90deg, transparent 2cqw, var(--num) 2cqw 2.8cqw, transparent 2.8cqw calc(100% - 2.8cqw), var(--num) 0 calc(100% - 2cqw), transparent 0),
+    var(--fab);
+}
+.tb-card[data-edition="alternate"] .tb-card__art {
+  background: linear-gradient(90deg, var(--num) 0 4.5cqw, var(--trim) 4.5cqw 5.5cqw, transparent 5.5cqw calc(100% - 5.5cqw), var(--trim) 0 calc(100% - 4.5cqw), var(--num) 0), var(--fab);
+}
+.tb-card[data-edition="city"] .tb-card__art {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--num) 26%, transparent) 0 0.3cqw, transparent 0.3cqw 5.5cqw),
+    linear-gradient(165deg, color-mix(in oklab, var(--t1) 30%, transparent), transparent 55%),
+    var(--fab);
+}
+.tb-card[data-edition="classic"] .tb-card__art {
+  background:
+    linear-gradient(90deg, var(--trim) 0 1.4cqw, var(--num) 1.4cqw 3cqw, var(--trim) 3cqw 4.4cqw, transparent 4.4cqw calc(100% - 4.4cqw), var(--trim) 0 calc(100% - 3cqw), var(--num) 0 calc(100% - 1.4cqw), var(--trim) 0),
+    radial-gradient(120% 90% at 50% 40%, transparent 60%, #6b4e1a22),
+    var(--fab);
+}
+.tb-card[data-edition="gameworn"] .tb-card__art {
+  background:
+    radial-gradient(30% 18% at 22% 78%, #00000026, transparent 70%),
+    radial-gradient(24% 14% at 74% 64%, #00000020, transparent 70%),
+    var(--fab);
+}
+
+/* the tackle-twill number, sewn on behind the player */
+.tb-card__mono {
+  position: absolute;
   left: 0;
   right: 0;
-  top: 58%;
-  height: 7cqw;
-  background: var(--t2);
-  opacity: 0.85;
-  transform: skewY(-8deg);
+  top: 24%;
+  z-index: 1;
+  text-align: center;
+  font-family: var(--font-jersey), var(--font-display), sans-serif;
+  font-size: 64cqw;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--num);
+  -webkit-text-stroke: 1.6cqw var(--edge);
+  paint-order: stroke fill;
+  text-shadow: 0 0.9cqw 1.4cqw #0000004d;
 }
-/* ESPN headshot cut-out: fills the art panel in front of the shoulder band */
+.tb-card[data-art="splash"] .tb-card__mono {
+  display: none;
+}
+.tb-card__mono.is-back {
+  top: 30%;
+  font-size: 70cqw;
+}
+/* ESPN cut-out: stands in front of the number, feet on the hem */
 .tb-card__face-img {
   position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 100%;
+  height: 74%;
+  object-fit: cover;
+  object-position: 50% 100%;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 1.2cqw 1.6cqw #00000059);
+}
+/* chosen splash art: the whole fabric, headshot to full body */
+.tb-card__splash {
+  position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 0%;
+  object-position: 50% 22%;
   pointer-events: none;
   user-select: none;
-  filter: drop-shadow(0 1.5cqw 2cqw #0006);
 }
-.tb-card__mono {
+
+/* chest: the surname arched like a wordmark, the first name under it */
+.tb-card__chest {
   position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  padding-top: 6cqw;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 112%;
-  font-size: 30cqw;
-  line-height: 1;
-  color: var(--paper);
-  -webkit-text-stroke: 0.6cqw color-mix(in oklab, var(--t1) 60%, black);
+  left: 0;
+  right: 0;
+  top: 8.5%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.tb-card__chest.is-back {
+  top: 9%;
+}
+.tb-card[data-art="splash"] .tb-card__chest::before {
+  content: "";
+  position: absolute;
+  inset: -40% 0 -30%;
+  z-index: -1;
+  background: linear-gradient(180deg, #000000a6, transparent);
+}
+.tb-card__wordmark {
+  display: block;
+  width: 92%;
+  overflow: visible;
+}
+.tb-card__wordmark text {
+  font-family: var(--font-jersey), var(--font-display), sans-serif;
+  letter-spacing: 0.02em;
+  fill: var(--num);
+  stroke: var(--edge);
+  stroke-width: 0.7px;
   paint-order: stroke fill;
 }
-.tb-card__mono.is-duo {
-  font-size: 19cqw;
+.tb-card__first {
+  margin-top: -0.6cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 4.2cqw;
+  line-height: 1;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--num);
 }
+.tb-card[data-art="splash"] .tb-card__first,
+.tb-card[data-art="splash"] .tb-card__wordmark text {
+  filter: drop-shadow(0 0.4cqw 0.8cqw #000c);
+}
+
+/* type as an embroidered sleeve patch: Rookie, Duo, or the insert class */
+.tb-card__type {
+  position: absolute;
+  top: 37%;
+  right: 3cqw;
+  z-index: 3;
+  max-width: 44cqw;
+  padding: 0.8cqw 2cqw;
+  border: 0.6cqw solid var(--on-trim);
+  border-radius: 99px;
+  outline: 0.4cqw dashed color-mix(in oklab, var(--on-trim) 60%, transparent);
+  outline-offset: -1.6cqw;
+  background: var(--trim);
+  color: var(--on-trim);
+  transform: rotate(-7deg);
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 900;
+  font-size: 3.6cqw;
+  line-height: 1.1;
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+  box-shadow: 0 0.6cqw 1.2cqw #00000059;
+}
+
+/* inserts: the moment, printed big over the art */
 .tb-card__moment {
   position: absolute;
-  left: 5cqw;
-  right: 5cqw;
-  bottom: 4cqw;
-  z-index: 2;
+  left: 4cqw;
+  right: 4cqw;
+  bottom: 3cqw;
+  z-index: 3;
   font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  font-stretch: 105%;
-  font-size: 7.6cqw;
-  line-height: 0.98;
+  font-weight: 900;
+  font-stretch: 110%;
+  font-size: 8cqw;
+  line-height: 0.95;
   text-transform: uppercase;
-  color: var(--paper);
-  text-shadow: 0 0.6cqw 1.6cqw #000c;
+  color: var(--on-fab);
+  text-shadow: 0 0.5cqw 1.4cqw #000c;
 }
 .tb-card__moment small {
   display: block;
+  margin-bottom: 0.6cqw;
   font-family: var(--font-body), sans-serif;
-  font-size: 4.2cqw;
+  font-stretch: 85%;
+  font-size: 3.8cqw;
   font-weight: 800;
   letter-spacing: 0.12em;
 }
-.tb-card__ovr {
+/* Generational: the night's box score stays on the face, a strip above the hem */
+.tb-card__box {
   position: absolute;
-  top: 3.5cqw;
-  left: 4cqw;
-  z-index: 2;
-  color: var(--paper);
-  font-family: var(--font-display), sans-serif;
-  text-shadow: 0 0.5cqw 1.2cqw #0009;
-}
-.tb-card__ovr b {
-  display: block;
-  font-weight: 900;
-  font-stretch: 100%;
-  font-size: 14cqw;
-  line-height: 0.9;
-}
-.tb-card__ovr span {
-  display: block;
-  font-family: var(--font-body), sans-serif;
-  font-weight: 800;
-  font-size: 4.4cqw;
-  letter-spacing: 0.1em;
-}
-.tb-card__sport {
-  position: absolute;
-  top: 4.5cqw;
-  right: 4.5cqw;
-  z-index: 2;
-  width: 9cqw;
-  height: 9cqw;
-  color: var(--paper);
-  filter: drop-shadow(0 0.4cqw 0.8cqw #0009);
-}
-/* type as a rubber stamp */
-.tb-card__type {
-  position: absolute;
-  top: 16cqw;
-  right: 4cqw;
-  z-index: 2;
-  padding: 0.6cqw 2cqw;
-  border: 0.7cqw solid currentColor;
-  border-radius: 1cqw;
-  color: var(--paper);
-  background: color-mix(in oklab, var(--ink) 55%, transparent);
-  transform: rotate(-6deg);
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 900;
-  font-size: 4.2cqw;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.tb-card[data-rarity="mythic"] .tb-card__type,
-.tb-card[data-rarity="legendary"] .tb-card__type {
-  color: var(--rc);
-}
-
-.tb-card__band {
-  padding: 2.4cqw 4cqw 2cqw;
-  background: var(--ink);
-}
-.tb-card__name {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  font-stretch: 100%;
-  font-size: 8.4cqw;
-  line-height: 1;
-  text-transform: uppercase;
-  color: var(--paper);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.tb-card__name.is-long {
-  font-size: 6.6cqw;
-  font-stretch: 80%;
-}
-.tb-card__meta {
-  margin-top: 0.8cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 600;
-  font-size: 4cqw;
-  color: var(--navy-300);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Light kits (white, cream, yellow): print the art in navy ink instead of paper */
-.tb-card[data-art="light"] .tb-card__art {
-  background:
-    repeating-linear-gradient(90deg, #14213d0d 0 6cqw, transparent 6cqw 12cqw),
-    linear-gradient(170deg, var(--t1), color-mix(in oklab, var(--t1) 82%, #14213d));
-}
-.tb-card[data-art="light"] .tb-card__mono {
-  color: var(--ink);
-  -webkit-text-stroke: 0.6cqw var(--paper);
-}
-.tb-card[data-art="light"] .tb-card__ovr,
-.tb-card[data-art="light"] .tb-card__sport {
-  color: var(--ink);
-  text-shadow: none;
-  filter: none;
-}
-.tb-card[data-art="light"] .tb-card__type {
-  color: var(--ink);
-  background: color-mix(in oklab, var(--paper) 70%, transparent);
-}
-.tb-card[data-art="light"][data-rarity="legendary"] .tb-card__type,
-.tb-card[data-art="light"][data-rarity="mythic"] .tb-card__type {
-  color: var(--stamp-ink);
-}
-.tb-card[data-art="light"] .tb-card__moment {
-  color: var(--ink);
-  text-shadow: 0 0.3cqw 1cqw #ffffffb3;
-}
-
-/* the paper stub, below the perforation */
-.tb-card__stub {
-  position: relative;
+  left: 3cqw;
+  right: 3cqw;
+  bottom: 2.6cqw;
+  z-index: 3;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 3cqw 4cqw 2.4cqw;
-  background: var(--paper);
-  color: var(--ink);
+  justify-content: space-around;
+  padding: 1.4cqw 1cqw 1.2cqw;
+  border-top: 0.6cqw solid var(--num);
+  border-radius: 1cqw;
+  background: #000000a6;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
 }
-.tb-card__stub::before {
+.tb-card__box div {
+  text-align: center;
+}
+.tb-card__box b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 7.6cqw;
+  line-height: 1;
+}
+.tb-card__box span {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 800;
+  font-size: 2.8cqw;
+  letter-spacing: 0.12em;
+}
+.tb-card__box ~ .tb-card__moment {
+  bottom: 17cqw;
+}
+
+/* the hem: ribbed trim, a stitch line, jock tag left, edition tag right */
+.tb-card__hem {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2.4cqw;
+  min-height: 23cqw;
+  padding: 3cqw 3cqw 3.2cqw;
+  background:
+    repeating-linear-gradient(0deg, #0000000f 0 0.4cqw, transparent 0.4cqw 1.2cqw),
+    var(--trim);
+  color: var(--on-trim);
+}
+.tb-card__hem::before {
   content: "";
   position: absolute;
   left: 2cqw;
   right: 2cqw;
-  top: 0;
-  height: 0.5cqw;
-  color: var(--ink-soft);
-  background: repeating-linear-gradient(90deg, currentColor 0 1.6cqw, transparent 1.6cqw 3cqw);
+  top: 1.2cqw;
+  border-top: 0.45cqw dashed color-mix(in oklab, var(--on-trim) 55%, transparent);
 }
-.tb-card__stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.2cqw 2.4cqw;
+.tb-card__jock {
+  width: 17cqw;
+  padding: 1.3cqw 0.6cqw 1.4cqw;
+  border-radius: 0.8cqw;
+  background:
+    repeating-linear-gradient(0deg, #14213d0d 0 0.25cqw, transparent 0.25cqw 0.7cqw),
+    var(--paper);
+  color: var(--ink);
+  text-align: center;
+  box-shadow: 0 0.5cqw 1cqw #0000004d;
 }
-.tb-card__stats div {
+.tb-card__jock b {
+  display: block;
+  font-family: var(--font-jersey), var(--font-display), sans-serif;
+  font-weight: 400;
+  font-size: 8.4cqw;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+.tb-card__jock span {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.9cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tb-card__hemtext {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.8cqw;
+}
+.tb-card__meta {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 3.4cqw;
+  line-height: 1.15;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.tb-card__serial {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 700;
-  font-size: 3.8cqw;
-  color: var(--ink-soft);
+  font-size: 3cqw;
+  letter-spacing: 0.04em;
+  opacity: 0.9;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
-.tb-card__stats b {
-  color: var(--ink);
+.tb-card__serial b {
+  font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-size: 4.8cqw;
+  font-size: 3.6cqw;
 }
-.tb-card__nostats {
+.tb-card__serial i {
+  padding: 0 1cqw;
+  border: 0.35cqw solid currentColor;
+  border-radius: 0.6cqw;
+  font-style: normal;
+  font-weight: 900;
+}
+.tb-card__serial i.is-gem {
+  border-color: var(--r-legendary);
+  background: var(--r-legendary);
+  color: var(--ink);
+}
+/* the edition hang tag, punched and tied on */
+.tb-card__edition {
+  position: relative;
+  min-width: 16cqw;
+  padding: 2.6cqw 2cqw 1.4cqw;
+  border-radius: 1cqw;
+  background: var(--rc);
+  color: var(--ink);
+  text-align: center;
+  transform: rotate(-4deg);
+  box-shadow: 0 0.6cqw 1.2cqw #00000059;
+}
+.tb-card__edition::before {
+  content: "";
+  position: absolute;
+  top: 0.8cqw;
+  left: 50%;
+  width: 1.5cqw;
+  height: 1.5cqw;
+  border-radius: 50%;
+  background: var(--trim);
+  transform: translateX(-50%);
+}
+.tb-card__edition b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 105%;
+  font-size: 3.8cqw;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.tb-card__edition span {
+  display: block;
+  margin-top: 0.4cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 4cqw;
+  font-size: 2.7cqw;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+.tb-card[data-rarity="mythic"] .tb-card__edition {
+  background: linear-gradient(120deg, #ff5fd2, #ffb3ec 50%, #ff5fd2);
+}
+.tb-card[data-edition="classic"] .tb-card__hem {
+  background:
+    linear-gradient(180deg, transparent 0 16%, var(--num) 16% 26%, transparent 26%),
+    repeating-linear-gradient(0deg, #0000000f 0 0.4cqw, transparent 0.4cqw 1.2cqw),
+    var(--trim);
+}
+
+/* the stat sheet on the jersey back */
+.tb-card__sheet {
+  position: absolute;
+  left: 5cqw;
+  right: 5cqw;
+  bottom: 3.5cqw;
+  z-index: 3;
+  padding: 2.4cqw 3cqw 2cqw;
+  border-radius: 1.2cqw;
+  background:
+    repeating-linear-gradient(0deg, #14213d0a 0 0.25cqw, transparent 0.25cqw 0.7cqw),
+    var(--paper);
+  color: var(--ink);
+  box-shadow: 0 0.8cqw 1.6cqw #00000059;
+  font-variant-numeric: tabular-nums;
+}
+.tb-card__sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2cqw 2cqw;
+}
+.tb-card__sheet-grid div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tb-card__sheet-grid span {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 800;
+  font-size: 2.8cqw;
+  letter-spacing: 0.12em;
   color: var(--ink-soft);
 }
-.tb-card__foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.tb-card__sheet-grid b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 6.4cqw;
+  line-height: 1;
+}
+.tb-card__sheet-src,
+.tb-card__sheet-note {
   margin-top: 1.4cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
-  font-weight: 800;
-  font-size: 3.6cqw;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-size: 3cqw;
+  letter-spacing: 0.06em;
+  text-align: center;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
-.tb-card__serial {
-  color: var(--stamp-ink);
-  font-size: 4.4cqw;
-  letter-spacing: 0.04em;
-}
-.tb-card__grade {
-  padding: 0.2cqw 1.4cqw;
-  border-radius: 0.8cqw;
-  border: 0.4cqw solid var(--ink-soft);
+.tb-card__sheet-note {
+  margin: 0;
+  font-size: 3.6cqw;
   color: var(--ink);
 }
-.tb-card__grade.is-gem {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--stock-hoops);
+
+/* the face-down house jersey; legendary and mythic pulls give themselves away in the trim */
+.tb-card.is-house[data-rarity="legendary"] .tb-card__face {
+  --trim: var(--r-legendary);
+  --edge: var(--r-legendary);
+}
+.tb-card.is-house[data-rarity="mythic"] .tb-card__face {
+  --trim: var(--r-mythic);
+  --edge: var(--r-mythic);
+}
+.tb-card.is-house .tb-card__art {
+  background:
+    repeating-linear-gradient(135deg, #ffffff08 0 1cqw, transparent 1cqw 4cqw),
+    var(--fab);
 }
 
-/* Finish overlays sit over the whole ticket */
+/* small cards (8-up reveal grid, phones): keep who, OVR and rarity; drop the fine print */
+@container (max-width: 170px) {
+  .tb-card__hemtext,
+  .tb-card__first {
+    display: none;
+  }
+  .tb-card__hem {
+    grid-template-columns: auto 1fr;
+    justify-items: end;
+  }
+  .tb-card__edition span {
+    display: none;
+  }
+  .tb-card__edition b {
+    font-size: 5cqw;
+  }
+  .tb-card__type {
+    font-size: 4.4cqw;
+  }
+}
+
+/* Finish overlays: thread and foil over the whole jersey */
 .tb-card__shine,
 .tb-card__glare {
   position: absolute;
   inset: 0;
-  border-radius: 3.5cqw;
   pointer-events: none;
   z-index: 5;
 }
@@ -621,13 +826,9 @@ select {
   to { filter: hue-rotate(360deg); }
 }
 
-/* Not owned yet: an unprinted ticket outline */
+/* Not owned yet: the jersey still on the rack, unlit */
 .tb-card.is-missing {
   filter: none;
-}
-.tb-card.is-missing .tb-card__stock {
-  background: var(--navy-700);
-  animation: none;
 }
 .tb-card.is-missing .tb-card__face {
   filter: grayscale(1) brightness(0.42) contrast(0.9);
@@ -636,113 +837,10 @@ select {
   display: none;
 }
 
-/* ───────────────────────────── Card back ─────────────────────────────
-   The back of the ticket: navy microprint, ADMIT ONE, and a stub whose
-   colour gives away the class before the flip.                      */
-.tb-back {
-  --rc: var(--r-common);
-  --perf-y: calc(100% - 31.4cqw);
-  position: absolute;
-  inset: 0;
-  container-type: inline-size;
-  filter: drop-shadow(0 8px 14px #0009);
-}
-.tb-back[data-rarity="uncommon"] { --rc: var(--r-uncommon); }
-.tb-back[data-rarity="rare"] { --rc: var(--r-rare); }
-.tb-back[data-rarity="epic"] { --rc: var(--r-epic); }
-.tb-back[data-rarity="legendary"] { --rc: var(--r-legendary); }
-.tb-back[data-rarity="mythic"] { --rc: var(--r-mythic); }
-
-.tb-back__face {
-  position: absolute;
-  inset: 0;
-  border-radius: 3.5cqw;
-  overflow: hidden;
-  display: grid;
-  grid-template-rows: var(--perf-y) 1fr;
-  background: var(--navy-850);
-  -webkit-mask:
-    radial-gradient(4cqw at 0 var(--perf-y), #0000 97%, #000) left / 51% 100% no-repeat,
-    radial-gradient(4cqw at 100% var(--perf-y), #0000 97%, #000) right / 51% 100% no-repeat;
-  mask:
-    radial-gradient(4cqw at 0 var(--perf-y), #0000 97%, #000) left / 51% 100% no-repeat,
-    radial-gradient(4cqw at 100% var(--perf-y), #0000 97%, #000) right / 51% 100% no-repeat;
-}
-.tb-back__print {
-  display: grid;
-  place-items: center;
-  text-align: center;
-  background:
-    repeating-linear-gradient(135deg, #ffffff08 0 1.2cqw, transparent 1.2cqw 2.6cqw),
-    var(--navy-850);
-  border: 2cqw solid var(--navy-700);
-  border-bottom: 0;
-  border-radius: 3.5cqw 3.5cqw 0 0;
-}
-.tb-back__logo {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 130%;
-  font-size: 11cqw;
-  line-height: 0.9;
-  color: var(--paper);
-}
-.tb-back__seven {
-  display: block;
-  font-size: 26cqw;
-  font-stretch: 100%;
-  line-height: 0.85;
-  color: var(--stock-soccer);
-}
-.tb-back__admit {
-  display: block;
-  margin-top: 3cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 4.4cqw;
-  letter-spacing: 0.32em;
-  color: var(--stock-soccer);
-}
-.tb-back__stub {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--rc);
-  color: var(--ink);
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 900;
-  font-size: 4.6cqw;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-.tb-back__stub::before {
-  content: "";
-  position: absolute;
-  left: 4cqw;
-  right: 4cqw;
-  top: 0;
-  height: 0.6cqw;
-  color: var(--navy-950);
-  background: repeating-linear-gradient(90deg, currentColor 0 1.6cqw, transparent 1.6cqw 3cqw);
-}
-.tb-back[data-rarity="legendary"] .tb-back__stub,
-.tb-back[data-rarity="mythic"] .tb-back__stub {
-  background-image: linear-gradient(115deg, transparent 30%, #ffffff8c 46%, transparent 62%);
-  background-size: 260% 100%;
-  animation: tb-sheen 1.4s ease-in-out infinite;
-}
-.tb-back[data-rarity="mythic"] .tb-back__stub {
-  animation: tb-sheen 0.9s ease-in-out infinite, tb-hue 2.4s linear infinite;
-}
-
-/* ───────────────────────────── Pack ticket ─────────────────────────────
-   A pack is a horizontal match ticket: coloured body, paper stub.   */
+/* ───────────────────────────── Pack: a jersey in a polybag ─────────────────────────────
+   A folded jersey sealed in a clear bag with a retail sticker; the hang tag is the
+   stub you tear (PackHub animates it away).                                     */
 .tb-pack {
-  --stock: var(--stock-soccer);
-  --stock-ink: var(--ink);
   position: relative;
   container-type: inline-size;
   width: 100%;
@@ -752,67 +850,101 @@ select {
 @media (max-width: 767px) {
   .tb-pack { aspect-ratio: 2.2 / 1; }
 }
-.tb-pack[data-pack="basketball"] { --stock: var(--stock-hoops); }
-.tb-pack[data-pack="mixed"] { --stock: var(--stock-mixed); --stock-ink: var(--paper); }
-
 .tb-pack__ticket {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 26%;
-  border-radius: 2.4cqw;
-  -webkit-mask:
-    radial-gradient(3.4cqw at 74% 0, #0000 97%, #000) top / 100% 51% no-repeat,
-    radial-gradient(3.4cqw at 74% 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
-  mask:
-    radial-gradient(3.4cqw at 74% 0, #0000 97%, #000) top / 100% 51% no-repeat,
-    radial-gradient(3.4cqw at 74% 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  grid-template-columns: minmax(0, 1fr) 21%;
+  align-items: center;
+  gap: 3.5cqw;
 }
 .tb-pack__body {
   position: relative;
-  padding: 5cqw 5cqw 4.5cqw;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 2cqw;
   background:
-    repeating-linear-gradient(90deg, #ffffff10 0 3cqw, transparent 3cqw 6cqw),
-    var(--stock);
-  color: var(--stock-ink);
+    radial-gradient(19% 30% at 50% 0, #1b2a52 92%, transparent 94%),
+    radial-gradient(calc(19% + 1.6cqw) calc(30% + 1.6cqw) at 50% 0, var(--ink) 98%, transparent 100%),
+    linear-gradient(180deg, transparent 0 55%, #00000038 57%, #ffffff1f 59%, transparent 62%),
+    linear-gradient(90deg, #00000042, transparent 13% 87%, #00000042),
+    radial-gradient(circle, #0000001f 0 0.22cqw, transparent 0.32cqw) 0 0 / 1.1cqw 1.1cqw,
+    var(--stock-hoops);
+}
+/* the bag: gloss streaks and crimped heat seals left and right */
+.tb-pack__body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, #ffffff73 0 0.5cqw, transparent 0.5cqw 1.3cqw) left / 2.2cqw 100% no-repeat,
+    repeating-linear-gradient(0deg, #ffffff73 0 0.5cqw, transparent 0.5cqw 1.3cqw) right / 2.2cqw 100% no-repeat,
+    linear-gradient(112deg, transparent 18%, #ffffff47 22%, transparent 29% 56%, #ffffff29 60%, transparent 66%);
+  border: 0.4cqw solid #ffffff38;
+  border-radius: 2cqw;
+}
+.tb-pack__jersey {
+  position: absolute;
+  top: 17%;
+  right: 9%;
+  z-index: 1;
+  font-family: var(--font-jersey), var(--font-display), sans-serif;
+  font-size: 40cqw;
+  line-height: 0.85;
+  color: var(--ink);
+  -webkit-text-stroke: 1cqw var(--paper);
+  paint-order: stroke fill;
+  text-shadow: 0 0.6cqw 1cqw #0000004d;
+}
+.tb-pack__label {
+  position: absolute;
+  left: 5cqw;
+  bottom: 5cqw;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  border-radius: 2.4cqw 0 0 2.4cqw;
+  gap: 1.6cqw;
+  max-width: 56%;
+  padding: 2.4cqw 3cqw 2.6cqw;
+  border-radius: 1cqw;
+  background: var(--paper);
+  color: var(--ink);
+  transform: rotate(-2deg);
+  box-shadow: 0 0.6cqw 1.2cqw #00000059;
 }
 .tb-pack__brand {
   display: flex;
   align-items: center;
-  gap: 2cqw;
+  gap: 1.6cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 3.6cqw;
+  font-size: 2.8cqw;
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 .tb-pack__brand svg {
-  width: 6cqw;
-  height: 6cqw;
+  width: 4.4cqw;
+  height: 4.4cqw;
 }
 .tb-pack__name {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 125%;
-  font-size: 11.5cqw;
-  line-height: 0.85;
+  font-family: var(--font-jersey), var(--font-display), sans-serif;
+  font-size: 9.5cqw;
+  line-height: 0.9;
   white-space: nowrap;
   text-transform: uppercase;
 }
 .tb-pack__fields {
   display: flex;
-  gap: 6cqw;
+  gap: 4cqw;
 }
 .tb-pack__fields div {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 700;
-  font-size: 3cqw;
+  font-size: 2.3cqw;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -821,36 +953,54 @@ select {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 110%;
-  font-size: 6cqw;
+  font-size: 4.4cqw;
   letter-spacing: 0;
   line-height: 1;
 }
+/* the hang tag, tied to the bag by a string */
 .tb-pack__stub {
   position: relative;
-  background: var(--paper);
-  color: var(--ink);
-  border-radius: 0 2.4cqw 2.4cqw 0;
+  height: 82%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 5cqw 0 4.5cqw;
+  padding: 7cqw 0 4cqw;
+  border-radius: 2cqw;
+  background: var(--paper);
+  color: var(--ink);
+  rotate: 5deg;
+  box-shadow: 0 0.8cqw 1.6cqw #00000066;
 }
 .tb-pack__stub::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: 4cqw;
-  bottom: 4cqw;
-  width: 0.7cqw;
-  color: var(--ink-soft);
-  background: repeating-linear-gradient(180deg, currentColor 0 2cqw, transparent 2cqw 3.6cqw);
+  top: 2.4cqw;
+  left: 50%;
+  width: 2.6cqw;
+  height: 2.6cqw;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 0.5cqw var(--paper-2);
+  transform: translateX(-50%);
+}
+.tb-pack__stub::after {
+  content: "";
+  position: absolute;
+  top: 3.5cqw;
+  right: 50%;
+  width: 13cqw;
+  height: 0.5cqw;
+  border-radius: 99px;
+  background: var(--paper-2);
+  transform-origin: 100% 50%;
+  rotate: -12deg;
 }
 .tb-pack__tear {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.8cqw;
+  font-size: 2.6cqw;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--stamp-ink);
@@ -860,9 +1010,9 @@ select {
   transform: rotate(180deg);
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 100%;
-  font-size: 5.4cqw;
+  font-size: 5cqw;
   letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
 .tb-pack__barcode {
   width: 56%;
@@ -871,105 +1021,83 @@ select {
 }
 
 /* ───────────────────────────── Insert classes ─────────────────────────────
-   Each insert has its own art panel. Splash art (insert-art.ts) covers it once
-   chosen; until then the initials sit on the class background.            */
-.tb-card__splash {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 30%;
-  pointer-events: none;
-  user-select: none;
-}
-/* Each insert class has its own art style, scoped by [data-type="<class id>"]
-   (ids in src/lib/catalog/inserts.ts). The kit shoulder band is off for all of them. */
-.tb-card[data-type="newblood"] .tb-card__art::after,
-.tb-card[data-type="goodbyes"] .tb-card__art::after,
-.tb-card[data-type="goldenboy"] .tb-card__art::after,
-.tb-card[data-type="generational"] .tb-card__art::after,
-.tb-card[data-type="stardom"] .tb-card__art::after,
-.tb-card[data-type="light"] .tb-card__art::after,
-.tb-card[data-type="shadow"] .tb-card__art::after,
-.tb-card[data-type="fortress"] .tb-card__art::after,
-.tb-card[data-type="cult"] .tb-card__art::after {
-  display: none;
-}
+   Each class keeps the jersey cut but brings its own fabric (on __art) and
+   restitches the colours (on __face). Class ids: src/lib/catalog/inserts.ts.   */
 
-/* 1. New Blood: old team to new team across a perforated diagonal, customs stamp */
+/* 1. New Blood: one jersey sewn from two teams, old on the left, new on the right */
+.tb-card[data-type="newblood"] .tb-card__face {
+  --num: var(--paper);
+  --edge: #111;
+  --trim: #111;
+  --on-trim: var(--paper);
+  --on-fab: var(--paper);
+}
 .tb-card[data-type="newblood"] .tb-card__art {
   background:
-    linear-gradient(135deg, transparent 49%, #f7f7f2cc 49% 51%, transparent 51%),
-    linear-gradient(135deg, var(--f1) 0 50%, var(--t1) 50% 100%);
-}
-.tb-card[data-type="newblood"] .tb-card__mono {
-  color: var(--paper);
-  -webkit-text-stroke: 0.6cqw #0009;
+    linear-gradient(90deg, transparent calc(50% - 0.5cqw), #f7f7f2 calc(50% - 0.5cqw) calc(50% + 0.5cqw), transparent 0),
+    linear-gradient(90deg, var(--f1) 0 50%, var(--t1) 50% 100%);
 }
 .tb-card[data-type="newblood"] .tb-card__type {
-  color: var(--stamp-ink);
-  background: var(--paper);
-  border-color: var(--stamp-ink);
   border-style: double;
   border-width: 1cqw;
-  transform: rotate(-10deg);
+  border-color: var(--stamp-ink);
+  border-radius: 1cqw;
+  outline: none;
+  background: var(--paper);
+  color: var(--stamp-ink);
+  transform: rotate(-11deg);
 }
 
-/* 2. Hard Goodbyes: last light in an empty arena, sepia print, outlined lettering */
+/* 2. Hard Goodbyes: the retired jersey, hung in the rafters in sepia light */
+.tb-card[data-type="goodbyes"] .tb-card__face {
+  --num: transparent;
+  --edge: #e9d3a8;
+  --trim: #2a221a;
+  --on-trim: #e9d3a8;
+  --on-fab: #e9d3a8;
+}
 .tb-card[data-type="goodbyes"] .tb-card__art {
   background:
-    repeating-linear-gradient(0deg, #ffffff08 0 0.3cqw, transparent 0.3cqw 1.2cqw),
-    radial-gradient(70% 55% at 50% 0%, #e9d3a855, transparent 70%),
-    radial-gradient(120% 90% at 50% 40%, #6b5a45, #2a221a 80%);
+    radial-gradient(70% 45% at 50% 0%, #e9d3a84d, transparent 70%),
+    radial-gradient(120% 90% at 50% 40%, #6b5a45, #2a221a 85%);
+}
+.tb-card[data-type="goodbyes"] .tb-card__mono {
+  -webkit-text-stroke-width: 0.8cqw;
+}
+.tb-card[data-type="goodbyes"] .tb-card__wordmark text {
+  fill: #e9d3a8;
+  stroke: #2a221a;
+}
+.tb-card[data-type="goodbyes"] .tb-card__first {
+  color: #e9d3a8;
 }
 .tb-card[data-type="goodbyes"] .tb-card__splash {
   filter: sepia(0.6) saturate(0.8) contrast(1.05);
 }
-.tb-card[data-type="goodbyes"] .tb-card__mono {
-  color: transparent;
-  -webkit-text-stroke: 0.6cqw #e9d3a8;
-}
-.tb-card[data-type="goodbyes"] .tb-card__type {
-  color: #e9d3a8;
-  background: transparent;
-  transform: none;
-}
-.tb-card[data-type="goodbyes"] .tb-card__band {
-  background: #2a221a;
-}
-.tb-card[data-type="goodbyes"] .tb-card__name {
-  color: #e9d3a8;
-}
 
-/* 3. Golden Boy: a gold sunburst behind the kid */
+/* 3. Golden Boy: a gold jersey with a sunburst woven through it */
+.tb-card[data-type="goldenboy"] .tb-card__face {
+  --num: var(--paper);
+  --edge: #7a4e05;
+  --trim: #4a2f02;
+  --on-trim: #f5c542;
+  --on-fab: #4a2f02;
+}
 .tb-card[data-type="goldenboy"] .tb-card__art {
   background:
-    radial-gradient(circle at 50% 42%, #fff6cf 0, #fff6cf00 38%),
-    repeating-conic-gradient(from 0deg at 50% 42%, #f5c542 0 7deg, #e0a526 7deg 14deg),
+    radial-gradient(circle at 50% 46%, #fff6cf 0, #fff6cf00 36%),
+    repeating-conic-gradient(from 0deg at 50% 46%, #f5c542 0 7deg, #e0a526 7deg 14deg),
     #e0a526;
 }
-.tb-card[data-type="goldenboy"] .tb-card__mono {
-  color: var(--paper);
-  -webkit-text-stroke: 0.6cqw #7a4e05;
-}
-.tb-card[data-type="goldenboy"] .tb-card__ovr,
-.tb-card[data-type="goldenboy"] .tb-card__sport {
-  color: #4a2f02;
-  text-shadow: none;
-  filter: none;
-}
-.tb-card[data-type="goldenboy"] .tb-card__type {
-  color: #f5c542;
-  background: #4a2f02;
-  border-color: #4a2f02;
-}
-.tb-card[data-type="goldenboy"] .tb-card__name {
-  color: #f5c542;
-}
 
-/* 4. Generational: a flame field, the headline number printed big */
+/* 4. Generational: a jersey on fire; the box score rides on the face */
+.tb-card[data-type="generational"] .tb-card__face {
+  --num: var(--paper);
+  --edge: #6a0b0b;
+  --trim: #6a0b0b;
+  --on-trim: #ffe36a;
+  --on-fab: var(--paper);
+}
 .tb-card[data-type="generational"] .tb-card__art {
   background:
     radial-gradient(40% 55% at 18% 100%, #ffe36a 0, #ffe36a00 70%),
@@ -983,22 +1111,19 @@ select {
   50% { background-position: 0 -1.5cqw, 0 1cqw, 0 -1cqw, 0 0; }
   100% { background-position: 0 1cqw, 0 -1.5cqw, 0 1.5cqw, 0 0; }
 }
-.tb-card[data-type="generational"] .tb-card__mono {
-  color: var(--paper);
-  -webkit-text-stroke: 0.6cqw #6a0b0b;
-}
 .tb-card[data-type="generational"] .tb-card__moment {
   font-size: 11cqw;
-  font-weight: 900;
   font-stretch: 115%;
 }
-.tb-card[data-type="generational"] .tb-card__type {
-  color: #6a0b0b;
-  background: #ffe36a;
-  border-color: #ffe36a;
-}
 
-/* 5. Ultimate Stardom: a night sky, two spotlights, gold-leaf lettering */
+/* 5. Ultimate Stardom: a midnight jersey under two spotlights, gold lettering */
+.tb-card[data-type="stardom"] .tb-card__face {
+  --num: #e8b83a;
+  --edge: #0a0820;
+  --trim: #0a0820;
+  --on-trim: #e8b83a;
+  --on-fab: #fff3c4;
+}
 .tb-card[data-type="stardom"] .tb-card__art {
   background:
     conic-gradient(from 160deg at 15% -5%, transparent 0 12deg, #fff3c433 16deg 26deg, transparent 30deg),
@@ -1007,69 +1132,48 @@ select {
     radial-gradient(circle, #ffffff80 0 0.2cqw, transparent 0.4cqw) 5cqw 4cqw / 13cqw 11cqw,
     radial-gradient(110% 80% at 50% 100%, #2a1f5c, #0a0820 75%);
 }
-.tb-card[data-type="stardom"] .tb-card__mono {
-  background: linear-gradient(180deg, #fff3c4 10%, #e8b83a 50%, #9c6b12 90%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-stroke: 0;
-}
-.tb-card[data-type="stardom"] .tb-card__type {
-  color: #0a0820;
-  background: #e8b83a;
-  border-color: #e8b83a;
-}
-.tb-card[data-type="stardom"] .tb-card__band {
-  background: #0a0820;
-}
-.tb-card[data-type="stardom"] .tb-card__name {
-  color: #e8b83a;
-}
 
-/* 6. The Light (East): white light rays out of a team-colour halo */
+/* 6. The Light (East): a white jersey lit from inside, rays out of a team-colour halo */
+.tb-card[data-type="light"] .tb-card__face {
+  --num: var(--t1);
+  --edge: var(--paper);
+  --trim: #f4f2ea;
+  --on-trim: var(--ink);
+  --on-fab: var(--ink);
+}
 .tb-card[data-type="light"] .tb-card__art {
   background:
-    radial-gradient(circle at 50% 40%, #ffffff 0 14cqw, transparent 34cqw),
-    repeating-conic-gradient(from 0deg at 50% 40%, #ffffff 0 6deg, #ffffff00 6deg 12deg),
-    radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--t1) 35%, white), color-mix(in oklab, var(--t1) 70%, white) 75%);
+    radial-gradient(circle at 50% 44%, #ffffff 0 14cqw, transparent 36cqw),
+    repeating-conic-gradient(from 0deg at 50% 44%, #ffffff 0 6deg, #ffffff00 6deg 12deg),
+    radial-gradient(circle at 50% 44%, color-mix(in oklab, var(--t1) 35%, white), color-mix(in oklab, var(--t1) 70%, white) 75%);
 }
-.tb-card[data-type="light"] .tb-card__mono {
-  color: var(--t1);
-  -webkit-text-stroke: 0.6cqw var(--paper);
-}
-.tb-card[data-type="light"] .tb-card__ovr,
-.tb-card[data-type="light"] .tb-card__sport,
-.tb-card[data-type="light"] .tb-card__moment {
-  color: var(--ink);
-  text-shadow: none;
-  filter: none;
-}
-.tb-card[data-type="light"] .tb-card__type {
-  color: var(--ink);
-  background: var(--paper);
-  border-color: var(--ink);
+.tb-card[data-type="light"] .tb-card__wordmark text {
+  stroke: var(--ink);
 }
 
-/* 7. The Shadow (West): near-black, a team-colour rim light from the side */
+/* 7. The Shadow (West): a black jersey, a team-colour rim light from the side */
+.tb-card[data-type="shadow"] .tb-card__face {
+  --num: #08080a;
+  --edge: color-mix(in oklab, var(--t1) 70%, white);
+  --trim: #050507;
+  --on-trim: color-mix(in oklab, var(--t1) 55%, white);
+  --on-fab: var(--paper);
+}
 .tb-card[data-type="shadow"] .tb-card__art {
   background:
     radial-gradient(60% 80% at 100% 40%, color-mix(in oklab, var(--t1) 85%, white), transparent 70%),
     radial-gradient(40% 60% at 0% 80%, color-mix(in oklab, var(--t2) 40%, transparent), transparent 70%),
     linear-gradient(160deg, #15151a, #050507);
 }
-.tb-card[data-type="shadow"] .tb-card__mono {
-  color: #08080a;
-  -webkit-text-stroke: 0.6cqw color-mix(in oklab, var(--t1) 70%, white);
-}
-.tb-card[data-type="shadow"] .tb-card__type {
-  color: color-mix(in oklab, var(--t1) 60%, white);
-  background: #050507;
-}
-.tb-card[data-type="shadow"] .tb-card__band {
-  background: #050507;
-}
 
-/* 8. Stone Fortress: a cut-stone wall, engraved lettering */
+/* 8. Stone Fortress: a jersey of cut stone, the number carved in */
+.tb-card[data-type="fortress"] .tb-card__face {
+  --num: #c9ccd2;
+  --edge: #23252a;
+  --trim: #2b2d31;
+  --on-trim: #e7e9ec;
+  --on-fab: #e7e9ec;
+}
 .tb-card[data-type="fortress"] .tb-card__art {
   background:
     linear-gradient(#0000 calc(100% - 0.7cqw), #2b2d31 0) 0 0 / 100% 10cqw,
@@ -1079,44 +1183,30 @@ select {
     linear-gradient(170deg, #80848c, #4b4f57);
 }
 .tb-card[data-type="fortress"] .tb-card__mono {
-  color: #c9ccd2;
-  -webkit-text-stroke: 0.5cqw #23252a;
   text-shadow: 0 0.6cqw 0 #23252a, 0 -0.3cqw 0 #ffffff40;
 }
 .tb-card[data-type="fortress"] .tb-card__type {
-  color: #e7e9ec;
-  background: #2b2d31;
-  border-color: #e7e9ec;
-  border-radius: 0;
+  border-radius: 0.6cqw;
+  outline: none;
   transform: none;
 }
-.tb-card[data-type="fortress"] .tb-card__band {
-  background: #2b2d31;
-}
 
-/* 9. Cult Classic: a retro jersey, cream stock, halftone and throwback stripes */
+/* 9. Cult Classic: a throwback jersey, cream wool, halftone and team stripes */
+.tb-card[data-type="cult"] .tb-card__face {
+  --num: var(--t1);
+  --edge: var(--ink);
+  --trim: var(--ink);
+  --on-trim: #f1e4c6;
+  --on-fab: var(--ink);
+}
 .tb-card[data-type="cult"] .tb-card__art {
   background:
-    linear-gradient(transparent 56%, var(--t1) 56% 62%, var(--t2) 62% 66%, var(--t1) 66% 72%, transparent 72%),
+    linear-gradient(transparent 60%, var(--t1) 60% 65%, var(--t2) 65% 68%, var(--t1) 68% 73%, transparent 73%),
     radial-gradient(circle, color-mix(in oklab, var(--t1) 22%, transparent) 0 0.7cqw, transparent 0.8cqw) 0 0 / 3.2cqw 3.2cqw,
     #f1e4c6;
 }
 .tb-card[data-type="cult"] .tb-card__mono {
-  color: var(--t1);
-  -webkit-text-stroke: 0.5cqw var(--ink);
   text-shadow: 1.2cqw 1.2cqw 0 var(--t2);
-}
-.tb-card[data-type="cult"] .tb-card__ovr,
-.tb-card[data-type="cult"] .tb-card__sport {
-  color: var(--ink);
-  text-shadow: none;
-  filter: none;
-}
-.tb-card[data-type="cult"] .tb-card__type {
-  color: #f1e4c6;
-  background: var(--t1);
-  border-color: var(--ink);
-  border-radius: 99px;
 }
 
 /* NEW stamp: lands on a card the first time it enters your binder */

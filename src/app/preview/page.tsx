@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { Card } from "@/components/Card";
+import { TurnableCard } from "@/components/Card";
 import { isAdmin } from "@/lib/admin";
-import { cardView, INSERT_NAMES, INSERT_POOLS, INSERT_TYPES } from "@/lib/catalog";
+import { cardView, INSERT_NAMES, INSERT_POOLS, INSERT_TYPES, POOLS, RARITIES } from "@/lib/catalog";
 import { getCurrentUser } from "@/lib/session";
 
 export const metadata = { title: "Insert preview" };
@@ -31,8 +31,8 @@ export default async function PreviewPage({ searchParams }: { searchParams: Prom
         Insert <span className="text-accent">preview</span>
       </h1>
       <p className="mt-3 text-muted">
-        Splash art comes from <code className="text-text">src/lib/catalog/insert-art.ts</code>. A card showing initials
-        has no art yet, or its image failed to load.
+        Splash art comes from <code className="text-text">src/lib/catalog/insert-art.ts</code>. A card showing only its
+        jersey number (or initials) has no art yet, or its image failed to load. Turn a card around to see its back.
       </p>
       <nav className="mt-4 flex gap-2 font-cond text-sm font-semibold">
         {(["all", "art", "missing"] as const).map((k) => (
@@ -45,6 +45,20 @@ export default async function PreviewPage({ searchParams }: { searchParams: Prom
           </a>
         ))}
       </nav>
+      {show === "all" && (
+        <section className="mt-10">
+          <h2 className="font-display text-2xl">
+            Base set <span className="font-cond text-base text-muted">one per edition</span>
+          </h2>
+          <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+            {RARITIES.flatMap((r) => POOLS.basketball[r].slice(0, 1)).map((d) => (
+              <li key={d.id}>
+                <TurnableCard card={cardView(d.id)} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {groups
         .filter((g) => g.cards.length > 0)
         .map((g) => (
@@ -58,7 +72,7 @@ export default async function PreviewPage({ searchParams }: { searchParams: Prom
             <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
               {g.cards.map((v) => (
                 <li key={v.designId}>
-                  <Card card={v} />
+                  <TurnableCard card={v} />
                   <code className={`mt-1 block text-center text-xs ${v.art ? "text-accent" : "text-muted"}`}>
                     {v.designId}
                   </code>
