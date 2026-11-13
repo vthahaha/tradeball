@@ -24,16 +24,16 @@ export const INSERT_ART: Record<string, string> = {
   NB15: "", // Norman Powell
 
   // 2. Hard Goodbyes
-  HG1: "", // Garrett Temple
-  HG2: "", // Chris Paul
-  HG3: "", // Kyle Lowry
-  HG4: "", // Taj Gibson
-  HG5: "", // Nicolas Batum
-  HG6: "", // Isaiah Whitehead
-  HG7: "", // Malcolm Brogdon
-  HG8: "", // Danilo Gallinari
-  HG9: "", // P.J. Tucker
-  HG10: "", // Russell Westbrook
+  HG1: "/inserts/HG1.jpg", // Garrett Temple
+  HG2: "/inserts/HG2.jpg", // Chris Paul
+  HG3: "/inserts/HG3.jpg", // Kyle Lowry
+  HG4: "/inserts/HG4.jpg", // Taj Gibson
+  HG5: "/inserts/HG5.jpg", // Nicolas Batum
+  HG6: "/inserts/HG6.jpg", // Isaiah Whitehead
+  HG7: "/inserts/HG7.jpg", // Malcolm Brogdon
+  HG8: "/inserts/HG8.jpg", // Danilo Gallinari
+  HG9: "/inserts/HG9.jpg", // P.J. Tucker
+  HG10: "/inserts/HG10.jpg", // Russell Westbrook
 
   // 3. Golden Boy
   GB1: "", // Victor Wembanyama
@@ -48,15 +48,15 @@ export const INSERT_ART: Record<string, string> = {
   GB10: "", // Ace Bailey
 
   // 4. Generational
-  GE1: "", // Nikola Jokic
-  GE2: "", // Victor Wembanyama
-  GE3: "", // Jalen Brunson
-  GE4: "", // Luka Doncic
-  GE5: "", // Kawhi Leonard
-  GE6: "", // Cooper Flagg
-  GE7: "", // Shai Gilgeous-Alexander
-  GE8: "", // Stephen Curry
-  GE9: "", // Bam Adebayo
+  GE1: "/inserts/GE1.jpg", // Nikola Jokic
+  GE2: "/inserts/GE2.jpg", // Victor Wembanyama
+  GE3: "/inserts/GE3.jpg", // Jalen Brunson
+  GE4: "/inserts/GE4.jpg", // Luka Doncic
+  GE5: "/inserts/GE5.jpg", // Kawhi Leonard
+  GE6: "/inserts/GE6.jpg", // Cooper Flagg
+  GE7: "/inserts/GE7.jpg", // Shai Gilgeous-Alexander
+  GE8: "/inserts/GE8.jpg", // Stephen Curry
+  GE9: "/inserts/GE9.jpg", // Bam Adebayo
 
   // 5. Ultimate Stardom
   US1: "", // Shai Gilgeous-Alexander
@@ -151,33 +151,33 @@ export const INSERT_ART: Record<string, string> = {
   CC30: "", // Brendan Haywood
 
   // Set 2: A. Best of the Best
-  BOTB1: "", // Jalen Brunson
-  BOTB2: "", // Shai Gilgeous-Alexander
-  BOTB3: "", // Jaylen Brown
-  BOTB4: "", // LeBron James
-  BOTB5: "", // Dirk Nowitzki
-  BOTB6: "", // Kobe Bryant
-  BOTB7: "", // Tim Duncan
-  BOTB8: "", // Chauncey Billups
-  BOTB9: "", // Dennis Johnson
-  BOTB10: "", // Hakeem Olajuwon
-  BOTB11: "", // Michael Jordan
-  BOTB12: "", // Joe Dumars
-  BOTB13: "", // Moses Malone
-  BOTB14: "", // Bill Walton
-  BOTB15: "", // Rick Barry
+  BOTB1: "/inserts/BOTB1.jpg", // Jalen Brunson
+  BOTB2: "/inserts/BOTB2.jpg", // Shai Gilgeous-Alexander
+  BOTB3: "/inserts/BOTB3.jpg", // Jaylen Brown
+  BOTB4: "/inserts/BOTB4.jpg", // LeBron James
+  BOTB5: "/inserts/BOTB5.jpg", // Dirk Nowitzki
+  BOTB6: "/inserts/BOTB6.jpg", // Kobe Bryant
+  BOTB7: "/inserts/BOTB7.jpg", // Tim Duncan
+  BOTB8: "/inserts/BOTB8.jpg", // Chauncey Billups
+  BOTB9: "/inserts/BOTB9.jpg", // Dennis Johnson
+  BOTB10: "/inserts/BOTB10.jpg", // Hakeem Olajuwon
+  BOTB11: "/inserts/BOTB11.jpg", // Michael Jordan
+  BOTB12: "/inserts/BOTB12.jpg", // Joe Dumars
+  BOTB13: "/inserts/BOTB13.jpg", // Moses Malone
+  BOTB14: "/inserts/BOTB14.jpg", // BOTB12l Walton
+  BOTB15: "/inserts/BOTB15.jpg", // Rick Barry
 
   // Set 2: B. Rivalries
-  RV1: "", // Larry Bird & Magic Johnson
-  RV2: "", // Michael Jordan & Isiah Thomas
-  RV3: "", // LeBron James & Stephen Curry
-  RV4: "", // Tim Duncan & Dirk Nowitzki
-  RV5: "", // Charles Barkley & Karl Malone
-  RV6: "", // Anthony Edwards & Shai Gilgeous-Alexander
-  RV7: "", // Bill Russell & Wilt Chamberlain
-  RV8: "", // Kareem Abdul-Jabbar & Bob Lanier
-  RV9: "", // Allen Iverson & Kobe Bryant
-  RV10: "", // Shaquille O'Neal & Dwight Howard
+  RV1: "/inserts/RV1.jpg", // Larry Bird & Magic Johnson
+  RV2: "/inserts/RV2.jpg", // Michael Jordan & Isiah Thomas
+  RV3: "/inserts/RV3.jpg", // LeBron James & Stephen Curry
+  RV4: "/inserts/RV4.jpg", // Tim Duncan & Dirk Nowitzki
+  RV5: "/inserts/RV5.jpg", // Charles Barkley & Karl Malone
+  RV6: "/inserts/RV6.jpg", // Anthony Edwards & Shai Gilgeous-Alexander
+  RV7: "/inserts/RV7.jpg", // Bill Russell & Wilt Chamberlain
+  RV8: "/inserts/RV8.jpg", // Kareem Abdul-Jabbar & Bob Lanier
+  RV9: "/inserts/RV9.jpg", // Allen Iverson & Kobe Bryant
+  RV10: "/inserts/RV10.jpg", // Shaquille O'Neal & Dwight Howard
 
   // Set 3: 1. Flash of Brilliance
   FB1: "", // Jason Williams
@@ -197,16 +197,16 @@ export const INSERT_ART: Record<string, string> = {
   FB15: "", // Ja Morant
 
   // Set 3: 2. Time Wizards
-  TW1: "", // Arvydas Sabonis
-  TW2: "", // Andrei Kirilenko
-  TW3: "", // Chris Bosh
-  TW4: "", // Peja Stojakovic
-  TW5: "", // Shawn Marion
-  TW6: "", // Rasheed Wallace
-  TW7: "", // Toni Kukoc
-  TW8: "", // Lamar Odom
-  TW9: "", // Bob McAdoo
-  TW10: "", // Sam Perkins
+  TW1: "/inserts/TW1.png", // Arvydas Sabonis
+  TW2: "/inserts/TW2.png", // Andrei Kirilenko
+  TW3: "/inserts/TW3.png", // Chris Bosh
+  TW4: "/inserts/TW4.png", // Peja Stojakovic
+  TW5: "/inserts/TW5.png", // Shawn Marion
+  TW6: "/inserts/TW6.png", // Rasheed Wallace
+  TW7: "/inserts/TW7.png", // Toni Kukoc
+  TW8: "/inserts/TW8.png", // Lamar Odom
+  TW9: "/inserts/TW9.png", // Bob McAdoo
+  TW10: "/inserts/TW10.png", // Sam Perkins
 
   // Set 3: 3. Founding Father
   FF1: "", // Mark Aguirre
@@ -219,16 +219,16 @@ export const INSERT_ART: Record<string, string> = {
   FF8: "", // Baron Davis
 
   // Set 3: 4. The Dream Team
-  DT1: "", // Charles Barkley
-  DT2: "", // Larry Bird
-  DT3: "", // Clyde Drexler
-  DT4: "", // Patrick Ewing
-  DT5: "", // Michael Jordan
-  DT6: "", // Magic Johnson
-  DT7: "", // Christian Laettner
-  DT8: "", // Karl Malone
-  DT9: "", // Chris Mullin
-  DT10: "", // Scottie Pippen
-  DT11: "", // David Robinson
-  DT12: "", // John Stockton
+  DT1: "/inserts/DT1.jpg", // Charles Barkley
+  DT2: "/inserts/DT2.jpg", // Larry Bird
+  DT3: "/inserts/DT3.jpg", // Clyde Drexler
+  DT4: "/inserts/DT4.jpg", // Patrick Ewing
+  DT5: "/inserts/DT5.jpg", // Michael Jordan
+  DT6: "/inserts/DT6.jpg", // Magic Johnson
+  DT7: "/inserts/DT7.jpg", // Christian Laettner
+  DT8: "/inserts/DT8.jpg", // Karl Malone
+  DT9: "/inserts/DT9.jpg", // Chris Mullin
+  DT10: "/inserts/DT10.jpg", // Scottie Pippen
+  DT11: "/inserts/DT11.jpg", // David Robinson
+  DT12: "/inserts/DT12.jpg", // John Stockton
 };
