@@ -864,12 +864,381 @@ select {
 }
 .tb-ins--cult .tb-ins__line { color: #6a5a44; }
 
+/* ── insert details: fine print, card numbers, stat lines ── */
+.tb-ins__fine {
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  margin-top: 1.1cqw;
+  padding-top: 1cqw;
+  border-top: 0.25cqw solid color-mix(in oklab, currentColor 28%, transparent);
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 700;
+  font-size: 2.1cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.78;
+}
+.tb-ins__fine.is-center { justify-content: center; }
+.tb-ins__no {
+  margin-left: auto;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.tb-ins__fine.is-center .tb-ins__no { margin-left: 0; }
+.tb-ins__no i { font-style: normal; opacity: 0.8; }
+.tb-ins__stats {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.6cqw 1.4cqw;
+}
+.tb-ins__stats b,
+.tb-ins__line .tb-ins__stats b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 2.8cqw;
+  letter-spacing: 0;
+}
+/* footers grow a line for the fine print */
+.tb-ins--newblood .tb-ins__photo,
+.tb-ins--newblood .tb-ins__seam { bottom: 31cqw; }
+.tb-ins--newblood .tb-ins__foot { height: 31cqw; }
+.tb-ins--generational .tb-ins__photo { bottom: 29cqw; }
+.tb-ins--generational .tb-ins__big.is-front { bottom: 32cqw; }
+.tb-ins--generational .tb-ins__foot { height: 29cqw; }
+.tb-ins--stardom .tb-ins__photo,
+.tb-ins--light .tb-ins__photo,
+.tb-ins--shadow .tb-ins__photo { bottom: 29cqw; }
+.tb-ins--stardom .tb-ins__foot,
+.tb-ins--light .tb-ins__foot,
+.tb-ins--shadow .tb-ins__foot { height: 29cqw; }
+.tb-ins--cult .tb-ins__photo { bottom: 34cqw; }
+
+/* corner marks round a photo window */
+.tb-ins__corners {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+.tb-ins__corners i {
+  position: absolute;
+  width: 5.5cqw;
+  height: 5.5cqw;
+}
+.tb-ins__corners i:nth-child(1) { top: 0; left: 0; }
+.tb-ins__corners i:nth-child(2) { top: 0; right: 0; transform: scaleX(-1); }
+.tb-ins__corners i:nth-child(3) { bottom: 0; left: 0; transform: scaleY(-1); }
+.tb-ins__corners i:nth-child(4) { right: 0; bottom: 0; transform: scale(-1); }
+
+/* New Blood: pinstripe on the new side, halftone on the old, a ghost arrow over the seam,
+   team codes either side */
+.tb-ins__pin {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: repeating-linear-gradient(90deg, #ffffff1f 0 0.3cqw, transparent 0.3cqw 3.2cqw);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.tb-ins--newblood .tb-ins__old {
+  background:
+    radial-gradient(circle, #0000002e 0 0.45cqw, transparent 0.55cqw) 0 0 / 1.6cqw 1.6cqw,
+    var(--f1);
+}
+.tb-ins__arrow {
+  position: absolute;
+  top: 34%;
+  left: 34%;
+  z-index: 3;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: 40cqw;
+  line-height: 0.6;
+  color: transparent;
+  -webkit-text-stroke: 0.35cqw #ffffffa6;
+  transform: translate(-30%, -50%);
+  pointer-events: none;
+}
+.tb-ins__codes {
+  position: absolute;
+  right: 0;
+  bottom: 32.4cqw;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 5cqw;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #fff;
+  text-shadow: 0 0.3cqw 1cqw #0008;
+}
+.tb-ins__codes .is-from {
+  width: 34%;
+  text-align: center;
+  text-decoration: line-through;
+  text-decoration-thickness: 0.4cqw;
+  opacity: 0.8;
+}
+.tb-ins__codes .is-to {
+  flex: 1;
+  padding-right: 4cqw;
+  text-align: right;
+}
+
+/* Hard Goodbyes: album mounting corners, film sprockets inside the keyline, a quiet thank you */
+.tb-ins--goodbyes .tb-ins__photo { inset: 12cqw 9cqw 36cqw; }
+.tb-ins--goodbyes .tb-ins__keyline { inset: 3.6cqw; }
+.tb-ins--goodbyes .tb-ins__set {
+  top: 6cqw;
+  right: 0;
+  left: 0;
+  max-width: none;
+  font-size: 2.8cqw;
+  text-align: center;
+  color: #b9bcc2;
+}
+.tb-ins__corners.is-mount { inset: 11.2cqw 8.2cqw 35.2cqw; }
+.tb-ins__corners.is-mount i {
+  background: #1c1c1e;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  filter: drop-shadow(0 0 0.25cqw #b9bcc2);
+}
+.tb-ins__sprockets {
+  position: absolute;
+  top: 12cqw;
+  bottom: 36cqw;
+  z-index: 2;
+  left: 5cqw;
+  right: 5cqw;
+  background:
+    repeating-linear-gradient(180deg, #2a2a2d 0 1.6cqw, transparent 1.6cqw 3.4cqw) left / 2cqw 100% no-repeat,
+    repeating-linear-gradient(180deg, #2a2a2d 0 1.6cqw, transparent 1.6cqw 3.4cqw) right / 2cqw 100% no-repeat;
+  pointer-events: none;
+}
+.tb-ins--goodbyes .tb-ins__foot { padding-bottom: 6cqw; }
+.tb-ins__thanks {
+  margin-top: 0.8cqw;
+  font-family: var(--font-body), sans-serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 3cqw;
+  letter-spacing: 0.04em;
+  color: #b9bcc2;
+}
+
+/* Golden Boy: an engraved line border on the black, foil brackets, the U-23 tag */
+.tb-ins__engrave {
+  position: absolute;
+  inset: 2.4cqw;
+  z-index: 0;
+  border: 0.3cqw solid #e2b64f66;
+  background:
+    repeating-linear-gradient(45deg, #e2b64f14 0 0.2cqw, transparent 0.2cqw 1.1cqw),
+    repeating-linear-gradient(-45deg, #e2b64f14 0 0.2cqw, transparent 0.2cqw 1.1cqw);
+  box-shadow: inset 0 0 0 1.2cqw #0c0b08, inset 0 0 0 1.5cqw #e2b64f40;
+  pointer-events: none;
+}
+.tb-ins--goldenboy .tb-ins__photo { inset: 17cqw 7cqw 32cqw; }
+.tb-ins__corners.is-bracket { inset: 15.4cqw 5.4cqw 30.4cqw; }
+.tb-ins__corners.is-bracket i {
+  border-top: 0.5cqw solid #e2b64f;
+  border-left: 0.5cqw solid #e2b64f;
+}
+.tb-ins--goldenboy .tb-ins__set { top: 5cqw; left: 7cqw; }
+.tb-ins--goldenboy .tb-ins__set span { color: #a88a45; opacity: 1; }
+.tb-ins--goldenboy .tb-ins__ovr { top: 5cqw; right: 7cqw; }
+.tb-ins--goldenboy .tb-ins__foot { padding: 0 7cqw 5cqw; }
+.tb-ins__u23 {
+  position: absolute;
+  bottom: 33.6cqw;
+  left: 8.6cqw;
+  z-index: 4;
+  padding: 0.5cqw 1.4cqw;
+  border: 0.35cqw solid #e2b64f;
+  background: #0c0b08;
+  color: #e2b64f;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 3cqw;
+  letter-spacing: 0.1em;
+}
+
+/* Generational: scoreboard scanlines over the number, its unit, a FINAL tag */
+.tb-ins__scan {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    repeating-linear-gradient(180deg, #00000024 0 0.35cqw, transparent 0.35cqw 1.2cqw),
+    radial-gradient(circle at 100% 0%, #0000003d 0 0.5cqw, transparent 0.6cqw) 0 0 / 1.8cqw 1.8cqw;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.tb-ins__unit {
+  position: absolute;
+  right: 4cqw;
+  bottom: 33cqw;
+  z-index: 3;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 7cqw;
+  letter-spacing: 0.1em;
+  color: #fff;
+  text-shadow: 0 0.3cqw 1cqw #0008;
+}
+.tb-ins__final {
+  padding: 0.2cqw 1cqw;
+  background: #fff;
+  color: #0e0f12;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 2.4cqw;
+  letter-spacing: 0.14em;
+}
+
+/* Ultimate Stardom: foil specks over the holo, a holo hairline round the photo */
+.tb-ins__specks {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(circle, #ffffffd9 0 0.18cqw, transparent 0.3cqw) 0 0 / 7cqw 9cqw,
+    radial-gradient(circle, #ffffffa6 0 0.14cqw, transparent 0.26cqw) 3.5cqw 4.5cqw / 9cqw 7cqw,
+    radial-gradient(circle, #ffffff80 0 0.12cqw, transparent 0.22cqw) 1.5cqw 6cqw / 5cqw 11cqw;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.tb-ins__holoframe {
+  position: absolute;
+  inset: 2.6cqw 2.6cqw 31.6cqw;
+  z-index: 3;
+  border: 0.5cqw solid transparent;
+  background:
+    repeating-linear-gradient(calc(115deg + var(--ry, 0deg) * 4), #ff8ad9 0 6%, #8ad7ff 12%, #c2ff8a 18%, #ffe68a 24%, #ff8ad9 30%) border-box;
+  -webkit-mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+/* The Light / The Shadow: crop marks at the corners, a light leak, the team code */
+.tb-ins__corners.is-crop { inset: 2.4cqw 2.4cqw 31.4cqw; }
+.tb-ins__corners.is-crop i {
+  width: 4cqw;
+  height: 4cqw;
+  border-top: 0.25cqw solid currentColor;
+  border-left: 0.25cqw solid currentColor;
+  opacity: 0.7;
+}
+.tb-ins--light .tb-ins__corners.is-crop { color: var(--ink); }
+.tb-ins--shadow .tb-ins__corners.is-crop { color: color-mix(in oklab, var(--t1) 60%, white); }
+.tb-ins__leak {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.tb-ins--light .tb-ins__leak {
+  background: radial-gradient(60% 45% at 100% 0%, #ffe6b8b3, transparent 70%);
+  mix-blend-mode: screen;
+}
+.tb-ins--shadow .tb-ins__leak {
+  background:
+    radial-gradient(circle, #00000059 0 0.35cqw, transparent 0.45cqw) 0 0 / 1.4cqw 1.4cqw;
+  -webkit-mask: linear-gradient(90deg, #000, transparent 55%);
+  mask: linear-gradient(90deg, #000, transparent 55%);
+}
+.tb-ins__abbr {
+  position: absolute;
+  right: 4cqw;
+  bottom: 30.6cqw;
+  z-index: 3;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: 12cqw;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+}
+.tb-ins--light .tb-ins__abbr { color: color-mix(in oklab, var(--t1) 75%, white); font-weight: 300; }
+.tb-ins--shadow .tb-ins__abbr { color: color-mix(in oklab, var(--t1) 55%, #000); }
+
+/* Stone Fortress: a chiselled bevel round the window, keystones at its corners */
+.tb-ins__bevel {
+  position: absolute;
+  inset: 7.6cqw;
+  z-index: 1;
+  box-shadow:
+    inset 0.7cqw 0.7cqw 0 #ffffff2e,
+    inset -0.7cqw -0.7cqw 0 #00000059;
+  pointer-events: none;
+}
+.tb-ins__corners.is-keystone { inset: 6.6cqw; }
+.tb-ins__corners.is-keystone i {
+  width: 5cqw;
+  height: 5cqw;
+  background:
+    radial-gradient(circle, #ffffff12 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.2cqw 1.2cqw,
+    #4b4e54;
+  box-shadow: inset 0.4cqw 0.4cqw 0 #ffffff26, inset -0.4cqw -0.4cqw 0 #0000004d;
+}
+
+/* Cult Classic: halftone rosettes printed over the bottom of the photo, card number in a dot,
+   a two-colour stripe over the name */
+.tb-ins__rosette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(circle, color-mix(in oklab, var(--t1) 60%, transparent) 0 0.45cqw, transparent 0.55cqw) 0 0 / 1.5cqw 1.5cqw;
+  -webkit-mask: linear-gradient(180deg, transparent 55%, #000);
+  mask: linear-gradient(180deg, transparent 55%, #000);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.tb-ins__cardno {
+  position: absolute;
+  top: 2.4cqw;
+  right: 2.6cqw;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 9cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--t1) 85%, #000);
+  color: #efe3c4;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 3.8cqw;
+  box-shadow: 0 0 0 0.5cqw #efe3c4;
+}
+.tb-ins__stripe {
+  width: 44%;
+  height: 1cqw;
+  margin-bottom: 1.4cqw;
+  background: linear-gradient(90deg, var(--t1) 0 62%, var(--t2) 62%);
+}
+
 /* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
 @container (max-width: 170px) {
   .tb-base__plate > span,
   .tb-ins__line,
   .tb-ins__set span,
-  .tb-ins__seam span {
+  .tb-ins__seam span,
+  .tb-ins__fine,
+  .tb-ins__thanks,
+  .tb-ins__codes,
+  .tb-ins__sprockets {
     display: none;
   }
   .tb-ins__set {

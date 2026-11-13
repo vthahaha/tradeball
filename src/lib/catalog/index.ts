@@ -18,6 +18,14 @@ const nick = (abbr: string) => teamByAbbr.get(abbr)?.name ?? abbr;
 export const headshotUrl = (espnId: string) => `https://a.espncdn.com/i/headshots/nba/players/full/${espnId}.png`;
 
 /** [primary, secondary] team colours, from the team nickname shown on a card. */
+const ABBR_FIX: Record<string, string> = { NY: "NYK", GS: "GSW", SA: "SAS", NO: "NOP", UTAH: "UTA", WSH: "WAS" };
+
+/** Three-letter code for a team nickname, as printed on cards (NYK, GSW, SAS...). */
+export function teamCode(team: string): string {
+  const abbr = teamByName.get(team)?.abbr ?? "";
+  return ABBR_FIX[abbr] ?? abbr;
+}
+
 export function teamColors(team: string): [string, string] {
   const t = teamByName.get(team);
   return t ? [t.color, t.alt] : ["#233862", "#a9b6d3"];
