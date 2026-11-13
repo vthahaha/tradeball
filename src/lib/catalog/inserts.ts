@@ -1,4 +1,4 @@
-// Series 1 insert classes, from "Insert Categories Set 1" and "Set 2 - Classic".
+// Series 1 insert classes, from "Insert Categories Set 1", "Set 2 - Classic" and "Set 3".
 // Every card's id is the id from that document (NB1, HG2, GE9, ...): that is the
 // key to use in insert-art.ts and what /admin lists.
 //
@@ -29,6 +29,11 @@ export const INSERT_CLASSES: InsertClass[] = [
   // Set 2, "Classic"
   { id: "botb", name: "Best of the Best", rarity: "legendary", boost: 3 },
   { id: "rivalries", name: "Rivalries", rarity: "epic", boost: 2 },
+  // Set 3
+  { id: "flash", name: "Flash of Brilliance", rarity: "rare", boost: 2 },
+  { id: "wizards", name: "Time Wizards", rarity: "rare", boost: 0 },
+  { id: "founders", name: "Founding Father", rarity: "epic", boost: 0 },
+  { id: "dreamteam", name: "The Dream Team", rarity: "legendary", boost: 0 },
 ];
 
 export interface Legend {
@@ -477,6 +482,149 @@ const RIVALRIES: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "rivalries", note: "Rivalries" }));
 
+// ── Set 3 ──
+
+// 1. Flash of Brilliance: the flashiest players to do it, coloured by their signature team
+const FLASH: InsertCard[] = (
+  [
+    { id: "FB1", team: "Kings", legend: L("Jason Williams", "G", "USA", 82) },
+    { id: "FB2", team: "Hawks", legend: L("Pete Maravich", "G", "USA", 92) },
+    { id: "FB3", team: "Raptors", legend: L("Vince Carter", "G", "USA", 91) },
+    { id: "FB4", team: "Lakers", legend: L("Magic Johnson", "G", "USA", 98) },
+    { id: "FB5", team: "76ers", legend: L("Allen Iverson", "G", "USA", 95) },
+    { id: "FB6", team: "Warriors", player: "3975" }, // Stephen Curry
+    { id: "FB7", team: "Mavericks", player: "6442" }, // Kyrie Irving
+    { id: "FB8", team: "SuperSonics", legend: L("Shawn Kemp", "F", "USA", 89) },
+    { id: "FB9", team: "Suns", legend: L("Steve Nash", "G", "Canada", 93) },
+    { id: "FB10", team: "Heat", legend: L("Dwyane Wade", "G", "USA", 95) },
+    {
+      id: "FB11",
+      team: "Spurs",
+      legend: L("Manu Ginobili", "G", "Argentina", 89),
+    },
+    {
+      id: "FB12",
+      team: "Clippers",
+      legend: L("Blake Griffin", "F", "USA", 88),
+    },
+    { id: "FB13", team: "Nuggets", player: "3112335" }, // Nikola Jokic
+    { id: "FB14", team: "Knicks", legend: L("Jamal Crawford", "G", "USA", 83) },
+    { id: "FB15", team: "Grizzlies", player: "4279888" }, // Ja Morant
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "flash" }));
+
+// 2. Time Wizards: players who were ahead of their time
+const TIME_WIZARDS: InsertCard[] = (
+  [
+    {
+      id: "TW1",
+      team: "Trail Blazers",
+      legend: L("Arvydas Sabonis", "C", "Lithuania", 88),
+    },
+    {
+      id: "TW2",
+      team: "Jazz",
+      legend: L("Andrei Kirilenko", "F", "Russia", 86),
+    },
+    { id: "TW3", team: "Heat", legend: L("Chris Bosh", "F", "USA", 89) },
+    {
+      id: "TW4",
+      team: "Kings",
+      legend: L("Peja Stojakovic", "F", "Serbia", 86),
+    },
+    { id: "TW5", team: "Suns", legend: L("Shawn Marion", "F", "USA", 88) },
+    {
+      id: "TW6",
+      team: "Pistons",
+      legend: L("Rasheed Wallace", "F", "USA", 87),
+    },
+    { id: "TW7", team: "Bulls", legend: L("Toni Kukoc", "F", "Croatia", 86) },
+    { id: "TW8", team: "Lakers", legend: L("Lamar Odom", "F", "USA", 86) },
+    { id: "TW9", team: "Braves", legend: L("Bob McAdoo", "C", "USA", 91) },
+    { id: "TW10", team: "Mavericks", legend: L("Sam Perkins", "F", "USA", 82) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "wizards" }));
+
+// 3. Founding Father: the first icons of younger franchises (kicker = the franchise's founding year)
+const FOUNDING_FATHERS: InsertCard[] = (
+  [
+    {
+      id: "FF1",
+      team: "Mavericks",
+      kicker: "1980",
+      legend: L("Mark Aguirre", "F", "USA", 87),
+    },
+    {
+      id: "FF2",
+      team: "Hornets",
+      kicker: "1988",
+      legend: L("Larry Johnson", "F", "USA", 86),
+    },
+    {
+      id: "FF3",
+      team: "Heat",
+      kicker: "1988",
+      legend: L("Glenn Rice", "F", "USA", 87),
+    },
+    {
+      id: "FF4",
+      team: "Timberwolves",
+      kicker: "1989",
+      legend: L("Kevin Garnett", "F", "USA", 96),
+    },
+    {
+      id: "FF5",
+      team: "Magic",
+      kicker: "1989",
+      legend: L("Shaquille O'Neal", "C", "USA", 98),
+    },
+    {
+      id: "FF6",
+      team: "Raptors",
+      kicker: "1995",
+      legend: L("Damon Stoudamire", "G", "USA", 84),
+    },
+    {
+      id: "FF7",
+      team: "Vancouver Grizzlies",
+      kicker: "1995",
+      legend: L("Shareef Abdur-Rahim", "F", "USA", 86),
+    },
+    {
+      id: "FF8",
+      team: "New Orleans Hornets",
+      kicker: "2002",
+      legend: L("Baron Davis", "G", "USA", 87),
+    },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "founders" }));
+
+// 4. The Dream Team: the 1992 Olympic roster, coloured by their club at the time
+const DREAM_TEAM: InsertCard[] = (
+  [
+    { id: "DT1", team: "76ers", legend: L("Charles Barkley", "F", "USA", 95) },
+    { id: "DT2", team: "Celtics", legend: L("Larry Bird", "F", "USA", 98) },
+    {
+      id: "DT3",
+      team: "Trail Blazers",
+      legend: L("Clyde Drexler", "G", "USA", 93),
+    },
+    { id: "DT4", team: "Knicks", legend: L("Patrick Ewing", "C", "USA", 93) },
+    { id: "DT5", team: "Bulls", legend: L("Michael Jordan", "G", "USA", 99) },
+    { id: "DT6", team: "Lakers", legend: L("Magic Johnson", "G", "USA", 98) },
+    {
+      id: "DT7",
+      team: "Duke",
+      legend: L("Christian Laettner", "F", "USA", 83),
+    },
+    { id: "DT8", team: "Jazz", legend: L("Karl Malone", "F", "USA", 95) },
+    { id: "DT9", team: "Warriors", legend: L("Chris Mullin", "F", "USA", 90) },
+    { id: "DT10", team: "Bulls", legend: L("Scottie Pippen", "F", "USA", 93) },
+    { id: "DT11", team: "Spurs", legend: L("David Robinson", "C", "USA", 95) },
+    { id: "DT12", team: "Jazz", legend: L("John Stockton", "G", "USA", 93) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "dreamteam", kicker: "Barcelona 1992" }));
+
 export const INSERT_CARDS: InsertCard[] = [
   ...NEW_BLOOD,
   ...HARD_GOODBYES,
@@ -489,4 +637,8 @@ export const INSERT_CARDS: InsertCard[] = [
   ...CULT_CLASSIC,
   ...BEST_OF_THE_BEST,
   ...RIVALRIES,
+  ...FLASH,
+  ...TIME_WIZARDS,
+  ...FOUNDING_FATHERS,
+  ...DREAM_TEAM,
 ];

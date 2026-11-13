@@ -564,6 +564,154 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
+    // Flash of Brilliance: one camera flash glinting across the top corner, slanted type
+    case "flash":
+      return (
+        <div className="tb-ins tb-ins--flash">
+          {photo()}
+          <div className="tb-ins__flashbulb" aria-hidden />
+          <div className="tb-ins__fade" aria-hidden />
+          <div className="tb-ins__set">
+            Flash of
+            <br />
+            Brilliance
+          </div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.8)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__fine">
+              <span>{card.team}</span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
+    // Time Wizards: the player trailed by two faint echoes shifted ahead, ahead of their time
+    case "wizards":
+      return (
+        <div className="tb-ins tb-ins--wizards">
+          {photo(
+            props.showImg ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element -- echoes of the same splash art */}
+                <img
+                  className="tb-ins__echo is-far"
+                  src={props.imgSrc}
+                  alt=""
+                  aria-hidden
+                  draggable={false}
+                  referrerPolicy="no-referrer"
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element -- echoes of the same splash art */}
+                <img
+                  className="tb-ins__echo is-near"
+                  src={props.imgSrc}
+                  alt=""
+                  aria-hidden
+                  draggable={false}
+                  referrerPolicy="no-referrer"
+                />
+              </>
+            ) : (
+              <div className="tb-ins__echo-mono" aria-hidden>
+                <span>{initials(name)}</span>
+                <span>{initials(name)}</span>
+              </div>
+            ),
+          )}
+          <div className="tb-ins__fade" aria-hidden />
+          <div className="tb-ins__set">Time Wizards</div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.78)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__moment">
+              Ahead of their time · {card.team}
+            </div>
+            <div className="tb-ins__fine">
+              <span>{p.pos}</span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
+    // Founding Father: a charter certificate; engraved double rule, the portrait framed like a
+    // document's, the name in an engraved serif, the franchise's founding year
+    case "founders":
+      return (
+        <div className="tb-ins tb-ins--founders">
+          <div className="tb-ins__rules" aria-hidden />
+          {photo()}
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div className="tb-ins__charter">Founding Father</div>
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.86)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__est">
+              {card.team} · Est. {card.kicker}
+            </div>
+            <div className="tb-ins__fine is-center">
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
+    // The Dream Team: navy, a row of stars, Barcelona 1992, red and white stripes at the foot
+    case "dreamteam":
+      return (
+        <div className="tb-ins tb-ins--dreamteam">
+          <div className="tb-ins__head">
+            <svg className="tb-ins__stars" viewBox="0 0 60 10" aria-hidden>
+              {[5, 17.5, 30, 42.5, 55].map((x) => (
+                <path
+                  key={x}
+                  d={`M${x} 0.6 L${x + 1.2} 3.6 L${x + 4.3} 3.7 L${x + 1.9} 5.6 L${x + 2.7} 8.7 L${x} 6.9 L${x - 2.7} 8.7 L${x - 1.9} 5.6 L${x - 4.3} 3.7 L${x - 1.2} 3.6 Z`}
+                />
+              ))}
+            </svg>
+            <div className="tb-ins__dtname">The Dream Team</div>
+            <div className="tb-ins__dtplace">{card.kicker}</div>
+          </div>
+          {photo()}
+          <div className="tb-ins__stripes" aria-hidden />
+          <div className="tb-ins__dtplate">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.7)}cqw` }}
+            >
+              {name}
+            </div>
+            <b>{card.ovr}</b>
+            <div className="tb-ins__fine">
+              <span>
+                {card.team} · {p.pos}
+              </span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
     default:
       return null;
   }

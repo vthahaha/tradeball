@@ -160,6 +160,45 @@ export function SetIcon({ type }: { type: string }) {
           />
         </>,
       );
+    case "flash":
+      return s(
+        <path d="M13 2 L5 13 H11 L9 22 L19 9 H13 Z" fill="currentColor" />,
+      );
+    case "wizards":
+      return s(
+        <>
+          <circle cx="16" cy="12" r="5" fill="currentColor" />
+          <circle cx="10" cy="12" r="5" fill="currentColor" opacity="0.45" />
+          <circle cx="5" cy="12" r="4" fill="currentColor" opacity="0.2" />
+        </>,
+      );
+    case "founders":
+      return s(
+        <rect
+          x="4"
+          y="3"
+          width="16"
+          height="18"
+          rx="1"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeDasharray="3 1.5"
+        />,
+      );
+    case "dreamteam":
+      return s(
+        <>
+          <path
+            d="M3 15 H21 M3 19 H21"
+            stroke="currentColor"
+            strokeWidth="2.4"
+          />
+          <circle cx="7" cy="7" r="1.6" fill="currentColor" />
+          <circle cx="12" cy="7" r="1.6" fill="currentColor" />
+          <circle cx="17" cy="7" r="1.6" fill="currentColor" />
+        </>,
+      );
     default:
       return null;
   }

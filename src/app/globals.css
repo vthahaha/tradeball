@@ -1415,6 +1415,205 @@ select {
 .tb-ins--rivalries .tb-ins__vsline::before { flex-basis: 11cqw; }
 .tb-ins--rivalries .tb-ins__vsline { font-size: 3.2cqw; }
 
+/* Flash of Brilliance: one camera flash glinting across the top corner (it follows the tilt),
+   slanted italic type */
+.tb-ins--flash { background: var(--t1); }
+.tb-ins__flashbulb {
+  position: absolute;
+  top: 7cqw;
+  left: -30%;
+  z-index: 3;
+  width: 160%;
+  height: 15cqw;
+  background: linear-gradient(90deg, transparent, #ffffffa6 44%, #fff 50%, #ffffffa6 56%, transparent);
+  transform: rotate(-28deg) translateX(calc(var(--gx, 50%) * 0.3 - 15%));
+  mix-blend-mode: screen;
+  filter: blur(0.5cqw);
+  opacity: 0.8;
+  pointer-events: none;
+}
+.tb-ins--flash .tb-ins__set {
+  font-size: 4.6cqw;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.95;
+  letter-spacing: 0.06em;
+  transform: skewX(-8deg);
+  transform-origin: left;
+  text-shadow: 0 0.3cqw 1.2cqw #000a;
+}
+.tb-ins--flash .tb-ins__ovr { text-shadow: 0 0.3cqw 1.2cqw #000a; }
+.tb-ins--flash .tb-ins__foot { padding: 0 4cqw 4cqw; }
+.tb-ins--flash .tb-ins__name {
+  font-style: italic;
+  transform: skewX(-8deg);
+  transform-origin: left;
+}
+.tb-ins--flash .tb-ins__fine { color: #d8d8d8; }
+
+/* Time Wizards: two faint cyan echoes of the player shifted ahead, on deep teal */
+.tb-ins--wizards,
+.tb-ins--wizards .tb-ins__photo { background: #0e2a33; }
+.tb-ins__echo {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  filter: grayscale(1) brightness(1.3) sepia(1) hue-rotate(150deg) saturate(3);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.tb-ins__echo.is-near { opacity: 0.3; transform: translateX(4cqw); }
+.tb-ins__echo.is-far { opacity: 0.16; transform: translateX(8.5cqw); }
+.tb-ins__echo-mono span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  font-size: 30cqw;
+  line-height: 1;
+}
+.tb-ins__echo-mono span:nth-child(1) { color: #7fe7ff26; transform: translateX(9cqw); }
+.tb-ins__echo-mono span:nth-child(2) { color: #7fe7ff59; transform: translateX(4.5cqw); }
+.tb-ins--wizards .tb-ins__set {
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  color: #7fe7ff;
+}
+.tb-ins--wizards .tb-ins__moment { color: #7fe7ff; }
+.tb-ins--wizards .tb-ins__foot { padding: 0 4cqw 4cqw; }
+.tb-ins--wizards .tb-ins__fine { color: #9fdde6; }
+
+/* Founding Father: a charter certificate; cream stock, an engraved double rule, the portrait
+   framed like a document's, the name in an engraved serif, the founding year */
+.tb-ins--founders {
+  background: radial-gradient(130% 100% at 50% 30%, #faf5e8, #ece2c9);
+  color: #2a2118;
+}
+.tb-ins__rules {
+  position: absolute;
+  inset: 2.4cqw;
+  z-index: 1;
+  border: 0.35cqw solid #8a6a3a;
+  box-shadow: inset 0 0 0 1.1cqw #f3ecdc, inset 0 0 0 1.45cqw #8a6a3a;
+  pointer-events: none;
+}
+.tb-ins--founders .tb-ins__photo {
+  inset: 6.4cqw 6.4cqw 41cqw;
+  box-shadow: inset 0 0 0 0.3cqw #0003;
+}
+.tb-ins--founders .tb-ins__ovr { top: 8.4cqw; right: 8.6cqw; }
+.tb-ins--founders .tb-ins__foot {
+  padding: 0 7cqw 5.6cqw;
+  text-align: center;
+}
+.tb-ins__charter {
+  margin-bottom: 1.4cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #8a6a3a;
+}
+.tb-ins--founders .tb-ins__name {
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.tb-ins__est {
+  margin-top: 1.2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6a5a44;
+}
+.tb-ins--founders .tb-ins__fine { color: #6a5a44; }
+
+/* The Dream Team: navy, a row of stars, Barcelona 1992, red and white stripes at the foot */
+.tb-ins--dreamteam { background: #0f1f45; color: #fff; }
+.tb-ins__head {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 4;
+  display: flex;
+  height: 17cqw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9cqw;
+  background: #0f1f45;
+}
+.tb-ins__stars {
+  width: 32cqw;
+  height: auto;
+  fill: #fff;
+}
+.tb-ins__dtname {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-size: 3.6cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.tb-ins__dtplace {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #d6a11a;
+}
+.tb-ins--dreamteam .tb-ins__photo { inset: 17cqw 0 22cqw; background: #1a2d5c; }
+.tb-ins--dreamteam .tb-ins__ovr { display: none; }
+.tb-ins__stripes {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  height: 22cqw;
+  background: repeating-linear-gradient(180deg, #b3132b 0 2.2cqw, #f4f4f4 2.2cqw 4.4cqw);
+}
+.tb-ins__dtplate {
+  position: absolute;
+  right: 4cqw;
+  bottom: 3.6cqw;
+  left: 4cqw;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 2cqw;
+  padding: 2.2cqw 3cqw 2cqw;
+  background: #0f1f45;
+  box-shadow: 0 0.6cqw 1.2cqw #0007;
+}
+.tb-ins__dtplate > b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: 8cqw;
+  line-height: 0.9;
+  color: #d6a11a;
+}
+.tb-ins__dtplate .tb-ins__fine {
+  grid-column: 1 / -1;
+  color: #b9c3dc;
+}
+
 /* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
 @container (max-width: 170px) {
   .tb-base__plate > span,
@@ -1423,6 +1622,8 @@ select {
   .tb-ins__fine,
   .tb-ins__codes,
   .tb-ins__moment,
+  .tb-ins__est,
+  .tb-ins__charter,
   .tb-ins__side small,
   .tb-ins--rivalries .tb-ins__ticket-head .tb-ins__serial {
     display: none;

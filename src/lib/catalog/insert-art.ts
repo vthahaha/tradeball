@@ -178,4 +178,57 @@ export const INSERT_ART: Record<string, string> = {
   RV8: "", // Kareem Abdul-Jabbar & Bob Lanier
   RV9: "", // Allen Iverson & Kobe Bryant
   RV10: "", // Shaquille O'Neal & Dwight Howard
+
+  // Set 3: 1. Flash of Brilliance
+  FB1: "", // Jason Williams
+  FB2: "", // Pete Maravich
+  FB3: "", // Vince Carter
+  FB4: "", // Magic Johnson
+  FB5: "", // Allen Iverson
+  FB6: "", // Stephen Curry
+  FB7: "", // Kyrie Irving
+  FB8: "", // Shawn Kemp
+  FB9: "", // Steve Nash
+  FB10: "", // Dwyane Wade
+  FB11: "", // Manu Ginobili
+  FB12: "", // Blake Griffin
+  FB13: "", // Nikola Jokic
+  FB14: "", // Jamal Crawford
+  FB15: "", // Ja Morant
+
+  // Set 3: 2. Time Wizards
+  TW1: "", // Arvydas Sabonis
+  TW2: "", // Andrei Kirilenko
+  TW3: "", // Chris Bosh
+  TW4: "", // Peja Stojakovic
+  TW5: "", // Shawn Marion
+  TW6: "", // Rasheed Wallace
+  TW7: "", // Toni Kukoc
+  TW8: "", // Lamar Odom
+  TW9: "", // Bob McAdoo
+  TW10: "", // Sam Perkins
+
+  // Set 3: 3. Founding Father
+  FF1: "", // Mark Aguirre
+  FF2: "", // Larry Johnson
+  FF3: "", // Glenn Rice
+  FF4: "", // Kevin Garnett
+  FF5: "", // Shaquille O'Neal
+  FF6: "", // Damon Stoudamire
+  FF7: "", // Shareef Abdur-Rahim
+  FF8: "", // Baron Davis
+
+  // Set 3: 4. The Dream Team
+  DT1: "", // Charles Barkley
+  DT2: "", // Larry Bird
+  DT3: "", // Clyde Drexler
+  DT4: "", // Patrick Ewing
+  DT5: "", // Michael Jordan
+  DT6: "", // Magic Johnson
+  DT7: "", // Christian Laettner
+  DT8: "", // Karl Malone
+  DT9: "", // Chris Mullin
+  DT10: "", // Scottie Pippen
+  DT11: "", // David Robinson
+  DT12: "", // John Stockton
 };

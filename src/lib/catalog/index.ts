@@ -24,6 +24,10 @@ const ABBR_FIX: Record<string, string> = { NY: "NYK", GS: "GSW", SA: "SAS", NO: 
 /** Franchises that no longer play under the name a card prints. */
 const HISTORIC: Record<string, { abbr: string; colors: [string, string] }> = {
   SuperSonics: { abbr: "SEA", colors: ["#00653a", "#ffc200"] },
+  Braves: { abbr: "BUF", colors: ["#2a6ebb", "#f2672d"] },
+  "Vancouver Grizzlies": { abbr: "VAN", colors: ["#00a7a7", "#b4793c"] },
+  "New Orleans Hornets": { abbr: "NOH", colors: ["#00788c", "#5a2d82"] },
+  Duke: { abbr: "DUKE", colors: ["#001a57", "#ffffff"] },
 };
 
 export function teamCode(team: string): string {
