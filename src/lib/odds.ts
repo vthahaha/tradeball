@@ -53,10 +53,20 @@ export const CARDS_PER_PACK = 8;
 
 /**
  * The last slot of every pack is an insert; which class it comes from, by weight.
- * Empty until insert classes exist; the slot then rolls a normal base/rookie card.
- * Example: { champs: 5, courtside: 20 }
+ * The weights add up to 100, so each one is that class's % chance per pack.
+ * A class left out here is never pulled.
  */
-export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {};
+export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
+  light: 20, // The Light (uncommon)
+  shadow: 20, // The Shadow (uncommon)
+  newblood: 13, // New Blood (rare)
+  goldenboy: 11, // Golden Boy (rare)
+  fortress: 11, // Stone Fortress (rare)
+  cult: 10, // Cult Classic (epic)
+  goodbyes: 8, // Hard Goodbyes (epic)
+  stardom: 4, // Ultimate Stardom (legendary)
+  generational: 3, // Generational (mythic)
+};
 export const MAX_BANKED_PACKS = 3;
 
 export function cooldownMs() {

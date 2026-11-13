@@ -96,7 +96,8 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
 
   const statEntries = card.stats ? Object.entries(card.stats) : [];
   // Season averages and percentages show one decimal; whole numbers (single-game lines) stay whole.
-  const fmtStat = (k: string, v: number) => (Number.isInteger(v) && !k.endsWith("%") && insert ? String(v) : v.toFixed(1));
+  const singleGame = !!card.statLine?.endsWith(" game");
+  const fmtStat = (k: string, v: number) => (singleGame && Number.isInteger(v) ? String(v) : v.toFixed(1));
 
   return (
     <div
@@ -150,7 +151,9 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
             <div className="tb-card__meta">
               {isDuo
                 ? `${p1.team}${p2.team !== p1.team ? ` / ${p2.team}` : ""}`
-                : card.fromTeam
+                : card.meta
+                  ? card.meta
+                  : card.fromTeam
                   ? `${card.fromTeam} → ${card.team}`
                   : card.type === "rookie" && p1.pick
                     ? `${p1.team} · Pick ${p1.pick}${p1.college ? ` · ${p1.college}` : ""}`
@@ -159,7 +162,10 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
           </div>
           <div className="tb-card__stub">
             {statEntries.length > 0 ? (
-              <div className="tb-card__stats" title={card.statLine ? (insert ? card.statLine : `${card.statLine} per game`) : undefined}>
+              <div
+                className="tb-card__stats"
+                title={card.statLine ? (singleGame ? card.statLine : `${card.statLine} per game`) : undefined}
+              >
                 {statEntries.map(([k, v]) => (
                   <div key={k}>
                     <span>{k}</span>
@@ -168,7 +174,7 @@ export function Card({ card, finish = "standard", serialNo, supply, grade, missi
                 ))}
               </div>
             ) : (
-              <div className="tb-card__nostats">No stats yet</div>
+              <div className="tb-card__nostats">{card.note ?? "No stats yet"}</div>
             )}
             <div className="tb-card__foot">
               <span>

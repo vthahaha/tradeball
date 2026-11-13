@@ -1,3 +1,5 @@
+import { INSERT_CLASSES } from "./inserts";
+
 // Basketball only for now. Keep the union shape so another sport can come back later.
 export type Sport = "basketball";
 
@@ -5,12 +7,11 @@ export const RARITIES = ["common", "uncommon", "rare", "epic", "legendary", "myt
 export type Rarity = (typeof RARITIES)[number];
 
 /**
- * Insert classes go here (e.g. "champs"). Each one needs: an entry in INSERT_TYPES,
- * designs in catalog/index.ts (INSERT_DESIGNS), a weight in odds.ts
- * (INSERT_CLASS_WEIGHTS) and its own art style in globals.css ([data-type="..."]).
- * Series 1 has none right now.
+ * Insert classes are defined in inserts.ts (INSERT_CLASSES + INSERT_CARDS). Each one
+ * also needs a weight in odds.ts (INSERT_CLASS_WEIGHTS) and its own art style in
+ * globals.css ([data-type="<class id>"]).
  */
-export const INSERT_TYPES: readonly string[] = [];
+export const INSERT_TYPES: readonly string[] = INSERT_CLASSES.map((c) => c.id);
 export type InsertType = string;
 
 /** Base set + rookies, "duo" for future multi-player cards, or an insert class id. */
@@ -80,9 +81,13 @@ export interface CardDesign {
   ovr: number;
   /** Team nickname to show and colour by, when it is not the player's current team. */
   team?: string;
-  /** New Arrivals: the team they came from (nickname). */
+  /** New Blood: the team they came from (nickname). */
   fromTeam?: string;
-  /** Stat line override (Flamin' Hot shows the game's box score). */
+  /** Stat line override (Generational shows the game's box score). */
   stats?: StatLine;
   statLine?: string;
+  /** Replaces the team · nation line under the name. */
+  meta?: string;
+  /** Shown on the stub when there are no stats. */
+  note?: string;
 }

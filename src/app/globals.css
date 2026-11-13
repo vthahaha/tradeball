@@ -884,9 +884,240 @@ select {
   pointer-events: none;
   user-select: none;
 }
-/* Each insert class adds its own art style here, scoped by [data-type="<class>"]:
-   .tb-card[data-type="<class>"] .tb-card__art { background: ...; }
-   plus any tweaks to __mono, __type, __moment, __band for that class. */
+/* Each insert class has its own art style, scoped by [data-type="<class id>"]
+   (ids in src/lib/catalog/inserts.ts). The kit shoulder band is off for all of them. */
+.tb-card[data-type="newblood"] .tb-card__art::after,
+.tb-card[data-type="goodbyes"] .tb-card__art::after,
+.tb-card[data-type="goldenboy"] .tb-card__art::after,
+.tb-card[data-type="generational"] .tb-card__art::after,
+.tb-card[data-type="stardom"] .tb-card__art::after,
+.tb-card[data-type="light"] .tb-card__art::after,
+.tb-card[data-type="shadow"] .tb-card__art::after,
+.tb-card[data-type="fortress"] .tb-card__art::after,
+.tb-card[data-type="cult"] .tb-card__art::after {
+  display: none;
+}
+
+/* 1. New Blood: old team to new team across a perforated diagonal, customs stamp */
+.tb-card[data-type="newblood"] .tb-card__art {
+  background:
+    linear-gradient(135deg, transparent 49%, #f7f7f2cc 49% 51%, transparent 51%),
+    linear-gradient(135deg, var(--f1) 0 50%, var(--t1) 50% 100%);
+}
+.tb-card[data-type="newblood"] .tb-card__mono {
+  color: var(--paper);
+  -webkit-text-stroke: 0.6cqw #0009;
+}
+.tb-card[data-type="newblood"] .tb-card__type {
+  color: var(--stamp-ink);
+  background: var(--paper);
+  border-color: var(--stamp-ink);
+  border-style: double;
+  border-width: 1cqw;
+  transform: rotate(-10deg);
+}
+
+/* 2. Hard Goodbyes: last light in an empty arena, sepia print, outlined lettering */
+.tb-card[data-type="goodbyes"] .tb-card__art {
+  background:
+    repeating-linear-gradient(0deg, #ffffff08 0 0.3cqw, transparent 0.3cqw 1.2cqw),
+    radial-gradient(70% 55% at 50% 0%, #e9d3a855, transparent 70%),
+    radial-gradient(120% 90% at 50% 40%, #6b5a45, #2a221a 80%);
+}
+.tb-card[data-type="goodbyes"] .tb-card__splash {
+  filter: sepia(0.6) saturate(0.8) contrast(1.05);
+}
+.tb-card[data-type="goodbyes"] .tb-card__mono {
+  color: transparent;
+  -webkit-text-stroke: 0.6cqw #e9d3a8;
+}
+.tb-card[data-type="goodbyes"] .tb-card__type {
+  color: #e9d3a8;
+  background: transparent;
+  transform: none;
+}
+.tb-card[data-type="goodbyes"] .tb-card__band {
+  background: #2a221a;
+}
+.tb-card[data-type="goodbyes"] .tb-card__name {
+  color: #e9d3a8;
+}
+
+/* 3. Golden Boy: a gold sunburst behind the kid */
+.tb-card[data-type="goldenboy"] .tb-card__art {
+  background:
+    radial-gradient(circle at 50% 42%, #fff6cf 0, #fff6cf00 38%),
+    repeating-conic-gradient(from 0deg at 50% 42%, #f5c542 0 7deg, #e0a526 7deg 14deg),
+    #e0a526;
+}
+.tb-card[data-type="goldenboy"] .tb-card__mono {
+  color: var(--paper);
+  -webkit-text-stroke: 0.6cqw #7a4e05;
+}
+.tb-card[data-type="goldenboy"] .tb-card__ovr,
+.tb-card[data-type="goldenboy"] .tb-card__sport {
+  color: #4a2f02;
+  text-shadow: none;
+  filter: none;
+}
+.tb-card[data-type="goldenboy"] .tb-card__type {
+  color: #f5c542;
+  background: #4a2f02;
+  border-color: #4a2f02;
+}
+.tb-card[data-type="goldenboy"] .tb-card__name {
+  color: #f5c542;
+}
+
+/* 4. Generational: a flame field, the headline number printed big */
+.tb-card[data-type="generational"] .tb-card__art {
+  background:
+    radial-gradient(40% 55% at 18% 100%, #ffe36a 0, #ffe36a00 70%),
+    radial-gradient(35% 65% at 55% 105%, #ffd23f 0, #ffd23f00 70%),
+    radial-gradient(40% 50% at 88% 100%, #ffb12b 0, #ffb12b00 70%),
+    linear-gradient(0deg, #ff8a1f 0%, #e8331c 45%, #6a0b0b 100%);
+  animation: tb-flicker 2.4s ease-in-out infinite alternate;
+}
+@keyframes tb-flicker {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+  50% { background-position: 0 -1.5cqw, 0 1cqw, 0 -1cqw, 0 0; }
+  100% { background-position: 0 1cqw, 0 -1.5cqw, 0 1.5cqw, 0 0; }
+}
+.tb-card[data-type="generational"] .tb-card__mono {
+  color: var(--paper);
+  -webkit-text-stroke: 0.6cqw #6a0b0b;
+}
+.tb-card[data-type="generational"] .tb-card__moment {
+  font-size: 11cqw;
+  font-weight: 900;
+  font-stretch: 115%;
+}
+.tb-card[data-type="generational"] .tb-card__type {
+  color: #6a0b0b;
+  background: #ffe36a;
+  border-color: #ffe36a;
+}
+
+/* 5. Ultimate Stardom: a night sky, two spotlights, gold-leaf lettering */
+.tb-card[data-type="stardom"] .tb-card__art {
+  background:
+    conic-gradient(from 160deg at 15% -5%, transparent 0 12deg, #fff3c433 16deg 26deg, transparent 30deg),
+    conic-gradient(from 174deg at 85% -5%, transparent 0 12deg, #fff3c433 16deg 26deg, transparent 30deg),
+    radial-gradient(circle, #ffffffcc 0 0.3cqw, transparent 0.5cqw) 0 0 / 11cqw 9cqw,
+    radial-gradient(circle, #ffffff80 0 0.2cqw, transparent 0.4cqw) 5cqw 4cqw / 13cqw 11cqw,
+    radial-gradient(110% 80% at 50% 100%, #2a1f5c, #0a0820 75%);
+}
+.tb-card[data-type="stardom"] .tb-card__mono {
+  background: linear-gradient(180deg, #fff3c4 10%, #e8b83a 50%, #9c6b12 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 0;
+}
+.tb-card[data-type="stardom"] .tb-card__type {
+  color: #0a0820;
+  background: #e8b83a;
+  border-color: #e8b83a;
+}
+.tb-card[data-type="stardom"] .tb-card__band {
+  background: #0a0820;
+}
+.tb-card[data-type="stardom"] .tb-card__name {
+  color: #e8b83a;
+}
+
+/* 6. The Light (East): white light rays out of a team-colour halo */
+.tb-card[data-type="light"] .tb-card__art {
+  background:
+    radial-gradient(circle at 50% 40%, #ffffff 0 14cqw, transparent 34cqw),
+    repeating-conic-gradient(from 0deg at 50% 40%, #ffffff 0 6deg, #ffffff00 6deg 12deg),
+    radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--t1) 35%, white), color-mix(in oklab, var(--t1) 70%, white) 75%);
+}
+.tb-card[data-type="light"] .tb-card__mono {
+  color: var(--t1);
+  -webkit-text-stroke: 0.6cqw var(--paper);
+}
+.tb-card[data-type="light"] .tb-card__ovr,
+.tb-card[data-type="light"] .tb-card__sport,
+.tb-card[data-type="light"] .tb-card__moment {
+  color: var(--ink);
+  text-shadow: none;
+  filter: none;
+}
+.tb-card[data-type="light"] .tb-card__type {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--ink);
+}
+
+/* 7. The Shadow (West): near-black, a team-colour rim light from the side */
+.tb-card[data-type="shadow"] .tb-card__art {
+  background:
+    radial-gradient(60% 80% at 100% 40%, color-mix(in oklab, var(--t1) 85%, white), transparent 70%),
+    radial-gradient(40% 60% at 0% 80%, color-mix(in oklab, var(--t2) 40%, transparent), transparent 70%),
+    linear-gradient(160deg, #15151a, #050507);
+}
+.tb-card[data-type="shadow"] .tb-card__mono {
+  color: #08080a;
+  -webkit-text-stroke: 0.6cqw color-mix(in oklab, var(--t1) 70%, white);
+}
+.tb-card[data-type="shadow"] .tb-card__type {
+  color: color-mix(in oklab, var(--t1) 60%, white);
+  background: #050507;
+}
+.tb-card[data-type="shadow"] .tb-card__band {
+  background: #050507;
+}
+
+/* 8. Stone Fortress: a cut-stone wall, engraved lettering */
+.tb-card[data-type="fortress"] .tb-card__art {
+  background:
+    linear-gradient(#0000 calc(100% - 0.7cqw), #2b2d31 0) 0 0 / 100% 10cqw,
+    linear-gradient(90deg, #0000 calc(100% - 0.7cqw), #2b2d31 0) 0 0 / 17cqw 20cqw,
+    linear-gradient(90deg, #0000 calc(100% - 0.7cqw), #2b2d31 0) 8.5cqw 10cqw / 17cqw 20cqw,
+    radial-gradient(circle at 30% 20%, #9a9ea6, transparent 60%),
+    linear-gradient(170deg, #80848c, #4b4f57);
+}
+.tb-card[data-type="fortress"] .tb-card__mono {
+  color: #c9ccd2;
+  -webkit-text-stroke: 0.5cqw #23252a;
+  text-shadow: 0 0.6cqw 0 #23252a, 0 -0.3cqw 0 #ffffff40;
+}
+.tb-card[data-type="fortress"] .tb-card__type {
+  color: #e7e9ec;
+  background: #2b2d31;
+  border-color: #e7e9ec;
+  border-radius: 0;
+  transform: none;
+}
+.tb-card[data-type="fortress"] .tb-card__band {
+  background: #2b2d31;
+}
+
+/* 9. Cult Classic: a retro jersey, cream stock, halftone and throwback stripes */
+.tb-card[data-type="cult"] .tb-card__art {
+  background:
+    linear-gradient(transparent 56%, var(--t1) 56% 62%, var(--t2) 62% 66%, var(--t1) 66% 72%, transparent 72%),
+    radial-gradient(circle, color-mix(in oklab, var(--t1) 22%, transparent) 0 0.7cqw, transparent 0.8cqw) 0 0 / 3.2cqw 3.2cqw,
+    #f1e4c6;
+}
+.tb-card[data-type="cult"] .tb-card__mono {
+  color: var(--t1);
+  -webkit-text-stroke: 0.5cqw var(--ink);
+  text-shadow: 1.2cqw 1.2cqw 0 var(--t2);
+}
+.tb-card[data-type="cult"] .tb-card__ovr,
+.tb-card[data-type="cult"] .tb-card__sport {
+  color: var(--ink);
+  text-shadow: none;
+  filter: none;
+}
+.tb-card[data-type="cult"] .tb-card__type {
+  color: #f1e4c6;
+  background: var(--t1);
+  border-color: var(--ink);
+  border-radius: 99px;
+}
 
 /* NEW stamp: lands on a card the first time it enters your binder */
 .tb-new-stamp {
