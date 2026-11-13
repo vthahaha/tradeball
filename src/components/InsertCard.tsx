@@ -526,7 +526,7 @@ export function InsertFront(props: InsertFrontProps) {
             <small>{pl?.name.split(" ")[0]}</small>
             <b
               style={{
-                fontSize: `${nameSize(pl ? lastName(pl.name) : "", 0.58)}cqw`,
+                fontSize: `${nameSize(pl ? lastName(pl.name) : "", 0.8)}cqw`,
               }}
             >
               {pl ? lastName(pl.name) : ""}
@@ -542,29 +542,18 @@ export function InsertFront(props: InsertFrontProps) {
               <span>{p2 ? initials(p2.name) : ""}</span>
             </div>,
           )}
+          <Rating ovr={card.ovr} pos="Pair" />
           <div className="tb-ins__ticket">
             <div className="tb-ins__ticket-main">
               <div className="tb-ins__ticket-head">
                 <span>Rivalries</span>
-                <span>Admit two</span>
+                {serial}
               </div>
               {side(p, card.team, "--t1")}
               <div className="tb-ins__vsline" aria-hidden>
                 <span>vs</span>
               </div>
               {side(p2, card.team2, "--u1")}
-              <div className="tb-ins__fields">
-                <span>
-                  OVR<b>{card.ovr}</b>
-                </span>
-                <span>
-                  Pos
-                  <b>
-                    {p.pos}/{p2?.pos}
-                  </b>
-                </span>
-                {serial}
-              </div>
             </div>
             <div className="tb-ins__stub" aria-hidden>
               <span className="tb-ins__stubno">{card.designId}</span>

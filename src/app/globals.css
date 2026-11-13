@@ -1379,28 +1379,6 @@ select {
   border-top: 0.25cqw dashed #b9bbc2;
 }
 .tb-ins__vsline::before { flex: 0 0 9cqw; }
-.tb-ins__fields {
-  display: flex;
-  align-items: center;
-  gap: 3cqw;
-  padding-top: 1cqw;
-  border-top: 0.25cqw solid #d6d2c4;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 700;
-  font-size: 2.1cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #5b5d66;
-}
-.tb-ins__fields b {
-  margin-left: 0.8cqw;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-size: 3.4cqw;
-  letter-spacing: 0;
-  color: #16171c;
-}
 .tb-ins__stub {
   display: flex;
   flex-direction: column;
@@ -1424,6 +1402,19 @@ select {
   background: repeating-linear-gradient(180deg, #16171c 0 0.4cqw, transparent 0.4cqw 0.8cqw, #16171c 0.8cqw 1.6cqw, transparent 1.6cqw 2cqw);
 }
 
+/* Rivalries, polished for real photos: the rating on the photo, bigger surnames and chips,
+   no fields row */
+.tb-ins--rivalries .tb-ins__photo { bottom: 39cqw; }
+.tb-ins--rivalries .tb-ins__ticket { height: 38cqw; }
+.tb-ins--rivalries .tb-ins__ticket-main { padding: 2.8cqw 3.6cqw 3cqw; }
+.tb-ins--rivalries .tb-ins__ticket-head { align-items: center; font-size: 2.6cqw; }
+.tb-ins--rivalries .tb-ins__ticket-head .tb-ins__serial { margin-left: auto; }
+.tb-ins--rivalries .tb-ins__side { gap: 2.4cqw; }
+.tb-ins--rivalries .tb-ins__side > i { width: 11cqw; height: 8cqw; font-size: 3.6cqw; }
+.tb-ins--rivalries .tb-ins__side small { font-size: 2.6cqw; }
+.tb-ins--rivalries .tb-ins__vsline::before { flex-basis: 11cqw; }
+.tb-ins--rivalries .tb-ins__vsline { font-size: 3.2cqw; }
+
 /* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
 @container (max-width: 170px) {
   .tb-base__plate > span,
@@ -1433,8 +1424,7 @@ select {
   .tb-ins__codes,
   .tb-ins__moment,
   .tb-ins__side small,
-  .tb-ins__fields,
-  .tb-ins__ticket-head span:last-child {
+  .tb-ins--rivalries .tb-ins__ticket-head .tb-ins__serial {
     display: none;
   }
   .tb-ins__set {

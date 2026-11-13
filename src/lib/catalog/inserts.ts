@@ -400,7 +400,8 @@ const BEST_OF_THE_BEST: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "botb", title: "Finals MVP", note: "Finals MVP" }));
 
-// B. Rivalries: two players, each coloured by the team they fought it out for
+// B. Rivalries: two players, left to right as they stand in the chosen photo, each coloured
+// by the jersey they wear in it
 const RIVALRIES: InsertCard[] = (
   [
     {
@@ -419,21 +420,21 @@ const RIVALRIES: InsertCard[] = (
     },
     {
       id: "RV3",
-      team: "Cavaliers",
+      team: "Lakers",
       player: "1966",
       team2: "Warriors",
       player2: "3975",
     }, // LeBron James & Stephen Curry
     {
       id: "RV4",
-      team: "Spurs",
-      legend: L("Tim Duncan", "F", "USA", 97),
-      team2: "Mavericks",
-      legend2: L("Dirk Nowitzki", "F", "Germany", 95),
+      team: "Mavericks",
+      legend: L("Dirk Nowitzki", "F", "Germany", 95),
+      team2: "Spurs",
+      legend2: L("Tim Duncan", "F", "USA", 97),
     },
     {
       id: "RV5",
-      team: "Suns",
+      team: "Rockets",
       legend: L("Charles Barkley", "F", "USA", 95),
       team2: "Jazz",
       legend2: L("Karl Malone", "F", "USA", 95),
@@ -449,7 +450,7 @@ const RIVALRIES: InsertCard[] = (
       id: "RV7",
       team: "Celtics",
       legend: L("Bill Russell", "C", "USA", 97),
-      team2: "76ers",
+      team2: "Lakers",
       legend2: L("Wilt Chamberlain", "C", "USA", 98),
     },
     {
@@ -461,14 +462,14 @@ const RIVALRIES: InsertCard[] = (
     },
     {
       id: "RV9",
-      team: "76ers",
-      legend: L("Allen Iverson", "G", "USA", 95),
-      team2: "Lakers",
-      legend2: L("Kobe Bryant", "G", "USA", 97),
+      team: "Lakers",
+      legend: L("Kobe Bryant", "G", "USA", 97),
+      team2: "76ers",
+      legend2: L("Allen Iverson", "G", "USA", 95),
     },
     {
       id: "RV10",
-      team: "Lakers",
+      team: "Cavaliers",
       legend: L("Shaquille O'Neal", "C", "USA", 98),
       team2: "Magic",
       legend2: L("Dwight Howard", "C", "USA", 92),
