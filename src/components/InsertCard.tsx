@@ -488,44 +488,68 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // Best of the Best: ivory stock, the Finals year blind-embossed, a gold-ruled photo and
-    // the champion's ribbon in the team's colours down the edge
+    // Best of the Best: the photo in a notch-cornered gold frame, the Finals year running down
+    // its edge in outline, a team badge, and an engraved trophy plate at the foot
     case "botb":
       return (
         <div className="tb-ins tb-ins--botb">
-          <div className="tb-ins__ribbon" aria-hidden />
+          <div className="tb-ins__goldframe" aria-hidden />
           {photo()}
-          <div className="tb-ins__goldrule" aria-hidden />
-          <Rating ovr={card.ovr} pos={p.pos} />
-          <div className="tb-ins__emboss" aria-hidden>
+          <div className="tb-ins__year" aria-hidden>
             {card.kicker}
           </div>
-          <div className="tb-ins__foot">
-            <div
-              className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.8)}cqw` }}
-            >
-              {name}
+          <div className="tb-ins__badge" aria-hidden>
+            {teamCode(card.team)}
+          </div>
+          <div className="tb-ins__plate">
+            <div className="tb-ins__plate-main">
+              <div
+                className="tb-ins__name"
+                style={{ fontSize: `${nameSize(name, 0.72)}cqw` }}
+              >
+                {name}
+              </div>
+              <div className="tb-ins__line">
+                <b>Finals MVP</b>
+                <span>
+                  {card.kicker} · {card.team}
+                </span>
+              </div>
+              <div className="tb-ins__fine">
+                <span>Best of the Best</span>
+                {serial}
+                {no}
+              </div>
             </div>
-            <div className="tb-ins__line">
-              <b>Finals MVP</b>
-              <span>
-                {card.kicker} · {card.team}
-              </span>
-              {serial}
-            </div>
-            <div className="tb-ins__fine">
-              <span>Best of the Best</span>
-              {no}
+            <div className="tb-ins__plate-ovr">
+              <b>{card.ovr}</b>
+              <small>{p.pos}</small>
             </div>
           </div>
         </div>
       );
 
-    // Rivalries: a tale of the tape; each player's half carries their team's colour,
-    // a VS disc where the two name blocks meet
+    // Rivalries: the matchup printed as a game ticket under the photo, a tear-off stub
+    // with the card number and a barcode
     case "rivalries": {
       const p2 = card.players[1];
+      const side = (pl: typeof p, team?: string, colour = "--t1") => (
+        <div className="tb-ins__side">
+          <i style={{ background: `var(${colour})` }}>
+            {team ? teamCode(team) : ""}
+          </i>
+          <div>
+            <small>{pl?.name.split(" ")[0]}</small>
+            <b
+              style={{
+                fontSize: `${nameSize(pl ? lastName(pl.name) : "", 0.58)}cqw`,
+              }}
+            >
+              {pl ? lastName(pl.name) : ""}
+            </b>
+          </div>
+        </div>
+      );
       return (
         <div className="tb-ins tb-ins--rivalries">
           {photo(
@@ -534,50 +558,33 @@ export function InsertFront(props: InsertFrontProps) {
               <span>{p2 ? initials(p2.name) : ""}</span>
             </div>,
           )}
-          <div className="tb-ins__set">
-            Rivalries
-            <span>
-              {card.team2
-                ? `${teamCode(card.team)} vs ${teamCode(card.team2)}`
-                : ""}
-            </span>
-          </div>
-          <div className="tb-ins__ovr">
-            <b>{card.ovr}</b>
-            <span>Pair</span>
-          </div>
-          <div className="tb-ins__tape">
-            <div className="is-one">
-              <small>{p.name.split(" ")[0]}</small>
-              <b style={{ fontSize: `${nameSize(lastName(p.name), 0.62)}cqw` }}>
-                {lastName(p.name)}
-              </b>
-              <span>
-                {card.team} · {p.pos}
-              </span>
+          <div className="tb-ins__ticket">
+            <div className="tb-ins__ticket-main">
+              <div className="tb-ins__ticket-head">
+                <span>Rivalries</span>
+                <span>Admit two</span>
+              </div>
+              {side(p, card.team, "--t1")}
+              <div className="tb-ins__vsline" aria-hidden>
+                <span>vs</span>
+              </div>
+              {side(p2, card.team2, "--u1")}
+              <div className="tb-ins__fields">
+                <span>
+                  OVR<b>{card.ovr}</b>
+                </span>
+                <span>
+                  Pos
+                  <b>
+                    {p.pos}/{p2?.pos}
+                  </b>
+                </span>
+                {serial}
+              </div>
             </div>
-            <div className="is-two">
-              <small>{p2?.name.split(" ")[0]}</small>
-              <b
-                style={{
-                  fontSize: `${nameSize(p2 ? lastName(p2.name) : "", 0.62)}cqw`,
-                }}
-              >
-                {p2 ? lastName(p2.name) : ""}
-              </b>
-              <span>
-                {card.team2} · {p2?.pos}
-              </span>
-            </div>
-            <i className="tb-ins__vs" aria-hidden>
-              vs
-            </i>
-          </div>
-          <div className="tb-ins__foot">
-            <div className="tb-ins__fine">
-              <span>Rivalries</span>
-              {serial}
-              {no}
+            <div className="tb-ins__stub" aria-hidden>
+              <span className="tb-ins__stubno">{card.designId}</span>
+              <span className="tb-ins__barcode" />
             </div>
           </div>
         </div>

@@ -1234,69 +1234,113 @@ select {
   background: linear-gradient(90deg, var(--t1) 0 62%, var(--t2) 62%);
 }
 
-/* Best of the Best: ivory stock, the Finals year blind-embossed (paper pressed, no ink),
-   a gold rule round the photo, the champion's ribbon in the team's colours down the edge */
-.tb-ins--botb {
-  background: radial-gradient(130% 100% at 50% 30%, #faf6ec, #ebe3cf);
-  color: #1a1712;
+/* Best of the Best: the photo in a notch-cornered gold frame, the Finals year down its edge
+   in gold outline, a round team badge, an engraved black-and-gold trophy plate */
+.tb-ins--botb { background: #0d0c0a; }
+.tb-ins__goldframe,
+.tb-ins--botb .tb-ins__photo {
+  clip-path: polygon(0 0, calc(100% - 9cqw) 0, 100% 9cqw, 100% 100%, 9cqw 100%, 0 calc(100% - 9cqw));
 }
-.tb-ins__ribbon {
+.tb-ins__goldframe {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  width: 3.4cqw;
-  background: linear-gradient(90deg, var(--t1) 0 68%, var(--t2) 68%);
+  inset: 1.6cqw 1.6cqw 30.4cqw;
+  z-index: 0;
+  background: linear-gradient(135deg, #f6dc8a, #b8892a 35%, #f3d27a 55%, #8a6206 80%, #e9c46a);
 }
-.tb-ins--botb .tb-ins__photo { inset: 5cqw 5cqw 46cqw 8.4cqw; }
-.tb-ins__goldrule {
+.tb-ins--botb .tb-ins__photo { inset: 2.4cqw 2.4cqw 31.2cqw; }
+.tb-ins__year {
   position: absolute;
-  inset: 3.8cqw 3.8cqw 44.8cqw 7.2cqw;
-  z-index: 2;
-  border: 0.35cqw solid #b8912f;
-  pointer-events: none;
-}
-.tb-ins--botb .tb-ins__ovr { top: 7cqw; right: 7.4cqw; }
-.tb-ins__emboss {
-  position: absolute;
-  right: 3cqw;
-  bottom: 13cqw;
-  left: 6cqw;
-  z-index: 1;
-  text-align: right;
+  top: 12cqw;
+  right: 4.4cqw;
+  z-index: 3;
+  writing-mode: vertical-rl;
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 70%;
-  font-size: 32cqw;
-  line-height: 0.8;
-  letter-spacing: -0.03em;
-  color: #ede5d1;
-  text-shadow: -0.3cqw -0.3cqw 0 #ffffffd9, 0.35cqw 0.35cqw 0.1cqw #00000024;
+  font-stretch: 72%;
+  font-size: 12cqw;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: transparent;
+  -webkit-text-stroke: 0.4cqw #f3d27a;
+  filter: drop-shadow(0 0.3cqw 0.8cqw #0009);
   pointer-events: none;
 }
-.tb-ins--botb .tb-ins__foot { left: 3.4cqw; padding: 0 5cqw 4cqw; }
-.tb-ins--botb .tb-ins__line { color: #8a6a1e; }
+.tb-ins__badge {
+  position: absolute;
+  top: 5cqw;
+  left: 5cqw;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 13cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--t1);
+  color: #fff;
+  box-shadow: 0 0 0 0.7cqw var(--t2), 0 0 0 1.1cqw #e9c46a, 0 0.8cqw 1.6cqw #0008;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 4cqw;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0.2cqw 0.5cqw #0007;
+}
+.tb-ins__plate {
+  position: absolute;
+  right: 2.4cqw;
+  bottom: 2.4cqw;
+  left: 2.4cqw;
+  z-index: 4;
+  display: grid;
+  height: 26.4cqw;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2.4cqw;
+  padding: 2.4cqw 3.6cqw;
+  border: 0.5cqw solid #c9a43a;
+  background: linear-gradient(180deg, #1f1c15, #0d0c0a);
+  color: #f3e6c4;
+  box-shadow: inset 0 0 0 0.4cqw #0d0c0a, inset 0 0 0 0.7cqw #e9c46a59;
+}
+.tb-ins__plate-main { min-width: 0; }
+.tb-ins--botb .tb-ins__line { color: #c9a43a; }
 .tb-ins--botb .tb-ins__line b {
-  font-size: 3cqw;
-  letter-spacing: 0.14em;
+  font-size: 2.8cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.tb-ins--botb .tb-ins__fine { color: #b8a272; }
+.tb-ins__plate-ovr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 2.4cqw;
+  border-left: 0.3cqw solid #c9a43a80;
+  color: #f3d27a;
+}
+.tb-ins__plate-ovr b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  font-size: 10cqw;
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+.tb-ins__plate-ovr small {
+  margin-top: 0.6cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.4cqw;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-/* Rivalries: a tale of the tape; each player's half in their team's colour, VS where they meet */
-.tb-ins--rivalries { background: #0e0f12; }
+/* Rivalries: the photo over a matchup ticket; perforation, notches, a stub with the number */
+.tb-ins--rivalries { background: #1a1b20; }
 .tb-ins--rivalries .tb-ins__photo {
-  bottom: 38cqw;
+  bottom: 41cqw;
   background: linear-gradient(90deg, var(--t1) 0 50%, var(--u1) 50%);
-}
-.tb-ins--rivalries .tb-ins__photo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border-left: 1.4cqw solid var(--t1);
-  border-right: 1.4cqw solid var(--u1);
-  pointer-events: none;
 }
 .tb-ins--rivalries .tb-card__mono { display: none; }
 .tb-ins__halves {
@@ -1312,93 +1356,149 @@ select {
   font-size: 18cqw;
   color: #ffffffd9;
 }
-.tb-ins--rivalries .tb-ins__set { text-shadow: 0 0.3cqw 1cqw #0009; }
-.tb-ins__tape {
+.tb-ins__ticket {
   position: absolute;
-  right: 0;
-  bottom: 9cqw;
-  left: 0;
+  right: 2.4cqw;
+  bottom: 2.4cqw;
+  left: 2.4cqw;
   z-index: 4;
   display: grid;
-  height: 29cqw;
-  grid-template-columns: 1fr 1fr;
-  color: #fff;
-  text-shadow: 0 0.2cqw 0.6cqw #0006;
+  height: 40cqw;
+  grid-template-columns: minmax(0, 1fr) 15cqw;
+  border-radius: 1.2cqw;
+  background: #f4efe2;
+  color: #16171c;
+  -webkit-mask:
+    radial-gradient(2.6cqw at calc(100% - 15cqw) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(2.6cqw at calc(100% - 15cqw) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  mask:
+    radial-gradient(2.6cqw at calc(100% - 15cqw) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(2.6cqw at calc(100% - 15cqw) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
 }
-.tb-ins__tape > div {
+.tb-ins__ticket-main {
+  display: flex;
   min-width: 0;
-  padding: 3.6cqw 5.4cqw 2.4cqw 4cqw;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.6cqw 3.4cqw 2.4cqw;
 }
-.tb-ins__tape .is-one { background: var(--t1); }
-.tb-ins__tape .is-two {
-  padding: 3.6cqw 4cqw 2.4cqw 5.4cqw;
-  background: var(--u1);
-  text-align: right;
-}
-.tb-ins__tape small {
-  display: block;
+.tb-ins__ticket-head {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1cqw;
+  border-bottom: 0.3cqw solid #16171c;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.2em;
+  font-size: 2.4cqw;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  opacity: 0.9;
 }
-.tb-ins__tape b {
-  display: block;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 66%;
-  line-height: 0.9;
-  text-transform: uppercase;
-  overflow-wrap: anywhere;
+.tb-ins__side {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 2cqw;
 }
-.tb-ins__tape span {
-  display: block;
-  margin-top: 1cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 700;
-  font-size: 2.2cqw;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.88;
-}
-.tb-ins__vs {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  z-index: 5;
+.tb-ins__side > i {
   display: grid;
+  flex: none;
   place-items: center;
-  width: 11cqw;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #0e0f12;
+  width: 9cqw;
+  height: 6.4cqw;
+  border-radius: 0.6cqw;
   color: #fff;
-  box-shadow: 0 0 0 0.6cqw #fff;
-  transform: translate(-50%, -50%);
   font-family: var(--font-display), sans-serif;
   font-style: normal;
   font-weight: 900;
   font-stretch: 80%;
-  font-size: 4.6cqw;
+  font-size: 3cqw;
+  text-shadow: 0 0.2cqw 0.5cqw #0007;
+}
+.tb-ins__side > div { min-width: 0; }
+.tb-ins__side small {
+  display: block;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 700;
+  font-size: 2.3cqw;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  text-shadow: none;
+  color: #5b5d66;
 }
-.tb-ins--rivalries .tb-ins__foot {
+.tb-ins__side b {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 66%;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.tb-ins__vsline {
   display: flex;
-  height: 9cqw;
   align-items: center;
-  padding: 0 4cqw;
+  gap: 1.6cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 80%;
+  font-size: 2.8cqw;
+  text-transform: uppercase;
+  color: #8a8c94;
 }
-.tb-ins--rivalries .tb-ins__fine {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border: none;
-  color: #c9ccd3;
+.tb-ins__vsline::before,
+.tb-ins__vsline::after {
+  content: "";
+  flex: 1;
+  border-top: 0.25cqw dashed #b9bbc2;
+}
+.tb-ins__vsline::before { flex: 0 0 9cqw; }
+.tb-ins__fields {
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+  padding-top: 1cqw;
+  border-top: 0.25cqw solid #d6d2c4;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 700;
+  font-size: 2.1cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5b5d66;
+}
+.tb-ins__fields b {
+  margin-left: 0.8cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 3.4cqw;
+  letter-spacing: 0;
+  color: #16171c;
+}
+.tb-ins__stub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3cqw 0;
+  border-left: 0.35cqw dashed #9a9ca4;
+}
+.tb-ins__stubno {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 4.2cqw;
+  letter-spacing: 0.06em;
+}
+.tb-ins__barcode {
+  width: 60%;
+  height: 9cqw;
+  background: repeating-linear-gradient(180deg, #16171c 0 0.4cqw, transparent 0.4cqw 0.8cqw, #16171c 0.8cqw 1.6cqw, transparent 1.6cqw 2cqw);
 }
 
 /* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
@@ -1410,8 +1510,9 @@ select {
   .tb-ins__thanks,
   .tb-ins__codes,
   .tb-ins__sprockets,
-  .tb-ins__tape small,
-  .tb-ins__tape span {
+  .tb-ins__side small,
+  .tb-ins__fields,
+  .tb-ins__ticket-head span:last-child {
     display: none;
   }
   .tb-ins__set {
