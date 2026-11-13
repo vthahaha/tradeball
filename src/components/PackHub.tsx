@@ -60,7 +60,7 @@ function fmt(ms: number) {
 
 const pad = (n: number) => String(n).padStart(4, "0");
 
-/** A pack: a shoebox with a store receipt taped on to tear. `no` is the player's next pack number. */
+/** A pack: a foil hobby wrapper with a crimped end to tear. `no` is the player's next pack number. */
 export function PackArt({ type, no, torn = false }: { type: PackType; no: number; torn?: boolean }) {
   const p = PACKS.find((x) => x.type === type)!;
   const reduce = useReducedMotion();
@@ -68,10 +68,15 @@ export function PackArt({ type, no, torn = false }: { type: PackType; no: number
     <div className="tb-pack" data-pack={type}>
       <div className="tb-pack__ticket">
         <div className="tb-pack__body">
-          <div className="tb-pack__lid" aria-hidden />
-          <span className="tb-pack__print" aria-hidden>
-            Gate 7
-          </span>
+          <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
+            <circle cx="50" cy="50" r="46" fill="#e2691f" stroke="#14213d" strokeWidth="2.4" />
+            <path
+              d="M50 4 V96 M4 50 H96 M20 14 C34 30 34 70 20 86 M80 14 C66 30 66 70 80 86"
+              fill="none"
+              stroke="#14213d"
+              strokeWidth="2.4"
+            />
+          </svg>
           <div className="tb-pack__label">
             <div className="tb-pack__brand">
               <SportIcon />
