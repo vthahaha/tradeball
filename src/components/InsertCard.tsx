@@ -105,7 +105,7 @@ function Photo({
       {showImg ? (
         // eslint-disable-next-line @next/next/no-img-element -- chosen splash art, hotlinked on purpose
         <img
-          className="tb-card__splash"
+          className={`tb-card__splash ${card.art ? "" : "is-headshot"}`}
           src={imgSrc}
           alt=""
           loading="lazy"

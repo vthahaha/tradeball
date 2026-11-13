@@ -864,6 +864,16 @@ select {
 }
 .tb-ins--cult .tb-ins__line { color: #6a5a44; }
 
+/* an ESPN cut-out standing in for splash art: feet on the floor of the photo window */
+.tb-card__splash.is-headshot {
+  top: auto;
+  left: -8%;
+  width: 116%;
+  height: 90%;
+  object-position: 50% 100%;
+  filter: drop-shadow(0 1.2cqw 1.6cqw #00000066);
+}
+
 /* ── insert details: fine print, card numbers, stat lines ── */
 .tb-ins__fine {
   display: flex;
