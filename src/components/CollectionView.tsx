@@ -5,10 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { NUMBERED_FINISHES, SHARDS_PER_PACK, shardValueFor } from "@/lib/odds";
 import { useEffect, useMemo, useState } from "react";
-import type { CardView } from "@/lib/catalog";
+import { INSERT_NAMES, INSERT_TYPES, teamColors, type CardView } from "@/lib/catalog";
 import { isInsert, RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
 import { Card, TurnableCard } from "./Card";
+import { SetIcon } from "./CardArt";
 
 export interface OwnedCopy {
   instanceId: string;
@@ -32,6 +33,60 @@ const RARITY_COLOR: Record<Rarity, string> = {
 };
 
 type SortKey = "rarity" | "ovr" | "newest" | "name";
+type GroupKey = "set" | "team" | "rarity" | "none";
+
+function groupTitle(group: GroupKey, k: string) {
+  if (group === "set") return k === "base" ? "Base set" : k === "rookie" ? "Rookies" : (INSERT_NAMES[k] ?? k);
+  if (group === "rarity") return k[0].toUpperCase() + k.slice(1);
+  return k;
+}
+
+/** A binder page header: the team's colours or the set's mark, then owned / total. */
+function GroupHead({ group, k, owned, total }: { group: GroupKey; k: string; owned: number; total: number }) {
+  const [t1, t2] = group === "team" ? teamColors(k) : ["", ""];
+  const pct = total ? Math.round((owned / total) * 100) : 0;
+  return (
+    <header className="flex items-center gap-3 border-b-2 border-dashed border-line pb-3">
+      {group === "team" && (
+        <span className="flex h-9 w-6 shrink-0 overflow-hidden rounded-sm" aria-hidden>
+          <span className="flex-1" style={{ background: t1 }} />
+          <span className="w-2" style={{ background: t2 }} />
+        </span>
+      )}
+      {group === "rarity" && <span className="size-4 shrink-0 rounded-full" style={{ background: RARITY_COLOR[k as Rarity] }} aria-hidden />}
+      {group === "set" && isInsert(k) && (
+        <span className="tb-binder__seticon grid size-9 shrink-0 place-items-center rounded-md bg-panel-2 text-accent" aria-hidden>
+          <SetIcon type={k} />
+        </span>
+      )}
+      <h2 className="min-w-0 truncate font-display text-2xl leading-none sm:text-3xl">{groupTitle(group, k)}</h2>
+      <div className="ml-auto flex shrink-0 items-center gap-3">
+        <span className="font-cond text-sm font-bold text-muted">
+          <span className="text-text">{owned}</span>/{total}
+        </span>
+        <span className="hidden h-1.5 w-24 overflow-hidden rounded-full bg-bg-2 sm:block" aria-hidden>
+          <span className="block h-full rounded-full bg-accent" style={{ width: `${Math.max(owned ? 4 : 0, pct)}%` }} />
+        </span>
+      </div>
+    </header>
+  );
+}
+
+function Select({ label, value, onChange, children }: { label: string; value: string; onChange: (v: string) => void; children: React.ReactNode }) {
+  return (
+    <label className="flex items-center gap-2">
+      <span className="field-label">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="max-w-48 rounded-full border border-line bg-bg-2 px-3 py-1.5 font-cond text-sm font-bold uppercase tracking-wider outline-none focus:border-accent"
+      >
+        {children}
+      </select>
+    </label>
+  );
+}
+
 
 /** Best copy first: rarest finish, then grade. */
 function bestCopy(copies: OwnedCopy[]) {
@@ -123,9 +178,11 @@ export function CollectionView({
     });
   }
 
-  const [kind, setKind] = useState<"all" | "base" | "rookie" | "insert">("all");
+  const [setFilter, setSetFilter] = useState<string>("all"); // all | base | rookie | insert | <insert class id>
+  const [team, setTeam] = useState<string>("all");
   const [rarity, setRarity] = useState<Rarity | "all">("all");
-  const [showMissing, setShowMissing] = useState(false);
+  const [group, setGroup] = useState<GroupKey>("set");
+  const [showMissing, setShowMissing] = useState(true);
   const [dupesOnly, setDupesOnly] = useState(false);
   const [sort, setSort] = useState<SortKey>("rarity");
   const [query, setQuery] = useState("");
@@ -145,34 +202,59 @@ export function CollectionView({
     return { base: per("base"), rookie: per("rookie"), insert: per("insert") };
   }, [designs, byDesign]);
   const hasInserts = stats.insert.total > 0;
+  const teams = useMemo(() => [...new Set(designs.map((d) => d.team).filter(Boolean))].sort(), [designs]);
 
-  const list = useMemo(() => {
+  // Everything the filters allow, owned or not: group headers count against this.
+  const scope = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const filtered = designs.filter((d) => {
-      const owned = byDesign.get(d.designId);
-      if (wishOnly) {
-        if (!wishSet.has(d.designId)) return false;
-      } else if (!showMissing && !owned) return false;
-      if (dupesOnly && (owned?.length ?? 0) < 2) return false;
-      if (kind === "insert" ? !isInsert(d.type) : kind !== "all" && d.type !== kind) return false;
+    return designs.filter((d) => {
+      if (wishOnly && !wishSet.has(d.designId)) return false;
+      if (setFilter === "insert" ? !isInsert(d.type) : setFilter !== "all" && d.type !== setFilter) return false;
+      if (team !== "all" && d.team !== team) return false;
       if (rarity !== "all" && d.rarity !== rarity) return false;
       if (q && !d.players.some((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))) return false;
       return true;
     });
+  }, [designs, setFilter, team, rarity, query, wishOnly, wishSet]);
+
+  const groups = useMemo(() => {
+    const shown = scope.filter((d) => {
+      const owned = byDesign.get(d.designId);
+      if (!showMissing && !owned && !wishOnly) return false;
+      if (dupesOnly && (owned?.length ?? 0) < 2) return false;
+      return true;
+    });
     const newest = (d: CardView) => byDesign.get(d.designId)?.[0]?.pulledAt ?? "";
-    return filtered.sort((a, b) => {
+    const cmp = (a: CardView, b: CardView) => {
       switch (sort) {
         case "rarity":
           return RARITIES.indexOf(b.rarity) - RARITIES.indexOf(a.rarity) || b.ovr - a.ovr;
         case "ovr":
           return b.ovr - a.ovr;
         case "newest":
-          return newest(b).localeCompare(newest(a));
+          return newest(b).localeCompare(newest(a)) || b.ovr - a.ovr;
         case "name":
           return a.players[0].name.localeCompare(b.players[0].name);
       }
-    });
-  }, [designs, byDesign, showMissing, dupesOnly, kind, rarity, query, sort, wishOnly, wishSet]);
+    };
+    const keyOf = (d: CardView) => (group === "team" ? d.team || "Legends" : group === "rarity" ? d.rarity : group === "set" ? d.type : "all");
+    const order = (k: string) =>
+      group === "rarity" ? -RARITIES.indexOf(k as Rarity) : group === "set" ? (k === "base" ? -2 : k === "rookie" ? -1 : INSERT_TYPES.indexOf(k)) : 0;
+    const map = new Map<string, { cards: CardView[]; owned: number; total: number }>();
+    for (const d of scope) {
+      const k = keyOf(d);
+      const g = map.get(k) ?? { cards: [], owned: 0, total: 0 };
+      g.total++;
+      if (byDesign.has(d.designId)) g.owned++;
+      map.set(k, g);
+    }
+    for (const d of shown) map.get(keyOf(d))!.cards.push(d);
+    return [...map.entries()]
+      .filter(([, g]) => g.cards.length > 0)
+      .sort(([a], [b]) => order(a) - order(b) || a.localeCompare(b))
+      .map(([key, g]) => ({ key, ...g, cards: g.cards.sort(cmp) }));
+  }, [scope, byDesign, showMissing, dupesOnly, wishOnly, group, sort]);
+  const shownCount = groups.reduce((n, g) => n + g.cards.length, 0);
 
   const openDesign = open ? designs.find((d) => d.designId === open) : null;
 
@@ -254,98 +336,151 @@ export function CollectionView({
         )}
       </AnimatePresence>
 
-      {/* Filters */}
-      <section className="mt-6 flex flex-col gap-3">
-        <div className="-mx-4 flex items-center gap-2 no-scrollbar overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
-          <Chip active={kind === "all"} onClick={() => setKind("all")}>All</Chip>
-          <Chip active={kind === "base"} onClick={() => setKind("base")}>Base</Chip>
-          <Chip active={kind === "rookie"} onClick={() => setKind("rookie")}>Rookies</Chip>
-          {hasInserts && (
-            <Chip active={kind === "insert"} onClick={() => setKind("insert")}>
-              Inserts
-            </Chip>
-          )}
-          <span className="mx-1 hidden h-5 w-px bg-line sm:block" />
+      {/* Filters: what to show, then how to group it */}
+      <section className="ticket-panel mt-6" aria-label="Binder filters">
+        <div className="flex flex-wrap items-center gap-2 px-3 pt-3 sm:px-5">
           <input
             type="search"
             placeholder="Search player or team"
             aria-label="Search player or team"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="min-w-44 flex-1 shrink-0 rounded-full border border-line bg-bg-2 px-4 py-1.5 text-sm sm:min-w-0 outline-none focus:border-accent sm:max-w-64"
+            className="min-w-0 flex-1 basis-48 rounded-full border border-line bg-bg-2 px-4 py-1.5 text-sm outline-none focus:border-accent"
           />
-          <select
-            aria-label="Sort"
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded-full border border-line bg-bg-2 px-3 py-1.5 font-cond text-sm font-bold uppercase tracking-wider"
-          >
-            <option value="rarity">Rarity</option>
-            <option value="ovr">Rating</option>
-            <option value="newest">Newest</option>
-            <option value="name">Name</option>
-          </select>
+          <Select label="Set" value={setFilter} onChange={setSetFilter}>
+            <option value="all">All sets</option>
+            <option value="base">Base set</option>
+            <option value="rookie">Rookies</option>
+            {hasInserts && <option value="insert">All inserts</option>}
+            {INSERT_TYPES.map((t) => (
+              <option key={t} value={t}>
+                {INSERT_NAMES[t]}
+              </option>
+            ))}
+          </Select>
+          <Select label="Team" value={team} onChange={setTeam}>
+            <option value="all">All teams</option>
+            {teams.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </Select>
         </div>
-        <div className="-mx-4 flex items-center gap-2 no-scrollbar overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
+        <div className="flex items-center gap-2 no-scrollbar overflow-x-auto px-3 py-3 sm:flex-wrap sm:overflow-visible sm:px-5">
           <Chip active={rarity === "all"} onClick={() => setRarity("all")}>Any rarity</Chip>
           {RARITIES.map((r) => (
             <Chip key={r} active={rarity === r} onClick={() => setRarity(r)} color={RARITY_COLOR[r]}>
               {r}
             </Chip>
           ))}
-          <span className="mx-1 hidden h-5 w-px bg-line sm:block" />
-          <Chip active={showMissing} onClick={() => setShowMissing((v) => !v)}>Show missing</Chip>
-          <Chip active={dupesOnly} onClick={() => setDupesOnly((v) => !v)}>Duplicates</Chip>
-          <Chip active={wishOnly} onClick={() => setWishOnly((v) => !v)} color="#ffd76a">
-            Wishlist ({wishSet.size})
-          </Chip>
+        </div>
+        <div className="perf" aria-hidden />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-3 py-3 sm:px-5">
+          <div className="flex items-center gap-2">
+            <span className="field-label">Group by</span>
+            <div role="radiogroup" aria-label="Group by" className="flex rounded-full border border-line p-0.5">
+              {(
+                [
+                  ["set", "Set"],
+                  ["team", "Team"],
+                  ["rarity", "Rarity"],
+                  ["none", "None"],
+                ] as const
+              ).map(([k, label]) => (
+                <button
+                  key={k}
+                  type="button"
+                  role="radio"
+                  aria-checked={group === k}
+                  onClick={() => setGroup(k)}
+                  className={`rounded-full px-3 py-1 font-cond text-sm font-bold uppercase tracking-wider transition-colors ${
+                    group === k ? "bg-text text-bg" : "text-muted hover:text-text"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <Select label="Sort" value={sort} onChange={(v) => setSort(v as SortKey)}>
+            <option value="rarity">Rarest first</option>
+            <option value="ovr">Highest rated</option>
+            <option value="newest">Newest pulls</option>
+            <option value="name">Name A–Z</option>
+          </Select>
+          <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
+            <Chip active={showMissing} onClick={() => setShowMissing((v) => !v)}>
+              {showMissing ? "Missing shown" : "Missing hidden"}
+            </Chip>
+            <Chip active={dupesOnly} onClick={() => setDupesOnly((v) => !v)}>Duplicates</Chip>
+            <Chip active={wishOnly} onClick={() => setWishOnly((v) => !v)} color="#ffd76a">
+              Wishlist ({wishSet.size})
+            </Chip>
+          </div>
         </div>
       </section>
 
-      {/* Grid */}
-      {list.length === 0 ? (
-        <p className="mt-10 rounded-md border border-dashed border-line px-4 py-10 text-center text-muted">
-          {copies.length === 0 ? "Your binder is empty. Go open a pack!" : "No cards match these filters."}
+      <p className="mt-4 font-cond text-sm font-semibold text-muted" aria-live="polite">
+        {shownCount} card{shownCount === 1 ? "" : "s"}
+        {showMissing && !wishOnly ? " · cards you haven't pulled are blurred" : ""}
+      </p>
+
+      {/* Binder pages, one per group */}
+      {shownCount === 0 ? (
+        <p className="mt-6 rounded-md border border-dashed border-line px-4 py-10 text-center text-muted">
+          {copies.length === 0 && !showMissing ? "Your binder is empty. Go open a pack!" : "No cards match these filters."}
         </p>
       ) : (
-        <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-          {list.map((d) => {
-            const owned = byDesign.get(d.designId);
-            const best = owned ? bestCopy(owned) : null;
-            return (
-              <li key={d.designId}>
-                <button
-                  type="button"
-                  className="relative block w-full cursor-pointer text-left"
-                  onClick={() => setOpen(d.designId)}
-                  aria-label={`${d.players.map((p) => p.name).join(" & ")}${owned ? `, ${owned.length} owned` : ", not owned"}`}
-                >
-                  <Card
-                    card={d}
-                    missing={!owned}
-                    finish={best?.finish}
-                    serialNo={best?.serialNo}
-                    supply={best?.supply}
-                    grade={best?.grade}
-                  />
-                  {owned && owned.length > 1 && (
-                    <span className="absolute -right-1.5 -top-1.5 z-10 rounded-full bg-accent px-2 py-0.5 font-cond text-sm font-extrabold text-accent-ink shadow-lg">
-                      ×{owned.length}
-                    </span>
-                  )}
-                  {wishSet.has(d.designId) && (
-                    <span
-                      className="absolute -left-1.5 -top-1.5 z-10 rounded-full bg-[#ffd76a] px-2 py-0.5 font-cond text-sm font-extrabold text-bg shadow-lg"
-                      aria-label="On your wishlist"
+        groups.map((g) => (
+          <section key={g.key} className="mt-8" aria-label={group === "none" ? "Cards" : groupTitle(group, g.key)}>
+            {group !== "none" && <GroupHead group={group} k={g.key} owned={g.owned} total={g.total} />}
+            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {g.cards.map((d) => {
+                const owned = byDesign.get(d.designId);
+                const best = owned ? bestCopy(owned) : null;
+                return (
+                  <li key={d.designId} className="tb-binder__slot">
+                    <button
+                      type="button"
+                      className={`relative block w-full cursor-pointer text-left ${owned ? "" : "tb-binder__missing"}`}
+                      onClick={() => setOpen(d.designId)}
+                      aria-label={`${d.players.map((p) => p.name).join(" & ")}${owned ? `, ${owned.length} owned` : ", not pulled yet"}`}
                     >
-                      <StarIcon filled className="size-3.5" />
-                    </span>
-                  )}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+                      <Card
+                        card={d}
+                        missing={!owned}
+                        tilt={!!owned}
+                        finish={best?.finish}
+                        serialNo={best?.serialNo}
+                        supply={best?.supply}
+                        grade={best?.grade}
+                      />
+                      {!owned && (
+                        <span className="tb-binder__tag" aria-hidden>
+                          Not pulled
+                        </span>
+                      )}
+                      {owned && owned.length > 1 && (
+                        <span className="absolute -right-1.5 -top-1.5 z-10 rounded-full bg-accent px-2 py-0.5 font-cond text-sm font-extrabold text-accent-ink shadow-lg">
+                          ×{owned.length}
+                        </span>
+                      )}
+                      {wishSet.has(d.designId) && (
+                        <span
+                          className="absolute -left-1.5 -top-1.5 z-10 rounded-full bg-[#ffd76a] px-2 py-0.5 font-cond text-sm font-extrabold text-bg shadow-lg"
+                          aria-label="On your wishlist"
+                        >
+                          <StarIcon filled className="size-3.5" />
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))
       )}
 
       <AnimatePresence>

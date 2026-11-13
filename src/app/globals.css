@@ -1041,13 +1041,50 @@ select {
   to { filter: hue-rotate(360deg); }
 }
 
-/* not owned yet: printed in grey */
+/* not owned yet: the card is there, blurred and faded, so you know what you're chasing */
 .tb-card.is-missing {
   filter: none;
 }
 .tb-card.is-missing .tb-card__frame {
-  filter: grayscale(1) brightness(0.42) contrast(0.9);
+  filter: blur(3.2px) saturate(0.45) brightness(0.62);
   animation: none;
+}
+
+/* binder slots: off-screen pages skip rendering, missing slots carry a tag */
+.tb-binder__slot {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 280px;
+}
+.tb-binder__missing {
+  transition: transform 0.2s ease-out;
+}
+.tb-binder__missing:hover,
+.tb-binder__missing:focus-visible {
+  transform: translateY(-3px);
+}
+.tb-binder__tag {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  z-index: 8;
+  padding: 0.2rem 0.65rem;
+  border: 1.5px solid var(--line);
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--bg-2) 88%, transparent);
+  color: var(--muted);
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.tb-binder__seticon svg {
+  width: 1.3rem;
+  height: 1.3rem;
 }
 .tb-card.is-missing .tb-card__shine {
   display: none;
