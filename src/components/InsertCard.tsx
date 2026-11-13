@@ -295,64 +295,66 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // Generational: the night's number in outline, half behind the player and half over them
-    case "generational": {
-      const big = card.title?.match(/\d+/)?.[0] ?? "";
-      const unit =
-        card.title
-          ?.replace(/[\d·\s]+/g, " ")
-          .trim()
-          .split(" ")[0] ?? "";
-      const box = card.stats ? Object.entries(card.stats) : [];
+    // Generational: the full photo, no numbers on the front. A gold commemorative seal reads
+    // "One for the lifetime"; the box score lives on the back.
+    case "generational":
       return (
         <div className="tb-ins tb-ins--generational">
-          {photo(
-            <>
-              <div className="tb-ins__big" aria-hidden>
-                {big}
-              </div>
-              <div className="tb-ins__scan" aria-hidden />
-            </>,
-          )}
-          <div className="tb-ins__big is-front" aria-hidden>
-            {big}
-          </div>
-          {unit && (
-            <div className="tb-ins__unit" aria-hidden>
-              {unit}
-            </div>
-          )}
-          <div className="tb-ins__set">
-            Generational
-            {card.kicker && <span>{card.kicker}</span>}
-          </div>
+          {photo()}
+          <div className="tb-ins__fade" aria-hidden />
+          <div className="tb-ins__set">Generational</div>
           <Rating ovr={card.ovr} pos={p.pos} />
+          <svg
+            className="tb-ins__seal"
+            viewBox="0 0 40 40"
+            aria-label="One for the lifetime"
+            role="img"
+          >
+            <defs>
+              <path
+                id={`${wallId}-ring`}
+                d="M20 20 m-14.6 0 a14.6 14.6 0 1 1 29.2 0 a14.6 14.6 0 1 1 -29.2 0"
+              />
+            </defs>
+            <circle cx="20" cy="20" r="19.4" className="tb-ins__seal-rim" />
+            <circle cx="20" cy="20" r="18.2" className="tb-ins__seal-face" />
+            <circle cx="20" cy="20" r="11.2" className="tb-ins__seal-core" />
+            <text
+              className="tb-ins__seal-text"
+              textLength="88"
+              lengthAdjust="spacing"
+            >
+              <textPath href={`#${wallId}-ring`}>
+                ONE FOR THE LIFETIME ·
+              </textPath>
+            </text>
+            <text
+              x="20"
+              y="22.4"
+              textAnchor="middle"
+              className="tb-ins__seal-mark"
+            >
+              G7
+            </text>
+          </svg>
           <div className="tb-ins__foot">
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.82)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}
             >
               {name}
             </div>
-            <div className="tb-ins__line" title={card.statLine ?? undefined}>
-              <span className="tb-ins__final">Final</span>
-              {box.map(([k, v]) => (
-                <span key={k}>
-                  <b>{fmtStat(true, v)}</b> {k}
-                </span>
-              ))}
-              {serial}
-            </div>
+            {card.kicker && <div className="tb-ins__moment">{card.kicker}</div>}
             <div className="tb-ins__fine">
               <span>
                 {card.team} · {SEASON}
               </span>
+              {serial}
               {no}
             </div>
           </div>
         </div>
       );
-    }
 
     // Ultimate Stardom: holographic foil behind the player, moving with the tilt
     case "stardom":
