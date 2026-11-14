@@ -740,43 +740,6 @@ select {
 
 
 
-/* Stone Fortress: a granite frame, the set name running round it like a wall */
-.tb-ins--fortress {
-  background:
-    radial-gradient(circle, #ffffff14 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.3cqw 1.3cqw,
-    radial-gradient(circle, #00000024 0 0.3cqw, transparent 0.4cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw,
-    #6c6f75;
-}
-.tb-ins__wall {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-}
-.tb-ins__wall text {
-  font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  font-stretch: 90%;
-  font-size: 3.4px;
-  letter-spacing: 0.6px;
-  fill: #dcdee2;
-}
-.tb-ins--fortress .tb-ins__photo {
-  inset: 9cqw;
-  background: color-mix(in oklab, var(--t1) 80%, #000);
-  box-shadow: inset 0 0 0 0.5cqw #00000066;
-}
-.tb-ins--fortress .tb-ins__ovr { top: 12cqw; right: 12cqw; }
-.tb-ins--fortress .tb-ins__foot {
-  right: 9cqw;
-  bottom: 9cqw;
-  left: 9cqw;
-  padding: 8cqw 3cqw 3cqw;
-  background: linear-gradient(180deg, transparent, #000000c7 45%);
-}
-.tb-ins--fortress .tb-ins__line { color: #c5c8ce; }
-
 /* Cult Classic: yellowed vintage stock, the photo window printed a little off-centre */
 .tb-ins--cult {
   background:
@@ -1045,26 +1008,6 @@ select {
   mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0);
   box-shadow: inset 0 0 0 0.3cqw #ffffff66;
   pointer-events: none;
-}
-
-/* Stone Fortress: a chiselled bevel round the window, keystones at its corners */
-.tb-ins__bevel {
-  position: absolute;
-  inset: 7.6cqw;
-  z-index: 1;
-  box-shadow:
-    inset 0.7cqw 0.7cqw 0 #ffffff2e,
-    inset -0.7cqw -0.7cqw 0 #00000059;
-  pointer-events: none;
-}
-.tb-ins__corners.is-keystone { inset: 6.6cqw; }
-.tb-ins__corners.is-keystone i {
-  width: 5cqw;
-  height: 5cqw;
-  background:
-    radial-gradient(circle, #ffffff12 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.2cqw 1.2cqw,
-    #4b4e54;
-  box-shadow: inset 0.4cqw 0.4cqw 0 #ffffff26, inset -0.4cqw -0.4cqw 0 #0000004d;
 }
 
 /* Cult Classic: halftone rosettes printed over the bottom of the photo, card number in a dot,
@@ -1598,6 +1541,75 @@ select {
 .tb-ins--shadow .tb-ins__foot { padding: 0 4cqw 2.6cqw; }
 .tb-ins--light .tb-ins__fine { color: #4a5878; border-top-color: transparent; }
 .tb-ins--shadow .tb-ins__fine { color: #9aa0ad; border-top-color: transparent; }
+
+/* Stone Fortress: the full photo toned cold (grey, with the team colour through it) above a
+   thick carved stone base; the name, set and rating are cut into the stone */
+.tb-ins--fortress { background: #1d1f24; }
+.tb-ins--fortress .tb-ins__photo { inset: 0 0 31cqw; background: #2a2d33; }
+.tb-ins--fortress .tb-card__splash { filter: grayscale(1) contrast(1.15) brightness(0.95); }
+.tb-ins__tone {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: color-mix(in oklab, var(--t1) 80%, #1d2a44);
+  mix-blend-mode: color;
+  opacity: 0.6;
+  pointer-events: none;
+}
+.tb-ins--fortress .tb-card__mono { color: #d9dce1; }
+.tb-ins__base {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 4;
+  display: grid;
+  height: 31cqw;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 3cqw;
+  padding: 3cqw 4cqw;
+  border-top: 1cqw solid var(--t1);
+  background:
+    radial-gradient(circle, #ffffff12 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.3cqw 1.3cqw,
+    radial-gradient(circle, #00000026 0 0.3cqw, transparent 0.4cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw,
+    linear-gradient(170deg, #8f9298, #64676d);
+  color: #33363b;
+  box-shadow: inset 0 0.6cqw 0 #ffffff26;
+}
+.tb-ins__base-main { min-width: 0; }
+.tb-ins--fortress .tb-ins__name,
+.tb-ins__base-ovr b { text-shadow: 0 0.35cqw 0 #ffffff47, 0 -0.35cqw 0 #00000059; }
+.tb-ins__carve {
+  margin-top: 1.2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-shadow: 0 0.25cqw 0 #ffffff40;
+}
+.tb-ins--fortress .tb-ins__fine { justify-content: flex-start; border-top-color: #33363b33; color: #3e4146; }
+.tb-ins__base-ovr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 3cqw;
+  border-left: 0.3cqw solid #33363b4d;
+}
+.tb-ins__base-ovr small {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.18em;
+}
+.tb-ins__base-ovr b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  font-size: 11cqw;
+  line-height: 0.85;
+}
 
 /* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
 @container (max-width: 170px) {

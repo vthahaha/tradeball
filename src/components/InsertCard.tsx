@@ -155,24 +155,6 @@ function Corners({
   );
 }
 
-/** Stone Fortress: a closed rectangle of type, the set name running round the frame. */
-function Wall({ id }: { id: string }) {
-  const phrase = "STONE FORTRESS  ·  ";
-  return (
-    <svg
-      className="tb-ins__wall"
-      viewBox="0 0 94 134"
-      preserveAspectRatio="none"
-      aria-hidden
-    >
-      <path id={id} d="M4.6 4.6 H89.4 V129.4 H4.6 Z" fill="none" />
-      <text>
-        <textPath href={`#${id}`}>{phrase.repeat(12)}</textPath>
-      </text>
-    </svg>
-  );
-}
-
 export function InsertFront(props: InsertFrontProps) {
   const { card } = props;
   const wallId = useId().replace(/:/g, "");
@@ -418,30 +400,30 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
-    // Stone Fortress: a granite frame, the set name running round it like a wall
+    // Stone Fortress: the full photo toned cold (grey with the team colour through it) above a
+    // thick carved stone base with the name, the set and the rating cut into it
     case "fortress":
       return (
         <div className="tb-ins tb-ins--fortress">
-          <Wall id={`${wallId}-wall`} />
-          <div className="tb-ins__bevel" aria-hidden />
-          {photo()}
-          <Corners kind="keystone" />
-          <Rating ovr={card.ovr} pos={p.pos} label="DEF" />
-          <div className="tb-ins__foot">
-            <div
-              className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.72)}cqw` }}
-            >
-              {name}
+          {photo(<div className="tb-ins__tone" aria-hidden />)}
+          <div className="tb-ins__base">
+            <div className="tb-ins__base-main">
+              <div
+                className="tb-ins__name"
+                style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}
+              >
+                {name}
+              </div>
+              <div className="tb-ins__carve">Stone Fortress · {card.team}</div>
+              <div className="tb-ins__fine">
+                {serial}
+                {no}
+              </div>
             </div>
-            <div className="tb-ins__line">
-              <span>{card.team}</span>
-              <Stats card={card} keys={["STL", "BLK", "REB"]} />
-              {serial}
-            </div>
-            <div className="tb-ins__fine">
-              <span>Lockdown defense · {SEASON}</span>
-              {no}
+            <div className="tb-ins__base-ovr">
+              <small>DEF</small>
+              <b>{card.ovr}</b>
+              <small>{p.pos}</small>
             </div>
           </div>
         </div>
