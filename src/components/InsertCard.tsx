@@ -353,36 +353,26 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // Ultimate Stardom: holographic foil behind the player, moving with the tilt
+    // Ultimate Stardom: the back-of-jersey photo full bleed (the jersey is the nameplate),
+    // a thick holo foil frame that shifts with the tilt, quiet type in a soft fade
     case "stardom":
       return (
         <div className="tb-ins tb-ins--stardom">
-          {photo(
-            <>
-              <div className="tb-ins__holo" aria-hidden />
-              <div className="tb-ins__specks" aria-hidden />
-            </>,
-          )}
+          {photo()}
           <div className="tb-ins__holoframe" aria-hidden />
-          <div className="tb-ins__set">
-            Ultimate Stardom
-            <span>Best of {SEASON}</span>
-          </div>
+          <div className="tb-ins__fade" aria-hidden />
+          <div className="tb-ins__set">Ultimate Stardom</div>
           <Rating ovr={card.ovr} pos={p.pos} />
           <div className="tb-ins__foot">
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.52)}cqw` }}
             >
               {name}
             </div>
-            <div className="tb-ins__line">
-              <span>{card.team}</span>
-              <Stats card={card} keys={["PTS", "REB", "AST"]} />
-              {serial}
-            </div>
             <div className="tb-ins__fine">
-              <span>Holofoil</span>
+              <span>Best of {SEASON}</span>
+              {serial}
               {no}
             </div>
           </div>
