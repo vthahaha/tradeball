@@ -675,14 +675,14 @@ const DAY_OF_THE_DEAD: InsertCard[] = (
     { id: "DD4", player: "6430" }, // Jimmy Butler
     { id: "DD5", player: "3936299" }, // Jamal Murray
     { id: "DD6", player: "3136193" }, // Devin Booker
-    { id: "DD7", player: "4396907" }, // Darius Garland
+    { id: "DD7", player: "4066648" }, // Rui Hachimura
     { id: "DD8", player: "4066336" }, // Lauri Markkanen
     { id: "DD9", player: "3059318" }, // Joel Embiid
     { id: "DD10", player: "4701230" }, // Jalen Johnson
     { id: "DD11", player: "3136195" }, // Karl-Anthony Towns
     { id: "DD12", player: "4433134" }, // Scottie Barnes
     { id: "DD13", player: "3149673" }, // Pascal Siakam
-    { id: "DD14", player: "6583" }, // Anthony Davis
+    { id: "DD14", player: "5142718" }, // AJ Dybantsa
     { id: "DD15", player: "4871145" }, // Josh Giddey
     { id: "DD16", team: "Lakers", legend: L("James Worthy", "F", "USA", 92) },
     { id: "DD17", team: "Trail Blazers", legend: L("Clyde Drexler", "G", "USA", 93) },
@@ -693,9 +693,9 @@ const DAY_OF_THE_DEAD: InsertCard[] = (
     { id: "DD22", team: "Kings", legend: L("Oscar Robertson", "G", "USA", 97) },
     { id: "DD23", team: "Celtics", legend: L("Paul Pierce", "F", "USA", 93) },
     { id: "DD24", team: "Pistons", legend: L("Isiah Thomas", "G", "USA", 95) },
-    { id: "DD25", team: "Heat", legend: L("Tim Hardaway", "G", "USA", 90) },
+    { id: "DD25", team: "Heat", legend: L("Ray Allen", "G", "USA", 93) },
     { id: "DD26", team: "Cavaliers", legend: L("Anderson Varejão", "C", "Brazil", 80) },
-    { id: "DD27", team: "Magic", legend: L("Grant Hill", "F", "USA", 91) },
+    { id: "DD27", team: "Magic", legend: L("Dwight Howard", "C", "USA", 92) },
     { id: "DD28", team: "Hornets", legend: L("Alonzo Mourning", "C", "USA", 91) },
     { id: "DD29", team: "Nets", legend: L("Drazen Petrovic", "G", "Croatia", 87) },
     { id: "DD30", team: "Bucks", legend: L("Glenn Robinson", "F", "USA", 86) },
