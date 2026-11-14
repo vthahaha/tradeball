@@ -121,6 +121,17 @@ function Photo({
   );
 }
 
+/** 1 -> 1st, 3 -> 3rd, 11 -> 11th */
+function ordinal(n: string) {
+  const v = Number(n);
+  const t = v % 100;
+  const suf =
+    t >= 11 && t <= 13
+      ? "th"
+      : (({ 1: "st", 2: "nd", 3: "rd" }) as Record<number, string>)[v % 10] ?? "th";
+  return `${v}${suf}`;
+}
+
 function Rating({
   ovr,
   pos,
@@ -622,24 +633,32 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // Founding Father: a charter certificate; engraved double rule, the portrait framed like a
-    // document's, the name in an engraved serif, the franchise's founding year
+    // Founding Father: draft night. A dark stage lit by camera flashes, the draft photo hung as a
+    // cream-bordered press print, "With the Nth pick" on a caption tag, the name on a team-colour podium
     case "founders":
       return (
         <div className="tb-ins tb-ins--founders">
-          <div className="tb-ins__rules" aria-hidden />
+          <div className="tb-ins__flashes" aria-hidden>
+            <i />
+            <i />
+            <i />
+          </div>
           {photo()}
           <Rating ovr={card.ovr} pos={p.pos} />
-          <div className="tb-ins__foot">
+          {card.meta && (
+            <div className="tb-ins__pickcap">With the {ordinal(card.meta)} pick</div>
+          )}
+          <div className="tb-ins__podium">
             <div className="tb-ins__charter">Founding Father</div>
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.86)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.84)}cqw` }}
             >
               {name}
             </div>
             <div className="tb-ins__est">
-              {card.team} · Est. {card.kicker}
+              {card.team}
+              {card.note && <> · {card.note} Draft</>}
             </div>
             <div className="tb-ins__fine is-center">
               {serial}

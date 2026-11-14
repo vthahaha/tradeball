@@ -545,53 +545,70 @@ const TIME_WIZARDS: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "wizards" }));
 
-// 3. Founding Father: the first icons of younger franchises (kicker = the franchise's founding year)
+// 3. Founding Father: the first icons of younger franchises, on draft night
+// (kicker = the franchise's founding year, note = draft year, meta = pick number)
 const FOUNDING_FATHERS: InsertCard[] = (
   [
     {
       id: "FF1",
+      note: "1981",
+      meta: "1",
       team: "Mavericks",
       kicker: "1980",
       legend: L("Mark Aguirre", "F", "USA", 87),
     },
     {
       id: "FF2",
+      note: "1991",
+      meta: "1",
       team: "Hornets",
       kicker: "1988",
       legend: L("Larry Johnson", "F", "USA", 86),
     },
     {
       id: "FF3",
+      note: "1989",
+      meta: "4",
       team: "Heat",
       kicker: "1988",
       legend: L("Glenn Rice", "F", "USA", 87),
     },
     {
       id: "FF4",
+      note: "1995",
+      meta: "5",
       team: "Timberwolves",
       kicker: "1989",
       legend: L("Kevin Garnett", "F", "USA", 96),
     },
     {
       id: "FF5",
+      note: "1992",
+      meta: "1",
       team: "Magic",
       kicker: "1989",
       legend: L("Shaquille O'Neal", "C", "USA", 98),
     },
     {
       id: "FF6",
+      note: "1995",
+      meta: "7",
       team: "Raptors",
       kicker: "1995",
       legend: L("Damon Stoudamire", "G", "USA", 84),
     },
     {
       id: "FF7",
+      note: "1996",
+      meta: "3",
       team: "Vancouver Grizzlies",
       kicker: "1995",
       legend: L("Shareef Abdur-Rahim", "F", "USA", 86),
     },
     {
       id: "FF8",
+      note: "1999",
+      meta: "3",
       team: "New Orleans Hornets",
       kicker: "2002",
       legend: L("Baron Davis", "G", "USA", 87),
