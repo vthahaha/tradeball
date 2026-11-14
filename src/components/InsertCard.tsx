@@ -379,36 +379,38 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // The Light / The Shadow: one photo lit two ways, high key in the East and low key in the West
+    // The Light / The Shadow: a beam of light split by a prism behind the player, landing in two
+    // team-colour stripes. The Light is bright on white; The Shadow is the beam swallowed in black.
     case "light":
     case "shadow": {
       const east = card.type === "light";
       return (
         <div className={`tb-ins tb-ins--${card.type}`}>
-          {photo(<div className="tb-ins__leak" aria-hidden />)}
-          <Corners kind="crop" />
+          {photo(
+            <div className="tb-ins__prism" aria-hidden>
+              <i className="is-beam" />
+              <i className="is-spectrum" />
+              <i className="is-stripes" />
+            </div>,
+          )}
           <div className="tb-ins__set">
             {east ? "The Light" : "The Shadow"}
             <span>{east ? "Eastern Conference" : "Western Conference"}</span>
           </div>
-          <div className="tb-ins__abbr" aria-hidden>
-            {teamCode(card.team)}
-          </div>
           <Rating ovr={card.ovr} pos={p.pos} />
-          <div className="tb-ins__foot">
+          <div className="tb-ins__namebar">
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.78)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.6)}cqw` }}
             >
               {name}
             </div>
-            <div className="tb-ins__line">
-              <span>{card.team}</span>
-              <Stats card={card} keys={["PTS", "REB", "AST"]} />
-              {serial}
-            </div>
+            <b>{p.jersey || teamCode(card.team)}</b>
+          </div>
+          <div className="tb-ins__foot">
             <div className="tb-ins__fine">
-              <span>{east ? "High key" : "Low key"}</span>
+              <span>{card.team}</span>
+              {serial}
               {no}
             </div>
           </div>
