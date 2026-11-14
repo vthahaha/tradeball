@@ -60,18 +60,21 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  light: 19.2, // The Light (uncommon)
-  shadow: 19.2, // The Shadow (uncommon)
-  newblood: 13, // New Blood (rare)
-  goldenboy: 3, // Golden Boy (legendary)
-  fortress: 11, // Stone Fortress (rare)
+  light: 16.2, // The Light (uncommon)
+  shadow: 16.2, // The Shadow (uncommon)
+  newblood: 12, // New Blood (rare)
+  goldenboy: 2.5, // Golden Boy (legendary)
+  fortress: 10, // Stone Fortress (rare)
   flash: 5, // Flash of Brilliance (epic)
-  cult: 7, // Cult Classic (epic)
+  cult: 6, // Cult Classic (epic)
   wizards: 5, // Time Wizards (epic)
   goodbyes: 5, // Hard Goodbyes (epic)
   rivalries: 4, // Rivalries (epic)
   founders: 4, // Founding Father (epic)
-  botb: 3, // Best of the Best (legendary)
+  botb: 2.5, // Best of the Best (legendary)
+  dotd: 5, // Day of the Dead (epic)
+  lunar: 2.5, // Lunar New Year (legendary)
+  thirdeye: 2.5, // The Third Eye (legendary)
   // Mythic: about 1 pack in 30 holds one of these; a Generational about 1 in 125
   stardom: 0.6, // Ultimate Stardom (mythic)
   dreamteam: 0.6, // The Dream Team (mythic)

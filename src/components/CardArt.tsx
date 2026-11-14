@@ -186,6 +186,35 @@ export function SetIcon({ type }: { type: string }) {
           strokeDasharray="3 1.5"
         />,
       );
+    case "lunar":
+      return s(
+        <>
+          <ellipse cx="12" cy="12" rx="7.5" ry="6.5" fill="currentColor" />
+          <rect x="9" y="3.5" width="6" height="2" fill="currentColor" />
+          <rect x="9" y="18.5" width="6" height="2" fill="currentColor" />
+          <path d="M12 20.5V23" stroke="currentColor" strokeWidth="1.6" />
+        </>,
+      );
+    case "dotd":
+      return s(
+        <path
+          fillRule="evenodd"
+          d="M12 2.5a8 8 0 0 0-8 8c0 3 1.6 5.4 4 6.6v4.4h8v-4.4c2.4-1.2 4-3.6 4-6.6a8 8 0 0 0-8-8ZM7.2 11a1.9 1.9 0 1 0 3.8 0a1.9 1.9 0 1 0-3.8 0ZM13 11a1.9 1.9 0 1 0 3.8 0a1.9 1.9 0 1 0-3.8 0Z"
+          fill="currentColor"
+        />,
+      );
+    case "thirdeye":
+      return s(
+        <>
+          <path
+            d="M12 2.5Q19 12 12 21.5Q5 12 12 2.5Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <circle cx="12" cy="12" r="2.6" fill="currentColor" />
+        </>,
+      );
     case "dreamteam":
       return s(
         <>

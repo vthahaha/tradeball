@@ -1549,6 +1549,217 @@ select {
   color: #b9c3dc;
 }
 
+/* Lunar New Year: a red envelope. Lacquer-red stock under a gold lattice of interlocking coins,
+   a gold rule inset like the envelope's border, the photo in a moon-gate arch, and the year's
+   animal as a gold seal stamped across the arch's foot */
+.tb-ins--lunar {
+  --gold: #f6d27a;
+  background: radial-gradient(120% 80% at 50% 35%, #c9161f, #860a12);
+  color: var(--gold);
+}
+.tb-ins--lunar::after {
+  content: "";
+  position: absolute;
+  inset: 1.6cqw;
+  z-index: 1;
+  border: 0.4cqw solid color-mix(in oklab, var(--gold) 70%, transparent);
+  border-radius: 0.8cqw;
+  pointer-events: none;
+}
+.tb-ins__lattice {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.2;
+  background:
+    radial-gradient(circle, transparent 2.6cqw, var(--gold) 2.6cqw 3cqw, transparent 3cqw) 0 0 / 6cqw 6cqw,
+    radial-gradient(circle, transparent 2.6cqw, var(--gold) 2.6cqw 3cqw, transparent 3cqw) 3cqw 3cqw / 6cqw 6cqw;
+  pointer-events: none;
+}
+.tb-ins--lunar .tb-ins__photo {
+  inset: 18cqw 6cqw 42cqw;
+  z-index: 2;
+  border: 0.9cqw solid var(--gold);
+  border-radius: 50% 50% 1cqw 1cqw / 36% 36% 1cqw 1cqw;
+  background: #6e0910;
+  box-shadow: 0 1.2cqw 2.6cqw #0008;
+}
+.tb-ins--lunar .tb-ins__set {
+  top: 5.4cqw;
+  left: 6cqw;
+  color: var(--gold);
+}
+.tb-ins--lunar .tb-ins__ovr {
+  top: 4.4cqw;
+  right: 6cqw;
+  color: var(--gold);
+  text-shadow: none;
+}
+/* the seal: gold paste, the character carved out in red, stamped a little crooked */
+.tb-ins__seal {
+  position: absolute;
+  right: 8cqw;
+  bottom: 33cqw;
+  z-index: 4;
+  display: grid;
+  width: 18cqw;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 1.2cqw;
+  background: var(--gold);
+  box-shadow:
+    inset 0 0 0 0.7cqw var(--gold),
+    inset 0 0 0 1.1cqw #a10e17,
+    0 0.8cqw 1.8cqw #0009;
+  transform: rotate(-6deg);
+}
+.tb-ins__seal span {
+  font-family: "Noto Serif TC", "Source Han Serif TC", "Noto Serif CJK TC", "Songti TC", "PMingLiU", "MingLiU", serif;
+  font-weight: 900;
+  font-size: 12cqw;
+  line-height: 1;
+  color: #a10e17;
+}
+.tb-ins--lunar .tb-ins__foot { padding-bottom: 4.4cqw; }
+.tb-ins--lunar .tb-ins__name { max-width: 66cqw; color: var(--gold); }
+.tb-ins--lunar .tb-ins__fine {
+  color: color-mix(in oklab, var(--gold) 80%, transparent);
+  border-top-color: color-mix(in oklab, var(--gold) 35%, transparent);
+}
+
+/* Day of the Dead: papel picado strung across a violet night scattered with marigold petals, the
+   photo framed in marigold orange, a sugar skull propped on the corner of the frame */
+.tb-ins--dotd {
+  background:
+    radial-gradient(circle at 12% 64%, #ff8a00 0 0.6cqw, transparent 0.7cqw),
+    radial-gradient(circle at 88% 20%, #ffd23f 0 0.5cqw, transparent 0.6cqw),
+    radial-gradient(circle at 6% 30%, #ff2e93 0 0.5cqw, transparent 0.6cqw),
+    radial-gradient(circle at 93% 56%, #ff8a00 0 0.5cqw, transparent 0.6cqw),
+    radial-gradient(90% 60% at 50% 45%, #4a1766, transparent 75%),
+    #2a0b3b;
+  color: #fff;
+}
+.tb-ins__picado {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  display: flex;
+  height: 15cqw;
+  gap: 1.2cqw;
+  padding: 2cqw 3cqw 0;
+  background: linear-gradient(#fff6 0 0) 0 2cqw / 100% 0.3cqw no-repeat;
+}
+.tb-ins__picado i {
+  flex: 1;
+  background: var(--flag, #ff2e93);
+  clip-path: polygon(0 0, 100% 0, 100% 76%, 87.5% 100%, 75% 76%, 62.5% 100%, 50% 76%, 37.5% 100%, 25% 76%, 12.5% 100%, 0 76%);
+  /* the cut pattern: rows of punched holes */
+  mask: radial-gradient(circle, transparent 0 0.55cqw, #000 0.65cqw) 0.4cqw 1.4cqw / 2.6cqw 2.6cqw;
+  transform-origin: 50% 0;
+}
+.tb-ins__picado i:nth-child(1) { --flag: #ff2e93; transform: rotate(-2deg); }
+.tb-ins__picado i:nth-child(2) { --flag: #ff8a00; transform: rotate(1.5deg); }
+.tb-ins__picado i:nth-child(3) { --flag: #ffd23f; transform: rotate(-1deg); }
+.tb-ins__picado i:nth-child(4) { --flag: #a35bff; transform: rotate(2deg); }
+.tb-ins--dotd .tb-ins__photo {
+  inset: 16cqw 5cqw 40cqw;
+  z-index: 1;
+  border: 1cqw solid #ff8a00;
+  border-radius: 1cqw;
+  background: #3b1152;
+}
+.tb-ins--dotd .tb-ins__ovr { top: 19cqw; right: 8cqw; }
+.tb-ins__skull {
+  position: absolute;
+  right: 3cqw;
+  bottom: 30cqw;
+  z-index: 4;
+  width: 23cqw;
+  height: auto;
+  transform: rotate(9deg);
+  filter: drop-shadow(0 0.8cqw 1.2cqw #0009);
+}
+.tb-ins--dotd .tb-ins__foot { padding-right: 28cqw; }
+.tb-ins__ddset {
+  margin-bottom: 1.2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ff5fae;
+}
+.tb-ins--dotd .tb-ins__name { color: #ffd23f; }
+.tb-ins--dotd .tb-ins__fine { color: #ffffffb3; border-top-color: #ff8a0066; }
+
+/* The Third Eye: near-black blue, faint rings radiating from a vertical eye opened in the middle
+   of the card; the photo is seen through it, its lid lit a cold blue that slowly breathes */
+.tb-ins--thirdeye {
+  --eye: polygon(50% 0%, 61.1% 7.1%, 71.7% 14.3%, 81.2% 21.4%, 89.1% 28.6%, 95% 35.7%, 98.7% 42.9%, 100% 50%, 98.7% 57.1%, 95% 64.3%, 89.1% 71.4%, 81.2% 78.6%, 71.7% 85.7%, 61.1% 92.9%, 50% 100%, 38.9% 92.9%, 28.3% 85.7%, 18.8% 78.6%, 10.9% 71.4%, 5% 64.3%, 1.3% 57.1%, 0% 50%, 1.3% 42.9%, 5% 35.7%, 10.9% 28.6%, 18.8% 21.4%, 28.3% 14.3%, 38.9% 7.1%);
+  background:
+    radial-gradient(60% 42% at 50% 40%, #13285e, transparent 72%),
+    #03050c;
+  color: #fff;
+}
+.tb-ins__orbits {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 14% 12%, #fff 0 0.25cqw, transparent 0.4cqw),
+    radial-gradient(circle at 86% 30%, #fff 0 0.2cqw, transparent 0.35cqw),
+    radial-gradient(circle at 9% 58%, #ffffffaa 0 0.2cqw, transparent 0.35cqw),
+    radial-gradient(circle at 91% 70%, #ffffffaa 0 0.25cqw, transparent 0.4cqw),
+    repeating-radial-gradient(circle at 50% 40%, transparent 0 6cqw, #7d9cff22 6cqw 6.25cqw);
+  pointer-events: none;
+}
+.tb-ins__lid {
+  position: absolute;
+  inset: 6cqw 11cqw 41cqw;
+  z-index: 1;
+  filter: drop-shadow(0 0 2.4cqw #3d6bff);
+  animation: tb-wake 6s ease-in-out infinite;
+}
+.tb-ins__lid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: var(--eye);
+  background: linear-gradient(180deg, #a9c2ff, #2c4fb8 50%, #a9c2ff);
+}
+@keyframes tb-wake {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-ins__lid { animation: none; }
+}
+.tb-ins--thirdeye .tb-ins__photo {
+  inset: 7cqw 12cqw 42cqw;
+  z-index: 2;
+  clip-path: var(--eye);
+  background: #0b1530;
+}
+.tb-ins--thirdeye .tb-ins__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(50% 50% at 50% 50%, transparent 55%, #050a1ccc);
+  pointer-events: none;
+}
+.tb-ins--thirdeye .tb-ins__set { max-width: 26cqw; color: #9db8ff; }
+.tb-ins--thirdeye .tb-ins__foot { text-align: center; }
+.tb-ins__eye {
+  display: block;
+  width: 9cqw;
+  height: auto;
+  margin: 0 auto 1.6cqw;
+  color: #9db8ff;
+}
+.tb-ins--thirdeye .tb-ins__fine { color: #9db8ffb3; border-top-color: #9db8ff33; }
+
 /* The Light / The Shadow: a beam enters the top-left corner, a prism splits it into a spectrum
    band running diagonally behind the player, landing in two stripes of team colour. The Light is
    bright on white with a pastel prism border; The Shadow is the same beam swallowed in black, with
@@ -1740,6 +1951,7 @@ select {
   .tb-ins__est,
   .tb-ins__charter,
   .tb-ins__pickcap,
+  .tb-ins__ddset,
   .tb-ins__side small,
   .tb-ins--rivalries .tb-ins__ticket-head .tb-ins__serial {
     display: none;
@@ -2032,6 +2244,47 @@ select {
 }
 .tb-rev[data-set="dreamteam"] .tb-rev__foot {
   bottom: 15cqw;
+}
+
+/* Lunar New Year: the red envelope's back, gold coin lattice and the inset gold rule */
+.tb-rev[data-set="lunar"] {
+  --rev-bg: #b3121b;
+  --rev-ink: #f6d27a;
+  --rev-mark: #f6d27a;
+  --rev-medal: #fff6e0;
+  --rev-rule: #f6d27a66;
+}
+.tb-rev[data-set="lunar"] .tb-rev__deco {
+  background:
+    radial-gradient(circle, transparent 2.6cqw, #f6d27a33 2.6cqw 3cqw, transparent 3cqw) 0 0 / 6cqw 6cqw,
+    radial-gradient(circle, transparent 2.6cqw, #f6d27a33 2.6cqw 3cqw, transparent 3cqw) 3cqw 3cqw / 6cqw 6cqw;
+  box-shadow: inset 0 0 0 1.6cqw #b3121b, inset 0 0 0 2cqw #f6d27aaa;
+}
+
+/* Day of the Dead: violet night, a zigzag string of papel picado along the top */
+.tb-rev[data-set="dotd"] {
+  --rev-bg: #2a0b3b;
+  --rev-mark: #ffd23f;
+  --rev-rule: #ff2e9366;
+}
+.tb-rev[data-set="dotd"] .tb-rev__deco {
+  background:
+    conic-gradient(from 135deg at 50% 0, #2a0b3b 90deg, transparent 0) 0 11cqw / 4cqw 2cqw repeat-x,
+    linear-gradient(90deg, #ff2e93 0 25%, #ff8a00 0 50%, #ffd23f 0 75%, #a35bff 0) 0 0 / 100% 13cqw no-repeat,
+    radial-gradient(90% 60% at 50% 50%, #4a1766, transparent 75%);
+}
+
+/* The Third Eye: near black, the rings and a blue glow */
+.tb-rev[data-set="thirdeye"] {
+  --rev-bg: #03050c;
+  --rev-mark: #9db8ff;
+  --rev-medal: #e8eeff;
+  --rev-rule: #9db8ff40;
+}
+.tb-rev[data-set="thirdeye"] .tb-rev__deco {
+  background:
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 6cqw, #7d9cff22 6cqw 6.25cqw),
+    radial-gradient(60% 45% at 50% 50%, #13285e, transparent 72%);
 }
 
 /* ── face-down: the Gate 7 card back inside the parallel border ── */

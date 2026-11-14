@@ -215,4 +215,67 @@ export const INSERT_ART: Record<string, string> = {
   DT10: "/inserts/DT10.jpg", // Scottie Pippen
   DT11: "/inserts/DT11.jpg", // David Robinson
   DT12: "/inserts/DT12.jpg", // John Stockton
+
+  // Set 4: 1. Lunar New Year
+  LNY1: "", // Carmelo Anthony
+  LNY2: "", // De'Aaron Fox
+  LNY3: "", // Ben Wallace
+  LNY4: "", // Mark Price
+  LNY5: "", // Tyrese Haliburton
+  LNY6: "", // Isaiah Thomas
+  LNY7: "", // Dirk Nowitzki
+  LNY8: "", // Shaedon Sharpe
+  LNY9: "", // Gary Payton
+  LNY10: "", // Bradley Beal
+  LNY11: "", // Dwyane Wade
+  LNY12: "", // Penny Hardaway
+
+  // Set 4: 2. Day of the Dead
+  DD1: "", // Dylan Harper
+  DD2: "", // Alperen Sengun
+  DD3: "", // LaMelo Ball
+  DD4: "", // Jimmy Butler
+  DD5: "", // Jamal Murray
+  DD6: "", // Devin Booker
+  DD7: "", // Darius Garland
+  DD8: "", // Lauri Markkanen
+  DD9: "", // Joel Embiid
+  DD10: "", // Jalen Johnson
+  DD11: "", // Karl-Anthony Towns
+  DD12: "", // Scottie Barnes
+  DD13: "", // Pascal Siakam
+  DD14: "", // Anthony Davis
+  DD15: "", // Josh Giddey
+  DD16: "", // James Worthy
+  DD17: "", // Clyde Drexler
+  DD18: "", // Zach Randolph
+  DD19: "", // Russell Westbrook
+  DD20: "", // Jason Kidd
+  DD21: "", // Baron Davis
+  DD22: "", // Oscar Robertson
+  DD23: "", // Paul Pierce
+  DD24: "", // Isiah Thomas
+  DD25: "", // Tim Hardaway
+  DD26: "", // Anderson Varejão
+  DD27: "", // Grant Hill
+  DD28: "", // Alonzo Mourning
+  DD29: "", // Drazen Petrovic
+  DD30: "", // Glenn Robinson
+
+  // Set 4: 3. The Third Eye
+  TE1: "", // Kyrie Irving
+  TE2: "", // Paul George
+  TE3: "", // Yaxel Lendeborg
+  TE4: "", // Davion Mitchell
+  TE5: "", // Michael Porter Jr.
+  TE6: "", // Norman Powell
+  TE7: "", // Yang Hansen
+  TE8: "", // Paolo Banchero
+  TE9: "", // Tyler Herro
+  TE10: "", // Jeremiah Fears
+  TE11: "", // T.J. McConnell
+  TE12: "", // Jalen Williams
+  TE13: "", // Ausar Thompson
+  TE14: "", // Mikal Bridges
+  TE15: "", // Austin Reaves
 };

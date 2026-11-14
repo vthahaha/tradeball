@@ -1,4 +1,4 @@
-// Series 1 insert classes, from "Insert Categories Set 1", "Set 2 - Classic" and "Set 3".
+// Series 1 insert classes, from "Insert Categories Set 1", "Set 2 - Classic", "Set 3" and "Set 4".
 // Every card's id is the id from that document (NB1, HG2, GE9, ...): that is the
 // key to use in insert-art.ts and what /admin lists.
 //
@@ -34,6 +34,10 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "wizards", name: "Time Wizards", rarity: "epic", boost: 0 },
   { id: "founders", name: "Founding Father", rarity: "epic", boost: 0 },
   { id: "dreamteam", name: "The Dream Team", rarity: "mythic", boost: 0 },
+  // Set 4
+  { id: "lunar", name: "Lunar New Year", rarity: "legendary", boost: 3 },
+  { id: "dotd", name: "Day of the Dead", rarity: "epic", boost: 1 },
+  { id: "thirdeye", name: "The Third Eye", rarity: "legendary", boost: 3 },
 ];
 
 export interface Legend {
@@ -642,6 +646,84 @@ const DREAM_TEAM: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "dreamteam", kicker: "Barcelona 1992" }));
 
+// ── Set 4 ──
+
+// 1. Lunar New Year: one player for each animal of the zodiac (kicker = the animal)
+const LUNAR_NEW_YEAR: InsertCard[] = (
+  [
+    { id: "LNY1", kicker: "Mouse", team: "Knicks", legend: L("Carmelo Anthony", "F", "USA", 92) },
+    { id: "LNY2", kicker: "Ox", player: "4066259" }, // De'Aaron Fox
+    { id: "LNY3", kicker: "Tiger", team: "Pistons", legend: L("Ben Wallace", "C", "USA", 88) },
+    { id: "LNY4", kicker: "Cat", team: "Cavaliers", legend: L("Mark Price", "G", "USA", 87) },
+    { id: "LNY5", kicker: "Dragon", player: "4396993" }, // Tyrese Haliburton
+    { id: "LNY6", kicker: "Snake", team: "Celtics", legend: L("Isaiah Thomas", "G", "USA", 87) },
+    { id: "LNY7", kicker: "Horse", team: "Mavericks", legend: L("Dirk Nowitzki", "F", "Germany", 96) },
+    { id: "LNY8", kicker: "Goat", player: "4914336" }, // Shaedon Sharpe
+    { id: "LNY9", kicker: "Monkey", team: "SuperSonics", legend: L("Gary Payton", "G", "USA", 93) },
+    { id: "LNY10", kicker: "Chicken", team: "Wizards", player: "6580" }, // Bradley Beal
+    { id: "LNY11", kicker: "Dog", team: "Heat", legend: L("Dwyane Wade", "G", "USA", 95) },
+    { id: "LNY12", kicker: "Pig", team: "Magic", legend: L("Penny Hardaway", "G", "USA", 89) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "lunar" }));
+
+// 2. Day of the Dead
+const DAY_OF_THE_DEAD: InsertCard[] = (
+  [
+    { id: "DD1", player: "5037871" }, // Dylan Harper
+    { id: "DD2", player: "4871144" }, // Alperen Sengun
+    { id: "DD3", player: "4432816" }, // LaMelo Ball
+    { id: "DD4", player: "6430" }, // Jimmy Butler
+    { id: "DD5", player: "3936299" }, // Jamal Murray
+    { id: "DD6", player: "3136193" }, // Devin Booker
+    { id: "DD7", player: "4396907" }, // Darius Garland
+    { id: "DD8", player: "4066336" }, // Lauri Markkanen
+    { id: "DD9", player: "3059318" }, // Joel Embiid
+    { id: "DD10", player: "4701230" }, // Jalen Johnson
+    { id: "DD11", player: "3136195" }, // Karl-Anthony Towns
+    { id: "DD12", player: "4433134" }, // Scottie Barnes
+    { id: "DD13", player: "3149673" }, // Pascal Siakam
+    { id: "DD14", player: "6583" }, // Anthony Davis
+    { id: "DD15", player: "4871145" }, // Josh Giddey
+    { id: "DD16", team: "Lakers", legend: L("James Worthy", "F", "USA", 92) },
+    { id: "DD17", team: "Trail Blazers", legend: L("Clyde Drexler", "G", "USA", 93) },
+    { id: "DD18", team: "Grizzlies", legend: L("Zach Randolph", "F", "USA", 87) },
+    { id: "DD19", team: "Thunder", legend: L("Russell Westbrook", "G", "USA", 92) },
+    { id: "DD20", team: "Mavericks", legend: L("Jason Kidd", "G", "USA", 94) },
+    { id: "DD21", team: "New Orleans Hornets", legend: L("Baron Davis", "G", "USA", 87) },
+    { id: "DD22", team: "Kings", legend: L("Oscar Robertson", "G", "USA", 97) },
+    { id: "DD23", team: "Celtics", legend: L("Paul Pierce", "F", "USA", 93) },
+    { id: "DD24", team: "Pistons", legend: L("Isiah Thomas", "G", "USA", 95) },
+    { id: "DD25", team: "Heat", legend: L("Tim Hardaway", "G", "USA", 90) },
+    { id: "DD26", team: "Cavaliers", legend: L("Anderson Varejão", "C", "Brazil", 80) },
+    { id: "DD27", team: "Magic", legend: L("Grant Hill", "F", "USA", 91) },
+    { id: "DD28", team: "Hornets", legend: L("Alonzo Mourning", "C", "USA", 91) },
+    { id: "DD29", team: "Nets", legend: L("Drazen Petrovic", "G", "Croatia", 87) },
+    { id: "DD30", team: "Bucks", legend: L("Glenn Robinson", "F", "USA", 86) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "dotd" }));
+
+// 3. The Third Eye
+const THIRD_EYE: InsertCard[] = (
+  [
+    { id: "TE1", player: "6442" }, // Kyrie Irving
+    { id: "TE2", player: "4251" }, // Paul George
+    { id: "TE3", player: "5175737" }, // Yaxel Lendeborg
+    { id: "TE4", player: "4278053" }, // Davion Mitchell
+    { id: "TE5", player: "4278104" }, // Michael Porter Jr.
+    { id: "TE6", player: "2595516" }, // Norman Powell
+    // not in the base set yet
+    { id: "TE7", team: "Trail Blazers", legend: L("Yang Hansen", "C", "China", 76) },
+    { id: "TE8", player: "4432573" }, // Paolo Banchero
+    { id: "TE9", player: "4395725" }, // Tyler Herro
+    { id: "TE10", player: "5144091" }, // Jeremiah Fears
+    { id: "TE11", player: "2530530" }, // T.J. McConnell
+    { id: "TE12", player: "4593803" }, // Jalen Williams
+    { id: "TE13", player: "4684742" }, // Ausar Thompson
+    { id: "TE14", player: "3147657" }, // Mikal Bridges
+    { id: "TE15", player: "4066457" }, // Austin Reaves
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "thirdeye" }));
+
 export const INSERT_CARDS: InsertCard[] = [
   ...NEW_BLOOD,
   ...HARD_GOODBYES,
@@ -658,4 +740,7 @@ export const INSERT_CARDS: InsertCard[] = [
   ...TIME_WIZARDS,
   ...FOUNDING_FATHERS,
   ...DREAM_TEAM,
+  ...LUNAR_NEW_YEAR,
+  ...DAY_OF_THE_DEAD,
+  ...THIRD_EYE,
 ];

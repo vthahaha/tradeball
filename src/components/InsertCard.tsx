@@ -166,6 +166,88 @@ function Corners({
   );
 }
 
+/** The zodiac animal's character, for the Lunar New Year seal (traditional forms). */
+const ZODIAC: Record<string, string> = {
+  Mouse: "鼠",
+  Ox: "牛",
+  Tiger: "虎",
+  Cat: "貓",
+  Dragon: "龍",
+  Snake: "蛇",
+  Horse: "馬",
+  Goat: "羊",
+  Monkey: "猴",
+  Chicken: "雞",
+  Dog: "狗",
+  Pig: "豬",
+};
+
+/** Sugar skull eye and accent colours; each Day of the Dead card takes one by its number. */
+const SKULL_EYES: [string, string][] = [
+  ["#ff2e93", "#ffd23f"],
+  ["#ff8a00", "#a35bff"],
+  ["#a35bff", "#ff8a00"],
+  ["#ffd23f", "#ff2e93"],
+];
+
+/** Six petals round a point: the flowers in a sugar skull's eyes and on its brow. */
+function petals(cx: number, cy: number, d: number, r: number, fill: string) {
+  return [0, 1, 2, 3, 4, 5].map((k) => (
+    <circle
+      key={k}
+      cx={cx + d * Math.cos((k * Math.PI) / 3)}
+      cy={cy + d * Math.sin((k * Math.PI) / 3)}
+      r={r}
+      fill={fill}
+    />
+  ));
+}
+
+function SugarSkull({ hue }: { hue: number }) {
+  const [a, b] = SKULL_EYES[hue];
+  const ink = "#2a0b3b";
+  return (
+    <svg className="tb-ins__skull" viewBox="0 0 40 44" aria-hidden>
+      <path
+        d="M20 2C9.5 2 3 9.5 3 18.5c0 6 2.8 10.2 7 12.3V36c0 3.3 2.7 6 6 6h8c3.3 0 6-2.7 6-6v-5.2c4.2-2.1 7-6.3 7-12.3C37 9.5 30.5 2 20 2Z"
+        fill="#fff4e4"
+        stroke={ink}
+        strokeWidth="1.2"
+      />
+      {petals(20, 8.5, 2.6, 1.5, b)}
+      <circle cx="20" cy="8.5" r="1.3" fill={a} />
+      {[13, 27].map((cx) => (
+        <g key={cx}>
+          {petals(cx, 19, 4.6, 1.7, a)}
+          <circle cx={cx} cy="19" r="4" fill={ink} />
+          <circle cx={cx + 1.1} cy="17.9" r="0.9" fill="#fff" />
+        </g>
+      ))}
+      <path
+        d="M20 29.6c-1.8-1.3-2.8-2.4-2.8-3.4 0-.9.7-1.5 1.4-1.5.6 0 1.1.3 1.4.8.3-.5.8-.8 1.4-.8.7 0 1.4.6 1.4 1.5 0 1-1 2.1-2.8 3.4Z"
+        fill={b}
+      />
+      {[
+        [6.5, 26],
+        [8.6, 28.6],
+        [33.5, 26],
+        [31.4, 28.6],
+      ].map(([x, y]) => (
+        <circle key={`${x}-${y}`} cx={x} cy={y} r="0.9" fill={b} />
+      ))}
+      <path
+        d="M12.5 34H27.5M15 32v4M18 32v4M22 32v4M25 32v4"
+        stroke={ink}
+        strokeWidth="0.9"
+        strokeLinecap="round"
+      />
+      {[17, 20, 23].map((x) => (
+        <circle key={x} cx={x} cy={x === 20 ? 39.6 : 39} r="0.8" fill={a} />
+      ))}
+    </svg>
+  );
+}
+
 export function InsertFront(props: InsertFrontProps) {
   const { card } = props;
   const wallId = useId().replace(/:/g, "");
@@ -695,6 +777,114 @@ export function InsertFront(props: InsertFrontProps) {
             </div>
             <b>{card.ovr}</b>
             <div className="tb-ins__fine">
+              <span>
+                {card.team} · {p.pos}
+              </span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
+    // Lunar New Year: a red envelope. Lacquer-red stock under a gold lattice of interlocking
+    // coins, the photo in a moon-gate arch, the year's animal as a gold seal stamped on its foot
+    case "lunar": {
+      const animal = card.kicker ?? "";
+      const glyph = ZODIAC[animal];
+      return (
+        <div className="tb-ins tb-ins--lunar">
+          <div className="tb-ins__lattice" aria-hidden />
+          {photo()}
+          <div className="tb-ins__set">
+            Lunar New Year
+            {animal && <span>Year of the {animal}</span>}
+          </div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          {glyph && (
+            <div className="tb-ins__seal" aria-hidden>
+              <span>{glyph}</span>
+            </div>
+          )}
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.8)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__fine">
+              <span>{card.team}</span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Day of the Dead: papel picado strung across a violet night, the photo framed in marigold
+    // orange, a sugar skull propped on the corner of the frame
+    case "dotd": {
+      const n = Number(card.designId.match(/\d+$/)?.[0] ?? 0);
+      return (
+        <div className="tb-ins tb-ins--dotd">
+          <div className="tb-ins__picado" aria-hidden>
+            <i />
+            <i />
+            <i />
+            <i />
+          </div>
+          {photo()}
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <SugarSkull hue={n % SKULL_EYES.length} />
+          <div className="tb-ins__foot">
+            <div className="tb-ins__ddset">Day of the Dead</div>
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.8)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__fine">
+              <span>
+                {card.team} · {p.pos}
+              </span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // The Third Eye: near-black blue, faint rings radiating from a vertical eye opened in the
+    // middle of the card; the photo is seen through it, its lid lit a cold blue
+    case "thirdeye":
+      return (
+        <div className="tb-ins tb-ins--thirdeye">
+          <div className="tb-ins__orbits" aria-hidden />
+          <div className="tb-ins__lid" aria-hidden />
+          {photo()}
+          <div className="tb-ins__set">The Third Eye</div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <svg className="tb-ins__eye" viewBox="0 0 40 16" aria-hidden>
+              <path
+                d="M2 8 Q20 -4 38 8 Q20 20 2 8 Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+              />
+              <circle cx="20" cy="8" r="3.4" fill="currentColor" />
+            </svg>
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.8)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__fine is-center">
               <span>
                 {card.team} · {p.pos}
               </span>
