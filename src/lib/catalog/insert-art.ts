@@ -91,7 +91,7 @@ export const INSERT_ART: Record<string, string> = {
   // 8. Stone Fortress
   SF1: "/inserts/SF1.jpg", // Rudy Gobert
   SF2: "/inserts/SF2.jpg", // Evan Mobley
-  SF3: "/inserts/SF3.jpg", // Jaren Jackson Jr.
+  SF3: "/inserts/SF3.JPG", // Jaren Jackson Jr.
   SF4: "/inserts/SF4.jpg", // Ausar Thompson
   SF5: "/inserts/SF5.jpg", // Chet Holmgren
   SF6: "/inserts/SF6.jpg", // Derrick White
@@ -164,21 +164,21 @@ export const INSERT_ART: Record<string, string> = {
   RV10: "/inserts/RV10.jpg", // Shaquille O'Neal & Dwight Howard
 
   // Set 3: 1. Flash of Brilliance
-  FB1: "", // Jason Williams
-  FB2: "", // Pete Maravich
-  FB3: "", // Vince Carter
-  FB4: "", // Magic Johnson
-  FB5: "", // Allen Iverson
-  FB6: "", // Stephen Curry
-  FB7: "", // Kyrie Irving
-  FB8: "", // Shawn Kemp
-  FB9: "", // Steve Nash
-  FB10: "", // Dwyane Wade
-  FB11: "", // Manu Ginobili
-  FB12: "", // Blake Griffin
-  FB13: "", // Nikola Jokic
-  FB14: "", // Jamal Crawford
-  FB15: "", // Ja Morant
+  FB1: "/inserts/FB1.jpg", // Jason Williams
+  FB2: "/inserts/FB2.jpg", // Pete Maravich
+  FB3: "/inserts/FB3.jpg", // Vince Carter
+  FB4: "/inserts/FB4.png", // Magic Johnson
+  FB5: "/inserts/FB5.jpg", // Allen Iverson
+  FB6: "/inserts/FB6.jpg", // Stephen Curry
+  FB7: "/inserts/FB7.jpg", // Kyrie Irving
+  FB8: "/inserts/FB8.jpg", // Shawn Kemp
+  FB9: "/inserts/FB9.jpg", // Steve Nash
+  FB10: "/inserts/FB10.jpg", // Dwyane Wade
+  FB11: "/inserts/FB11.jpg", // Manu Ginobili
+  FB12: "/inserts/FB12.jpg", // Blake Griffin
+  FB13: "/inserts/FB13.jpg", // Nikola Jokic
+  FB14: "/inserts/FB14.jpg", // Jamal Crawford
+  FB15: "/inserts/FB15.jpg", // Ja Morant
 
   // Set 3: 2. Time Wizards
   TW1: "/inserts/TW1.png", // Arvydas Sabonis
@@ -193,14 +193,14 @@ export const INSERT_ART: Record<string, string> = {
   TW10: "/inserts/TW10.png", // Sam Perkins
 
   // Set 3: 3. Founding Father
-  FF1: "", // Mark Aguirre
-  FF2: "", // Larry Johnson
-  FF3: "", // Glenn Rice
-  FF4: "", // Kevin Garnett
-  FF5: "", // Shaquille O'Neal
-  FF6: "", // Damon Stoudamire
-  FF7: "", // Shareef Abdur-Rahim
-  FF8: "", // Baron Davis
+  FF1: "/inserts/FF1.jpg", // Mark Aguirre
+  FF2: "/inserts/FF2.jpg", // Larry Johnson
+  FF3: "/inserts/FF3.png", // Glenn Rice
+  FF4: "/inserts/FF4.jpg", // Kevin Garnett
+  FF5: "/inserts/FF5.jpg", // Shaquille O'Neal
+  FF6: "/inserts/FF6.jpg", // Damon Stoudamire
+  FF7: "/inserts/FF7.jpg", // Shareef Abdur-Rahim
+  FF8: "/inserts/FF8.jpg", // Baron Davis
 
   // Set 3: 4. The Dream Team
   DT1: "/inserts/DT1.jpg", // Charles Barkley
