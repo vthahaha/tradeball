@@ -19,7 +19,7 @@ export interface InsertClass {
 export const INSERT_CLASSES: InsertClass[] = [
   { id: "newblood", name: "New Blood", rarity: "rare", boost: 2 },
   { id: "goodbyes", name: "Hard Goodbyes", rarity: "epic", boost: 0 },
-  { id: "goldenboy", name: "Golden Boy", rarity: "rare", boost: 4 },
+  { id: "goldenboy", name: "Golden Boy", rarity: "legendary", boost: 4 },
   { id: "generational", name: "Generational", rarity: "mythic", boost: 0 },
   { id: "stardom", name: "Ultimate Stardom", rarity: "mythic", boost: 3 },
   { id: "light", name: "The Light", rarity: "uncommon", boost: 3 },
@@ -30,8 +30,8 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "botb", name: "Best of the Best", rarity: "legendary", boost: 3 },
   { id: "rivalries", name: "Rivalries", rarity: "epic", boost: 2 },
   // Set 3
-  { id: "flash", name: "Flash of Brilliance", rarity: "rare", boost: 2 },
-  { id: "wizards", name: "Time Wizards", rarity: "rare", boost: 0 },
+  { id: "flash", name: "Flash of Brilliance", rarity: "epic", boost: 2 },
+  { id: "wizards", name: "Time Wizards", rarity: "epic", boost: 0 },
   { id: "founders", name: "Founding Father", rarity: "epic", boost: 0 },
   { id: "dreamteam", name: "The Dream Team", rarity: "mythic", boost: 0 },
 ];

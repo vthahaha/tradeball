@@ -49,6 +49,7 @@
   --r-epic: #9a6cff;
   --r-legendary: #f2b33d;
   --r-mythic: #ff5fd2;
+  --r-grail: #5cf2c8;
 
   --perf-dash: repeating-linear-gradient(90deg, currentColor 0 6px, transparent 6px 11px);
 }
@@ -274,6 +275,18 @@ select {
   --rc: var(--r-mythic);
   --frame: conic-gradient(from var(--ang), #ff5fd2, #4fc3ff, #c6ff3d, #ffe14f, #ff7a45, #ff5fd2);
 }
+/* Grail: the Aurora parallel. A night-sky frame with green and violet light drifting through it
+   and a scatter of stars; reads as the darkest, deepest frame, not another rainbow */
+.tb-card[data-rarity="grail"] {
+  --rc: var(--r-grail);
+  --frame:
+    radial-gradient(circle at 18% 22%, #fff 0 0.35cqw, transparent 0.7cqw),
+    radial-gradient(circle at 82% 12%, #fff 0 0.3cqw, transparent 0.6cqw),
+    radial-gradient(circle at 74% 88%, #fff 0 0.35cqw, transparent 0.7cqw),
+    radial-gradient(circle at 10% 70%, #ffffffcc 0 0.25cqw, transparent 0.5cqw),
+    linear-gradient(160deg, transparent 20%, #5cf2c8b3 38%, transparent 52%, #9b6cffb3 66%, transparent 82%),
+    linear-gradient(180deg, #050a1f, #0c1a3a 50%, #050a1f);
+}
 .tb-card[data-finish="gold"] { --frame: linear-gradient(115deg, #fff2c4, #d6a11a 35%, #8a6206 60%, #f5d878); }
 .tb-card[data-finish="black"] { --frame: linear-gradient(150deg, #4a4a4f, #050505 50%, #2a2a2e); }
 
@@ -292,6 +305,17 @@ select {
 }
 .tb-card[data-rarity="legendary"] .tb-card__frame { animation: tb-chrome 6s ease-in-out infinite; }
 .tb-card[data-rarity="mythic"] .tb-card__frame { background-size: 100% 100%; animation: tb-spin 5s linear infinite; }
+.tb-card[data-rarity="grail"] .tb-card__frame {
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 260%, 100% 100%;
+  animation: tb-aurora 7s ease-in-out infinite;
+}
+@keyframes tb-aurora {
+  0%, 100% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0%, 0 0; }
+  50% { background-position: 0 0, 0 0, 0 0, 0 0, 0 100%, 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-card[data-rarity="grail"] .tb-card__frame { animation: none; }
+}
 
 /* ── shared pieces ── */
 .tb-card__face-img {

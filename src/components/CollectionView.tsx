@@ -30,6 +30,7 @@ const RARITY_COLOR: Record<Rarity, string> = {
   epic: "var(--r-epic)",
   legendary: "var(--r-legendary)",
   mythic: "var(--r-mythic)",
+  grail: "var(--r-grail)",
 };
 
 type SortKey = "rarity" | "ovr" | "newest" | "name";
@@ -369,7 +370,7 @@ export function CollectionView({
         </div>
         <div className="flex items-center gap-2 no-scrollbar overflow-x-auto px-3 py-3 sm:flex-wrap sm:overflow-visible sm:px-5">
           <Chip active={rarity === "all"} onClick={() => setRarity("all")}>Any rarity</Chip>
-          {RARITIES.map((r) => (
+          {RARITIES.filter((r) => designs.some((d) => d.rarity === r)).map((r) => (
             <Chip key={r} active={rarity === r} onClick={() => setRarity(r)} color={RARITY_COLOR[r]}>
               {r}
             </Chip>

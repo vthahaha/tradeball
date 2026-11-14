@@ -15,7 +15,7 @@ const PACKS: { type: PackType; name: string; gate: string; seat: string }[] = [
   { type: "basketball", name: "Hoops", gate: "BB", seat: "8" },
 ];
 
-const BIG: Rarity[] = ["legendary", "mythic"];
+const BIG: Rarity[] = ["legendary", "mythic", "grail"];
 const isBig = (c: PulledCard) => BIG.includes(c.rarity) || !!c.serialNo;
 
 // One shared 1-second clock. The server snapshot is 0, so the countdown renders a
@@ -480,10 +480,17 @@ function Spotlight({ card, onClose }: { card: PulledCard; onClose: () => void })
     ? oneOfOne
       ? "One of one"
       : `No. ${card.serialNo} of ${card.supply}`
-    : card.rarity === "mythic"
-      ? "Mythic pull"
-      : "Legend pull";
-  const color = card.rarity === "mythic" || oneOfOne ? "var(--r-mythic)" : "var(--r-legendary)";
+    : card.rarity === "grail"
+      ? "Grail pull"
+      : card.rarity === "mythic"
+        ? "Mythic pull"
+        : "Legend pull";
+  const color =
+    card.rarity === "grail"
+      ? "var(--r-grail)"
+      : card.rarity === "mythic" || oneOfOne
+        ? "var(--r-mythic)"
+        : "var(--r-legendary)";
   return (
     <motion.div
       className="fixed inset-0 z-[60] flex cursor-pointer flex-col items-center justify-center gap-8 bg-bg-2 px-4"

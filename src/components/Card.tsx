@@ -36,6 +36,7 @@ export const PARALLEL: Record<Rarity, string> = {
   epic: "Purple",
   legendary: "Gold",
   mythic: "Prismatic",
+  grail: "Aurora",
 };
 
 const FINISH_LABEL: Record<Finish, string | null> = {

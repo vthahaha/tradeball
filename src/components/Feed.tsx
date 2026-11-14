@@ -10,6 +10,7 @@ const RARITY_TEXT: Record<string, string> = {
   epic: "text-[var(--r-epic)]",
   legendary: "text-[var(--r-legendary)]",
   mythic: "text-[var(--r-mythic)]",
+  grail: "text-[var(--r-grail)]",
 };
 
 function ago(iso: string) {

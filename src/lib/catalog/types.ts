@@ -3,7 +3,8 @@ import { INSERT_CLASSES } from "./inserts";
 // Basketball only for now. Keep the union shape so another sport can come back later.
 export type Sport = "basketball";
 
-export const RARITIES = ["common", "uncommon", "rare", "epic", "legendary", "mythic"] as const;
+/** Grail sits above Mythic. No class uses it yet; its drop weight is 0 until one does. */
+export const RARITIES = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "grail"] as const;
 export type Rarity = (typeof RARITIES)[number];
 
 /**

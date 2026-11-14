@@ -73,7 +73,7 @@ export async function bestCards(userId: string, take = 5): Promise<PulledCard[]>
   // "Best" = numbered first, then rarity, then rating. Done in memory: binders are small.
   const rows = await db.cardInstance.findMany({ where: { ownerId: userId, recycledAt: null } });
   const rank = (f: string) => ({ masterpiece: 5, black: 4, gold: 3, holo: 2, foil: 1 })[f] ?? 0;
-  const order = ["common", "uncommon", "rare", "epic", "legendary", "mythic"];
+  const order = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "grail"];
   return rows
     .flatMap((r) => {
       const c = hydrateInstance(r);

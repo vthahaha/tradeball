@@ -8,6 +8,7 @@ export const RARITY_WEIGHTS: Record<Rarity, number> = {
   epic: 4,
   legendary: 0.9,
   mythic: 0.1,
+  grail: 0, // reserved: no base card is Grail
 };
 
 /** The guaranteed slot only rolls Rare or better (same ratios). */
@@ -59,14 +60,14 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  light: 17.7, // The Light (uncommon)
-  shadow: 17.7, // The Shadow (uncommon)
-  newblood: 10, // New Blood (rare)
-  goldenboy: 8, // Golden Boy (rare)
-  fortress: 8, // Stone Fortress (rare)
-  flash: 8, // Flash of Brilliance (rare)
+  light: 19.2, // The Light (uncommon)
+  shadow: 19.2, // The Shadow (uncommon)
+  newblood: 13, // New Blood (rare)
+  goldenboy: 3, // Golden Boy (legendary)
+  fortress: 11, // Stone Fortress (rare)
+  flash: 5, // Flash of Brilliance (epic)
   cult: 7, // Cult Classic (epic)
-  wizards: 6, // Time Wizards (rare)
+  wizards: 5, // Time Wizards (epic)
   goodbyes: 5, // Hard Goodbyes (epic)
   rivalries: 4, // Rivalries (epic)
   founders: 4, // Founding Father (epic)
@@ -113,6 +114,7 @@ export const SHARD_VALUE: Record<Rarity, number> = {
   epic: 8,
   legendary: 20,
   mythic: 50,
+  grail: 150,
 };
 export const SHARD_FINISH_BONUS: Partial<Record<Finish, number>> = { foil: 1, holo: 3 };
 /** Numbered cards can't be recycled: they're the whole point. */
