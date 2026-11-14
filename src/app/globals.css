@@ -1542,74 +1542,94 @@ select {
 .tb-ins--light .tb-ins__fine { color: #4a5878; border-top-color: transparent; }
 .tb-ins--shadow .tb-ins__fine { color: #9aa0ad; border-top-color: transparent; }
 
-/* Stone Fortress: the full photo toned cold (grey, with the team colour through it) above a
-   thick carved stone base; the name, set and rating are cut into the stone */
-.tb-ins--fortress { background: #1d1f24; }
-.tb-ins--fortress .tb-ins__photo { inset: 0 0 31cqw; background: #2a2d33; }
-.tb-ins--fortress .tb-card__splash { filter: grayscale(1) contrast(1.15) brightness(0.95); }
-.tb-ins__tone {
+/* Stone Fortress: a monument. The whole card is one speckled stone slab; the full-colour photo
+   is set into it as a recessed panel with a thin team-colour inlay; the name and set are carved
+   once below like an inscription; the rating sits on a carved block */
+.tb-ins--fortress {
+  background:
+    radial-gradient(circle, #ffffff14 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.3cqw 1.3cqw,
+    radial-gradient(circle, #00000026 0 0.3cqw, transparent 0.4cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw,
+    radial-gradient(120% 80% at 30% 20%, #ffffff1f, transparent 60%),
+    linear-gradient(170deg, #8f9298, #5f6268);
+  color: #33363b;
+}
+.tb-ins--fortress .tb-ins__photo {
+  inset: 6cqw 6cqw 36cqw;
+  background: #2a2d33;
+  box-shadow:
+    inset 1cqw 1cqw 1.4cqw #0000008c,
+    inset -0.4cqw -0.4cqw 0 #ffffff1f;
+}
+.tb-ins__inlay {
   position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: color-mix(in oklab, var(--t1) 80%, #1d2a44);
-  mix-blend-mode: color;
-  opacity: 0.6;
+  inset: 4.6cqw 4.6cqw 34.6cqw;
+  z-index: 3;
+  border: 0.45cqw solid var(--t1);
+  box-shadow: 0 0 0 0.35cqw #ffffff2e, inset 0 0 0 0.3cqw #0000004d;
   pointer-events: none;
 }
-.tb-ins--fortress .tb-card__mono { color: #d9dce1; }
-.tb-ins__base {
+.tb-ins__block {
   position: absolute;
-  inset: auto 0 0;
+  top: 8.6cqw;
+  right: 8.6cqw;
   z-index: 4;
-  display: grid;
-  height: 31cqw;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 3cqw;
-  padding: 3cqw 4cqw;
-  border-top: 1cqw solid var(--t1);
-  background:
-    radial-gradient(circle, #ffffff12 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.3cqw 1.3cqw,
-    radial-gradient(circle, #00000026 0 0.3cqw, transparent 0.4cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw,
-    linear-gradient(170deg, #8f9298, #64676d);
-  color: #33363b;
-  box-shadow: inset 0 0.6cqw 0 #ffffff26;
-}
-.tb-ins__base-main { min-width: 0; }
-.tb-ins--fortress .tb-ins__name,
-.tb-ins__base-ovr b { text-shadow: 0 0.35cqw 0 #ffffff47, 0 -0.35cqw 0 #00000059; }
-.tb-ins__carve {
-  margin-top: 1.2cqw;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  text-shadow: 0 0.25cqw 0 #ffffff40;
-}
-.tb-ins--fortress .tb-ins__fine { justify-content: flex-start; border-top-color: #33363b33; color: #3e4146; }
-.tb-ins__base-ovr {
   display: flex;
+  width: 15cqw;
   flex-direction: column;
   align-items: center;
-  padding-left: 3cqw;
-  border-left: 0.3cqw solid #33363b4d;
+  padding: 1.4cqw 0 1.6cqw;
+  background:
+    radial-gradient(circle, #ffffff12 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.2cqw 1.2cqw,
+    #55585e;
+  color: #e3e5e8;
+  box-shadow: 0 0.8cqw 1.4cqw #0000008c, inset 0.4cqw 0.4cqw 0 #ffffff2e, inset -0.4cqw -0.4cqw 0 #0000004d;
 }
-.tb-ins__base-ovr small {
+.tb-ins__block small {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.3cqw;
-  letter-spacing: 0.18em;
+  font-size: 2.2cqw;
+  letter-spacing: 0.2em;
 }
-.tb-ins__base-ovr b {
+.tb-ins__block b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 72%;
-  font-size: 11cqw;
-  line-height: 0.85;
+  font-size: 8cqw;
+  line-height: 0.9;
 }
+.tb-ins__inscription {
+  position: absolute;
+  right: 5cqw;
+  bottom: 4.6cqw;
+  left: 5cqw;
+  z-index: 4;
+  display: flex;
+  height: 26cqw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.tb-ins--fortress .tb-ins__name {
+  font-weight: 800;
+  font-stretch: 100%;
+  letter-spacing: 0.1em;
+  color: #34373c;
+  text-shadow: 0 0.35cqw 0 #ffffff4d, 0 -0.3cqw 0 #00000059;
+}
+.tb-ins__carve {
+  margin-top: 1.4cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.5cqw;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #34373c;
+  text-shadow: 0 0.25cqw 0 #ffffff40;
+}
+.tb-ins--fortress .tb-ins__fine { border-top-color: #34373c33; color: #3e4146; }
 
 /* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
 @container (max-width: 170px) {

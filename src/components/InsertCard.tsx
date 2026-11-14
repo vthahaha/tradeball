@@ -400,30 +400,30 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
-    // Stone Fortress: the full photo toned cold (grey with the team colour through it) above a
-    // thick carved stone base with the name, the set and the rating cut into it
+    // Stone Fortress: a monument. One stone slab, the full-colour photo set into it as a recessed
+    // panel with a team-colour inlay, the name and set carved once below, the rating on a block
     case "fortress":
       return (
         <div className="tb-ins tb-ins--fortress">
-          {photo(<div className="tb-ins__tone" aria-hidden />)}
-          <div className="tb-ins__base">
-            <div className="tb-ins__base-main">
-              <div
-                className="tb-ins__name"
-                style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}
-              >
-                {name}
-              </div>
-              <div className="tb-ins__carve">Stone Fortress · {card.team}</div>
-              <div className="tb-ins__fine">
-                {serial}
-                {no}
-              </div>
+          {photo()}
+          <div className="tb-ins__inlay" aria-hidden />
+          <div className="tb-ins__block">
+            <small>DEF</small>
+            <b>{card.ovr}</b>
+          </div>
+          <div className="tb-ins__inscription">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.7)}cqw` }}
+            >
+              {name}
             </div>
-            <div className="tb-ins__base-ovr">
-              <small>DEF</small>
-              <b>{card.ovr}</b>
-              <small>{p.pos}</small>
+            <div className="tb-ins__carve">
+              Stone Fortress · {card.team} · {p.pos}
+            </div>
+            <div className="tb-ins__fine is-center">
+              {serial}
+              {no}
             </div>
           </div>
         </div>
