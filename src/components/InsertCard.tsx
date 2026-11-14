@@ -580,23 +580,23 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // Rivalries (Legendary): the title belt. Full art, each player's side lit in his team colour up
-    // the outer edge; across the foot a black leather belt with gold stitching carries the two
-    // surnames on its straps, either side of a gold championship plate engraved "vs".
+    // Rivalries (Legendary): a prize-fight poster. The photo clean above; below it a cream paper bill
+    // under a heavy black and red rule, the two surnames printed big and stacked, each behind a
+    // block in its team's colour, a red italic "vs" between them.
     case "rivalries": {
       const p2 = card.players[1];
-      const corner = (pl: typeof p | undefined, team: string | undefined, side: "l" | "r") => {
+      const billing = (pl: typeof p | undefined, team: string | undefined, colour: string) => {
         const last = pl ? lastName(pl.name) : "";
         const first = pl ? pl.name.slice(0, pl.name.length - last.length).trim() : "";
         return (
-          <div className={`tb-ins__corner is-${side}`}>
-            <small>
-              {first}
-              {team && <> · {teamCode(team)}</>}
-            </small>
-            <b style={{ fontSize: `${Math.min(6.4, 30 / Math.max(1, last.length * 0.5))}cqw` }}>
-              {last}
-            </b>
+          <div className="tb-ins__rvrow">
+            <i style={{ background: `var(${colour})` }}>{team ? teamCode(team) : ""}</i>
+            <div>
+              <small>{first}</small>
+              <b style={{ fontSize: `${Math.min(11, 72 / Math.max(1, last.length * 0.52))}cqw` }}>
+                {last}
+              </b>
+            </div>
           </div>
         );
       };
@@ -608,20 +608,22 @@ export function InsertFront(props: InsertFrontProps) {
               <span>{p2 ? initials(p2.name) : ""}</span>
             </div>,
           )}
-          <div className="tb-ins__rvglow" aria-hidden />
-          <div className="tb-ins__fade" aria-hidden />
-          <Rating ovr={card.ovr} pos="Pair" />
-          <div className="tb-ins__belt">
-            {corner(p, card.team, "l")}
-            <div className="tb-ins__plate">
-              <small>Rivalries</small>
-              <b>vs</b>
+          <div className="tb-ins__rvbill">
+            <div className="tb-ins__rvhead">
+              <span>Rivalries</span>
+              <span>
+                <b>{card.ovr}</b> Pair
+              </span>
             </div>
-            {corner(p2, card.team2, "r")}
-          </div>
-          <div className="tb-ins__fine is-center tb-ins__rvfine">
-            {serial}
-            {no}
+            {billing(p, card.team, "--t1")}
+            <div className="tb-ins__rvvs" aria-hidden>
+              vs
+            </div>
+            {billing(p2, card.team2, "--u1")}
+            <div className="tb-ins__fine tb-ins__rvfine">
+              {serial}
+              {no}
+            </div>
           </div>
         </div>
       );
@@ -798,7 +800,7 @@ export function InsertFront(props: InsertFrontProps) {
           </div>
           <Rating ovr={card.ovr} pos={p.pos} />
           {glyph && (
-            <div className="tb-ins__seal" aria-hidden>
+            <div className="tb-ins__zseal" aria-hidden>
               <span>{glyph}</span>
             </div>
           )}

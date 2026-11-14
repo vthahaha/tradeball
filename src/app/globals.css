@@ -1115,19 +1115,19 @@ select {
   font-variant-numeric: tabular-nums;
 }
 
-/* Rivalries (Legendary): the title belt. Full art, each player's side lit in his team colour up the
-   outer edge; across the foot a black leather belt with gold stitching, the two surnames on its
-   straps (the strap ends dyed in each team's colour), and in the middle a gold championship plate
-   engraved "vs", a slow light passing over it. */
-.tb-ins--rivalries { background: #111014; }
+/* Rivalries (Legendary): a prize-fight poster. The photo clean across the top; below it a cream
+   paper bill under a heavy black rule with a red line, the two surnames printed big and stacked,
+   each led by a solid block in its team's colour with the team code, and a red italic "vs" set
+   between them on a hairline. The rating sits in the bill's header, off the photo. */
+.tb-ins--rivalries { background: #f2ead6; }
 .tb-ins--rivalries .tb-ins__photo {
-  inset: 0;
+  bottom: 50cqw;
   background: linear-gradient(90deg, var(--t1) 0 50%, var(--u1) 50%);
 }
 .tb-ins--rivalries .tb-card__mono { display: none; }
 .tb-ins__halves {
   position: absolute;
-  inset: 0 0 30%;
+  inset: 0;
   z-index: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1138,145 +1138,108 @@ select {
   font-size: 18cqw;
   color: #ffffffd9;
 }
-.tb-ins__rvglow {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: linear-gradient(
-    90deg,
-    color-mix(in oklab, var(--t1) 75%, transparent),
-    transparent 24%,
-    transparent 76%,
-    color-mix(in oklab, var(--u1) 75%, transparent)
-  );
-  -webkit-mask-image: linear-gradient(0deg, #000 25%, transparent 88%);
-  mask-image: linear-gradient(0deg, #000 25%, transparent 88%);
-  opacity: 0.8;
-  pointer-events: none;
-}
-.tb-ins--rivalries .tb-ins__fade {
-  height: 44%;
-  background: linear-gradient(180deg, transparent, #0b0a0dc4 52%, #0b0a0d);
-}
-.tb-ins--rivalries .tb-ins__ovr {
-  right: auto;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  text-shadow: 0 0.3cqw 1.2cqw #000c;
-}
-.tb-ins__belt {
+.tb-ins__rvbill {
   position: absolute;
   right: 0;
-  bottom: 12.5cqw;
+  bottom: 0;
   left: 0;
   z-index: 4;
-  display: grid;
-  height: 16cqw;
-  grid-template-columns: minmax(0, 1fr) 25cqw minmax(0, 1fr);
-  align-items: center;
+  display: flex;
+  height: 50cqw;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3.4cqw 4.4cqw 3.2cqw;
+  border-top: 1.4cqw solid #16171c;
   background:
-    repeating-linear-gradient(90deg, #e2b44a 0 1.2cqw, transparent 1.2cqw 2cqw) 0 1.3cqw / 100% 0.25cqw no-repeat,
-    repeating-linear-gradient(90deg, #e2b44a 0 1.2cqw, transparent 1.2cqw 2cqw) 0 calc(100% - 1.3cqw) / 100% 0.25cqw no-repeat,
-    linear-gradient(90deg, var(--t1), #17151b 20%, #0f0e12 50%, #17151b 80%, var(--u1));
-  box-shadow: 0 1cqw 2.4cqw #000a, inset 0 0.4cqw 0 #ffffff14;
+    linear-gradient(#b3202a 0 0) 0 0.8cqw / 100% 0.5cqw no-repeat,
+    radial-gradient(120% 90% at 50% 0%, #f7f0de, #ebe0c6);
+  color: #16171c;
+  box-shadow: 0 -0.6cqw 1.6cqw #0006;
 }
-.tb-ins__corner {
+.tb-ins__rvhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #b3202a;
+}
+.tb-ins__rvhead span:last-child { color: #16171c; letter-spacing: 0.16em; }
+.tb-ins__rvhead b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: 5.6cqw;
+  letter-spacing: 0;
+  line-height: 0.8;
+}
+.tb-ins__rvrow {
+  display: flex;
   min-width: 0;
-  padding: 0 2.4cqw 0 4cqw;
+  align-items: center;
+  gap: 2.4cqw;
 }
-.tb-ins__corner.is-r {
-  padding: 0 4cqw 0 2.4cqw;
-  text-align: right;
+.tb-ins__rvrow > i {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 11cqw;
+  height: 9.4cqw;
+  color: #fff;
+  font-family: var(--font-display), sans-serif;
+  font-style: normal;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 3.4cqw;
+  text-shadow: 0 0.2cqw 0.5cqw #0007;
 }
-.tb-ins__corner small,
-.tb-ins__corner b {
+.tb-ins__rvrow > div { min-width: 0; }
+.tb-ins__rvrow small,
+.tb-ins__rvrow b {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.tb-ins__corner small {
-  margin-bottom: 0.4cqw;
+.tb-ins__rvrow small {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.2cqw;
-  letter-spacing: 0.16em;
+  font-size: 2.3cqw;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #e9d9a8;
+  color: #5b5648;
 }
-.tb-ins__corner b {
+.tb-ins__rvrow b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 66%;
-  line-height: 1;
-  text-transform: uppercase;
-  color: #fff;
-}
-/* the plate: polished gold, a dark bevel, an engraved inner ring */
-.tb-ins__plate {
-  position: relative;
-  display: grid;
-  height: 22cqw;
-  align-content: center;
-  justify-items: center;
-  overflow: hidden;
-  border-radius: 50%;
-  background: radial-gradient(120% 90% at 35% 25%, #fff4c8, #e8bb52 38%, #b07f1e 70%, #6b4a0c);
-  box-shadow:
-    0 0 0 0.6cqw #5b420c,
-    0 0 0 1cqw #e2b44a,
-    0 1.2cqw 2.4cqw #000c,
-    inset 0 0 0 1.4cqw #ffffff22;
-  color: #3d2a05;
-}
-.tb-ins__plate::before {
-  content: "";
-  position: absolute;
-  inset: 1.8cqw;
-  border: 0.3cqw solid #6b4a0c88;
-  border-radius: 50%;
-}
-.tb-ins__plate::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(110deg, transparent 40%, #ffffffb3 50%, transparent 60%) 0 0 / 300% 100% no-repeat;
-  animation: tb-plate 5s ease-in-out infinite;
-}
-@keyframes tb-plate {
-  0%, 45% { background-position: 100% 0; }
-  85%, 100% { background-position: 0% 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .tb-ins__plate::after { animation: none; opacity: 0; }
-}
-.tb-ins__plate small {
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 1.9cqw;
-  letter-spacing: 0.28em;
+  line-height: 0.9;
   text-transform: uppercase;
 }
-.tb-ins__plate b {
+.tb-ins__rvvs {
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
   font-family: var(--font-engrave), serif;
   font-style: italic;
   font-weight: 700;
-  font-size: 9cqw;
-  line-height: 0.95;
-  text-shadow: 0 0.25cqw 0 #fff7d680;
+  font-size: 5cqw;
+  line-height: 1;
+  color: #b3202a;
 }
-.tb-ins__rvfine {
-  position: absolute;
-  right: 5cqw;
-  bottom: 3.4cqw;
-  left: 5cqw;
-  z-index: 4;
-  margin-top: 0;
-  color: #e9d9a8;
+.tb-ins__rvvs::before,
+.tb-ins__rvvs::after {
+  content: "";
+  flex: 1;
+  border-top: 0.25cqw solid #16171c40;
 }
+.tb-ins__rvvs::before { flex: 0 0 11cqw; }
+.tb-ins__rvfine { margin-top: 0; color: #5b5648; }
 
 /* Flash of Brilliance: one camera flash glinting across the top corner (it follows the tilt),
    slanted italic type */
@@ -1603,7 +1566,7 @@ select {
   text-shadow: none;
 }
 /* the seal: gold paste, the character carved out in red, stamped a little crooked */
-.tb-ins__seal {
+.tb-ins__zseal {
   position: absolute;
   right: 8cqw;
   bottom: 33cqw;
@@ -1620,7 +1583,7 @@ select {
     0 0.8cqw 1.8cqw #0009;
   transform: rotate(-6deg);
 }
-.tb-ins__seal span {
+.tb-ins__zseal span {
   font-family: "Noto Serif TC", "Source Han Serif TC", "Noto Serif CJK TC", "Songti TC", "PMingLiU", "MingLiU", serif;
   font-weight: 900;
   font-size: 12cqw;
@@ -2053,8 +2016,7 @@ select {
   .tb-ins__pickcap,
   .tb-ins__imline,
   .tb-ins__imdate span,
-  .tb-ins__corner small,
-  .tb-ins__plate small,
+  .tb-ins__rvrow small,
   .tb-ins__rvfine {
     display: none;
   }
@@ -2280,19 +2242,19 @@ select {
   letter-spacing: 0;
 }
 
-/* Rivalries: black leather with gold stitching round the edge, the two team colours on the strap ends */
+/* Rivalries: the poster's paper, the heavy black rule with its red line, both teams' colours below */
 .tb-rev[data-set="rivalries"] {
-  --rev-bg: #111014;
-  --rev-ink: #e9d9a8;
-  --rev-mark: #e2b44a;
+  --rev-bg: #f2ead6;
+  --rev-ink: #16171c;
+  --rev-mark: #16171c;
   --rev-medal: #fff;
-  --rev-rule: #e2b44a55;
+  --rev-rule: #16171c33;
 }
 .tb-rev[data-set="rivalries"] .tb-rev__deco {
-  inset: 1.6cqw;
-  border: 0.3cqw dashed #e2b44a99;
-  border-radius: 1cqw;
-  background: linear-gradient(90deg, var(--t1) 0 50%, var(--u1) 50%) 0 0 / 100% 1.6cqw no-repeat;
+  background:
+    linear-gradient(#16171c 0 0) 0 0 / 100% 2.4cqw no-repeat,
+    linear-gradient(#b3202a 0 0) 0 3.2cqw / 100% 0.6cqw no-repeat,
+    linear-gradient(90deg, var(--t1) 0 50%, var(--u1) 50%) 0 100% / 100% 2cqw no-repeat;
 }
 
 /* Flash of Brilliance: the team colour, one flash glint, a slanted mark */
