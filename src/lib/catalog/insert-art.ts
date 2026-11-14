@@ -36,18 +36,18 @@ export const INSERT_ART: Record<string, string> = {
   HG10: "/inserts/HG10.jpg", // Russell Westbrook
 
   // 3. Golden Boy
-  GB1: "", // Victor Wembanyama
-  GB2: "", // Cooper Flagg
-  GB3: "", // Dylan Harper
-  GB4: "", // Stephon Castle
-  GB5: "", // Kon Knueppel
-  GB6: "", // VJ Edgecombe
-  GB7: "", // Jalen Duren
-  GB8: "", // Donovan Clingan
-  GB9: "", // Matas Buzelis
-  GB10: "", // Ace Bailey
+  GB1: "/inserts/GB1.png", // Victor Wembanyama
+  GB2: "/inserts/GB2.png", // Cooper Flagg
+  GB3: "/inserts/GB3.png", // Dylan Harper
+  GB4: "/inserts/GB4.png", // Stephon Castle
+  GB5: "/inserts/GB5.png", // Kon Knueppel
+  GB6: "/inserts/GB6.png", // VJ Edgecombe
+  GB7: "/inserts/GB7.png", // Jalen Duren
+  GB8: "/inserts/GB8.png", // Donovan Clingan
+  GB9: "/inserts/GB9.png", // Matas Buzelis
+  GB10: "/inserts/GB10.png", // Ace Bailey
 
-  // 4. Generational
+  // 4. Generational  
   GE1: "/inserts/GE1.jpg", // Nikola Jokic
   GE2: "/inserts/GE2.jpg", // Victor Wembanyama
   GE3: "/inserts/GE3.jpg", // Jalen Brunson
@@ -59,64 +59,64 @@ export const INSERT_ART: Record<string, string> = {
   GE9: "/inserts/GE9.jpg", // Bam Adebayo
 
   // 5. Ultimate Stardom
-  US1: "", // Shai Gilgeous-Alexander
-  US2: "", // Luka Doncic
-  US3: "", // Victor Wembanyama
-  US4: "", // Jalen Brunson
-  US5: "", // Donovan Mitchell
-  US6: "", // Tyrese Maxey
-  US7: "", // Anthony Edwards
-  US8: "", // Nikola Jokic
-  US9: "", // LeBron James
-  US10: "", // Cade Cunningham
+  US1: "/inserts/US1.jpg", // Shai Gilgeous-Alexander
+  US2: "/inserts/US2.jpg", // Luka Doncic
+  US3: "/inserts/US3.jpg", // Victor Wembanyama
+  US4: "/inserts/US4.jpg", // Jalen Brunson
+  US5: "/inserts/US5.jpg", // Donovan Mitchell
+  US6: "/inserts/US6.jpg", // Tyrese Maxey
+  US7: "/inserts/US7.jpg", // Anthony Edwards
+  US8: "/inserts/US8.jpg", // Nikola Jokic
+  US9: "/inserts/US9.jpg", // LeBron James
+  US10: "/inserts/US10.jpg", // Cade Cunningham
 
   // 6. The Light
-  TL1: "", // Dyson Daniels
-  TL2: "", // Neemias Queta
-  TL3: "", // Egor Demin
-  TL4: "", // Ryan Kalkbrenner
-  TL5: "", // Jalen Smith
-  TL6: "", // Jarrett Allen
-  TL7: "", // Duncan Robinson
-  TL8: "", // Ivica Zubac
-  TL9: "", // Pelle Larsson
-  TL10: "", // Kel'el Ware
-  TL11: "", // Josh Hart
-  TL12: "", // Wendell Carter Jr.
-  TL13: "", // Anfernee Simons
-  TL14: "", // RJ Barrett
-  TL15: "", // Alex Sarr
+  TL1: "/inserts/TL1.png", // Dyson Daniels
+  TL2: "/inserts/TL2.png", // Neemias Queta
+  TL3: "/inserts/TL3.png", // Egor Demin
+  TL4: "/inserts/TL4.png", // Ryan Kalkbrenner
+  TL5: "/inserts/TL5.png", // Jalen Smith
+  TL6: "/inserts/TL6.png", // Jarrett Allen
+  TL7: "/inserts/TL7.png", // Duncan Robinson
+  TL8: "/inserts/TL8.png", // Ivica Zubac
+  TL9: "/inserts/TL9.png", // Pelle Larsson
+  TL10: "/inserts/TL10.png", // Kel'el Ware
+  TL11: "/inserts/TL11.png", // Josh Hart
+  TL12: "/inserts/TL12.png", // Wendell Carter Jr.
+  TL13: "/inserts/TL13.png", // Anfernee Simons
+  TL14: "/inserts/TL14.png", // RJ Barrett
+  TL15: "/inserts/TL15.png", // Alex Sarr
 
   // 7. The Shadow
-  TS1: "", // Max Christie
-  TS2: "", // Aaron Gordon
-  TS3: "", // Brandin Podziemski
-  TS4: "", // Fred VanVleet
-  TS5: "", // Rui Hachimura
-  TS6: "", // Matisse Thybulle
-  TS7: "", // Zach Edey
-  TS8: "", // Jaden McDaniels
-  TS9: "", // Saddiq Bey
-  TS10: "", // Cason Wallace
-  TS11: "", // Dillon Brooks
-  TS12: "", // Scoot Henderson
-  TS13: "", // Keegan Murray
-  TS14: "", // Julian Champagnie
-  TS15: "", // Kyle Filipowski
+  TS1: "/inserts/TS1.png", // Max Christie
+  TS2: "/inserts/TS2.png", // Aaron Gordon
+  TS3: "/inserts/TS3.png", // Brandin Podziemski
+  TS4: "/inserts/TS4.png", // Fred VanVleet
+  TS5: "/inserts/TS5.png", // Rui Hachimura
+  TS6: "/inserts/TS6.png", // Matisse Thybulle
+  TS7: "/inserts/TS7.png", // Zach Edey
+  TS8: "/inserts/TS8.png", // Jaden McDaniels
+  TS9: "/inserts/TS9.png", // Saddiq Bey
+  TS10: "/inserts/TS10.png", // Cason Wallace
+  TS11: "/inserts/TS11.png", // Dillon Brooks
+  TS12: "/inserts/TS12.png", // Scoot Henderson
+  TS13: "/inserts/TS13.png", // Keegan Murray
+  TS14: "/inserts/TS14.png", // Julian Champagnie
+  TS15: "/inserts/TS15.png", // Kyle Filipowski
 
   // 8. Stone Fortress
-  SF1: "", // Rudy Gobert
-  SF2: "", // Evan Mobley
-  SF3: "", // Jaren Jackson Jr.
-  SF4: "", // Ausar Thompson
-  SF5: "", // Chet Holmgren
-  SF6: "", // Derrick White
-  SF7: "", // OG Anunoby
-  SF8: "", // Scottie Barnes
-  SF9: "", // Toumani Camara
-  SF10: "", // Draymond Green
-  SF11: "", // Amen Thompson
-  SF12: "", // Kris Dunn
+  SF1: "/inserts/SF1.jpg", // Rudy Gobert
+  SF2: "/inserts/SF2.jpg", // Evan Mobley
+  SF3: "/inserts/SF3.jpg", // Jaren Jackson Jr.
+  SF4: "/inserts/SF4.jpg", // Ausar Thompson
+  SF5: "/inserts/SF5.jpg", // Chet Holmgren
+  SF6: "/inserts/SF6.jpg", // Derrick White
+  SF7: "/inserts/SF7.jpg", // OG Anunoby
+  SF8: "/inserts/SF8.jpg", // Scottie Barnes
+  SF9: "/inserts/SF9.jpg", // Toumani Camara
+  SF10: "/inserts/SF10.jpg", // Draymond Green
+  SF11: "/inserts/SF11.jpg", // Amen Thompson
+  SF12: "/inserts/SF12.jpg", // Kris Dunn
 
   // 9. Cult Classic
   CC1: "", // Kevin Willis
