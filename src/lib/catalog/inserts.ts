@@ -268,7 +268,7 @@ const STONE_FORTRESS: InsertCard[] = [
 // 9. Cult Classic: one franchise cult hero per team
 const CULT_CLASSIC: InsertCard[] = [
   { id: "CC1", team: "Hawks", legend: L("Kevin Willis", "F", "USA", 84) },
-  { id: "CC2", team: "Celtics", legend: L("Reggie Lewis", "F", "USA", 86) },
+  { id: "CC2", team: "Celtics", legend: L("Rajon Rondo", "G", "USA", 86) },
   { id: "CC3", team: "Nets", legend: L("Buck Williams", "F", "USA", 85) },
   {
     id: "CC4",

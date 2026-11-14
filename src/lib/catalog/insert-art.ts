@@ -104,7 +104,7 @@ export const INSERT_ART: Record<string, string> = {
 
   // 9. Cult Classic
   CC1: "", // Kevin Willis
-  CC2: "", // Reggie Lewis
+  CC2: "", // Rajon Rondo
   CC3: "", // Buck Williams
   CC4: "", // Bismack Biyombo
   CC5: "", // Bob Love
