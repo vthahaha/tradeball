@@ -124,10 +124,12 @@ export function Card({
   const { style, insert, isDuo, setName } = useLook(card);
   // Base and rookie cards show the ESPN headshot. Inserts show their splash art once one is
   // chosen (insert-art.ts); until then the set's scene carries the card with the initials.
-  // New Blood falls back to the ESPN headshot until splash art is chosen.
+  // New Blood always uses the ESPN headshot; other inserts use their chosen splash art.
   const headshot = !isDuo && p1.espnId ? headshotUrl(p1.espnId) : undefined;
   const imgSrc = insert
-    ? (card.art ?? (card.type === "newblood" ? headshot : undefined))
+    ? card.type === "newblood"
+      ? headshot
+      : card.art
     : headshot;
   const showImg = !!imgSrc && !imgFailed;
   const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;

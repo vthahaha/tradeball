@@ -2,27 +2,11 @@
 // Leave "" to show the player initials on the class background.
 //
 // Paste an image URL, or drop a file in /public/inserts and point at it:
-//   NB1: "/inserts/NB1.webp",
+//   HG1: "/inserts/HG1.jpg",
 //   GE9: "https://example.com/bam-83.jpg",
 // The image is cropped to fill the art panel, so portrait or square shots work best.
+// New Blood (NB) cards always use the player's ESPN headshot and take no art here.
 export const INSERT_ART: Record<string, string> = {
-  // 1. New Blood
-  NB1: "", // Jaylen Brown
-  NB2: "", // LeBron James
-  NB3: "", // Giannis Antetokounmpo
-  NB4: "", // Santi Aldama
-  NB5: "", // Walker Kessler
-  NB6: "", // Tobias Harris
-  NB7: "", // Mitchell Robinson
-  NB8: "", // Kawhi Leonard
-  NB9: "", // Luguentz Dort
-  NB10: "", // Jonathan Kuminga
-  NB11: "", // Ja Morant
-  NB12: "", // DeMar DeRozan
-  NB13: "", // LaMelo Ball
-  NB14: "", // Julius Randle
-  NB15: "", // Norman Powell
-
   // 2. Hard Goodbyes
   HG1: "/inserts/HG1.jpg", // Garrett Temple
   HG2: "/inserts/HG2.jpg", // Chris Paul
