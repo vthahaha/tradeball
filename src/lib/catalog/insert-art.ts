@@ -103,36 +103,36 @@ export const INSERT_ART: Record<string, string> = {
   SF12: "/inserts/SF12.jpg", // Kris Dunn
 
   // 9. Cult Classic
-  CC1: "", // Kevin Willis
-  CC2: "", // Rajon Rondo
-  CC3: "", // Buck Williams
-  CC4: "", // Bismack Biyombo
-  CC5: "", // Bob Love
-  CC6: "", // Austin Carr
-  CC7: "", // Jason Terry
-  CC8: "", // Kiki Vandeweghe
-  CC9: "", // Rick Mahorn
-  CC10: "", // Chris Mullin
-  CC11: "", // Rudy Tomjanovich
-  CC12: "", // Victor Oladipo
-  CC13: "", // Chris Kaman
-  CC14: "", // Derek Fisher
-  CC15: "", // Shareef Abdur-Rahim
-  CC16: "", // Rony Seikaly
-  CC17: "", // Michael Redd
-  CC18: "", // Christian Laettner
-  CC19: "", // David West
-  CC20: "", // Allan Houston
-  CC21: "", // Gus Williams
-  CC22: "", // Rafer Alston
-  CC23: "", // Clarence Weatherspoon
-  CC24: "", // Kevin Johnson
-  CC25: "", // Jim Paxson
-  CC26: "", // DeMarcus Cousins
-  CC27: "", // Bruce Bowen
-  CC28: "", // Damon Stoudamire
-  CC29: "", // Mark Eaton
-  CC30: "", // Brendan Haywood
+  CC1: "/inserts/CC1.jpg", // Kevin Willis
+  CC2: "/inserts/CC2.jpg", // Rajon Rondo
+  CC3: "/inserts/CC3.jpg", // Buck Williams
+  CC4: "/inserts/CC4.JPG", // Bismack Biyombo
+  CC5: "/inserts/CC5.JPG", // Bob Love
+  CC6: "/inserts/CC6.jpg", // Austin Carr
+  CC7: "/inserts/CC7.jpg", // Jason Terry
+  CC8: "/inserts/CC8.jpg", // Kiki Vandeweghe
+  CC9: "/inserts/CC9.jpg", // Rick Mahorn
+  CC10: "/inserts/CC10.jpg", // Chris Mullin
+  CC11: "/inserts/CC11.JPG", // Rudy Tomjanovich
+  CC12: "/inserts/CC12.jpg", // Victor Oladipo
+  CC13: "/inserts/CC13.jpg", // Chris Kaman
+  CC14: "/inserts/CC14.jpg", // Derek Fisher
+  CC15: "/inserts/CC15.jpg", // Shareef Abdur-Rahim
+  CC16: "/inserts/CC16.jpg", // Rony Seikaly
+  CC17: "/inserts/CC17.jpg", // Michael Redd
+  CC18: "/inserts/CC18.jpg", // Christian Laettner
+  CC19: "/inserts/CC19.jpg", // David West
+  CC20: "/inserts/CC20.jpg", // Allan Houston
+  CC21: "/inserts/CC21.JPG", // Gus Williams
+  CC22: "/inserts/CC22.jpg", // Rafer Alston
+  CC23: "/inserts/CC23.JPG", // Clarence Weatherspoon
+  CC24: "/inserts/CC24.jpg", // Kevin Johnson
+  CC25: "/inserts/CC25.jpg", // Jim Paxson
+  CC26: "/inserts/CC26.jpg", // DeMarcus Cousins
+  CC27: "/inserts/CC27.jpg", // Bruce Bowen
+  CC28: "/inserts/CC28.jpg", // Damon Stoudamire
+  CC29: "/inserts/CC29.jpg", // Mark Eaton
+  CC30: "/inserts/CC30.jpg", // Brendan Haywood
 
   // Set 2: A. Best of the Best
   BOTB1: "/inserts/BOTB1.jpg", // Jalen Brunson
