@@ -215,6 +215,14 @@ export function SetIcon({ type }: { type: string }) {
           <circle cx="12" cy="12" r="2.6" fill="currentColor" />
         </>,
       );
+    case "iconic":
+      return s(
+        <>
+          <path d="M5 21C3 15 6 9 4 3" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M19 21c2-6-1-12 1-18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" opacity="0.55" />
+          <path d="M12 8.5l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" fill="currentColor" />
+        </>,
+      );
     case "dreamteam":
       return s(
         <>

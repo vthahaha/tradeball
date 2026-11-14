@@ -60,7 +60,7 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  light: 16.2, // The Light (uncommon)
+  light: 16.1, // The Light (uncommon)
   shadow: 16.2, // The Shadow (uncommon)
   newblood: 12, // New Blood (rare)
   goldenboy: 2.5, // Golden Boy (legendary)
@@ -79,6 +79,8 @@ export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
   stardom: 0.6, // Ultimate Stardom (mythic)
   dreamteam: 0.6, // The Dream Team (mythic)
   generational: 0.4, // Generational (mythic)
+  // Grail: 1 slot in 1,000, so about 1 pack in 500
+  iconic: 0.1, // Iconic Moments (grail)
 };
 export const MAX_BANKED_PACKS = 3;
 

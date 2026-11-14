@@ -898,6 +898,47 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
+    // Iconic Moments (Grail): the photo untouched, the Aurora border's light rising up both side
+    // edges (green on the left, violet on the right) and fading before the middle. The set and date
+    // run down the left edge, the moment's name up the right, in thin spaced capitals.
+    case "iconic": {
+      const title = card.title ?? "";
+      const size = Math.min(5.4, 70 / (Math.max(1, title.length) * 1.12));
+      return (
+        <div className="tb-ins tb-ins--iconic">
+          {photo()}
+          <div className="tb-ins__aurora" aria-hidden>
+            <i />
+            <i />
+          </div>
+          <div className="tb-ins__fade" aria-hidden />
+          <div className="tb-ins__imdate">
+            Iconic Moments
+            {card.kicker && <span> · {card.kicker}</span>}
+          </div>
+          <div className="tb-ins__imtitle" style={{ fontSize: `${size}cqw` }}>
+            {title}
+          </div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div
+              className="tb-ins__name"
+              style={{ fontSize: `${nameSize(name, 0.72)}cqw` }}
+            >
+              {name}
+            </div>
+            <div className="tb-ins__imline">
+              {card.team} · {card.meta}
+            </div>
+            <div className="tb-ins__fine">
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     default:
       return null;
   }

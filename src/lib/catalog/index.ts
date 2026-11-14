@@ -28,6 +28,7 @@ const HISTORIC: Record<string, { abbr: string; colors: [string, string] }> = {
   "Vancouver Grizzlies": { abbr: "VAN", colors: ["#00a7a7", "#b4793c"] },
   "New Orleans Hornets": { abbr: "NOH", colors: ["#00788c", "#5a2d82"] },
   Duke: { abbr: "DUKE", colors: ["#001a57", "#ffffff"] },
+  "Philadelphia Warriors": { abbr: "PHW", colors: ["#1d428a", "#ffc72c"] },
 };
 
 export function teamCode(team: string): string {
@@ -43,6 +44,7 @@ const LOGO_FRANCHISE: Record<string, string> = {
   "Vancouver Grizzlies": "MEM",
   "New Orleans Hornets": "NO",
   Duke: "MIN", // Laettner: drafted by Minnesota in 1992
+  "Philadelphia Warriors": "GS",
 };
 
 /** ESPN's logo for the team's current franchise (hotlinked like the headshots). */
@@ -141,8 +143,8 @@ export const INSERT_DESIGNS: CardDesign[] = INSERT_CARDS.map((c) => {
   const one = slot(c.player, c.legend, 1);
   if (!one) throw new Error(`Insert ${c.id}: no player`);
   const two = slot(c.player2, c.legend2, 2);
-  // a two-player card rates the pair: the average of the two
-  const ovr = c.ovr ?? (two ? Math.round((one.ovr + two.ovr) / 2) : one.ovr);
+  // a two-player card rates the pair: the average of the two; Grail cards are always 99
+  const ovr = cls.rarity === "grail" ? 99 : (c.ovr ?? (two ? Math.round((one.ovr + two.ovr) / 2) : one.ovr));
   return {
     id: c.id,
     sport: "basketball",

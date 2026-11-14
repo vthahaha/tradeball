@@ -1764,6 +1764,95 @@ select {
 }
 .tb-ins--thirdeye .tb-ins__fine { color: #9db8ffb3; border-top-color: #9db8ff33; }
 
+/* Iconic Moments (Grail): the photo left alone. The Aurora border's light rises up both side edges,
+   green on the left and violet on the right, in soft curtain streaks that fade out before the middle
+   of the card and breathe slowly. The set and date run down the left edge, the moment's name up the
+   right, in thin spaced capitals; the name and the game sit small at the foot. */
+.tb-ins--iconic { background: #050a1f; color: #fff; }
+.tb-ins__aurora i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 24cqw;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(0deg, #000 25%, #0009 60%, transparent 96%);
+  mask-image: linear-gradient(0deg, #000 25%, #0009 60%, transparent 96%);
+  animation: tb-aurora-breathe 9s ease-in-out infinite alternate;
+}
+.tb-ins__aurora i:first-child {
+  left: 0;
+  background:
+    repeating-linear-gradient(90deg, #5cf2c826 0 0.5cqw, transparent 0.5cqw 2.2cqw),
+    linear-gradient(90deg, #5cf2c8b3, #5cf2c840 40%, transparent);
+}
+.tb-ins__aurora i:last-child {
+  right: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 1.7cqw, #9b6cff2e 1.7cqw 2.2cqw),
+    linear-gradient(270deg, #9b6cffb3, #9b6cff40 40%, transparent);
+  animation-delay: -4.5s;
+}
+@keyframes tb-aurora-breathe {
+  from { opacity: 0.65; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-ins__aurora i { animation: none; opacity: 0.85; }
+}
+.tb-ins--iconic .tb-ins__fade {
+  height: 36%;
+  background: linear-gradient(180deg, transparent, #050a1fb3 50%, #050a1fe6);
+}
+.tb-ins__imdate,
+.tb-ins__imtitle {
+  position: absolute;
+  z-index: 4;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  text-transform: uppercase;
+  text-shadow: 0 0 1.2cqw #050a1f, 0 0 0.4cqw #050a1f;
+}
+/* the set and the date, reading down the left edge */
+.tb-ins__imdate {
+  top: 5cqw;
+  left: 3.4cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.32em;
+  color: #9ff5dc;
+}
+.tb-ins__imdate span { color: #ffffffd9; }
+/* the moment, reading up the right edge from just above the foot */
+.tb-ins__imtitle {
+  right: 3cqw;
+  bottom: 36cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 400;
+  font-stretch: 100%;
+  line-height: 1;
+  letter-spacing: 0.4em;
+  color: #fff;
+  transform: rotate(180deg);
+}
+.tb-ins--iconic .tb-ins__ovr { right: 4cqw; text-shadow: 0 0.3cqw 1.2cqw #000c; }
+.tb-ins--iconic .tb-ins__foot { padding: 0 8cqw 4.4cqw; }
+.tb-ins--iconic .tb-ins__name { text-shadow: 0 0.4cqw 1.2cqw #000a; }
+.tb-ins__imline {
+  margin-top: 1cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9ff5dc;
+}
+.tb-ins--iconic .tb-ins__fine { color: #c6d3f0; border-top-color: #5cf2c84d; }
+
 /* The Light / The Shadow: a beam enters the top-left corner, a prism splits it into a spectrum
    band running diagonally behind the player, landing in two stripes of team colour. The Light is
    bright on white with a pastel prism border; The Shadow is the same beam swallowed in black, with
@@ -1955,6 +2044,8 @@ select {
   .tb-ins__est,
   .tb-ins__charter,
   .tb-ins__pickcap,
+  .tb-ins__imline,
+  .tb-ins__imdate span,
   .tb-ins__side small,
   .tb-ins--rivalries .tb-ins__ticket-head .tb-ins__serial {
     display: none;
@@ -2289,6 +2380,19 @@ select {
   background:
     repeating-radial-gradient(circle at 50% 50%, transparent 0 6cqw, #7d9cff22 6cqw 6.25cqw),
     radial-gradient(60% 45% at 50% 50%, #13285e, transparent 72%);
+}
+
+/* Iconic Moments: night blue, the same aurora light up both side edges */
+.tb-rev[data-set="iconic"] {
+  --rev-bg: #050a1f;
+  --rev-mark: #5cf2c8;
+  --rev-medal: #eafff8;
+  --rev-rule: #5cf2c855;
+}
+.tb-rev[data-set="iconic"] .tb-rev__deco {
+  background:
+    linear-gradient(90deg, #5cf2c866, transparent 26%, transparent 74%, #9b6cff66),
+    radial-gradient(60% 45% at 50% 45%, #12305a, transparent 72%);
 }
 
 /* ── face-down: the Gate 7 card back inside the parallel border ── */

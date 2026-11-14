@@ -278,4 +278,11 @@ export const INSERT_ART: Record<string, string> = {
   TE13: "/inserts/TE13.png", // Ausar Thompson
   TE14: "/inserts/TE14.png", // Mikal Bridges
   TE15: "/inserts/TE15.png", // Austin Reaves
+
+  // Grail: Iconic Moments
+  IM1: "/inserts/IM1.jpg", // The Last Shot, Michael Jordan
+  IM2: "/inserts/IM2.jpg", // The Block, LeBron James
+  IM3: "/inserts/IM3.jpg", // The 38 Feet, Stephen Curry
+  IM4: "/inserts/IM4.jpg", // The Stepover, Allen Iverson
+  IM5: "/inserts/IM5.jpg", // The 100th Point, Wilt Chamberlain
 };

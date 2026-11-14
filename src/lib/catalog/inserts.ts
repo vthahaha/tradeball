@@ -38,6 +38,8 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "lunar", name: "Lunar New Year", rarity: "legendary", boost: 3 },
   { id: "dotd", name: "Day of the Dead", rarity: "epic", boost: 1 },
   { id: "thirdeye", name: "The Third Eye", rarity: "legendary", boost: 3 },
+  // Grail
+  { id: "iconic", name: "Iconic Moments", rarity: "grail", boost: 0 },
 ];
 
 export interface Legend {
@@ -724,6 +726,55 @@ const THIRD_EYE: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "thirdeye" }));
 
+// ── Grail ──
+
+// Iconic Moments: the plays everyone has replayed (title = the moment, kicker = the date,
+// meta = where it happened)
+const ICONIC_MOMENTS: InsertCard[] = (
+  [
+    {
+      id: "IM1",
+      title: "The Last Shot",
+      kicker: "June 14, 1998",
+      meta: "Finals · Game 6 · at Utah",
+      team: "Bulls",
+      legend: L("Michael Jordan", "G", "USA", 99),
+    },
+    {
+      id: "IM2",
+      title: "The Block",
+      kicker: "June 19, 2016",
+      meta: "Finals · Game 7 · at Golden State",
+      team: "Cavaliers",
+      player: "1966",
+    }, // LeBron James
+    {
+      id: "IM3",
+      title: "The 38 Feet",
+      kicker: "Feb 27, 2016",
+      meta: "Overtime · at Oklahoma City",
+      team: "Warriors",
+      player: "3975",
+    }, // Stephen Curry
+    {
+      id: "IM4",
+      title: "The Stepover",
+      kicker: "June 6, 2001",
+      meta: "Finals · Game 1 · at Los Angeles",
+      team: "76ers",
+      legend: L("Allen Iverson", "G", "USA", 95),
+    },
+    {
+      id: "IM5",
+      title: "The 100th Point",
+      kicker: "March 2, 1962",
+      meta: "vs Knicks · Hershey, PA",
+      team: "Philadelphia Warriors",
+      legend: L("Wilt Chamberlain", "C", "USA", 98),
+    },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "iconic" }));
+
 export const INSERT_CARDS: InsertCard[] = [
   ...NEW_BLOOD,
   ...HARD_GOODBYES,
@@ -743,4 +794,5 @@ export const INSERT_CARDS: InsertCard[] = [
   ...LUNAR_NEW_YEAR,
   ...DAY_OF_THE_DEAD,
   ...THIRD_EYE,
+  ...ICONIC_MOMENTS,
 ];
