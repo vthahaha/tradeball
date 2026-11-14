@@ -21,7 +21,7 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "goodbyes", name: "Hard Goodbyes", rarity: "epic", boost: 0 },
   { id: "goldenboy", name: "Golden Boy", rarity: "rare", boost: 4 },
   { id: "generational", name: "Generational", rarity: "mythic", boost: 0 },
-  { id: "stardom", name: "Ultimate Stardom", rarity: "legendary", boost: 3 },
+  { id: "stardom", name: "Ultimate Stardom", rarity: "mythic", boost: 3 },
   { id: "light", name: "The Light", rarity: "uncommon", boost: 3 },
   { id: "shadow", name: "The Shadow", rarity: "uncommon", boost: 3 },
   { id: "fortress", name: "Stone Fortress", rarity: "rare", boost: 3 },
@@ -33,7 +33,7 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "flash", name: "Flash of Brilliance", rarity: "rare", boost: 2 },
   { id: "wizards", name: "Time Wizards", rarity: "rare", boost: 0 },
   { id: "founders", name: "Founding Father", rarity: "epic", boost: 0 },
-  { id: "dreamteam", name: "The Dream Team", rarity: "legendary", boost: 0 },
+  { id: "dreamteam", name: "The Dream Team", rarity: "mythic", boost: 0 },
 ];
 
 export interface Legend {

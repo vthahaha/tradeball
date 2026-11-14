@@ -59,8 +59,8 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  light: 15, // The Light (uncommon)
-  shadow: 15, // The Shadow (uncommon)
+  light: 17.7, // The Light (uncommon)
+  shadow: 17.7, // The Shadow (uncommon)
   newblood: 10, // New Blood (rare)
   goldenboy: 8, // Golden Boy (rare)
   fortress: 8, // Stone Fortress (rare)
@@ -70,10 +70,11 @@ export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
   goodbyes: 5, // Hard Goodbyes (epic)
   rivalries: 4, // Rivalries (epic)
   founders: 4, // Founding Father (epic)
-  stardom: 3, // Ultimate Stardom (legendary)
   botb: 3, // Best of the Best (legendary)
-  dreamteam: 2, // The Dream Team (legendary)
-  generational: 2, // Generational (mythic)
+  // Mythic: about 1 pack in 30 holds one of these; a Generational about 1 in 125
+  stardom: 0.6, // Ultimate Stardom (mythic)
+  dreamteam: 0.6, // The Dream Team (mythic)
+  generational: 0.4, // Generational (mythic)
 };
 export const MAX_BANKED_PACKS = 3;
 
