@@ -1115,16 +1115,19 @@ select {
   font-variant-numeric: tabular-nums;
 }
 
-/* Rivalries: the photo over a matchup ticket; perforation, notches, a stub with the number */
-.tb-ins--rivalries { background: #1a1b20; }
+/* Rivalries (Legendary): the title belt. Full art, each player's side lit in his team colour up the
+   outer edge; across the foot a black leather belt with gold stitching, the two surnames on its
+   straps (the strap ends dyed in each team's colour), and in the middle a gold championship plate
+   engraved "vs", a slow light passing over it. */
+.tb-ins--rivalries { background: #111014; }
 .tb-ins--rivalries .tb-ins__photo {
-  bottom: 41cqw;
+  inset: 0;
   background: linear-gradient(90deg, var(--t1) 0 50%, var(--u1) 50%);
 }
 .tb-ins--rivalries .tb-card__mono { display: none; }
 .tb-ins__halves {
   position: absolute;
-  inset: 0;
+  inset: 0 0 30%;
   z-index: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1135,141 +1138,145 @@ select {
   font-size: 18cqw;
   color: #ffffffd9;
 }
-.tb-ins__ticket {
+.tb-ins__rvglow {
   position: absolute;
-  right: 2.4cqw;
-  bottom: 2.4cqw;
-  left: 2.4cqw;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--t1) 75%, transparent),
+    transparent 24%,
+    transparent 76%,
+    color-mix(in oklab, var(--u1) 75%, transparent)
+  );
+  -webkit-mask-image: linear-gradient(0deg, #000 25%, transparent 88%);
+  mask-image: linear-gradient(0deg, #000 25%, transparent 88%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+.tb-ins--rivalries .tb-ins__fade {
+  height: 44%;
+  background: linear-gradient(180deg, transparent, #0b0a0dc4 52%, #0b0a0d);
+}
+.tb-ins--rivalries .tb-ins__ovr {
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  text-shadow: 0 0.3cqw 1.2cqw #000c;
+}
+.tb-ins__belt {
+  position: absolute;
+  right: 0;
+  bottom: 12.5cqw;
+  left: 0;
   z-index: 4;
   display: grid;
-  height: 40cqw;
-  grid-template-columns: minmax(0, 1fr) 15cqw;
-  border-radius: 1.2cqw;
-  background: #f4efe2;
-  color: #16171c;
-  -webkit-mask:
-    radial-gradient(2.6cqw at calc(100% - 15cqw) 0, #0000 97%, #000) top / 100% 51% no-repeat,
-    radial-gradient(2.6cqw at calc(100% - 15cqw) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
-  mask:
-    radial-gradient(2.6cqw at calc(100% - 15cqw) 0, #0000 97%, #000) top / 100% 51% no-repeat,
-    radial-gradient(2.6cqw at calc(100% - 15cqw) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
-}
-.tb-ins__ticket-main {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 2.6cqw 3.4cqw 2.4cqw;
-}
-.tb-ins__ticket-head {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 1cqw;
-  border-bottom: 0.3cqw solid #16171c;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.4cqw;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-}
-.tb-ins__side {
-  display: flex;
-  min-width: 0;
+  height: 16cqw;
+  grid-template-columns: minmax(0, 1fr) 25cqw minmax(0, 1fr);
   align-items: center;
-  gap: 2cqw;
+  background:
+    repeating-linear-gradient(90deg, #e2b44a 0 1.2cqw, transparent 1.2cqw 2cqw) 0 1.3cqw / 100% 0.25cqw no-repeat,
+    repeating-linear-gradient(90deg, #e2b44a 0 1.2cqw, transparent 1.2cqw 2cqw) 0 calc(100% - 1.3cqw) / 100% 0.25cqw no-repeat,
+    linear-gradient(90deg, var(--t1), #17151b 20%, #0f0e12 50%, #17151b 80%, var(--u1));
+  box-shadow: 0 1cqw 2.4cqw #000a, inset 0 0.4cqw 0 #ffffff14;
 }
-.tb-ins__side > i {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 9cqw;
-  height: 6.4cqw;
-  border-radius: 0.6cqw;
-  color: #fff;
-  font-family: var(--font-display), sans-serif;
-  font-style: normal;
-  font-weight: 900;
-  font-stretch: 80%;
-  font-size: 3cqw;
-  text-shadow: 0 0.2cqw 0.5cqw #0007;
+.tb-ins__corner {
+  min-width: 0;
+  padding: 0 2.4cqw 0 4cqw;
 }
-.tb-ins__side > div { min-width: 0; }
-.tb-ins__side small {
-  display: block;
-  font-family: var(--font-body), sans-serif;
-  font-stretch: 85%;
-  font-weight: 700;
-  font-size: 2.3cqw;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #5b5d66;
+.tb-ins__corner.is-r {
+  padding: 0 4cqw 0 2.4cqw;
+  text-align: right;
 }
-.tb-ins__side b {
+.tb-ins__corner small,
+.tb-ins__corner b {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.tb-ins__corner small {
+  margin-bottom: 0.4cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.2cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #e9d9a8;
+}
+.tb-ins__corner b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 66%;
-  line-height: 0.95;
+  line-height: 1;
   text-transform: uppercase;
+  color: #fff;
 }
-.tb-ins__vsline {
-  display: flex;
-  align-items: center;
-  gap: 1.6cqw;
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-style: italic;
-  font-stretch: 80%;
-  font-size: 2.8cqw;
-  text-transform: uppercase;
-  color: #8a8c94;
+/* the plate: polished gold, a dark bevel, an engraved inner ring */
+.tb-ins__plate {
+  position: relative;
+  display: grid;
+  height: 22cqw;
+  align-content: center;
+  justify-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(120% 90% at 35% 25%, #fff4c8, #e8bb52 38%, #b07f1e 70%, #6b4a0c);
+  box-shadow:
+    0 0 0 0.6cqw #5b420c,
+    0 0 0 1cqw #e2b44a,
+    0 1.2cqw 2.4cqw #000c,
+    inset 0 0 0 1.4cqw #ffffff22;
+  color: #3d2a05;
 }
-.tb-ins__vsline::before,
-.tb-ins__vsline::after {
+.tb-ins__plate::before {
   content: "";
-  flex: 1;
-  border-top: 0.25cqw dashed #b9bbc2;
+  position: absolute;
+  inset: 1.8cqw;
+  border: 0.3cqw solid #6b4a0c88;
+  border-radius: 50%;
 }
-.tb-ins__vsline::before { flex: 0 0 9cqw; }
-.tb-ins__stub {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 3cqw 0;
-  border-left: 0.35cqw dashed #9a9ca4;
+.tb-ins__plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 40%, #ffffffb3 50%, transparent 60%) 0 0 / 300% 100% no-repeat;
+  animation: tb-plate 5s ease-in-out infinite;
 }
-.tb-ins__stubno {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-family: var(--font-display), sans-serif;
-  font-weight: 900;
-  font-stretch: 80%;
-  font-size: 4.2cqw;
-  letter-spacing: 0.06em;
+@keyframes tb-plate {
+  0%, 45% { background-position: 100% 0; }
+  85%, 100% { background-position: 0% 0; }
 }
-.tb-ins__barcode {
-  width: 60%;
-  height: 9cqw;
-  background: repeating-linear-gradient(180deg, #16171c 0 0.4cqw, transparent 0.4cqw 0.8cqw, #16171c 0.8cqw 1.6cqw, transparent 1.6cqw 2cqw);
+@media (prefers-reduced-motion: reduce) {
+  .tb-ins__plate::after { animation: none; opacity: 0; }
 }
-
-/* Rivalries, polished for real photos: the rating on the photo, bigger surnames and chips,
-   no fields row */
-.tb-ins--rivalries .tb-ins__photo { bottom: 39cqw; }
-.tb-ins--rivalries .tb-ins__ticket { height: 38cqw; }
-.tb-ins--rivalries .tb-ins__ticket-main { padding: 2.8cqw 3.6cqw 3cqw; }
-.tb-ins--rivalries .tb-ins__ticket-head { align-items: center; font-size: 2.6cqw; }
-.tb-ins--rivalries .tb-ins__ticket-head .tb-ins__serial { margin-left: auto; }
-.tb-ins--rivalries .tb-ins__side { gap: 2.4cqw; }
-.tb-ins--rivalries .tb-ins__side > i { width: 11cqw; height: 8cqw; font-size: 3.6cqw; }
-.tb-ins--rivalries .tb-ins__side small { font-size: 2.6cqw; }
-.tb-ins--rivalries .tb-ins__vsline::before { flex-basis: 11cqw; }
-.tb-ins--rivalries .tb-ins__vsline { font-size: 3.2cqw; }
+.tb-ins__plate small {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 1.9cqw;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+.tb-ins__plate b {
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 9cqw;
+  line-height: 0.95;
+  text-shadow: 0 0.25cqw 0 #fff7d680;
+}
+.tb-ins__rvfine {
+  position: absolute;
+  right: 5cqw;
+  bottom: 3.4cqw;
+  left: 5cqw;
+  z-index: 4;
+  margin-top: 0;
+  color: #e9d9a8;
+}
 
 /* Flash of Brilliance: one camera flash glinting across the top corner (it follows the tilt),
    slanted italic type */
@@ -2046,8 +2053,9 @@ select {
   .tb-ins__pickcap,
   .tb-ins__imline,
   .tb-ins__imdate span,
-  .tb-ins__side small,
-  .tb-ins--rivalries .tb-ins__ticket-head .tb-ins__serial {
+  .tb-ins__corner small,
+  .tb-ins__plate small,
+  .tb-ins__rvfine {
     display: none;
   }
   .tb-ins__ddset { font-size: 0; margin-bottom: 0.6cqw; }
@@ -2272,18 +2280,19 @@ select {
   letter-spacing: 0;
 }
 
-/* Rivalries: ticket paper, perforated across the middle, both teams' logos */
+/* Rivalries: black leather with gold stitching round the edge, the two team colours on the strap ends */
 .tb-rev[data-set="rivalries"] {
-  --rev-bg: #f4efe2;
-  --rev-ink: #16171c;
-  --rev-mark: #16171c;
+  --rev-bg: #111014;
+  --rev-ink: #e9d9a8;
+  --rev-mark: #e2b44a;
   --rev-medal: #fff;
-  --rev-rule: #16171c33;
+  --rev-rule: #e2b44a55;
 }
 .tb-rev[data-set="rivalries"] .tb-rev__deco {
-  background:
-    linear-gradient(90deg, var(--t1) 0 50%, var(--u1) 50%) 0 0 / 100% 2.4cqw no-repeat,
-    repeating-linear-gradient(90deg, #9a9ca4 0 1.6cqw, transparent 1.6cqw 3cqw) 0 50% / 100% 0.35cqw no-repeat;
+  inset: 1.6cqw;
+  border: 0.3cqw dashed #e2b44a99;
+  border-radius: 1cqw;
+  background: linear-gradient(90deg, var(--t1) 0 50%, var(--u1) 50%) 0 0 / 100% 1.6cqw no-repeat;
 }
 
 /* Flash of Brilliance: the team colour, one flash glint, a slanted mark */

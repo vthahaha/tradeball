@@ -580,27 +580,26 @@ export function InsertFront(props: InsertFrontProps) {
         </div>
       );
 
-    // Rivalries: the matchup printed as a game ticket under the photo, a tear-off stub
-    // with the card number and a barcode
+    // Rivalries (Legendary): the title belt. Full art, each player's side lit in his team colour up
+    // the outer edge; across the foot a black leather belt with gold stitching carries the two
+    // surnames on its straps, either side of a gold championship plate engraved "vs".
     case "rivalries": {
       const p2 = card.players[1];
-      const side = (pl: typeof p, team?: string, colour = "--t1") => (
-        <div className="tb-ins__side">
-          <i style={{ background: `var(${colour})` }}>
-            {team ? teamCode(team) : ""}
-          </i>
-          <div>
-            <small>{pl?.name.split(" ")[0]}</small>
-            <b
-              style={{
-                fontSize: `${nameSize(pl ? lastName(pl.name) : "", 0.8)}cqw`,
-              }}
-            >
-              {pl ? lastName(pl.name) : ""}
+      const corner = (pl: typeof p | undefined, team: string | undefined, side: "l" | "r") => {
+        const last = pl ? lastName(pl.name) : "";
+        const first = pl ? pl.name.slice(0, pl.name.length - last.length).trim() : "";
+        return (
+          <div className={`tb-ins__corner is-${side}`}>
+            <small>
+              {first}
+              {team && <> · {teamCode(team)}</>}
+            </small>
+            <b style={{ fontSize: `${Math.min(6.4, 30 / Math.max(1, last.length * 0.5))}cqw` }}>
+              {last}
             </b>
           </div>
-        </div>
-      );
+        );
+      };
       return (
         <div className="tb-ins tb-ins--rivalries">
           {photo(
@@ -609,23 +608,20 @@ export function InsertFront(props: InsertFrontProps) {
               <span>{p2 ? initials(p2.name) : ""}</span>
             </div>,
           )}
+          <div className="tb-ins__rvglow" aria-hidden />
+          <div className="tb-ins__fade" aria-hidden />
           <Rating ovr={card.ovr} pos="Pair" />
-          <div className="tb-ins__ticket">
-            <div className="tb-ins__ticket-main">
-              <div className="tb-ins__ticket-head">
-                <span>Rivalries</span>
-                {serial}
-              </div>
-              {side(p, card.team, "--t1")}
-              <div className="tb-ins__vsline" aria-hidden>
-                <span>vs</span>
-              </div>
-              {side(p2, card.team2, "--u1")}
+          <div className="tb-ins__belt">
+            {corner(p, card.team, "l")}
+            <div className="tb-ins__plate">
+              <small>Rivalries</small>
+              <b>vs</b>
             </div>
-            <div className="tb-ins__stub" aria-hidden>
-              <span className="tb-ins__stubno">{card.designId}</span>
-              <span className="tb-ins__barcode" />
-            </div>
+            {corner(p2, card.team2, "r")}
+          </div>
+          <div className="tb-ins__fine is-center tb-ins__rvfine">
+            {serial}
+            {no}
           </div>
         </div>
       );

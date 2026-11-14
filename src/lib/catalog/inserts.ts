@@ -25,19 +25,19 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "light", name: "The Light", rarity: "uncommon", boost: 3 },
   { id: "shadow", name: "The Shadow", rarity: "uncommon", boost: 3 },
   { id: "fortress", name: "Stone Fortress", rarity: "rare", boost: 3 },
-  { id: "cult", name: "Cult Classic", rarity: "epic", boost: 0 },
+  { id: "cult", name: "Cult Classic", rarity: "rare", boost: 0 },
   // Set 2, "Classic"
   { id: "botb", name: "Best of the Best", rarity: "legendary", boost: 3 },
-  { id: "rivalries", name: "Rivalries", rarity: "epic", boost: 2 },
+  { id: "rivalries", name: "Rivalries", rarity: "legendary", boost: 2 },
   // Set 3
   { id: "flash", name: "Flash of Brilliance", rarity: "epic", boost: 2 },
-  { id: "wizards", name: "Time Wizards", rarity: "epic", boost: 0 },
+  { id: "wizards", name: "Time Wizards", rarity: "rare", boost: 0 },
   { id: "founders", name: "Founding Father", rarity: "epic", boost: 0 },
   { id: "dreamteam", name: "The Dream Team", rarity: "mythic", boost: 0 },
   // Set 4
-  { id: "lunar", name: "Lunar New Year", rarity: "legendary", boost: 3 },
+  { id: "lunar", name: "Lunar New Year", rarity: "epic", boost: 3 },
   { id: "dotd", name: "Day of the Dead", rarity: "epic", boost: 1 },
-  { id: "thirdeye", name: "The Third Eye", rarity: "legendary", boost: 3 },
+  { id: "thirdeye", name: "The Third Eye", rarity: "epic", boost: 3 },
   // Grail
   { id: "iconic", name: "Iconic Moments", rarity: "grail", boost: 0 },
 ];
@@ -208,7 +208,7 @@ const STARDOM: InsertCard[] = [
   { id: "US1", player: "4278073" }, // Shai Gilgeous-Alexander
   { id: "US2", player: "3945274" }, // Luka Doncic
   { id: "US3", player: "5104157" }, // Victor Wembanyama
-  { id: "US4", player: "3934672" }, // Jalen Brunson
+  { id: "US4", player: "3934672", ovr: 99 }, // Jalen Brunson, 2026 Finals MVP
   { id: "US5", player: "3908809" }, // Donovan Mitchell
   { id: "US6", player: "4431678" }, // Tyrese Maxey
   { id: "US7", player: "4594268" }, // Anthony Edwards

@@ -60,27 +60,31 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  light: 16.1, // The Light (uncommon)
-  shadow: 16.2, // The Shadow (uncommon)
-  newblood: 12, // New Blood (rare)
-  goldenboy: 2.5, // Golden Boy (legendary)
-  fortress: 10, // Stone Fortress (rare)
-  flash: 5, // Flash of Brilliance (epic)
-  cult: 6, // Cult Classic (epic)
-  wizards: 5, // Time Wizards (epic)
-  goodbyes: 5, // Hard Goodbyes (epic)
-  rivalries: 4, // Rivalries (epic)
-  founders: 4, // Founding Father (epic)
-  botb: 2.5, // Best of the Best (legendary)
-  dotd: 5, // Day of the Dead (epic)
-  lunar: 2.5, // Lunar New Year (legendary)
-  thirdeye: 2.5, // The Third Eye (legendary)
-  // Mythic: about 1 pack in 30 holds one of these; a Generational about 1 in 125
-  stardom: 0.6, // Ultimate Stardom (mythic)
-  dreamteam: 0.6, // The Dream Team (mythic)
-  generational: 0.4, // Generational (mythic)
-  // Grail: 1 slot in 1,000, so about 1 pack in 500
-  iconic: 0.1, // Iconic Moments (grail)
+  // Uncommon: 30
+  light: 15, // The Light
+  shadow: 15, // The Shadow
+  // Rare: 35
+  newblood: 11, // New Blood
+  fortress: 9, // Stone Fortress
+  cult: 8, // Cult Classic
+  wizards: 7, // Time Wizards
+  // Epic: 25.8
+  flash: 5, // Flash of Brilliance
+  goodbyes: 5, // Hard Goodbyes
+  dotd: 5, // Day of the Dead
+  founders: 4, // Founding Father
+  lunar: 3.4, // Lunar New Year
+  thirdeye: 3.4, // The Third Eye
+  // Legendary: 7.5
+  goldenboy: 2.5, // Golden Boy
+  botb: 2.5, // Best of the Best
+  rivalries: 2.5, // Rivalries
+  // Mythic: 1.6, about 1 pack in 30 holds one; a Generational about 1 in 125
+  stardom: 0.6, // Ultimate Stardom
+  dreamteam: 0.6, // The Dream Team
+  generational: 0.4, // Generational
+  // Grail: 0.1, about 1 pack in 500
+  iconic: 0.1, // Iconic Moments
 };
 export const MAX_BANKED_PACKS = 3;
 
