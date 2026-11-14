@@ -1627,27 +1627,38 @@ select {
   border-top-color: color-mix(in oklab, var(--gold) 35%, transparent);
 }
 
-/* Day of the Dead: papel picado strung across a violet night scattered with marigold petals, the
-   photo framed in marigold orange, a sugar skull propped on the corner of the frame */
-.tb-ins--dotd {
+/* Day of the Dead: full art. Papel picado strung across the top of the photo, a thin marigold
+   frame inset round it, the art fading into violet night at the foot with a few marigold petals,
+   and a small sugar skull stamped beside the set name */
+.tb-ins--dotd { background: #2a0b3b; color: #fff; }
+.tb-ins--dotd::after {
+  content: "";
+  position: absolute;
+  inset: 1.8cqw;
+  z-index: 2;
+  border: 0.5cqw solid #ff8a00;
+  border-radius: 0.8cqw;
+  pointer-events: none;
+}
+.tb-ins--dotd .tb-ins__fade {
+  height: 50%;
   background:
-    radial-gradient(circle at 12% 64%, #ff8a00 0 0.6cqw, transparent 0.7cqw),
-    radial-gradient(circle at 88% 20%, #ffd23f 0 0.5cqw, transparent 0.6cqw),
-    radial-gradient(circle at 6% 30%, #ff2e93 0 0.5cqw, transparent 0.6cqw),
-    radial-gradient(circle at 93% 56%, #ff8a00 0 0.5cqw, transparent 0.6cqw),
-    radial-gradient(90% 60% at 50% 45%, #4a1766, transparent 75%),
-    #2a0b3b;
-  color: #fff;
+    radial-gradient(circle at 10% 78%, #ff8a00 0 0.6cqw, transparent 0.7cqw),
+    radial-gradient(circle at 90% 70%, #ffd23f 0 0.5cqw, transparent 0.6cqw),
+    radial-gradient(circle at 80% 90%, #ff2e93 0 0.5cqw, transparent 0.6cqw),
+    radial-gradient(circle at 22% 62%, #ffd23f 0 0.4cqw, transparent 0.5cqw),
+    linear-gradient(180deg, transparent, #2a0b3bc7 50%, #1c0628f2);
 }
 .tb-ins__picado {
   position: absolute;
   inset: 0 0 auto;
-  z-index: 3;
+  z-index: 4;
   display: flex;
-  height: 15cqw;
+  height: 14cqw;
   gap: 1.2cqw;
   padding: 2cqw 3cqw 0;
-  background: linear-gradient(#fff6 0 0) 0 2cqw / 100% 0.3cqw no-repeat;
+  background: linear-gradient(#ffffffb3 0 0) 0 2cqw / 100% 0.3cqw no-repeat;
+  filter: drop-shadow(0 0.6cqw 0.8cqw #0007);
 }
 .tb-ins__picado i {
   flex: 1;
@@ -1661,37 +1672,30 @@ select {
 .tb-ins__picado i:nth-child(2) { --flag: #ff8a00; transform: rotate(1.5deg); }
 .tb-ins__picado i:nth-child(3) { --flag: #ffd23f; transform: rotate(-1deg); }
 .tb-ins__picado i:nth-child(4) { --flag: #a35bff; transform: rotate(2deg); }
-.tb-ins--dotd .tb-ins__photo {
-  inset: 16cqw 5cqw 40cqw;
-  z-index: 1;
-  border: 1cqw solid #ff8a00;
-  border-radius: 1cqw;
-  background: #3b1152;
-}
-.tb-ins--dotd .tb-ins__ovr { top: 19cqw; right: 8cqw; }
-.tb-ins__skull {
-  position: absolute;
-  right: 3cqw;
-  bottom: 30cqw;
-  z-index: 4;
-  width: 23cqw;
-  height: auto;
-  transform: rotate(9deg);
-  filter: drop-shadow(0 0.8cqw 1.2cqw #0009);
-}
-.tb-ins--dotd .tb-ins__foot { padding-right: 28cqw; }
+.tb-ins--dotd .tb-ins__ovr { top: 16cqw; right: 5cqw; text-shadow: 0 0.3cqw 1.2cqw #000a; }
+.tb-ins--dotd .tb-ins__foot { padding: 0 5cqw 4.6cqw; }
 .tb-ins__ddset {
-  margin-bottom: 1.2cqw;
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  margin-bottom: 1.4cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.6cqw;
+  font-size: 2.8cqw;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #ff5fae;
+  color: #ff6fb6;
 }
-.tb-ins--dotd .tb-ins__name { color: #ffd23f; }
-.tb-ins--dotd .tb-ins__fine { color: #ffffffb3; border-top-color: #ff8a0066; }
+.tb-ins__skull {
+  flex: none;
+  width: 8.5cqw;
+  height: auto;
+  transform: rotate(-8deg);
+  filter: drop-shadow(0 0.4cqw 0.6cqw #0009);
+}
+.tb-ins--dotd .tb-ins__name { color: #ffd23f; text-shadow: 0 0.4cqw 1.2cqw #0008; }
+.tb-ins--dotd .tb-ins__fine { color: #ffffffbf; border-top-color: #ff8a0080; }
 
 /* The Third Eye: near-black blue, faint rings radiating from a vertical eye opened in the middle
    of the card; the photo is seen through it, its lid lit a cold blue that slowly breathes */
@@ -1951,11 +1955,11 @@ select {
   .tb-ins__est,
   .tb-ins__charter,
   .tb-ins__pickcap,
-  .tb-ins__ddset,
   .tb-ins__side small,
   .tb-ins--rivalries .tb-ins__ticket-head .tb-ins__serial {
     display: none;
   }
+  .tb-ins__ddset { font-size: 0; margin-bottom: 0.6cqw; }
   .tb-ins__set {
     font-size: 4cqw;
     letter-spacing: 0.16em;

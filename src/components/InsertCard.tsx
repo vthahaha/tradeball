@@ -823,23 +823,26 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
-    // Day of the Dead: papel picado strung across a violet night, the photo framed in marigold
-    // orange, a sugar skull propped on the corner of the frame
+    // Day of the Dead: full art under a string of papel picado, a thin marigold frame, the art
+    // fading into violet night at the foot, a small sugar skull stamped by the set name
     case "dotd": {
       const n = Number(card.designId.match(/\d+$/)?.[0] ?? 0);
       return (
         <div className="tb-ins tb-ins--dotd">
+          {photo()}
+          <div className="tb-ins__fade" aria-hidden />
           <div className="tb-ins__picado" aria-hidden>
             <i />
             <i />
             <i />
             <i />
           </div>
-          {photo()}
           <Rating ovr={card.ovr} pos={p.pos} />
-          <SugarSkull hue={n % SKULL_EYES.length} />
           <div className="tb-ins__foot">
-            <div className="tb-ins__ddset">Day of the Dead</div>
+            <div className="tb-ins__ddset">
+              <SugarSkull hue={n % SKULL_EYES.length} />
+              Day of the Dead
+            </div>
             <div
               className="tb-ins__name"
               style={{ fontSize: `${nameSize(name, 0.8)}cqw` }}
