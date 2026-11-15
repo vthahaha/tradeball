@@ -8,7 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 import { INSERT_NAMES, INSERT_TYPES, teamColors, type CardView } from "@/lib/catalog";
 import { isInsert, RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
-import { Card, TurnableCard } from "./Card";
+import { Card } from "./Card";
+import { CardViewer } from "./CardViewer";
 import { SetIcon } from "./CardArt";
 
 export interface OwnedCopy {
@@ -259,6 +260,14 @@ export function CollectionView({
 
   const openDesign = open ? designs.find((d) => d.designId === open) : null;
 
+  // the viewer's arrows walk the binder in the order it is shown
+  const order = groups.flatMap((g) => g.cards.map((c) => c.designId));
+  const step = (dir: 1 | -1) => {
+    const i = open ? order.indexOf(open) : -1;
+    const j = i + dir;
+    return i >= 0 && j >= 0 && j < order.length ? () => setOpen(order[j]) : undefined;
+  };
+
   return (
     <>
       {/* Completion, as one season-ticket strip */}
@@ -487,6 +496,7 @@ export function CollectionView({
       <AnimatePresence>
         {openDesign && (
           <CardDetail
+            key={openDesign.designId}
             design={openDesign}
             copies={byDesign.get(openDesign.designId) ?? []}
             owners={owners[openDesign.designId] ?? []}
@@ -498,6 +508,8 @@ export function CollectionView({
             onToggleShowcase={toggleShowcase}
             onRecycle={recycleOne}
             onClose={() => setOpen(null)}
+            onPrev={step(-1)}
+            onNext={step(1)}
           />
         )}
       </AnimatePresence>
@@ -630,6 +642,8 @@ function CardDetail({
   onToggleShowcase,
   onRecycle,
   onClose,
+  onPrev,
+  onNext,
 }: {
   design: CardView;
   copies: OwnedCopy[];
@@ -642,6 +656,8 @@ function CardDetail({
   onToggleShowcase: (id: string) => void;
   onRecycle: (id: string) => void;
   onClose: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 }) {
   const sorted = useMemo(
     () => [...copies].sort((a, b) => FINISH_RANK[b.finish] - FINISH_RANK[a.finish] || b.grade - a.grade),
@@ -650,56 +666,20 @@ function CardDetail({
   const [sel, setSel] = useState(sorted[0]?.instanceId);
   const copy = sorted.find((c) => c.instanceId === sel) ?? sorted[0];
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[#03050acc] px-4 py-10 backdrop-blur-md sm:items-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={design.players.map((p) => p.name).join(" & ")}
+    <CardViewer
+      card={design}
+      finish={copy?.finish}
+      serialNo={copy?.serialNo}
+      supply={copy?.supply}
+      grade={copy?.grade}
+      missing={!copy}
+      tilt={!!copy}
+      onClose={onClose}
+      onPrev={onPrev}
+      onNext={onNext}
     >
-      <motion.div
-        className="flex w-full max-w-3xl flex-col items-center gap-8 sm:flex-row sm:items-start"
-        initial={{ scale: 0.92, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="w-64 shrink-0 sm:w-80">
-          <TurnableCard
-            card={design}
-            finish={copy?.finish}
-            serialNo={copy?.serialNo}
-            supply={copy?.supply}
-            grade={copy?.grade}
-            missing={!copy}
-            tilt={!!copy}
-          />
-        </div>
-        <div className="w-full flex-1">
-          <div className="font-cond text-sm font-bold uppercase tracking-[0.2em]" style={{ color: RARITY_COLOR[design.rarity] }}>
-            {design.rarity} · {design.type}
-          </div>
-          <h2 className="font-display text-5xl leading-none">{design.players.map((p) => p.name).join(" & ")}</h2>
-          {design.title && (
-            <p className="mt-1 text-lg text-muted">
-              {design.title}
-              {design.year ? ` (${design.year})` : ""}
-            </p>
-          )}
-          <p className="mt-1 font-cond text-muted">
-            {design.players.map((p) => `${p.team} · ${p.pos} · ${p.nation}`).join("  /  ")}
-          </p>
-
+      <div className="mt-6">
           <button
             type="button"
             onClick={onToggleWish}
@@ -809,11 +789,7 @@ function CardDetail({
             </div>
           )}
 
-          <button className="btn btn-ghost mt-6" onClick={onClose}>
-            Close
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </CardViewer>
   );
 }

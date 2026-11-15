@@ -57,7 +57,7 @@ function baseMeta(card: CardView) {
   return p.nation || card.team;
 }
 
-function cardNo(card: CardView) {
+export function cardNo(card: CardView) {
   if (isInsert(card.type)) return card.designId;
   const m = card.designId.match(/^nba-(\d+)-(\w+)$/);
   return m ? `${m[2] === "rookie" ? "RC" : "B"}-${m[1]}` : card.designId;

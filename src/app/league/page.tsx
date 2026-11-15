@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Card } from "@/components/Card";
 import { Feed } from "@/components/Feed";
 import { db } from "@/lib/db";
 import { bestCards, feed, showcaseCards, userStats } from "@/lib/profile";
 import { getCurrentUser } from "@/lib/session";
+import { Card } from "@/components/Card";
 
 export default async function LeaguePage() {
   const me = await getCurrentUser();

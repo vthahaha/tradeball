@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { FeedItem } from "@/lib/profile";
 import { PlusIcon, SwapIcon } from "./Icons";
-import { Card } from "./Card";
+import { InspectableCard } from "./CardViewer";
 
 const RARITY_TEXT: Record<string, string> = {
   common: "text-[var(--r-common)]",
@@ -41,7 +41,7 @@ export function Feed({ items, empty = "Nothing here yet." }: { items: FeedItem[]
         <li key={it.id} className="flex items-center gap-3 px-4 py-3">
           {it.kind === "pull" ? (
             <div className="w-12 shrink-0">
-              <Card card={it.card} finish={it.card.finish} serialNo={it.card.serialNo} supply={it.card.supply} tilt={false} />
+              <InspectableCard card={it.card} finish={it.card.finish} serialNo={it.card.serialNo} supply={it.card.supply} tilt={false} />
             </div>
           ) : (
             <div

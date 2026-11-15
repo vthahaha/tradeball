@@ -8,6 +8,7 @@ import { INSERTS_PER_PACK } from "@/lib/odds";
 import type { Rarity } from "@/lib/catalog/types";
 import type { PackStatus, PackType, PulledCard } from "@/lib/packs";
 import { Card, CardBack } from "./Card";
+import { CardViewer } from "./CardViewer";
 import { CheckIcon, TicketIcon } from "./Icons";
 import { SportIcon } from "./SportIcon";
 
@@ -319,6 +320,8 @@ function PackOpening({
   const [stage, setStage] = useState<"pack" | "torn" | "cards">("pack");
   const [flipped, setFlipped] = useState<boolean[]>(() => cards.map(() => false));
   const [spotlight, setSpotlight] = useState<PulledCard | null>(null);
+  // a face-up card opens in the full-screen viewer
+  const [inspect, setInspect] = useState<number | null>(null);
   const allFlipped = flipped.every(Boolean);
 
   function tear() {
@@ -328,7 +331,10 @@ function PackOpening({
   }
 
   function flip(i: number) {
-    if (flipped[i]) return;
+    if (flipped[i]) {
+      setInspect(i);
+      return;
+    }
     setFlipped((f) => f.map((v, j) => (j === i ? true : v)));
     if (isBig(cards[i])) setTimeout(() => setSpotlight(cards[i]), 450);
   }
@@ -350,13 +356,14 @@ function PackOpening({
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
+        if (inspect !== null) return; // the viewer closes itself
         if (spotlight) setSpotlight(null);
         else if (allFlipped) onClose();
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [spotlight, allFlipped, onClose]);
+  }, [spotlight, inspect, allFlipped, onClose]);
 
   return (
     <motion.div
@@ -400,7 +407,7 @@ function PackOpening({
                 onClick={() => flip(i)}
                 aria-label={
                   flipped[i]
-                    ? `${c.players.map((p) => p.name).join(" & ")}${c.isNew ? ", new to your binder" : ""}`
+                    ? `${c.players.map((p) => p.name).join(" & ")}${c.isNew ? ", new to your binder" : ""}. Open it`
                     : `Flip card ${i + 1}`
                 }
               >
@@ -456,6 +463,21 @@ function PackOpening({
       )}
 
       <AnimatePresence>{spotlight && <Spotlight card={spotlight} onClose={() => setSpotlight(null)} />}</AnimatePresence>
+      <AnimatePresence>
+        {inspect !== null && (
+          <CardViewer
+            key={cards[inspect].instanceId}
+            card={cards[inspect]}
+            finish={cards[inspect].finish}
+            serialNo={cards[inspect].serialNo}
+            supply={cards[inspect].supply}
+            grade={cards[inspect].grade}
+            onClose={() => setInspect(null)}
+            onPrev={inspect > 0 && flipped[inspect - 1] ? () => setInspect(inspect - 1) : undefined}
+            onNext={inspect < cards.length - 1 && flipped[inspect + 1] ? () => setInspect(inspect + 1) : undefined}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

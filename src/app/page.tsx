@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { FINISH_SUPPLY } from "@/lib/odds";
 import { packStatus } from "@/lib/packs";
 import { getCurrentUser } from "@/lib/session";
+import { InspectableCard } from "@/components/CardViewer";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const user = await getCurrentUser();
@@ -52,7 +53,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
           <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4 lg:grid-cols-6">
             {pulls.map((p) => (
               <li key={p.id}>
-                <Card
+                <InspectableCard
                   card={p.card}
                   finish={p.finish}
                   serialNo={p.serialNo}

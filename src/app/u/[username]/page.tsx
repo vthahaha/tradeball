@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Card } from "@/components/Card";
 import { Feed } from "@/components/Feed";
 import { db } from "@/lib/db";
 import { bestCards, feed, showcaseCards, userStats } from "@/lib/profile";
 import { getCurrentUser } from "@/lib/session";
+import { InspectableCard } from "@/components/CardViewer";
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const me = await getCurrentUser();
@@ -76,7 +76,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
           <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {shown.map((c) => (
               <li key={c.instanceId}>
-                <Card card={c} finish={c.finish} serialNo={c.serialNo} supply={c.supply} grade={c.grade} />
+                <InspectableCard card={c} finish={c.finish} serialNo={c.serialNo} supply={c.supply} grade={c.grade} />
               </li>
             ))}
           </ul>
