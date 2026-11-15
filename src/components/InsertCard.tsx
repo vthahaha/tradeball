@@ -530,7 +530,7 @@ export function InsertFront(props: InsertFrontProps) {
           <div className="tb-ins__namebar">
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.6)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.78)}cqw` }}
             >
               {name}
             </div>
