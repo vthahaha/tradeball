@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useId, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import {
   headshotUrl,
   INSERT_NAMES,
@@ -16,6 +16,7 @@ import {
 } from "@/lib/catalog";
 import { initials, lastName, nameSize } from "./cardText";
 import { InsertFront } from "./InsertCard";
+import { inkOn, readableOnPaper } from "@/lib/color";
 
 export interface CardProps {
   card: CardView;
@@ -76,6 +77,10 @@ function useLook(card: CardView) {
       "--f1": f1,
       "--u1": u1,
       "--u2": u2,
+      // text that sits on a team colour, and a team colour that is used as text on light stock
+      "--t1-ink": inkOn(t1),
+      "--u1-ink": inkOn(u1),
+      "--t1-text": readableOnPaper(t1),
     } as CSSProperties,
     insert,
     isDuo,
@@ -108,6 +113,21 @@ function SerialLine({
 
 // ── front ──
 
+/** One observer for every card on the page: a card that scrolls off screen is marked asleep so
+ *  its looping border and set animations pause (globals.css), and wakes when it comes back. */
+let sleeper: IntersectionObserver | null = null;
+function watchVisibility(el: HTMLElement) {
+  if (typeof IntersectionObserver === "undefined") return () => {};
+  sleeper ??= new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) e.target.toggleAttribute("data-asleep", !e.isIntersecting);
+    },
+    { rootMargin: "200px" },
+  );
+  sleeper.observe(el);
+  return () => sleeper?.unobserve(el);
+}
+
 export function Card({
   card,
   finish = "standard",
@@ -119,6 +139,7 @@ export function Card({
   className,
 }: CardProps) {
   const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => (ref.current ? watchVisibility(ref.current) : undefined), []);
   const uid = useId().replace(/:/g, "");
   const [imgFailed, setImgFailed] = useState(false);
   const [p1, p2] = card.players;

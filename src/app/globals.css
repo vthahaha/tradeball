@@ -351,7 +351,8 @@ select {
   font-stretch: 72%;
   font-size: 30cqw;
   line-height: 1;
-  color: #ffffffd9;
+  color: var(--t1-ink, #fff);
+  opacity: 0.85;
 }
 .tb-card__seticon {
   flex: none;
@@ -1414,7 +1415,7 @@ select {
     linear-gradient(180deg, #ffffff26 0 0.5cqw, transparent 0.5cqw),
     linear-gradient(180deg, var(--t1), color-mix(in oklab, var(--t1) 55%, #000));
   border-top: 0.6cqw solid var(--t2);
-  color: #fff;
+  color: var(--t1-ink, #fff);
 }
 .tb-ins__charter {
   margin-bottom: 0.8cqw;
@@ -1424,7 +1425,8 @@ select {
   font-size: 2.6cqw;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: color-mix(in oklab, #f3ead8 80%, var(--t1));
+  color: var(--t1-ink, #fff);
+  opacity: 0.85;
 }
 .tb-ins--founders .tb-ins__name {
   font-family: var(--font-engrave), serif;
@@ -1433,7 +1435,7 @@ select {
   line-height: 1;
   letter-spacing: 0;
   text-transform: none;
-  color: #f3ead8;
+  color: var(--t1-ink, #f3ead8);
   text-shadow: 0 0.4cqw 1cqw #0006;
 }
 .tb-ins__est {
@@ -1444,9 +1446,10 @@ select {
   font-size: 2.6cqw;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #ffffffd9;
+  color: var(--t1-ink, #fff);
+  opacity: 0.85;
 }
-.tb-ins--founders .tb-ins__fine { color: #ffffffb3; border-top-color: #ffffff33; }
+.tb-ins--founders .tb-ins__fine { color: var(--t1-ink, #fff); opacity: 0.75; border-top-color: color-mix(in oklab, var(--t1-ink, #fff) 25%, transparent); }
 
 /* The Dream Team: navy, a row of stars, Barcelona 1992, red and white stripes at the foot */
 .tb-ins--dreamteam { background: #0f1f45; color: #fff; }
@@ -2109,11 +2112,11 @@ select {
 .tb-ins--shadow .tb-ins__prism .is-stripes {
   background: linear-gradient(-35deg, transparent 54%, color-mix(in oklab, var(--t1) 70%, #000) 54% 63%, transparent 63% 66%, color-mix(in oklab, var(--t2) 55%, #000) 66% 70%, transparent 70%);
 }
-.tb-ins--light .tb-card__mono { color: var(--t1); }
+.tb-ins--light .tb-card__mono { color: var(--t1-text); }
 .tb-ins--shadow .tb-card__mono { color: color-mix(in oklab, var(--t1) 60%, #fff); }
 .tb-ins--shadow .tb-ins__set,
 .tb-ins--shadow .tb-ins__ovr { text-shadow: 0 0.3cqw 1cqw #000a; }
-.tb-ins--light .tb-ins__ovr { color: var(--t1); text-shadow: none; }
+.tb-ins--light .tb-ins__ovr { color: var(--t1-text); text-shadow: none; }
 /* the name bar across the foot, the jersey number on the right */
 .tb-ins__namebar {
   position: absolute;
@@ -2233,6 +2236,30 @@ select {
   text-shadow: 0 0.25cqw 0 #ffffff40;
 }
 .tb-ins--fortress .tb-ins__fine { border-top-color: #34373c33; color: #3e4146; }
+
+/* cards scrolled off screen (Card.tsx marks them asleep) stop their looping animations */
+.tb-card[data-asleep],
+.tb-card[data-asleep] * {
+  animation-play-state: paused !important;
+}
+
+/* mid-size cards (binder grid, trade lists): the fine print would render at 3-5px here, so it goes,
+   except the serial number, which is the card's scarcity and stays at a readable size */
+@container (min-width: 171px) and (max-width: 259px) {
+  .tb-ins__fine > :not(.tb-ins__serial),
+  .tb-ins__ppmrz,
+  .tb-ins__ppdata dt,
+  .tb-ins__trstat small,
+  .tb-ins__rvrow small,
+  .tb-ins__imline,
+  .tb-ins__set span,
+  .tb-ins__est,
+  .tb-ins__moment {
+    display: none;
+  }
+  .tb-ins__fine { justify-content: flex-end; }
+  .tb-ins__serial { font-size: max(2.4cqw, 8px); }
+}
 
 /* small cards (8-up reveal grid, phones): who, rating and the set's look; the fine print goes */
 @container (max-width: 170px) {

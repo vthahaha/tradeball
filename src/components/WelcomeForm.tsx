@@ -31,7 +31,7 @@ export function WelcomeForm({ suggestion }: { suggestion: string }) {
         <label htmlFor="username" className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">
           Username
         </label>
-        <div className="mt-1 flex items-center rounded-lg border border-line bg-bg-2 focus-within:border-accent">
+        <div className="mt-1 flex items-center rounded-lg border border-line bg-bg-2 focus-within:border-accent focus-within:outline-2 focus-within:outline-offset-3 focus-within:outline-dashed focus-within:outline-accent">
           <span className="pl-3 text-lg text-muted">@</span>
           <input
             id="username"

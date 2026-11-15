@@ -53,7 +53,7 @@ export function ConfirmAction({
         id={id}
         value={text}
         onChange={(e) => setText(e.target.value.toUpperCase())}
-        className="w-32 rounded-md border border-line bg-bg-2 px-3 py-2 font-cond font-bold tracking-widest outline-none focus:border-accent"
+        className="w-32 rounded-md border border-line bg-bg-2 px-3 py-2 font-cond font-bold tracking-widest focus:border-accent"
         autoComplete="off"
       />
       <button className="btn btn-primary" disabled={text !== keyword || busy} onClick={run}>

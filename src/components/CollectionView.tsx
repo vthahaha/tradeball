@@ -80,7 +80,7 @@ function Select({ label, value, onChange, children }: { label: string; value: st
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="max-w-48 rounded-full border border-line bg-bg-2 px-3 py-1.5 font-cond text-sm font-bold uppercase tracking-wider outline-none focus:border-accent"
+        className="max-w-48 rounded-full border border-line bg-bg-2 px-3 py-1.5 font-cond text-sm font-bold uppercase tracking-wider focus:border-accent"
       >
         {children}
       </select>
@@ -346,7 +346,7 @@ export function CollectionView({
             aria-label="Search player or team"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="min-w-0 flex-1 basis-48 rounded-full border border-line bg-bg-2 px-4 py-1.5 text-sm outline-none focus:border-accent"
+            className="min-w-0 flex-1 basis-48 rounded-full border border-line bg-bg-2 px-4 py-1.5 text-sm focus:border-accent"
           />
           <Select label="Set" value={setFilter} onChange={setSetFilter}>
             <option value="all">All sets</option>

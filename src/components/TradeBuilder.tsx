@@ -108,7 +108,7 @@ function Side({
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search"
           aria-label={`Search ${owner}'s cards`}
-          className="min-w-0 flex-1 rounded-full border border-line bg-bg-2 px-3 py-1.5 text-sm outline-none focus:border-accent"
+          className="min-w-0 flex-1 rounded-full border border-line bg-bg-2 px-3 py-1.5 text-sm focus:border-accent"
         />
         <select
           value={kind}
@@ -281,7 +281,7 @@ export function TradeBuilder({
                 maxLength={200}
                 placeholder="Add a message (optional)"
                 aria-label="Message"
-                className="min-w-0 flex-1 rounded-lg border border-line bg-bg-2 px-3 py-2 outline-none focus:border-accent"
+                className="min-w-0 flex-1 rounded-lg border border-line bg-bg-2 px-3 py-2 focus:border-accent"
               />
               <span className="font-cond text-sm text-muted">
                 {give.length} for {get.length}
