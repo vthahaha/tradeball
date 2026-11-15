@@ -130,6 +130,38 @@ export const NATIONS: Record<string, Nation> = {
       </>
     ),
   },
+  BIH: {
+    name: "Bosnia and Herzegovina",
+    colors: ["#002395", "#fecb00", "#002395"],
+    flag: (
+      <>
+        <rect width="30" height="20" fill="#002395" />
+        <polygon points="8,0 22,0 22,20" fill="#fecb00" />
+        {/* the stars run down the triangle's long side, cut off at the top and bottom edges */}
+        {Array.from({ length: 9 }, (_, i) => {
+          const t = (i - 0.5) / 7;
+          return <polygon key={i} points={star(5.3 + 14 * t, 20 * t, 1.15)} fill="#fff" />;
+        })}
+      </>
+    ),
+  },
+  CAN: {
+    name: "Canada",
+    colors: ["#d52b1e", "#ffffff", "#d52b1e"],
+    flag: (
+      <>
+        <rect width="30" height="20" fill="#fff" />
+        <rect width="7.5" height="20" fill="#d52b1e" />
+        <rect x="22.5" width="7.5" height="20" fill="#d52b1e" />
+        {/* a simplified eleven-point maple leaf with its stem */}
+        <polygon
+          transform="translate(15 9.6)"
+          points="0,-4.6 0.9,-2.9 1.8,-3.3 1.5,-0.9 3,-2.4 3.3,-1.6 4.6,-1.9 4.1,-0.5 4.6,-0.1 2.3,1.7 2.6,2.6 0.3,2.3 0.3,4.6 -0.3,4.6 -0.3,2.3 -2.6,2.6 -2.3,1.7 -4.6,-0.1 -4.1,-0.5 -4.6,-1.9 -3.3,-1.6 -3,-2.4 -1.5,-0.9 -1.8,-3.3 -0.9,-2.9"
+          fill="#d52b1e"
+        />
+      </>
+    ),
+  },
   BHS: {
     name: "Bahamas",
     colors: ["#00778b", "#ffc72c", "#00778b"],

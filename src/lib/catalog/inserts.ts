@@ -750,12 +750,12 @@ const PASSPORTS: InsertCard[] = (
     { id: "PA12", kicker: "LTU", player: "3155942" }, // Domantas Sabonis
     // not in the base set yet
     { id: "PA13", kicker: "SEN", team: "Cavaliers", legend: L("Khalifa Diop", "C", "Senegal", 72) },
-    { id: "PA14", kicker: "RUS", player: "5175643" }, // Egor Demin
+    { id: "PA14", kicker: "BIH", player: "3102530" }, // Jusuf Nurkic
     { id: "PA15", kicker: "TUR", player: "4871144" }, // Alperen Sengun
     // not in the base set yet
     { id: "PA16", kicker: "HRV", team: "Pelicans", legend: L("Karlo Matkovic", "F", "Croatia", 74) },
     { id: "PA17", kicker: "COD", player: "4433247" }, // Jonathan Kuminga
-    { id: "PA18", kicker: "NZL", player: "2991235" }, // Steven Adams
+    { id: "PA18", kicker: "CAN", player: "4278073" }, // Shai Gilgeous-Alexander
     { id: "PA19", kicker: "GRC", player: "3032977" }, // Giannis Antetokounmpo
     { id: "PA20", kicker: "GBR", player: "3934719" }, // OG Anunoby
   ] as Omit<InsertCard, "cls">[]

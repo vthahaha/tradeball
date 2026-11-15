@@ -293,11 +293,11 @@ export const INSERT_ART: Record<string, string> = {
   PA11: "", // Kristaps Porzingis
   PA12: "", // Domantas Sabonis
   PA13: "", // Khalifa Diop
-  PA14: "", // Egor Demin
+  PA14: "", // Jusuf Nurkic
   PA15: "", // Alperen Sengun
   PA16: "", // Karlo Matkovic
   PA17: "", // Jonathan Kuminga
-  PA18: "", // Steven Adams
+  PA18: "", // Shai Gilgeous-Alexander
   PA19: "", // Giannis Antetokounmpo
   PA20: "", // OG Anunoby
 
