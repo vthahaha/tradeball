@@ -162,6 +162,20 @@ export const NATIONS: Record<string, Nation> = {
       </>
     ),
   },
+  SSD: {
+    name: "South Sudan",
+    colors: ["#000000", "#da121a", "#078930"],
+    flag: (
+      <>
+        <rect width="30" height="20" fill="#fff" />
+        <rect width="30" height="6" fill="#000" />
+        <rect y="7" width="30" height="6" fill="#da121a" />
+        <rect y="14" width="30" height="6" fill="#078930" />
+        <polygon points="0,0 13,10 0,20" fill="#0f47af" />
+        <polygon points={star(4.4, 10, 2.5)} fill="#fcdd09" />
+      </>
+    ),
+  },
   BHS: {
     name: "Bahamas",
     colors: ["#00778b", "#ffc72c", "#00778b"],

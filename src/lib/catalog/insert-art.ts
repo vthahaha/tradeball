@@ -282,24 +282,24 @@ export const INSERT_ART: Record<string, string> = {
   // Set 5: 1. Passports
   PA1: "/inserts/PA1.jpg", // Victor Wembanyama
   PA2: "/inserts/PA2.jpg", // Luka Doncic
-  PA3: "", // Nikola Jokic
-  PA4: "", // Pelle Larsson
-  PA5: "", // Santi Aldama
-  PA6: "", // Al Horford
-  PA7: "", // Lauri Markkanen
-  PA8: "", // VJ Edgecombe
-  PA9: "", // Goga Bitadze
-  PA10: "", // Dennis Schroder
-  PA11: "", // Kristaps Porzingis
-  PA12: "", // Domantas Sabonis
-  PA13: "", // Khalifa Diop
-  PA14: "", // Jusuf Nurkic
-  PA15: "", // Alperen Sengun
-  PA16: "", // Karlo Matkovic
-  PA17: "", // Jonathan Kuminga
-  PA18: "", // Shai Gilgeous-Alexander
-  PA19: "", // Giannis Antetokounmpo
-  PA20: "", // OG Anunoby
+  PA3: "/inserts/PA3.jpg", // Nikola Jokic
+  PA4: "/inserts/PA4.jpg", // Pelle Larsson
+  PA5: "/inserts/PA5.jpg", // Santi Aldama
+  PA6: "/inserts/PA6.jpg", // Al Horford
+  PA7: "/inserts/PA7.jpg", // Lauri Markkanen
+  PA8: "/inserts/PA8.jpg", // VJ Edgecombe
+  PA9: "/inserts/PA9.jpg", // Goga Bitadze
+  PA10: "/inserts/PA10.jpg", // Dennis Schroder
+  PA11: "/inserts/PA11.jpg", // Kristaps Porzingis
+  PA12: "/inserts/PA12.jpg", // Domantas Sabonis
+  PA13: "/inserts/PA13.jpg", // Khalifa Diop
+  PA14: "/inserts/PA14.jpg", // Jusuf Nurkic
+  PA15: "/inserts/PA15.jpg", // Alperen Sengun
+  PA16: "/inserts/PA16.jpg", // Karlo Matkovic
+  PA17: "/inserts/PA17.jpg", // Jonathan Kuminga
+  PA18: "/inserts/PA18.jpg", // Shai Gilgeous-Alexander
+  PA19: "/inserts/PA19.jpg", // Giannis Antetokounmpo
+  PA20: "/inserts/PA20.jpg", // Khaman Maluach
 
   // Set 5: 2. Snipers
   SN1: "", // Desmond Bane

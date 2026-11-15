@@ -757,7 +757,8 @@ const PASSPORTS: InsertCard[] = (
     { id: "PA17", kicker: "COD", player: "4433247" }, // Jonathan Kuminga
     { id: "PA18", kicker: "CAN", player: "4278073" }, // Shai Gilgeous-Alexander
     { id: "PA19", kicker: "GRC", player: "3032977" }, // Giannis Antetokounmpo
-    { id: "PA20", kicker: "GBR", player: "3934719" }, // OG Anunoby
+    // not in the base set yet
+    { id: "PA20", kicker: "SSD", team: "Suns", legend: L("Khaman Maluach", "C", "South Sudan", 75) },
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "passports" }));
 
