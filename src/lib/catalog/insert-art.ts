@@ -302,40 +302,40 @@ export const INSERT_ART: Record<string, string> = {
   PA20: "/inserts/PA20.jpg", // Khaman Maluach
 
   // Set 5: 2. Snipers
-  SN1: "", // Desmond Bane
-  SN2: "", // Sam Hauser
-  SN3: "", // Norman Powell
-  SN4: "", // Duncan Robinson
-  SN5: "", // Kon Knueppel
-  SN6: "", // Luke Kennard
-  SN7: "", // Kevin Durant
-  SN8: "", // Jared McCain
-  SN9: "", // Damian Lillard
-  SN10: "", // Stephen Curry
+  SN1: "/inserts/SN1.jpg", // Desmond Bane
+  SN2: "/inserts/SN2.jpg", // Sam Hauser
+  SN3: "/inserts/SN3.jpg", // Norman Powell
+  SN4: "/inserts/SN4.jpg", // Duncan Robinson
+  SN5: "/inserts/SN5.jpg", // Kon Knueppel
+  SN6: "/inserts/SN6.jpg", // Luke Kennard
+  SN7: "/inserts/SN7.jpg", // Kevin Durant
+  SN8: "/inserts/SN8.jpg", // Jared McCain
+  SN9: "/inserts/SN9.jpg", // Damian Lillard
+  SN10: "/inserts/SN10.jpg", // Stephen Curry
 
   // Set 5: 3. Dimers
-  DI1: "", // Davion Mitchell
-  DI2: "", // Trae Young
-  DI3: "", // James Harden
-  DI4: "", // Tyler Herro
-  DI5: "", // LeBron James
-  DI6: "", // Ty Jerome
-  DI7: "", // LaMelo Ball
-  DI8: "", // Darius Acuff Jr.
-  DI9: "", // De'Aaron Fox
-  DI10: "", // Keyonte George
+  DI1: "/inserts/DI1.jpg", // Davion Mitchell
+  DI2: "/inserts/DI2.jpg", // Trae Young
+  DI3: "/inserts/DI3.jpg", // James Harden
+  DI4: "/inserts/DI4.jpg", // Tyler Herro
+  DI5: "/inserts/DI5.jpg", // LeBron James
+  DI6: "/inserts/DI6.jpg", // Ty Jerome
+  DI7: "/inserts/DI7.jpg", // LaMelo Ball
+  DI8: "/inserts/DI8.jpg", // Darius Acuff Jr.
+  DI9: "/inserts/DI9.jpg", // De'Aaron Fox
+  DI10: "/inserts/DI10.jpg", // Keyonte George
 
   // Set 5: 4. Snatchers (ST: SN was taken by Snipers)
-  ST1: "", // Jalen Johnson
-  ST2: "", // Michael Porter Jr.
-  ST3: "", // Ivica Zubac
-  ST4: "", // Karl-Anthony Towns
-  ST5: "", // Scottie Barnes
-  ST6: "", // P.J. Washington
-  ST7: "", // Brook Lopez
-  ST8: "", // Walker Kessler
-  ST9: "", // Derik Queen
-  ST10: "", // Nikola Jokic
+  ST1: "/inserts/ST1.jpg", // Jalen Johnson
+  ST2: "/inserts/ST2.jpg", // Michael Porter Jr.
+  ST3: "/inserts/ST3.jpg", // Ivica Zubac
+  ST4: "/inserts/ST4.jpg", // Karl-Anthony Towns
+  ST5: "/inserts/ST5.jpg", // Scottie Barnes
+  ST6: "/inserts/ST6.jpg", // P.J. Washington
+  ST7: "/inserts/ST7.jpg", // Brook Lopez
+  ST8: "/inserts/ST8.jpg", // Walker Kessler
+  ST9: "/inserts/ST9.jpg", // Derik Queen
+  ST10: "/inserts/ST10.jpg", // Nikola Jokic
 
   // Grail: Iconic Moments
   IM1: "/inserts/IM1.jpg", // The Last Shot, Michael Jordan
