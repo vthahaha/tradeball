@@ -568,9 +568,7 @@ export function InsertFront(props: InsertFrontProps) {
             >
               {name}
             </div>
-            <div className="tb-ins__carve">
-              Stone Fortress · {card.team} · {p.pos}
-            </div>
+            <div className="tb-ins__carve">Stone Fortress</div>
             <div className="tb-ins__fine is-center">
               {serial}
               {no}
@@ -589,6 +587,7 @@ export function InsertFront(props: InsertFrontProps) {
           </div>
           <div className="tb-ins__foot">
             <div className="tb-ins__stripe" aria-hidden />
+            <div className="tb-ins__cultmark">Cult Classic</div>
             <div
               className="tb-ins__name"
               style={{ fontSize: `${nameSize(name, 0.7)}cqw` }}
@@ -600,7 +599,6 @@ export function InsertFront(props: InsertFrontProps) {
               <span>
                 {p.pos} · {card.ovr}
               </span>
-              <i>Cult Classic</i>
               {serial}
             </div>
             <div className="tb-ins__fine">
@@ -618,6 +616,7 @@ export function InsertFront(props: InsertFrontProps) {
         <div className="tb-ins tb-ins--botb">
           {photo()}
           <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__set">Best of the Best</div>
           <div className="tb-ins__plate">
             <div className="tb-ins__plate-main">
               <div
@@ -969,7 +968,6 @@ export function InsertFront(props: InsertFrontProps) {
           <div className="tb-ins__fade" aria-hidden />
           <div className="tb-ins__imdate">
             Iconic Moments
-            {card.kicker && <span> · {card.kicker}</span>}
           </div>
           <div className="tb-ins__imtitle" style={{ fontSize: `${size}cqw` }}>
             {title}
@@ -983,6 +981,7 @@ export function InsertFront(props: InsertFrontProps) {
               {name}
             </div>
             <div className="tb-ins__imline">
+              {card.kicker ? `${card.kicker} · ` : ""}
               {card.team} · {card.meta}
             </div>
             <div className="tb-ins__fine">

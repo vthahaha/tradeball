@@ -603,16 +603,16 @@ select {
 }
 .tb-ins__set {
   position: absolute;
-  top: 4.4cqw;
+  top: 4cqw;
   left: 4cqw;
   z-index: 4;
   max-width: 62cqw;
   font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  font-stretch: 90%;
-  font-size: 3.3cqw;
-  line-height: 1.1;
-  letter-spacing: 0.3em;
+  font-weight: 900;
+  font-stretch: 86%;
+  font-size: 5cqw;
+  line-height: 1;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 .tb-ins__set span {
@@ -713,6 +713,12 @@ select {
   left: 6cqw;
   padding-bottom: 1.2cqw;
   border-bottom: 0.35cqw solid currentColor;
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 5.6cqw;
+  letter-spacing: 0.01em;
+  color: #e2b64f;
 }
 .tb-ins--goldenboy .tb-ins__ovr { top: 4cqw; right: 6cqw; text-shadow: none; }
 .tb-ins--goldenboy .tb-ins__foot { padding: 0 6cqw 5cqw; }
@@ -790,6 +796,7 @@ select {
 .tb-ins--stardom .tb-ins__set {
   top: 5.4cqw;
   left: 5.4cqw;
+  font-style: italic;
   color: #fff;
   text-shadow: 0 0.3cqw 1cqw #000a;
 }
@@ -900,6 +907,17 @@ select {
 .tb-ins--newblood .tb-ins__seam { bottom: 31cqw; }
 .tb-ins--newblood .tb-ins__foot { height: 31cqw; }
 .tb-ins--cult .tb-ins__photo { bottom: 34cqw; }
+.tb-ins__cultmark {
+  margin-bottom: 0.6cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 4.2cqw;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #c4302b;
+}
 
 /* corner marks round a photo window */
 .tb-ins__corners {
@@ -985,8 +1003,8 @@ select {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.22em;
+  font-size: 3.6cqw;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #7a6a4f;
 }
@@ -1118,6 +1136,19 @@ select {
   clip-path: polygon(0 0, calc(100% - 9cqw) 0, 100% 9cqw, 100% 100%, 0 100%);
 }
 .tb-ins--botb .tb-ins__ovr { top: 3.6cqw; right: auto; left: 4cqw; text-align: left; }
+.tb-ins--botb .tb-ins__set {
+  right: 4cqw;
+  left: auto;
+  max-width: 40cqw;
+  text-align: right;
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 5cqw;
+  letter-spacing: 0.01em;
+  color: #f1cf6b;
+  text-shadow: 0 0.3cqw 1cqw #000c;
+}
 .tb-ins__plate {
   position: absolute;
   inset: auto 0 0;
@@ -1206,6 +1237,13 @@ select {
   color: #b3202a;
 }
 .tb-ins__rvhead span:last-child { color: #16171c; letter-spacing: 0.16em; }
+.tb-ins__rvhead span:first-child {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 4.6cqw;
+  letter-spacing: 0.02em;
+}
 .tb-ins__rvhead b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
@@ -1296,7 +1334,7 @@ select {
   pointer-events: none;
 }
 .tb-ins--flash .tb-ins__set {
-  font-size: 4.6cqw;
+  font-size: 6cqw;
   font-weight: 900;
   font-style: italic;
   line-height: 0.95;
@@ -1350,9 +1388,10 @@ select {
 .tb-ins__echo-mono span:nth-child(1) { color: #7fe7ff26; transform: translateX(9cqw); }
 .tb-ins__echo-mono span:nth-child(2) { color: #7fe7ff59; transform: translateX(4.5cqw); }
 .tb-ins--wizards .tb-ins__set {
-  font-weight: 400;
-  letter-spacing: 0.4em;
-  color: #7fe7ff;
+  font-style: italic;
+  color: #c8f6ff;
+  text-shadow: -0.9cqw 0 0 #7fe7ff99, -1.8cqw 0 0 #7fe7ff4d, -2.7cqw 0 0 #7fe7ff26;
+  padding-left: 2.7cqw;
 }
 .tb-ins--wizards .tb-ins__moment { color: #7fe7ff; }
 .tb-ins--wizards .tb-ins__foot { padding: 0 4cqw 4cqw; }
@@ -1455,14 +1494,15 @@ select {
 }
 .tb-ins__charter {
   margin-bottom: 0.8cqw;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--font-engrave), serif;
   font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.34em;
+  font-weight: 700;
+  font-size: 4cqw;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--t1-ink, #fff);
   opacity: 0.85;
+  font-style: italic;
 }
 .tb-ins--founders .tb-ins__name {
   font-family: var(--font-engrave), serif;
@@ -1508,9 +1548,9 @@ select {
 }
 .tb-ins__dtname {
   font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  font-size: 3.6cqw;
-  letter-spacing: 0.3em;
+  font-weight: 900;
+  font-size: 4.8cqw;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 .tb-ins__dtplace {
@@ -1691,8 +1731,8 @@ select {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.8cqw;
-  letter-spacing: 0.3em;
+  font-size: 3.8cqw;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #ff6fb6;
 }
@@ -1762,7 +1802,7 @@ select {
   background: radial-gradient(50% 50% at 50% 50%, transparent 55%, #050a1ccc);
   pointer-events: none;
 }
-.tb-ins--thirdeye .tb-ins__set { max-width: 26cqw; color: #9db8ff; }
+.tb-ins--thirdeye .tb-ins__set { max-width: 34cqw; color: #b7caff; letter-spacing: 0.08em; text-shadow: 0 0 2cqw #3d6bff; }
 .tb-ins--thirdeye .tb-ins__foot { text-align: center; }
 .tb-ins__eye {
   display: block;
@@ -1830,8 +1870,8 @@ select {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.3cqw;
-  letter-spacing: 0.32em;
+  font-size: 3.4cqw;
+  letter-spacing: 0.28em;
   color: #9ff5dc;
 }
 .tb-ins__imdate span { color: #ffffffd9; }
@@ -1939,6 +1979,12 @@ select {
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: color-mix(in oklab, var(--pp) 60%, #1b1d24);
+}
+.tb-ins__pphead > span:first-child {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-size: 3.8cqw;
+  letter-spacing: 0.24em;
 }
 .tb-ins__pphead > span:last-child {
   display: flex;
@@ -2332,13 +2378,13 @@ select {
 }
 .tb-ins__carve {
   margin-top: 1.6cqw;
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-stretch: 85%;
-  font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.24em;
+  font-weight: 900;
+  font-size: 4.4cqw;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #b9b4a8;
+  color: #d8d2c4;
   text-shadow: 0 -0.25cqw 0 #000a;
 }
 .tb-ins--fortress .tb-ins__fine { border-top-color: #ece6d833; color: #b9b4a8; }
@@ -2361,7 +2407,6 @@ select {
   .tb-ins__set span,
   .tb-ins__est,
   .tb-ins__moment,
-  .tb-ins__carve,
   .tb-ins__trteam {
     display: none;
   }
@@ -2378,9 +2423,7 @@ select {
   .tb-ins__codes,
   .tb-ins__moment,
   .tb-ins__est,
-  .tb-ins__charter,
   .tb-ins__pickcap,
-  .tb-ins__carve,
   .tb-ins__trteam,
   .tb-ins__ppmrz,
   .tb-ins__ppdata dt,
@@ -2392,10 +2435,9 @@ select {
   .tb-ins__rvfine {
     display: none;
   }
-  .tb-ins__ddset { font-size: 0; margin-bottom: 0.6cqw; }
   .tb-ins__set {
-    font-size: 4cqw;
-    letter-spacing: 0.16em;
+    font-size: 6cqw;
+    letter-spacing: 0.02em;
   }
 }
 
