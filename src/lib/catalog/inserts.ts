@@ -745,7 +745,7 @@ const PASSPORTS: InsertCard[] = (
     { id: "PA7", kicker: "FIN", player: "4066336" }, // Lauri Markkanen
     { id: "PA8", kicker: "BHS", player: "5124612" }, // VJ Edgecombe
     { id: "PA9", kicker: "GEO", player: "4348700" }, // Goga Bitadze
-    { id: "PA10", kicker: "DEU", player: "3032979" }, // Dennis Schroder
+    { id: "PA10", kicker: "DEU", player: "3032979", ovr: 95 }, // Dennis Schroder
     { id: "PA11", kicker: "LVA", player: "3102531" }, // Kristaps Porzingis
     { id: "PA12", kicker: "LTU", player: "3155942" }, // Domantas Sabonis
     // not in the base set yet
