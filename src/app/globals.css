@@ -2008,90 +2008,124 @@ select {
   color: #2a2c33;
 }
 
-/* Snipers (blue), Dimers (green), Snatchers (red): one layout. Full art inside a thin frame of the
-   set's colour; a white court diagram across the foot of the photo; a slanted colour footer with
-   the name and, big on the right, the number the player is in the set for. */
-.tb-ins--trio.is-snipers { --skill: #1d5fe0; --skill-dk: #0b2a6e; }
-.tb-ins--trio.is-dimers { --skill: #0e9f5a; --skill-dk: #06452a; }
-.tb-ins--trio.is-snatchers { --skill: #d7263d; --skill-dk: #5f0d18; }
-.tb-ins--trio { background: var(--skill-dk); }
-.tb-ins--trio .tb-ins__photo { bottom: 28cqw; }
-.tb-ins--trio::after {
-  content: "";
-  position: absolute;
-  inset: 2cqw;
-  z-index: 3;
-  border: 0.45cqw solid color-mix(in oklab, var(--skill) 75%, #fff);
-  border-radius: 0.8cqw;
-  pointer-events: none;
+/* Snipers (blue), Dimers (green), Snatchers (red): the set's colour owns the card so the three read
+   apart at a glance, whatever the player's team. A heavy slanted wordmark across the top, the photo
+   in a window framed in the set colour (its fallback is the set's dark, not the team colour), and a
+   solid panel of the colour below with the court diagram as a bold watermark, the name with a
+   team chip, and the player's number huge. A fine halftone keeps the colour from going flat. */
+.tb-ins--trio.is-snipers { --skill: #1d5fe0; --skill-lt: #5b8cff; --skill-dk: #0b2a6e; }
+.tb-ins--trio.is-dimers { --skill: #0e9f5a; --skill-lt: #3fd68a; --skill-dk: #06452a; }
+.tb-ins--trio.is-snatchers { --skill: #d7263d; --skill-lt: #ff5a6e; --skill-dk: #5f0d18; }
+.tb-ins--trio {
+  background:
+    radial-gradient(circle, #ffffff14 0 0.3cqw, transparent 0.42cqw) 0 0 / 1.6cqw 1.6cqw,
+    radial-gradient(120% 70% at 50% 0%, var(--skill-lt), var(--skill) 55%, var(--skill-dk));
+  color: #fff;
 }
-.tb-ins--trio .tb-ins__ovr { right: 5cqw; top: 5cqw; text-shadow: 0 0.3cqw 1.2cqw #000c; }
-.tb-ins__motif {
+.tb-ins__trmark {
   position: absolute;
-  right: 4cqw;
-  bottom: 31cqw;
-  left: 4cqw;
+  top: 3.2cqw;
+  left: 4.6cqw;
+  z-index: 4;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 110%;
+  font-size: 8.4cqw;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  transform: skewX(-8deg);
+  transform-origin: left;
+  text-shadow: 0.5cqw 0.5cqw 0 var(--skill-dk);
+}
+.tb-ins--trio .tb-ins__ovr { top: 3cqw; right: 4.6cqw; text-shadow: 0.4cqw 0.4cqw 0 var(--skill-dk); }
+.tb-ins--trio .tb-ins__ovr b { font-size: 9cqw; }
+.tb-ins--trio .tb-ins__photo {
+  inset: 15cqw 4.6cqw 43cqw;
   z-index: 2;
-  width: calc(100% - 8cqw);
-  height: auto;
-  fill: none;
-  stroke: #fff;
-  stroke-width: 0.55;
-  stroke-linecap: round;
-  opacity: 0.8;
-  filter: drop-shadow(0 0 0.6cqw #0009);
+  border-radius: 1.2cqw;
+  background: var(--skill-dk);
+  box-shadow: 0 0 0 0.8cqw #ffffffd9, 0 0 0 1.6cqw var(--skill-dk), 0 1.2cqw 2.4cqw #0008;
 }
-.tb-ins__motif .is-dash { stroke-dasharray: 1.8 1.6; }
-.tb-ins__motif .is-fill { fill: #fff; stroke: none; }
-.tb-ins__trfoot {
+.tb-ins--trio .tb-card__mono { color: var(--skill-lt); opacity: 0.9; }
+.tb-ins__trpanel {
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 4;
+  z-index: 3;
   display: grid;
-  height: 34cqw;
+  height: 40cqw;
   grid-template-columns: minmax(0, 1fr) auto;
   align-content: end;
-  column-gap: 3cqw;
-  padding: 0 5.4cqw 4.4cqw;
-  background: linear-gradient(170deg, var(--skill), var(--skill-dk) 92%);
-  clip-path: polygon(0 6cqw, 100% 0, 100% 100%, 0 100%);
-  color: #fff;
+  column-gap: 2cqw;
+  padding: 0 4.6cqw 4cqw;
 }
+/* the court diagram, bold and pale across the whole panel */
+.tb-ins__motif {
+  position: absolute;
+  inset: 1cqw 2cqw auto;
+  z-index: -1;
+  width: calc(100% - 4cqw);
+  height: auto;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.26;
+}
+.tb-ins__motif .is-dash { stroke-dasharray: 3 2.4; }
+.tb-ins__motif .is-fill { fill: #fff; stroke: none; }
 .tb-ins__trmain { min-width: 0; align-self: end; }
-.tb-ins__trset {
-  margin-bottom: 1.2cqw;
+.tb-ins--trio .tb-ins__name { text-shadow: 0.35cqw 0.35cqw 0 var(--skill-dk); }
+.tb-ins__trteam {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  margin-top: 1.2cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.6cqw;
-  letter-spacing: 0.3em;
+  font-size: 2.5cqw;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #ffffffcc;
+  color: #ffffffd9;
+}
+.tb-ins__trteam i {
+  padding: 0.5cqw 1.2cqw;
+  border-radius: 0.6cqw;
+  font-style: normal;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 2.8cqw;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 0 0.35cqw #ffffffb3;
 }
 .tb-ins__trstat { align-self: end; text-align: right; }
 .tb-ins__trstat b {
   display: block;
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
-  font-stretch: 72%;
-  font-size: 10cqw;
-  line-height: 0.85;
+  font-stretch: 70%;
+  font-size: 15cqw;
+  line-height: 0.82;
   font-variant-numeric: tabular-nums;
+  text-shadow: 0.5cqw 0.5cqw 0 var(--skill-dk);
 }
 .tb-ins__trstat small {
   display: block;
-  margin-top: 0.8cqw;
+  margin-top: 1cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2cqw;
+  font-size: 2.1cqw;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #ffffffcc;
+  color: #ffffffd9;
 }
-.tb-ins__trfoot .tb-ins__fine { grid-column: 1 / -1; color: #ffffffbf; }
+.tb-ins__trpanel .tb-ins__fine { grid-column: 1 / -1; color: #ffffffbf; }
 
 /* The Light / The Shadow: a beam enters the top-left corner, a prism splits it into a spectrum
    band running diagonally behind the player, landing in two stripes of team colour. The Light is
@@ -2327,7 +2361,8 @@ select {
   .tb-ins__set span,
   .tb-ins__est,
   .tb-ins__moment,
-  .tb-ins__carve {
+  .tb-ins__carve,
+  .tb-ins__trteam {
     display: none;
   }
   .tb-ins__fine { justify-content: flex-end; }
@@ -2346,6 +2381,7 @@ select {
   .tb-ins__charter,
   .tb-ins__pickcap,
   .tb-ins__carve,
+  .tb-ins__trteam,
   .tb-ins__ppmrz,
   .tb-ins__ppdata dt,
   .tb-ins__ppstamp small,
@@ -2716,14 +2752,16 @@ select {
   box-shadow: inset 0 0 0 2cqw #14254d, inset 0 0 0 2.4cqw #d8b75a99;
 }
 
-/* Snipers, Dimers, Snatchers: the set's dark colour, its bright colour as a slanted band at the foot */
-.tb-rev[data-set="snipers"] { --rev-bg: #0b2a6e; --skill: #1d5fe0; }
-.tb-rev[data-set="dimers"] { --rev-bg: #06452a; --skill: #0e9f5a; }
-.tb-rev[data-set="snatchers"] { --rev-bg: #5f0d18; --skill: #d7263d; }
+/* Snipers, Dimers, Snatchers: the set's colour, lit from the top, halftone, its dark at the foot */
+.tb-rev[data-set="snipers"] { --rev-bg: #1d5fe0; --skill-lt: #5b8cff; --skill-dk: #0b2a6e; }
+.tb-rev[data-set="dimers"] { --rev-bg: #0e9f5a; --skill-lt: #3fd68a; --skill-dk: #06452a; }
+.tb-rev[data-set="snatchers"] { --rev-bg: #d7263d; --skill-lt: #ff5a6e; --skill-dk: #5f0d18; }
 .tb-rev[data-set="snipers"] .tb-rev__deco,
 .tb-rev[data-set="dimers"] .tb-rev__deco,
 .tb-rev[data-set="snatchers"] .tb-rev__deco {
-  background: linear-gradient(174deg, transparent 0 74%, var(--skill) 74%);
+  background:
+    radial-gradient(circle, #ffffff14 0 0.3cqw, transparent 0.42cqw) 0 0 / 1.6cqw 1.6cqw,
+    radial-gradient(120% 70% at 50% 0%, var(--skill-lt), var(--rev-bg) 55%, var(--skill-dk));
 }
 
 /* ── face-down: the Gate 7 card back inside the parallel border ── */

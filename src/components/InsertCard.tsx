@@ -1059,9 +1059,11 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
-    // Snipers, Dimers, Snatchers: one layout, one colour each (blue, green, red). Full art, a thin
-    // white court diagram drawn across the foot of the photo (the arc, the passing lanes, the rim),
-    // and a slanted colour footer with the player's signature number big beside the name.
+    // Snipers, Dimers, Snatchers: the set's colour owns the card (blue, green, red), so the three read
+    // apart at a glance whatever team the player is on. The set's name across the top as a heavy
+    // slanted wordmark, the photo in a window framed in the set colour, and below it a solid panel
+    // of the colour with the skill's court diagram as a bold watermark, the name with a team chip,
+    // and the number the player is in the set for, huge.
     case "snipers":
     case "dimers":
     case "snatchers": {
@@ -1069,29 +1071,35 @@ export function InsertFront(props: InsertFrontProps) {
       const v = card.stats?.[skill.key];
       return (
         <div className={`tb-ins tb-ins--trio is-${card.type}`}>
+          <div className="tb-ins__trmark" aria-hidden>
+            {skill.label}
+          </div>
           {photo()}
-          <SkillMotif kind={card.type} />
           <Rating ovr={card.ovr} pos={p.pos} />
-          <div className="tb-ins__trfoot">
+          <div className="tb-ins__trpanel">
+            <SkillMotif kind={card.type} />
             <div className="tb-ins__trmain">
-              <div className="tb-ins__trset">{skill.label}</div>
               <div
                 className="tb-ins__name"
-                style={{ fontSize: `${nameSize(name, 0.62)}cqw` }}
+                style={{ fontSize: `${nameSize(name, 0.6)}cqw` }}
               >
                 {name}
+              </div>
+              <div className="tb-ins__trteam">
+                <i style={{ background: "var(--t1)", color: "var(--t1-ink)" }}>{teamCode(card.team)}</i>
+                {skill.label}
               </div>
             </div>
             {v != null && (
               <div className="tb-ins__trstat">
                 <b>{skill.key === "3P%" ? `${v.toFixed(1)}%` : v.toFixed(1)}</b>
-                <small>{skill.key === "3P%" ? "3PT" : skill.key} · {SEASON}</small>
+                <small>
+                  {skill.key === "3P%" ? "From three" : skill.key === "AST" ? "Assists" : "Rebounds"} · {SEASON}
+                </small>
               </div>
             )}
             <div className="tb-ins__fine">
-              <span>
-                {card.team} · {p.pos}
-              </span>
+              <span>{p.pos}</span>
               {serial}
               {no}
             </div>
