@@ -9,6 +9,7 @@ import type { Rarity } from "@/lib/catalog/types";
 import type { PackStatus, PackType, PulledCard } from "@/lib/packs";
 import { Card, CardBack } from "./Card";
 import { CardViewer } from "./CardViewer";
+import { PackDeal } from "./PackDeal";
 import { CheckIcon, TicketIcon } from "./Icons";
 import { SportIcon } from "./SportIcon";
 
@@ -317,9 +318,8 @@ function PackOpening({
   onAnother: () => void;
   onClose: () => void;
 }) {
-  const [stage, setStage] = useState<"pack" | "torn" | "cards">("pack");
+  const [stage, setStage] = useState<"pack" | "torn" | "deal" | "cards">("pack");
   const [flipped, setFlipped] = useState<boolean[]>(() => cards.map(() => false));
-  const [spotlight, setSpotlight] = useState<PulledCard | null>(null);
   // a face-up card opens in the full-screen viewer
   const [inspect, setInspect] = useState<number | null>(null);
   const allFlipped = flipped.every(Boolean);
@@ -327,7 +327,7 @@ function PackOpening({
   function tear() {
     if (stage !== "pack") return;
     setStage("torn");
-    setTimeout(() => setStage("cards"), 520);
+    setTimeout(() => setStage("deal"), 520);
   }
 
   function flip(i: number) {
@@ -336,7 +336,6 @@ function PackOpening({
       return;
     }
     setFlipped((f) => f.map((v, j) => (j === i ? true : v)));
-    if (isBig(cards[i])) setTimeout(() => setSpotlight(cards[i]), 450);
   }
 
   function revealAll() {
@@ -357,13 +356,12 @@ function PackOpening({
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
         if (inspect !== null) return; // the viewer closes itself
-        if (spotlight) setSpotlight(null);
-        else if (allFlipped) onClose();
+        if (allFlipped) onClose();
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [spotlight, inspect, allFlipped, onClose]);
+  }, [inspect, allFlipped, onClose]);
 
   return (
     <motion.div
@@ -375,7 +373,15 @@ function PackOpening({
       aria-modal="true"
       aria-label="Opening a pack"
     >
-      {stage !== "cards" ? (
+      {stage === "deal" ? (
+        <PackDeal
+          cards={cards}
+          onDone={() => {
+            setFlipped(cards.map(() => true));
+            setStage("cards");
+          }}
+        />
+      ) : stage !== "cards" ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-6">
           <motion.button
             type="button"
@@ -462,7 +468,6 @@ function PackOpening({
         </div>
       )}
 
-      <AnimatePresence>{spotlight && <Spotlight card={spotlight} onClose={() => setSpotlight(null)} />}</AnimatePresence>
       <AnimatePresence>
         {inspect !== null && (
           <CardViewer
@@ -492,54 +497,5 @@ function PackSummary({ cards }: { cards: PulledCard[] }) {
       {fresh > 0 && ` · ${fresh} new to your binder`}
       {shiny > 0 && ` · ${shiny} special finish${shiny > 1 ? "es" : ""}`}
     </p>
-  );
-}
-
-/** A big pull gets stamped across the screen, serial first. */
-function Spotlight({ card, onClose }: { card: PulledCard; onClose: () => void }) {
-  const oneOfOne = card.supply === 1;
-  const label = card.serialNo
-    ? oneOfOne
-      ? "One of one"
-      : `No. ${card.serialNo} of ${card.supply}`
-    : card.rarity === "grail"
-      ? "Grail pull"
-      : card.rarity === "mythic"
-        ? "Mythic pull"
-        : "Legend pull";
-  const color =
-    card.rarity === "grail"
-      ? "var(--r-grail)"
-      : card.rarity === "mythic" || oneOfOne
-        ? "var(--r-mythic)"
-        : "var(--r-legendary)";
-  return (
-    <motion.div
-      className="fixed inset-0 z-[60] flex cursor-pointer flex-col items-center justify-center gap-8 bg-bg-2 px-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <motion.div
-        className="whitespace-nowrap rounded-md border-[4px] px-4 py-1.5 font-display text-[clamp(1.6rem,8.5vw,3.75rem)] sm:border-[5px] sm:px-6 sm:py-2"
-        style={{ color, borderColor: color }}
-        initial={{ scale: 2.6, rotate: -14, opacity: 0 }}
-        animate={{ scale: 1, rotate: -5, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 520, damping: 22 }}
-      >
-        {label}
-      </motion.div>
-      <motion.div
-        className="w-64 sm:w-80"
-        initial={{ y: 40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.12, type: "spring", stiffness: 200, damping: 18 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Card card={card} finish={card.finish} serialNo={card.serialNo} supply={card.supply} grade={card.grade} />
-      </motion.div>
-      <p className="font-cond text-sm font-bold uppercase tracking-[0.22em] text-muted">Tap anywhere to continue</p>
-    </motion.div>
   );
 }
