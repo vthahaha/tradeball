@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { INSERT_NAMES, INSERT_TYPES, teamColors, type CardView } from "@/lib/catalog";
 import { isInsert, RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
-import { Card } from "./Card";
+import { Card, cardNo } from "./Card";
 import { CardViewer } from "./CardViewer";
 import { SetIcon } from "./CardArt";
 
@@ -34,7 +34,7 @@ const RARITY_COLOR: Record<Rarity, string> = {
   grail: "var(--r-grail)",
 };
 
-type SortKey = "rarity" | "ovr" | "newest" | "name";
+type SortKey = "set" | "rarity" | "ovr" | "newest" | "name";
 type GroupKey = "set" | "team" | "rarity" | "none";
 
 function groupTitle(group: GroupKey, k: string) {
@@ -44,7 +44,23 @@ function groupTitle(group: GroupKey, k: string) {
 }
 
 /** A binder page header: the team's colours or the set's mark, then owned / total. */
-function GroupHead({ group, k, owned, total }: { group: GroupKey; k: string; owned: number; total: number }) {
+function GroupHead({
+  group,
+  k,
+  owned,
+  total,
+  need,
+  needsOpen,
+  onNeeds,
+}: {
+  group: GroupKey;
+  k: string;
+  owned: number;
+  total: number;
+  need: number;
+  needsOpen: boolean;
+  onNeeds: () => void;
+}) {
   const [t1, t2] = group === "team" ? teamColors(k) : ["", ""];
   const pct = total ? Math.round((owned / total) * 100) : 0;
   return (
@@ -63,6 +79,18 @@ function GroupHead({ group, k, owned, total }: { group: GroupKey; k: string; own
       )}
       <h2 className="min-w-0 truncate font-display text-2xl leading-none sm:text-3xl">{groupTitle(group, k)}</h2>
       <div className="ml-auto flex shrink-0 items-center gap-3">
+        {need > 0 ? (
+          <button
+            type="button"
+            onClick={onNeeds}
+            aria-expanded={needsOpen}
+            className="rounded-full border border-line px-3 py-1 font-cond text-sm font-bold uppercase tracking-wider text-muted hover:border-accent hover:text-text"
+          >
+            Need {need}
+          </button>
+        ) : (
+          <span className="tb-spine__done">Complete</span>
+        )}
         <span className="font-cond text-sm font-bold text-muted">
           <span className="text-text">{owned}</span>/{total}
         </span>
@@ -71,6 +99,80 @@ function GroupHead({ group, k, owned, total }: { group: GroupKey; k: string; own
         </span>
       </div>
     </header>
+  );
+}
+
+/** What a set still needs: each missing card, who in the league has it, and a way to ask. */
+function NeedsList({
+  needs,
+  owners,
+  wished,
+  onWish,
+  onOpen,
+  order,
+}: {
+  needs: CardView[];
+  owners: Record<string, string[]>;
+  wished: Set<string>;
+  onWish: (id: string) => void;
+  onOpen: (id: string) => void;
+  order: (a: CardView, b: CardView) => number;
+}) {
+  const sorted = [...needs].sort(order);
+  const tradeable = sorted.filter((d) => owners[d.designId]?.length).length;
+  return (
+    <div className="mt-3 rounded-md border border-line bg-panel/80">
+      <p className="border-b border-dashed border-line px-4 py-2.5 font-cond text-sm font-semibold text-muted">
+        {tradeable > 0 ? (
+          <>
+            <span className="text-text">{tradeable}</span> of the {needs.length} you need are in someone&apos;s binder.
+          </>
+        ) : (
+          "Nobody in the league has pulled these yet."
+        )}
+      </p>
+      <ul className="max-h-80 divide-y divide-line/60 overflow-y-auto">
+        {sorted.map((d) => {
+          const who = owners[d.designId] ?? [];
+          const name = d.players.map((p) => p.name).join(" & ");
+          const on = wished.has(d.designId);
+          return (
+            <li key={d.designId} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-2">
+              <span className="size-2.5 shrink-0 rounded-full" style={{ background: RARITY_COLOR[d.rarity] }} aria-hidden />
+              <button type="button" onClick={() => onOpen(d.designId)} className="min-w-0 flex-1 truncate text-left font-semibold hover:text-accent">
+                {name}
+                <span className="ml-2 font-cond text-sm font-normal text-muted">{cardNo(d)}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onWish(d.designId)}
+                aria-pressed={on}
+                aria-label={on ? `Remove ${name} from your wishlist` : `Add ${name} to your wishlist`}
+                className={`grid size-8 place-items-center rounded-full ${on ? "text-[#ffd76a]" : "text-muted hover:text-text"}`}
+              >
+                <StarIcon filled={on} className="size-4" />
+              </button>
+              <span className="flex w-full flex-wrap gap-1.5 sm:w-auto">
+                {who.length === 0 ? (
+                  <span className="font-cond text-sm text-muted">Not pulled yet</span>
+                ) : (
+                  who.slice(0, 3).map((u) => (
+                    <Link
+                      key={u}
+                      href={`/trades/new?to=${encodeURIComponent(u)}&want=${encodeURIComponent(d.designId)}`}
+                      className="rounded-full border border-line bg-panel-2 px-2.5 py-0.5 font-cond text-sm font-bold hover:border-accent"
+                    >
+                      @{u} · Ask →
+                    </Link>
+                  ))
+                )}
+                {who.length > 3 && <span className="font-cond text-sm text-muted">+{who.length - 3}</span>}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 
@@ -186,9 +288,24 @@ export function CollectionView({
   const [group, setGroup] = useState<GroupKey>("set");
   const [showMissing, setShowMissing] = useState(true);
   const [dupesOnly, setDupesOnly] = useState(false);
-  const [sort, setSort] = useState<SortKey>("rarity");
+  const [sort, setSort] = useState<SortKey>("set");
+  const [needsOpen, setNeedsOpen] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState<string | null>(null);
+
+  // a card's slot in its set: the catalog order, so slot 7 is always card 7
+  const slotOf = useMemo(() => new Map(designs.map((d, i) => [d.designId, i])), [designs]);
+
+  // the shelf: every set with what you hold of it
+  const shelf = useMemo(() => {
+    const held = new Set(copies.map((c) => c.designId));
+    return ["base", "rookie", ...INSERT_TYPES]
+      .map((k) => {
+        const all = designs.filter((d) => d.type === k);
+        return { key: k, rarity: all[0]?.rarity ?? "common", total: all.length, owned: all.filter((d) => held.has(d.designId)).length };
+      })
+      .filter((x) => x.total > 0);
+  }, [designs, copies]);
 
   const byDesign = useMemo(() => {
     const m = new Map<string, OwnedCopy[]>();
@@ -229,6 +346,8 @@ export function CollectionView({
     const newest = (d: CardView) => byDesign.get(d.designId)?.[0]?.pulledAt ?? "";
     const cmp = (a: CardView, b: CardView) => {
       switch (sort) {
+        case "set":
+          return (slotOf.get(a.designId) ?? 0) - (slotOf.get(b.designId) ?? 0);
         case "rarity":
           return RARITIES.indexOf(b.rarity) - RARITIES.indexOf(a.rarity) || b.ovr - a.ovr;
         case "ovr":
@@ -242,12 +361,13 @@ export function CollectionView({
     const keyOf = (d: CardView) => (group === "team" ? d.team || "Legends" : group === "rarity" ? d.rarity : group === "set" ? d.type : "all");
     const order = (k: string) =>
       group === "rarity" ? -RARITIES.indexOf(k as Rarity) : group === "set" ? (k === "base" ? -2 : k === "rookie" ? -1 : INSERT_TYPES.indexOf(k)) : 0;
-    const map = new Map<string, { cards: CardView[]; owned: number; total: number }>();
+    const map = new Map<string, { cards: CardView[]; owned: number; total: number; needs: CardView[] }>();
     for (const d of scope) {
       const k = keyOf(d);
-      const g = map.get(k) ?? { cards: [], owned: 0, total: 0 };
+      const g = map.get(k) ?? { cards: [], owned: 0, total: 0, needs: [] };
       g.total++;
       if (byDesign.has(d.designId)) g.owned++;
+      else g.needs.push(d);
       map.set(k, g);
     }
     for (const d of shown) map.get(keyOf(d))!.cards.push(d);
@@ -255,10 +375,54 @@ export function CollectionView({
       .filter(([, g]) => g.cards.length > 0)
       .sort(([a], [b]) => order(a) - order(b) || a.localeCompare(b))
       .map(([key, g]) => ({ key, ...g, cards: g.cards.sort(cmp) }));
-  }, [scope, byDesign, showMissing, dupesOnly, wishOnly, group, sort]);
+  }, [scope, byDesign, showMissing, dupesOnly, wishOnly, group, sort, slotOf]);
   const shownCount = groups.reduce((n, g) => n + g.cards.length, 0);
 
   const openDesign = open ? designs.find((d) => d.designId === open) : null;
+
+  // one pocket of a binder page
+  const slot = (d: CardView) => {
+                const owned = byDesign.get(d.designId);
+                const best = owned ? bestCopy(owned) : null;
+                return (
+                  <li key={d.designId} className="tb-binder__slot tb-page__pocket">
+                    <button
+                      type="button"
+                      className={`relative block w-full cursor-pointer text-left ${owned ? "" : "tb-binder__missing"}`}
+                      onClick={() => setOpen(d.designId)}
+                      aria-label={`${d.players.map((p) => p.name).join(" & ")}${owned ? `, ${owned.length} owned` : ", not pulled yet"}`}
+                    >
+                      <Card
+                        card={d}
+                        missing={!owned}
+                        tilt={!!owned}
+                        finish={best?.finish}
+                        serialNo={best?.serialNo}
+                        supply={best?.supply}
+                        grade={best?.grade}
+                      />
+                      {!owned && (
+                        <span className="tb-binder__tag" aria-hidden>
+                          Not pulled
+                        </span>
+                      )}
+                      {owned && owned.length > 1 && (
+                        <span className="absolute -right-1.5 -top-1.5 z-10 rounded-full bg-accent px-2 py-0.5 font-cond text-sm font-extrabold text-accent-ink shadow-lg">
+                          ×{owned.length}
+                        </span>
+                      )}
+                      {wishSet.has(d.designId) && (
+                        <span
+                          className="absolute -left-1.5 -top-1.5 z-10 rounded-full bg-[#ffd76a] px-2 py-0.5 font-cond text-sm font-extrabold text-bg shadow-lg"
+                          aria-label="On your wishlist"
+                        >
+                          <StarIcon filled className="size-3.5" />
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                );
+  };
 
   // the viewer's arrows walk the binder in the order it is shown
   const order = groups.flatMap((g) => g.cards.map((c) => c.designId));
@@ -346,6 +510,62 @@ export function CollectionView({
         )}
       </AnimatePresence>
 
+      {/* The shelf: every set as a spine, with how much of it you hold. Tap to open that set. */}
+      <section aria-label="Sets" className="mt-6">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="field-label">Sets</h2>
+          {setFilter !== "all" && (
+            <button type="button" className="font-cond text-sm font-bold uppercase tracking-wider text-accent hover:underline" onClick={() => setSetFilter("all")}>
+              Show every set
+            </button>
+          )}
+        </div>
+        <ul className="no-scrollbar -mx-4 mt-2 flex snap-x gap-2.5 overflow-x-auto px-4 pb-2">
+          {shelf.map((x) => {
+            const done = x.owned === x.total;
+            const active = setFilter === x.key;
+            return (
+              <li key={x.key} className="snap-start">
+                <button
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => {
+                    setSetFilter(active ? "all" : x.key);
+                    setGroup("set");
+                    document.getElementById("binder-pages")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                  className={`tb-spine relative flex h-full w-36 flex-col gap-2 rounded-md border bg-panel p-3 text-left transition-colors ${
+                    active ? "border-text" : done ? "border-accent/70" : "border-line hover:border-muted"
+                  }`}
+                  style={{ "--spine": RARITY_COLOR[x.rarity as Rarity] } as React.CSSProperties}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="grid size-7 shrink-0 place-items-center rounded bg-panel-2 text-accent" aria-hidden>
+                      {isInsert(x.key) ? (
+                        <span className="tb-binder__seticon">
+                          <SetIcon type={x.key} />
+                        </span>
+                      ) : (
+                        <span className="font-display text-xs">{x.key === "base" ? "B" : "RC"}</span>
+                      )}
+                    </span>
+                    <span className="min-w-0 truncate font-cond text-sm font-bold uppercase tracking-wide">{groupTitle("set", x.key)}</span>
+                  </span>
+                  <span className="mt-auto flex items-baseline gap-1">
+                    <span className="font-display text-xl leading-none">{x.owned}</span>
+                    <span className="font-cond text-sm text-muted">/{x.total}</span>
+                    {done && <span className="tb-spine__done ml-auto">Complete</span>}
+                  </span>
+                  <span className="h-1 overflow-hidden rounded-full bg-bg-2" aria-hidden>
+                    <span className="block h-full rounded-full bg-accent" style={{ width: `${(x.owned / x.total) * 100}%` }} />
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
       {/* Filters: what to show, then how to group it */}
       <section className="ticket-panel mt-6" aria-label="Binder filters">
         <div className="flex flex-wrap items-center gap-2 px-3 pt-3 sm:px-5">
@@ -414,6 +634,7 @@ export function CollectionView({
             </div>
           </div>
           <Select label="Sort" value={sort} onChange={(v) => setSort(v as SortKey)}>
+            <option value="set">Set order</option>
             <option value="rarity">Rarest first</option>
             <option value="ovr">Highest rated</option>
             <option value="newest">Newest pulls</option>
@@ -437,6 +658,7 @@ export function CollectionView({
       </p>
 
       {/* Binder pages, one per group */}
+      <div id="binder-pages" className="scroll-mt-20" />
       {shownCount === 0 ? (
         <p className="mt-6 rounded-md border border-dashed border-line px-4 py-10 text-center text-muted">
           {copies.length === 0 && !showMissing ? "Your binder is empty. Go open a pack!" : "No cards match these filters."}
@@ -444,51 +666,42 @@ export function CollectionView({
       ) : (
         groups.map((g) => (
           <section key={g.key} className="mt-8" aria-label={group === "none" ? "Cards" : groupTitle(group, g.key)}>
-            {group !== "none" && <GroupHead group={group} k={g.key} owned={g.owned} total={g.total} />}
-            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-              {g.cards.map((d) => {
-                const owned = byDesign.get(d.designId);
-                const best = owned ? bestCopy(owned) : null;
-                return (
-                  <li key={d.designId} className="tb-binder__slot">
-                    <button
-                      type="button"
-                      className={`relative block w-full cursor-pointer text-left ${owned ? "" : "tb-binder__missing"}`}
-                      onClick={() => setOpen(d.designId)}
-                      aria-label={`${d.players.map((p) => p.name).join(" & ")}${owned ? `, ${owned.length} owned` : ", not pulled yet"}`}
-                    >
-                      <Card
-                        card={d}
-                        missing={!owned}
-                        tilt={!!owned}
-                        finish={best?.finish}
-                        serialNo={best?.serialNo}
-                        supply={best?.supply}
-                        grade={best?.grade}
-                      />
-                      {!owned && (
-                        <span className="tb-binder__tag" aria-hidden>
-                          Not pulled
-                        </span>
-                      )}
-                      {owned && owned.length > 1 && (
-                        <span className="absolute -right-1.5 -top-1.5 z-10 rounded-full bg-accent px-2 py-0.5 font-cond text-sm font-extrabold text-accent-ink shadow-lg">
-                          ×{owned.length}
-                        </span>
-                      )}
-                      {wishSet.has(d.designId) && (
-                        <span
-                          className="absolute -left-1.5 -top-1.5 z-10 rounded-full bg-[#ffd76a] px-2 py-0.5 font-cond text-sm font-extrabold text-bg shadow-lg"
-                          aria-label="On your wishlist"
-                        >
-                          <StarIcon filled className="size-3.5" />
-                        </span>
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+            {group !== "none" && (
+              <GroupHead
+                group={group}
+                k={g.key}
+                owned={g.owned}
+                total={g.total}
+                need={g.needs.length}
+                needsOpen={needsOpen === g.key}
+                onNeeds={() => setNeedsOpen((v) => (v === g.key ? null : g.key))}
+              />
+            )}
+            {needsOpen === g.key && g.needs.length > 0 && (
+              <NeedsList
+                needs={g.needs}
+                owners={owners}
+                wished={wishSet}
+                onWish={toggleWish}
+                onOpen={setOpen}
+                order={(a, b) =>
+                  (owners[b.designId]?.length ?? 0) - (owners[a.designId]?.length ?? 0) ||
+                  (slotOf.get(a.designId) ?? 0) - (slotOf.get(b.designId) ?? 0)
+                }
+              />
+            )}
+            {/* nine-pocket pages, two side by side on wide screens */}
+            <div className="mt-4 grid gap-5 lg:grid-cols-2">
+              {Array.from({ length: Math.ceil(g.cards.length / 9) }, (_, pi) => (
+                <div key={pi} className="tb-page">
+                  <ul className="grid grid-cols-3 gap-2 sm:gap-3">{g.cards.slice(pi * 9, pi * 9 + 9).map((d) => slot(d))}</ul>
+                  <div className="tb-page__no">
+                    Page {pi + 1}
+                    {g.cards.length > 9 ? ` of ${Math.ceil(g.cards.length / 9)}` : ""}
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
         ))
       )}
