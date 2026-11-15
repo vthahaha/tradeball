@@ -743,7 +743,7 @@ const PASSPORTS: InsertCard[] = (
     { id: "PA5", kicker: "ESP", player: "4593125" }, // Santi Aldama
     { id: "PA6", kicker: "DOM", player: "3213" }, // Al Horford
     { id: "PA7", kicker: "FIN", player: "4066336" }, // Lauri Markkanen
-    { id: "PA8", kicker: "CMR", player: "3149673" }, // Pascal Siakam
+    { id: "PA8", kicker: "BHS", player: "5124612" }, // VJ Edgecombe
     { id: "PA9", kicker: "GEO", player: "4348700" }, // Goga Bitadze
     { id: "PA10", kicker: "DEU", player: "3032979" }, // Dennis Schroder
     { id: "PA11", kicker: "LVA", player: "3102531" }, // Kristaps Porzingis

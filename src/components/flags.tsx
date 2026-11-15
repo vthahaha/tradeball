@@ -130,6 +130,16 @@ export const NATIONS: Record<string, Nation> = {
       </>
     ),
   },
+  BHS: {
+    name: "Bahamas",
+    colors: ["#00778b", "#ffc72c", "#00778b"],
+    flag: (
+      <>
+        {h3("#00778b", "#ffc72c", "#00778b")}
+        <polygon points="0,0 13,10 0,20" fill="#000" />
+      </>
+    ),
+  },
   GEO: {
     name: "Georgia",
     colors: ["#ffffff", "#ff0000", "#ffffff"],

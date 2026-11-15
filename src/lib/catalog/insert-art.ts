@@ -280,14 +280,14 @@ export const INSERT_ART: Record<string, string> = {
   TE15: "/inserts/TE15.png", // Austin Reaves
 
   // Set 5: 1. Passports
-  PA1: "", // Victor Wembanyama
-  PA2: "", // Luka Doncic
+  PA1: "/inserts/PA1.jpg", // Victor Wembanyama
+  PA2: "/inserts/PA2.jpg", // Luka Doncic
   PA3: "", // Nikola Jokic
   PA4: "", // Pelle Larsson
   PA5: "", // Santi Aldama
   PA6: "", // Al Horford
   PA7: "", // Lauri Markkanen
-  PA8: "", // Pascal Siakam
+  PA8: "", // VJ Edgecombe
   PA9: "", // Goga Bitadze
   PA10: "", // Dennis Schroder
   PA11: "", // Kristaps Porzingis
