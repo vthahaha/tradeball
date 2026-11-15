@@ -718,8 +718,7 @@ const THIRD_EYE: InsertCard[] = (
     { id: "TE4", player: "4278053" }, // Davion Mitchell
     { id: "TE5", player: "4278104" }, // Michael Porter Jr.
     { id: "TE6", player: "2595516" }, // Norman Powell
-    // not in the base set yet
-    { id: "TE7", team: "Trail Blazers", legend: L("Yang Hansen", "C", "China", 76) },
+    { id: "TE7", player: "5217746" }, // Yang Hansen
     { id: "TE8", player: "4432573" }, // Paolo Banchero
     { id: "TE9", player: "4395725" }, // Tyler Herro
     { id: "TE10", player: "5144091" }, // Jeremiah Fears
@@ -748,17 +747,14 @@ const PASSPORTS: InsertCard[] = (
     { id: "PA10", kicker: "DEU", player: "3032979", ovr: 95 }, // Dennis Schroder
     { id: "PA11", kicker: "LVA", player: "3102531" }, // Kristaps Porzingis
     { id: "PA12", kicker: "LTU", player: "3155942" }, // Domantas Sabonis
-    // not in the base set yet
-    { id: "PA13", kicker: "SEN", team: "Cavaliers", legend: L("Khalifa Diop", "C", "Senegal", 72) },
+    { id: "PA13", kicker: "SEN", player: "4997530" }, // Khalifa Diop
     { id: "PA14", kicker: "BIH", player: "3102530" }, // Jusuf Nurkic
     { id: "PA15", kicker: "TUR", player: "4871144" }, // Alperen Sengun
-    // not in the base set yet
-    { id: "PA16", kicker: "HRV", team: "Pelicans", legend: L("Karlo Matkovic", "F", "Croatia", 74) },
+    { id: "PA16", kicker: "HRV", player: "4997538" }, // Karlo Matkovic
     { id: "PA17", kicker: "COD", player: "4433247" }, // Jonathan Kuminga
     { id: "PA18", kicker: "CAN", player: "4278073" }, // Shai Gilgeous-Alexander
     { id: "PA19", kicker: "GRC", player: "3032977" }, // Giannis Antetokounmpo
-    // not in the base set yet
-    { id: "PA20", kicker: "SSD", team: "Suns", legend: L("Khaman Maluach", "C", "South Sudan", 75) },
+    { id: "PA20", kicker: "SSD", player: "5203685" }, // Khaman Maluach
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "passports" }));
 
@@ -772,8 +768,7 @@ const SNIPERS: InsertCard[] = (
     { id: "SN5", player: "5061575" }, // Kon Knueppel
     { id: "SN6", player: "3913174" }, // Luke Kennard
     { id: "SN7", player: "3202" }, // Kevin Durant
-    // not in the base set yet
-    { id: "SN8", team: "Thunder", legend: L("Jared McCain", "G", "USA", 79) },
+    { id: "SN8", player: "4683778" }, // Jared McCain
     { id: "SN9", player: "6606" }, // Damian Lillard
     { id: "SN10", player: "3975" }, // Stephen Curry
   ] as Omit<InsertCard, "cls">[]
