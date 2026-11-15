@@ -223,6 +223,32 @@ export function SetIcon({ type }: { type: string }) {
           <path d="M12 8.5l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" fill="currentColor" />
         </>,
       );
+    case "passports":
+      return s(
+        <>
+          <rect x="5" y="2.5" width="14" height="19" rx="1.5" fill="none" stroke="currentColor" strokeWidth="2" />
+          <circle cx="12" cy="10.5" r="3.6" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M8.5 17h7" stroke="currentColor" strokeWidth="1.6" />
+        </>,
+      );
+    case "snipers":
+      return s(
+        <path d="M3 21v-4a9 9 0 0 1 18 0v4" fill="none" stroke="currentColor" strokeWidth="2.2" />,
+      );
+    case "dimers":
+      return s(
+        <>
+          <path d="M3 18L10 9l5 6 6-9" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+          <path d="M21 4l-4.6 1.4 3.4 2.8z" fill="currentColor" />
+        </>,
+      );
+    case "snatchers":
+      return s(
+        <>
+          <rect x="5" y="3" width="14" height="8" fill="none" stroke="currentColor" strokeWidth="2" />
+          <path d="M7.5 13h9M8.5 13l1.5 7M15.5 13l-1.5 7M12 13v7" stroke="currentColor" strokeWidth="1.8" />
+        </>,
+      );
     case "dreamteam":
       return s(
         <>

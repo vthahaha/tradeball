@@ -279,6 +279,64 @@ export const INSERT_ART: Record<string, string> = {
   TE14: "/inserts/TE14.png", // Mikal Bridges
   TE15: "/inserts/TE15.png", // Austin Reaves
 
+  // Set 5: 1. Passports
+  PA1: "", // Victor Wembanyama
+  PA2: "", // Luka Doncic
+  PA3: "", // Nikola Jokic
+  PA4: "", // Pelle Larsson
+  PA5: "", // Santi Aldama
+  PA6: "", // Al Horford
+  PA7: "", // Lauri Markkanen
+  PA8: "", // Pascal Siakam
+  PA9: "", // Goga Bitadze
+  PA10: "", // Dennis Schroder
+  PA11: "", // Kristaps Porzingis
+  PA12: "", // Domantas Sabonis
+  PA13: "", // Khalifa Diop
+  PA14: "", // Egor Demin
+  PA15: "", // Alperen Sengun
+  PA16: "", // Karlo Matkovic
+  PA17: "", // Jonathan Kuminga
+  PA18: "", // Steven Adams
+  PA19: "", // Giannis Antetokounmpo
+  PA20: "", // OG Anunoby
+
+  // Set 5: 2. Snipers
+  SN1: "", // Desmond Bane
+  SN2: "", // Sam Hauser
+  SN3: "", // Norman Powell
+  SN4: "", // Duncan Robinson
+  SN5: "", // Kon Knueppel
+  SN6: "", // Luke Kennard
+  SN7: "", // Kevin Durant
+  SN8: "", // Jared McCain
+  SN9: "", // Damian Lillard
+  SN10: "", // Stephen Curry
+
+  // Set 5: 3. Dimers
+  DI1: "", // Davion Mitchell
+  DI2: "", // Trae Young
+  DI3: "", // James Harden
+  DI4: "", // Tyler Herro
+  DI5: "", // LeBron James
+  DI6: "", // Ty Jerome
+  DI7: "", // LaMelo Ball
+  DI8: "", // Darius Acuff Jr.
+  DI9: "", // De'Aaron Fox
+  DI10: "", // Keyonte George
+
+  // Set 5: 4. Snatchers (ST: SN was taken by Snipers)
+  ST1: "", // Jalen Johnson
+  ST2: "", // Michael Porter Jr.
+  ST3: "", // Ivica Zubac
+  ST4: "", // Karl-Anthony Towns
+  ST5: "", // Scottie Barnes
+  ST6: "", // P.J. Washington
+  ST7: "", // Brook Lopez
+  ST8: "", // Walker Kessler
+  ST9: "", // Derik Queen
+  ST10: "", // Nikola Jokic
+
   // Grail: Iconic Moments
   IM1: "/inserts/IM1.jpg", // The Last Shot, Michael Jordan
   IM2: "/inserts/IM2.jpg", // The Block, LeBron James

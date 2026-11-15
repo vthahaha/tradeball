@@ -1823,6 +1823,237 @@ select {
 }
 .tb-ins--iconic .tb-ins__fine { color: #c6d3f0; border-top-color: #5cf2c84d; }
 
+/* Passports: the photo above a passport data page. The flag's colours run down the card's left
+   edge; the page is pale stock tinted from the flag (--pp) under a fine guilloche, with the flag
+   printed at its true 3:2 and a fold of light across it, the bearer's details beside it in the
+   passport's label-over-value form, and the two machine-readable lines at the foot. An entry stamp
+   for the team is inked over the corner of the photo. */
+.tb-ins--passports { background: #f3f0e6; color: #1b1d24; }
+.tb-ins--passports .tb-ins__photo { inset: 0 0 46cqw 3.2cqw; }
+.tb-ins__pprail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  width: 3.2cqw;
+  box-shadow: inset -0.3cqw 0 0 #0000001f;
+}
+.tb-ins--passports .tb-ins__ovr { text-shadow: 0 0.3cqw 1.2cqw #000c; color: #fff; }
+.tb-ins__ppstamp {
+  position: absolute;
+  right: 5cqw;
+  bottom: 49cqw;
+  z-index: 4;
+  display: grid;
+  width: 19cqw;
+  aspect-ratio: 1;
+  place-content: center;
+  justify-items: center;
+  border: 0.55cqw solid var(--t1);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.9cqw #fff0, inset 0 0 0 1.25cqw var(--t1);
+  color: var(--t1);
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  text-transform: uppercase;
+  opacity: 0.82;
+  transform: rotate(-14deg);
+  mix-blend-mode: multiply;
+  background: #ffffffb3;
+}
+.tb-ins__ppstamp small { font-size: 1.7cqw; letter-spacing: 0.2em; line-height: 1.2; }
+.tb-ins__ppstamp b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: 5.4cqw;
+  line-height: 1;
+}
+.tb-ins__pppage {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 3.2cqw;
+  z-index: 3;
+  display: flex;
+  height: 46cqw;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.6cqw 4cqw 2.8cqw;
+  background:
+    repeating-radial-gradient(circle at 20% 130%, transparent 0 1.4cqw, color-mix(in oklab, var(--pp) 16%, transparent) 1.4cqw 1.6cqw),
+    repeating-radial-gradient(circle at 90% -40%, transparent 0 1.9cqw, color-mix(in oklab, var(--pp) 10%, transparent) 1.9cqw 2.1cqw),
+    linear-gradient(180deg, color-mix(in oklab, var(--pp) 10%, #f6f3ea), #ece7da);
+  border-top: 0.4cqw solid color-mix(in oklab, var(--pp) 55%, #1b1d24);
+}
+.tb-ins__pphead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--pp) 60%, #1b1d24);
+}
+.tb-ins__pphead > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  letter-spacing: 0.12em;
+  color: #4a4c55;
+}
+.tb-ins__ppbody {
+  display: grid;
+  grid-template-columns: 27cqw minmax(0, 1fr);
+  align-items: center;
+  gap: 3cqw;
+}
+.tb-ins__ppflag {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.6cqw;
+  box-shadow: 0 0.5cqw 1.2cqw #0004, 0 0 0 0.25cqw #0000002e;
+}
+.tb-ins__ppflag svg { display: block; width: 100%; height: auto; }
+/* the fold: soft light and shade running across the cloth */
+.tb-ins__ppflag::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, #ffffff38 0%, #fff0 22%, #00000026 38%, #fff0 52%, #ffffff2e 68%, #fff0 84%, #0000001f 100%);
+  pointer-events: none;
+}
+.tb-ins__ppdata {
+  display: grid;
+  min-width: 0;
+  gap: 1cqw;
+  margin: 0;
+}
+.tb-ins__ppdata > div { min-width: 0; }
+.tb-ins__ppdata dt {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 700;
+  font-size: 1.8cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6a6c74;
+}
+.tb-ins__ppdata dd {
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 3cqw;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+.tb-ins__ppmrz {
+  display: grid;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
+  font-weight: 600;
+  font-size: 2.45cqw;
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #2a2c33;
+}
+
+/* Snipers (blue), Dimers (green), Snatchers (red): one layout. Full art inside a thin frame of the
+   set's colour; a white court diagram across the foot of the photo; a slanted colour footer with
+   the name and, big on the right, the number the player is in the set for. */
+.tb-ins--trio.is-snipers { --skill: #1d5fe0; --skill-dk: #0b2a6e; }
+.tb-ins--trio.is-dimers { --skill: #0e9f5a; --skill-dk: #06452a; }
+.tb-ins--trio.is-snatchers { --skill: #d7263d; --skill-dk: #5f0d18; }
+.tb-ins--trio { background: var(--skill-dk); }
+.tb-ins--trio .tb-ins__photo { bottom: 28cqw; }
+.tb-ins--trio::after {
+  content: "";
+  position: absolute;
+  inset: 2cqw;
+  z-index: 3;
+  border: 0.45cqw solid color-mix(in oklab, var(--skill) 75%, #fff);
+  border-radius: 0.8cqw;
+  pointer-events: none;
+}
+.tb-ins--trio .tb-ins__ovr { right: 5cqw; top: 5cqw; text-shadow: 0 0.3cqw 1.2cqw #000c; }
+.tb-ins__motif {
+  position: absolute;
+  right: 4cqw;
+  bottom: 31cqw;
+  left: 4cqw;
+  z-index: 2;
+  width: calc(100% - 8cqw);
+  height: auto;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 0.6cqw #0009);
+}
+.tb-ins__motif .is-dash { stroke-dasharray: 1.8 1.6; }
+.tb-ins__motif .is-fill { fill: #fff; stroke: none; }
+.tb-ins__trfoot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 4;
+  display: grid;
+  height: 34cqw;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: end;
+  column-gap: 3cqw;
+  padding: 0 5.4cqw 4.4cqw;
+  background: linear-gradient(170deg, var(--skill), var(--skill-dk) 92%);
+  clip-path: polygon(0 6cqw, 100% 0, 100% 100%, 0 100%);
+  color: #fff;
+}
+.tb-ins__trmain { min-width: 0; align-self: end; }
+.tb-ins__trset {
+  margin-bottom: 1.2cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.6cqw;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ffffffcc;
+}
+.tb-ins__trstat { align-self: end; text-align: right; }
+.tb-ins__trstat b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  font-size: 10cqw;
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+.tb-ins__trstat small {
+  display: block;
+  margin-top: 0.8cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffffffcc;
+}
+.tb-ins__trfoot .tb-ins__fine { grid-column: 1 / -1; color: #ffffffbf; }
+
 /* The Light / The Shadow: a beam enters the top-left corner, a prism splits it into a spectrum
    band running diagonally behind the player, landing in two stripes of team colour. The Light is
    bright on white with a pastel prism border; The Shadow is the same beam swallowed in black, with
@@ -2014,6 +2245,10 @@ select {
   .tb-ins__est,
   .tb-ins__charter,
   .tb-ins__pickcap,
+  .tb-ins__ppmrz,
+  .tb-ins__ppdata dt,
+  .tb-ins__ppstamp small,
+  .tb-ins__trstat small,
   .tb-ins__imline,
   .tb-ins__imdate span,
   .tb-ins__rvrow small,
@@ -2364,6 +2599,28 @@ select {
   background:
     linear-gradient(90deg, #5cf2c866, transparent 26%, transparent 74%, #9b6cff66),
     radial-gradient(60% 45% at 50% 45%, #12305a, transparent 72%);
+}
+
+/* Passports: the cover, navy cloth with a gold rule */
+.tb-rev[data-set="passports"] {
+  --rev-bg: #14254d;
+  --rev-ink: #d8b75a;
+  --rev-mark: #d8b75a;
+  --rev-medal: #f6f1e2;
+  --rev-rule: #d8b75a66;
+}
+.tb-rev[data-set="passports"] .tb-rev__deco {
+  box-shadow: inset 0 0 0 2cqw #14254d, inset 0 0 0 2.4cqw #d8b75a99;
+}
+
+/* Snipers, Dimers, Snatchers: the set's dark colour, its bright colour as a slanted band at the foot */
+.tb-rev[data-set="snipers"] { --rev-bg: #0b2a6e; --skill: #1d5fe0; }
+.tb-rev[data-set="dimers"] { --rev-bg: #06452a; --skill: #0e9f5a; }
+.tb-rev[data-set="snatchers"] { --rev-bg: #5f0d18; --skill: #d7263d; }
+.tb-rev[data-set="snipers"] .tb-rev__deco,
+.tb-rev[data-set="dimers"] .tb-rev__deco,
+.tb-rev[data-set="snatchers"] .tb-rev__deco {
+  background: linear-gradient(174deg, transparent 0 74%, var(--skill) 74%);
 }
 
 /* ── face-down: the Gate 7 card back inside the parallel border ── */

@@ -38,6 +38,11 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "lunar", name: "Lunar New Year", rarity: "epic", boost: 3 },
   { id: "dotd", name: "Day of the Dead", rarity: "epic", boost: 1 },
   { id: "thirdeye", name: "The Third Eye", rarity: "epic", boost: 3 },
+  // Set 5
+  { id: "passports", name: "Passports", rarity: "uncommon", boost: 2 },
+  { id: "snipers", name: "Snipers", rarity: "uncommon", boost: 2 },
+  { id: "dimers", name: "Dimers", rarity: "uncommon", boost: 2 },
+  { id: "snatchers", name: "Snatchers", rarity: "uncommon", boost: 2 },
   // Grail
   { id: "iconic", name: "Iconic Moments", rarity: "grail", boost: 0 },
 ];
@@ -726,6 +731,84 @@ const THIRD_EYE: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "thirdeye" }));
 
+// ── Set 5 ──
+
+// 1. Passports: players from abroad (kicker = the ISO 3166 alpha-3 code, as on a passport)
+const PASSPORTS: InsertCard[] = (
+  [
+    { id: "PA1", kicker: "FRA", player: "5104157" }, // Victor Wembanyama
+    { id: "PA2", kicker: "SVN", player: "3945274" }, // Luka Doncic
+    { id: "PA3", kicker: "SRB", player: "3112335" }, // Nikola Jokic
+    { id: "PA4", kicker: "SWE", player: "4601025" }, // Pelle Larsson
+    { id: "PA5", kicker: "ESP", player: "4593125" }, // Santi Aldama
+    { id: "PA6", kicker: "DOM", player: "3213" }, // Al Horford
+    { id: "PA7", kicker: "FIN", player: "4066336" }, // Lauri Markkanen
+    { id: "PA8", kicker: "CMR", player: "3149673" }, // Pascal Siakam
+    { id: "PA9", kicker: "GEO", player: "4348700" }, // Goga Bitadze
+    { id: "PA10", kicker: "DEU", player: "3032979" }, // Dennis Schroder
+    { id: "PA11", kicker: "LVA", player: "3102531" }, // Kristaps Porzingis
+    { id: "PA12", kicker: "LTU", player: "3155942" }, // Domantas Sabonis
+    // not in the base set yet
+    { id: "PA13", kicker: "SEN", team: "Cavaliers", legend: L("Khalifa Diop", "C", "Senegal", 72) },
+    { id: "PA14", kicker: "RUS", player: "5175643" }, // Egor Demin
+    { id: "PA15", kicker: "TUR", player: "4871144" }, // Alperen Sengun
+    // not in the base set yet
+    { id: "PA16", kicker: "HRV", team: "Pelicans", legend: L("Karlo Matkovic", "F", "Croatia", 74) },
+    { id: "PA17", kicker: "COD", player: "4433247" }, // Jonathan Kuminga
+    { id: "PA18", kicker: "NZL", player: "2991235" }, // Steven Adams
+    { id: "PA19", kicker: "GRC", player: "3032977" }, // Giannis Antetokounmpo
+    { id: "PA20", kicker: "GBR", player: "3934719" }, // OG Anunoby
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "passports" }));
+
+// 2-4. Snipers, Dimers, Snatchers: the shooters, passers and rebounders, one colour each
+const SNIPERS: InsertCard[] = (
+  [
+    { id: "SN1", player: "4066320" }, // Desmond Bane
+    { id: "SN2", player: "4065804" }, // Sam Hauser
+    { id: "SN3", player: "2595516" }, // Norman Powell
+    { id: "SN4", player: "3157465" }, // Duncan Robinson
+    { id: "SN5", player: "5061575" }, // Kon Knueppel
+    { id: "SN6", player: "3913174" }, // Luke Kennard
+    { id: "SN7", player: "3202" }, // Kevin Durant
+    // not in the base set yet
+    { id: "SN8", team: "Thunder", legend: L("Jared McCain", "G", "USA", 79) },
+    { id: "SN9", player: "6606" }, // Damian Lillard
+    { id: "SN10", player: "3975" }, // Stephen Curry
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "snipers" }));
+
+const DIMERS: InsertCard[] = (
+  [
+    { id: "DI1", player: "4278053" }, // Davion Mitchell
+    { id: "DI2", player: "4277905" }, // Trae Young
+    { id: "DI3", player: "3992" }, // James Harden
+    { id: "DI4", player: "4395725" }, // Tyler Herro
+    { id: "DI5", player: "1966" }, // LeBron James
+    { id: "DI6", player: "4065733" }, // Ty Jerome
+    { id: "DI7", player: "4432816" }, // LaMelo Ball
+    { id: "DI8", player: "5142620" }, // Darius Acuff Jr.
+    { id: "DI9", player: "4066259" }, // De'Aaron Fox
+    { id: "DI10", player: "4433627" }, // Keyonte George
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "dimers" }));
+
+// ST, not SN as in the document: Snipers already use SN1-SN10 and card ids must be unique
+const SNATCHERS: InsertCard[] = (
+  [
+    { id: "ST1", player: "4701230" }, // Jalen Johnson
+    { id: "ST2", player: "4278104" }, // Michael Porter Jr.
+    { id: "ST3", player: "4017837" }, // Ivica Zubac
+    { id: "ST4", player: "3136195" }, // Karl-Anthony Towns
+    { id: "ST5", player: "4433134" }, // Scottie Barnes
+    { id: "ST6", player: "4278078" }, // P.J. Washington
+    { id: "ST7", player: "3448" }, // Brook Lopez
+    { id: "ST8", player: "4433136" }, // Walker Kessler
+    { id: "ST9", player: "4869780" }, // Derik Queen
+    { id: "ST10", player: "3112335" }, // Nikola Jokic
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "snatchers" }));
+
 // ── Grail ──
 
 // Iconic Moments: the plays everyone has replayed (title = the moment, kicker = the date,
@@ -794,5 +877,9 @@ export const INSERT_CARDS: InsertCard[] = [
   ...LUNAR_NEW_YEAR,
   ...DAY_OF_THE_DEAD,
   ...THIRD_EYE,
+  ...PASSPORTS,
+  ...SNIPERS,
+  ...DIMERS,
+  ...SNATCHERS,
   ...ICONIC_MOMENTS,
 ];

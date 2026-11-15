@@ -12,6 +12,7 @@ import {
   type Finish,
 } from "@/lib/catalog";
 import { fmtStat, initials, lastName, nameSize } from "./cardText";
+import { Flag, flagStripes, NATIONS } from "./flags";
 
 export interface InsertFrontProps {
   card: CardView;
@@ -244,6 +245,59 @@ function SugarSkull({ hue }: { hue: number }) {
       {[17, 20, 23].map((x) => (
         <circle key={x} cx={x} cy={x === 20 ? 39.6 : 39} r="0.8" fill={a} />
       ))}
+    </svg>
+  );
+}
+
+/** The three skill sets: their name and the stat each one leads with. */
+const SKILL: Record<string, { label: string; key: string }> = {
+  snipers: { label: "Snipers", key: "3P%" },
+  dimers: { label: "Dimers", key: "AST" },
+  snatchers: { label: "Snatchers", key: "REB" },
+};
+
+/** The court diagram for a skill set, in thin white line: the three-point arc with a shot dropping
+ *  in, a chain of passes ending in an arrow, or the backboard and rim with balls coming off it. */
+function SkillMotif({ kind }: { kind: string }) {
+  return (
+    <svg className="tb-ins__motif" viewBox="0 0 100 30" preserveAspectRatio="xMidYMax meet" aria-hidden>
+      {kind === "snipers" && (
+        <>
+          <path d="M4 30V24A46 22 0 0 1 96 24V30" />
+          <path d="M14 27.5Q40 -4 78 12.5" className="is-dash" />
+          <circle cx="80" cy="13.5" r="2" />
+          {/* ticks across the arc, where the arc actually is at each x */}
+          {[18, 34, 50, 66, 82].map((x) => {
+            const y = 24 - 22 * Math.sqrt(1 - ((x - 50) / 46) ** 2);
+            return <path key={x} d={`M${x} ${(y - 1.2).toFixed(2)}v2.4`} />;
+          })}
+        </>
+      )}
+      {kind === "dimers" && (
+        <>
+          <path d="M10 25L38 9L68 20L89 6" className="is-dash" />
+          <path d="M89 6l-5.2.3 2.4 4.1z" className="is-fill" />
+          {[
+            [10, 25],
+            [38, 9],
+            [68, 20],
+          ].map(([x, y]) => (
+            <circle key={x} cx={x} cy={y} r="1.5" className="is-fill" />
+          ))}
+        </>
+      )}
+      {kind === "snatchers" && (
+        <>
+          <rect x="40" y="1.5" width="20" height="9" rx="0.5" />
+          <rect x="46" y="5.5" width="8" height="5" />
+          <ellipse cx="50" cy="12.2" rx="5" ry="1.4" />
+          <path d="M45.4 12.4L47 18M50 13.6V18.6M54.6 12.4L53 18M47 18H53" />
+          <path d="M47 11Q28 -4 13 19" className="is-dash" />
+          <path d="M53 11Q74 -5 88 17" className="is-dash" />
+          <circle cx="12" cy="21.5" r="2.2" />
+          <circle cx="89" cy="19.5" r="2.2" />
+        </>
+      )}
     </svg>
   );
 }
@@ -929,6 +983,112 @@ export function InsertFront(props: InsertFrontProps) {
               {card.team} · {card.meta}
             </div>
             <div className="tb-ins__fine">
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Passports: the photo above a passport data page. The flag printed on the page at its true
+    // 3:2 with a fold of light across it, the flag's colours run down the card's edge, the page
+    // tinted from the flag with a guilloche, the two machine-readable lines at the foot, and an
+    // entry stamp for the team inked on the photo.
+    case "passports": {
+      const iso = card.kicker ?? "";
+      const nat = NATIONS[iso];
+      const last = lastName(name);
+      const first = name.slice(0, name.length - last.length).trim();
+      const team = teamCode(card.team);
+      const mrz = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]+/g, "<");
+      const fill = (s: string) => (s + "<".repeat(34)).slice(0, 34);
+      return (
+        <div
+          className="tb-ins tb-ins--passports"
+          style={{ "--pp": nat?.colors.find((c) => c !== "#ffffff") ?? "#233862" } as React.CSSProperties}
+        >
+          {photo()}
+          <div className="tb-ins__pprail" style={{ background: flagStripes(iso) }} aria-hidden />
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__ppstamp" aria-hidden>
+            <small>Entry</small>
+            <b>{team}</b>
+            <small>{SEASON}</small>
+          </div>
+          <div className="tb-ins__pppage">
+            <div className="tb-ins__pphead">
+              <span>Passport</span>
+              <span>
+                {serial}
+                {no}
+              </span>
+            </div>
+            <div className="tb-ins__ppbody">
+              <div className="tb-ins__ppflag">
+                <Flag code={iso} />
+              </div>
+              <dl className="tb-ins__ppdata">
+                <div>
+                  <dt>Surname</dt>
+                  <dd style={{ fontSize: `${Math.min(4.6, 46 / Math.max(1, last.length * 0.52))}cqw` }}>
+                    {last}
+                  </dd>
+                </div>
+                {first && (
+                  <div>
+                    <dt>Given names</dt>
+                    <dd>{first}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt>Nationality</dt>
+                  <dd>{nat?.name ?? p.nation}</dd>
+                </div>
+              </dl>
+            </div>
+            <div className="tb-ins__ppmrz" aria-hidden>
+              <span>{fill(`P<${iso}${mrz(last)}<<${mrz(first)}`)}</span>
+              <span>{fill(`${card.designId}<<${team}<<${p.pos}<<${SEASON.replace("-", "")}`)}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Snipers, Dimers, Snatchers: one layout, one colour each (blue, green, red). Full art, a thin
+    // white court diagram drawn across the foot of the photo (the arc, the passing lanes, the rim),
+    // and a slanted colour footer with the player's signature number big beside the name.
+    case "snipers":
+    case "dimers":
+    case "snatchers": {
+      const skill = SKILL[card.type];
+      const v = card.stats?.[skill.key];
+      return (
+        <div className={`tb-ins tb-ins--trio is-${card.type}`}>
+          {photo()}
+          <SkillMotif kind={card.type} />
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__trfoot">
+            <div className="tb-ins__trmain">
+              <div className="tb-ins__trset">{skill.label}</div>
+              <div
+                className="tb-ins__name"
+                style={{ fontSize: `${nameSize(name, 0.62)}cqw` }}
+              >
+                {name}
+              </div>
+            </div>
+            {v != null && (
+              <div className="tb-ins__trstat">
+                <b>{skill.key === "3P%" ? `${v.toFixed(1)}%` : v.toFixed(1)}</b>
+                <small>{skill.key === "3P%" ? "3PT" : skill.key} · {SEASON}</small>
+              </div>
+            )}
+            <div className="tb-ins__fine">
+              <span>
+                {card.team} · {p.pos}
+              </span>
               {serial}
               {no}
             </div>
