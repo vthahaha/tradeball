@@ -2184,94 +2184,130 @@ select {
 .tb-ins--light .tb-ins__fine { color: #4a5878; border-top-color: transparent; }
 .tb-ins--shadow .tb-ins__fine { color: #9aa0ad; border-top-color: transparent; }
 
-/* Stone Fortress: a monument. The whole card is one speckled stone slab; the full-colour photo
-   is set into it as a recessed panel with a thin team-colour inlay; the name and set are carved
-   once below like an inscription; the rating sits on a carved block */
+/* Stone Fortress: a castle wall. The team colour is the sky above a row of battlements cut against
+   it (the set's silhouette, readable at any size); below, the wall in dark granite masonry, staggered
+   blocks with mortar and a lit top edge; the photo set into the wall in a heavy bevelled stone frame
+   with a team-colour inlay; the rating on a heater shield in team colours; the name cut deep and
+   pale into the stone so it reads against the dark wall. */
 .tb-ins--fortress {
   background:
-    radial-gradient(circle, #ffffff14 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.3cqw 1.3cqw,
-    radial-gradient(circle, #00000026 0 0.3cqw, transparent 0.4cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw,
-    radial-gradient(120% 80% at 30% 20%, #ffffff1f, transparent 60%),
-    linear-gradient(170deg, #8f9298, #5f6268);
-  color: #33363b;
+    radial-gradient(circle, #ffffff10 0 0.22cqw, transparent 0.32cqw) 0 0 / 1.3cqw 1.3cqw,
+    radial-gradient(circle, #0000002e 0 0.28cqw, transparent 0.38cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='18'%3E%3Cpath d='M0 .3H24M0 9.3H24M.3 0V9M12.3 9V18' fill='none' stroke='%23000' stroke-opacity='.6' stroke-width='.6'/%3E%3Cpath d='M0 1H24M0 10H24M1 .6V9M13 9.6V18' fill='none' stroke='%23fff' stroke-opacity='.07' stroke-width='.5'/%3E%3C/svg%3E") 0 13cqw / 24cqw 18cqw,
+    radial-gradient(120% 70% at 50% 30%, #ffffff12, transparent 65%),
+    linear-gradient(180deg, #3d4046, #26282d);
+  color: #ece6d8;
+}
+/* the sky behind the battlements: the team colour, darker towards the top */
+.tb-ins__sky {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 13cqw;
+  background: linear-gradient(0deg, var(--t1), color-mix(in oklab, var(--t1) 55%, #000));
+}
+/* merlons and crenels: stone teeth along the top of the wall, each with a lit top face */
+.tb-ins__battlements {
+  position: absolute;
+  top: 4.5cqw;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: 9cqw;
+  background:
+    repeating-linear-gradient(90deg, #6a6e76 0 10.6cqw, transparent 10.6cqw 16cqw) 2.7cqw 0 / 100% 0.7cqw repeat-x,
+    repeating-linear-gradient(90deg, #4a4d54 0 10.6cqw, transparent 10.6cqw 16cqw) 2.7cqw 0 / 100% 5cqw repeat-x,
+    linear-gradient(#6a6e76, #6a6e76) 0 5cqw / 100% 0.6cqw no-repeat,
+    linear-gradient(#41444b, #3d4046) 0 5cqw / 100% 4cqw no-repeat;
+  filter: drop-shadow(0 0.6cqw 0.8cqw #0008);
 }
 .tb-ins--fortress .tb-ins__photo {
-  inset: 6cqw 6cqw 36cqw;
-  background: #2a2d33;
-  box-shadow:
-    inset 1cqw 1cqw 1.4cqw #0000008c,
-    inset -0.4cqw -0.4cqw 0 #ffffff1f;
+  inset: 17cqw 7cqw 39cqw;
+  z-index: 2;
+  background: #1c1e22;
 }
+/* the stone frame: thick, lit from the top left, a team-colour inlay just inside it */
 .tb-ins__inlay {
   position: absolute;
-  inset: 4.6cqw 4.6cqw 34.6cqw;
+  inset: 14.6cqw 4.6cqw 36.6cqw;
   z-index: 3;
-  border: 0.45cqw solid var(--t1);
-  box-shadow: 0 0 0 0.35cqw #ffffff2e, inset 0 0 0 0.3cqw #0000004d;
+  border: 2.4cqw solid #5a5e66;
+  border-top-color: #7a7e86;
+  border-left-color: #6c7078;
+  border-bottom-color: #3a3d43;
+  border-right-color: #44474e;
+  box-shadow:
+    inset 0 0 0 0.55cqw var(--t1),
+    inset 0 0 0 0.85cqw #0009,
+    0 1cqw 1.8cqw #000a;
   pointer-events: none;
 }
-.tb-ins__block {
+/* the shield: a heater in team colours with the second colour as its rim, hung on the frame */
+.tb-ins__shield {
   position: absolute;
-  top: 8.6cqw;
-  right: 8.6cqw;
-  z-index: 4;
+  top: 11cqw;
+  right: 2.6cqw;
+  z-index: 5;
   display: flex;
-  width: 15cqw;
+  width: 17cqw;
+  height: 20cqw;
   flex-direction: column;
   align-items: center;
-  padding: 1.4cqw 0 1.6cqw;
+  padding-top: 2.4cqw;
   background:
-    radial-gradient(circle, #ffffff12 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.2cqw 1.2cqw,
-    #55585e;
-  color: #e3e5e8;
-  box-shadow: 0 0.8cqw 1.4cqw #0000008c, inset 0.4cqw 0.4cqw 0 #ffffff2e, inset -0.4cqw -0.4cqw 0 #0000004d;
+    linear-gradient(135deg, #ffffff38, transparent 45%),
+    var(--t1);
+  color: var(--t1-ink, #fff);
+  clip-path: polygon(0 0, 100% 0, 100% 52%, 50% 100%, 0 52%);
+  box-shadow: inset 0 0 0 1cqw var(--t2);
 }
-.tb-ins__block small {
+.tb-ins__shield small {
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.2cqw;
-  letter-spacing: 0.2em;
+  font-size: 2.3cqw;
+  letter-spacing: 0.24em;
 }
-.tb-ins__block b {
+.tb-ins__shield b {
   font-family: var(--font-display), sans-serif;
   font-weight: 900;
   font-stretch: 72%;
-  font-size: 8cqw;
-  line-height: 0.9;
+  font-size: 8.6cqw;
+  line-height: 0.95;
 }
 .tb-ins__inscription {
   position: absolute;
   right: 5cqw;
-  bottom: 4.6cqw;
+  bottom: 4cqw;
   left: 5cqw;
   z-index: 4;
   display: flex;
-  height: 26cqw;
+  height: 29cqw;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
 }
+/* cut into the stone: pale letters, a dark lip above and a lit edge below */
 .tb-ins--fortress .tb-ins__name {
-  font-weight: 800;
-  font-stretch: 100%;
-  letter-spacing: 0.1em;
-  color: #34373c;
-  text-shadow: 0 0.35cqw 0 #ffffff4d, 0 -0.3cqw 0 #00000059;
+  font-weight: 900;
+  font-stretch: 92%;
+  letter-spacing: 0.06em;
+  color: #ece6d8;
+  text-shadow: 0 -0.35cqw 0 #000c, 0 0.3cqw 0 #ffffff26;
 }
 .tb-ins__carve {
-  margin-top: 1.4cqw;
+  margin-top: 1.6cqw;
   font-family: var(--font-body), sans-serif;
   font-stretch: 85%;
   font-weight: 800;
-  font-size: 2.5cqw;
-  letter-spacing: 0.26em;
+  font-size: 2.6cqw;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #34373c;
-  text-shadow: 0 0.25cqw 0 #ffffff40;
+  color: #b9b4a8;
+  text-shadow: 0 -0.25cqw 0 #000a;
 }
-.tb-ins--fortress .tb-ins__fine { border-top-color: #34373c33; color: #3e4146; }
+.tb-ins--fortress .tb-ins__fine { border-top-color: #ece6d833; color: #b9b4a8; }
 
 /* cards scrolled off screen (Card.tsx marks them asleep) stop their looping animations */
 .tb-card[data-asleep],
@@ -2290,7 +2326,8 @@ select {
   .tb-ins__imline,
   .tb-ins__set span,
   .tb-ins__est,
-  .tb-ins__moment {
+  .tb-ins__moment,
+  .tb-ins__carve {
     display: none;
   }
   .tb-ins__fine { justify-content: flex-end; }
@@ -2308,6 +2345,7 @@ select {
   .tb-ins__est,
   .tb-ins__charter,
   .tb-ins__pickcap,
+  .tb-ins__carve,
   .tb-ins__ppmrz,
   .tb-ins__ppdata dt,
   .tb-ins__ppstamp small,
@@ -2494,19 +2532,21 @@ select {
   background: linear-gradient(270deg, color-mix(in oklab, var(--t1) 70%, transparent), transparent 12%);
 }
 
-/* Stone Fortress: speckled granite, the mark carved in */
+/* Stone Fortress: the same wall, team-colour sky and battlements along the top, the mark cut in */
 .tb-rev[data-set="fortress"] {
-  --rev-bg: #6c6f75;
-  --rev-mark: #4b4e54;
-  --rev-rule: #ffffff40;
+  --rev-bg: #2c2e33;
+  --rev-ink: #ece6d8;
+  --rev-mark: #ece6d8;
+  --rev-rule: #ece6d833;
 }
 .tb-rev[data-set="fortress"] .tb-rev__deco {
   background:
-    radial-gradient(circle, #ffffff14 0 0.25cqw, transparent 0.35cqw) 0 0 / 1.3cqw 1.3cqw,
-    radial-gradient(circle, #00000024 0 0.3cqw, transparent 0.4cqw) 0.6cqw 0.7cqw / 1.7cqw 1.7cqw;
-  box-shadow: inset 0 0 0 2.4cqw #5d6066, inset 0.7cqw 0.7cqw 0 2.4cqw #ffffff22;
+    repeating-linear-gradient(90deg, #4a4d54 0 10.6cqw, transparent 10.6cqw 16cqw) 2.7cqw 6cqw / 100% 5cqw repeat-x,
+    linear-gradient(#41444b, #41444b) 0 11cqw / 100% 3cqw no-repeat,
+    linear-gradient(0deg, var(--t1), color-mix(in oklab, var(--t1) 55%, #000)) 0 0 / 100% 11cqw no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='18'%3E%3Cpath d='M0 .3H24M0 9.3H24M.3 0V9M12.3 9V18' fill='none' stroke='%23000' stroke-opacity='.6' stroke-width='.6'/%3E%3Cpath d='M0 1H24M0 10H24M1 .6V9M13 9.6V18' fill='none' stroke='%23fff' stroke-opacity='.07' stroke-width='.5'/%3E%3C/svg%3E") 0 14cqw / 24cqw 18cqw;
 }
-.tb-rev[data-set="fortress"] .tb-rev__mark { text-shadow: 0 0.4cqw 0 #ffffff33, 0 -0.4cqw 0 #00000066; }
+.tb-rev[data-set="fortress"] .tb-rev__mark { text-shadow: 0 -0.4cqw 0 #000c, 0 0.35cqw 0 #ffffff26; }
 
 /* Cult Classic: yellowed vintage stock, the mark in the team colour, a two-colour stripe */
 .tb-rev[data-set="cult"] {

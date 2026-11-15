@@ -547,21 +547,24 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
-    // Stone Fortress: a monument. One stone slab, the full-colour photo set into it as a recessed
-    // panel with a team-colour inlay, the name and set carved once below, the rating on a block
+    // Stone Fortress: a castle wall. The team's colour as the sky behind a row of battlements, the
+    // wall below in dark granite masonry, the photo set into it in a bevelled stone frame with a
+    // team-colour inlay, the rating hung on a heater shield, the name cut big and pale into the stone
     case "fortress":
       return (
         <div className="tb-ins tb-ins--fortress">
+          <div className="tb-ins__sky" aria-hidden />
+          <div className="tb-ins__battlements" aria-hidden />
           {photo()}
           <div className="tb-ins__inlay" aria-hidden />
-          <div className="tb-ins__block">
+          <div className="tb-ins__shield">
             <small>DEF</small>
             <b>{card.ovr}</b>
           </div>
           <div className="tb-ins__inscription">
             <div
               className="tb-ins__name"
-              style={{ fontSize: `${nameSize(name, 0.7)}cqw` }}
+              style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}
             >
               {name}
             </div>
