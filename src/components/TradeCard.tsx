@@ -6,7 +6,8 @@ import { useState } from "react";
 import type { PulledCard } from "@/lib/packs";
 import type { TradeView } from "@/lib/trades";
 import { SwapIcon } from "./Icons";
-import { MiniCard } from "./TradeBuilder";
+import { RARITIES } from "@/lib/catalog/types";
+import { InspectableCard } from "./CardViewer";
 
 const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#ffd76a] text-bg",
@@ -21,10 +22,26 @@ function when(iso: string) {
   return new Date(iso).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
-function CardRow({ label, cards }: { label: string; cards: PulledCard[] }) {
+/** "1 Legendary · 2 Rare": what a side is worth at a glance, rarest first. */
+function tally(cards: PulledCard[]) {
+  const n = new Map<string, number>();
+  for (const c of cards) n.set(c.rarity, (n.get(c.rarity) ?? 0) + 1);
+  return [...RARITIES]
+    .reverse()
+    .filter((r) => n.has(r))
+    .map((r) => `${n.get(r)} ${r}`)
+    .join(" · ");
+}
+
+function CardRow({ label, cards, fresh }: { label: string; cards: PulledCard[]; fresh?: Set<string> }) {
+  const newCount = fresh ? cards.filter((c) => !fresh.has(c.designId)).length : 0;
   return (
     <div className="min-w-0 flex-1">
-      <div className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">{label}</div>
+      <div className="flex flex-wrap items-baseline gap-x-2">
+        <span className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">{label}</span>
+        {cards.length > 0 && <span className="font-cond text-xs font-semibold capitalize text-muted">{tally(cards)}</span>}
+        {newCount > 0 && <span className="font-cond text-xs font-bold text-accent">{newCount} new for you</span>}
+      </div>
       {cards.length === 0 ? (
         <p className="mt-2 grid h-24 place-items-center rounded-lg border border-dashed border-line font-cond text-sm text-muted">
           Nothing
@@ -32,8 +49,13 @@ function CardRow({ label, cards }: { label: string; cards: PulledCard[] }) {
       ) : (
         <ul className="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-5">
           {cards.map((c) => (
-            <li key={c.instanceId}>
-              <MiniCard card={c} />
+            <li key={c.instanceId} className="relative">
+              <InspectableCard card={c} finish={c.finish} serialNo={c.serialNo} supply={c.supply} grade={c.grade} tilt={false} />
+              {fresh && !fresh.has(c.designId) && (
+                <span className="tb-fresh" aria-label="New for you">
+                  New
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -46,11 +68,15 @@ export function TradeCard({
   trade,
   me,
   mode,
+  mine,
 }: {
   trade: TradeView;
   me: string;
   mode: "incoming" | "outgoing" | "history" | "log";
+  /** Designs the viewer already owns: cards they would get that are not in here are marked new. */
+  mine?: string[];
 }) {
+  const owned = mine && mode !== "log" && mode !== "history" ? new Set(mine) : undefined;
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -103,11 +129,11 @@ export function TradeCard({
       {trade.message && <p className="mt-2 text-sm italic text-text/90">&ldquo;{trade.message}&rdquo;</p>}
 
       <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-start">
-        <CardRow label={leftLabel} cards={leftCards} />
+        <CardRow label={leftLabel} cards={leftCards} fresh={iAmSender ? undefined : owned} />
         <div className="hidden self-center font-display text-3xl text-muted md:block" aria-hidden>
           <SwapIcon className="size-7" />
         </div>
-        <CardRow label={rightLabel} cards={rightCards} />
+        <CardRow label={rightLabel} cards={rightCards} fresh={iAmSender ? owned : undefined} />
       </div>
 
       {trade.stale && (

@@ -2755,6 +2755,27 @@ select {
   animation: none;
 }
 
+/* a tag on a small card: "New" (would be new to your binder) or a star (on a wishlist) */
+.tb-fresh {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.35rem;
+  z-index: 10;
+  padding: 0.05rem 0.4rem;
+  border-radius: 99px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 0.2rem 0.5rem #0007;
+  pointer-events: none;
+}
+.tb-fresh.is-wish { background: #ffd76a; color: var(--bg); }
+
 /* the shelf: each set as a spine, its rarity colour down the left edge */
 .tb-spine { padding-left: 1rem; overflow: hidden; }
 .tb-spine::before {

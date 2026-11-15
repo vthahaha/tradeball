@@ -1,16 +1,23 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { LiveRefresh } from "@/components/LiveRefresh";
 import { TradeCard } from "@/components/TradeCard";
+import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { tradesFor } from "@/lib/trades";
 
 export default async function TradesPage() {
   const me = await getCurrentUser();
   if (!me) redirect("/");
-  const { incoming, outgoing, history, league } = await tradesFor(me.id);
+  const [{ incoming, outgoing, history, league }, held] = await Promise.all([
+    tradesFor(me.id),
+    db.cardInstance.findMany({ where: { ownerId: me.id, recycledAt: null }, select: { designId: true }, distinct: ["designId"] }),
+  ]);
+  const mine = held.map((h) => h.designId);
 
   return (
     <div>
+      <LiveRefresh />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="font-display text-5xl leading-none sm:text-6xl">
           <span className="text-accent">Trades</span>
@@ -22,13 +29,13 @@ export default async function TradesPage() {
 
       <Section title="Offers for you" count={incoming.length} empty="No offers waiting. Go make one!">
         {incoming.map((t) => (
-          <TradeCard key={t.id} trade={t} me={me.username} mode="incoming" />
+          <TradeCard key={t.id} trade={t} me={me.username} mode="incoming" mine={mine} />
         ))}
       </Section>
 
       <Section title="Your open offers" count={outgoing.length} empty="You have no open offers.">
         {outgoing.map((t) => (
-          <TradeCard key={t.id} trade={t} me={me.username} mode="outgoing" />
+          <TradeCard key={t.id} trade={t} me={me.username} mode="outgoing" mine={mine} />
         ))}
       </Section>
 

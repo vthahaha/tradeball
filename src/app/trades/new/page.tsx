@@ -16,7 +16,7 @@ async function binder(ownerId: string): Promise<PulledCard[]> {
 export default async function NewTradePage({
   searchParams,
 }: {
-  searchParams: Promise<{ to?: string; counter?: string; want?: string }>;
+  searchParams: Promise<{ to?: string; counter?: string; want?: string; give?: string }>;
 }) {
   const me = await getCurrentUser();
   if (!me) redirect("/");
@@ -52,10 +52,17 @@ export default async function NewTradePage({
     them ? wishlistOf(them.id) : Promise.resolve([]),
   ]);
 
-  if (sp.want && them && preGet.length === 0) {
-    const copy = theirCards.find((c) => c.designId === sp.want);
-    if (copy) preGet = [copy.instanceId];
-  }
+  // ?want=A,B and ?give=C,D: one copy of each design, theirs and mine
+  const pick = (cards: PulledCard[], list?: string) =>
+    (list ?? "")
+      .split(",")
+      .filter(Boolean)
+      .flatMap((id) => {
+        const copy = cards.find((c) => c.designId === id);
+        return copy ? [copy.instanceId] : [];
+      });
+  if (them && preGet.length === 0) preGet = pick(theirCards, sp.want);
+  if (them && preGive.length === 0) preGive = pick(myCards, sp.give);
 
   return (
     <div>
