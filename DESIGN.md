@@ -135,6 +135,13 @@ Flat app, physical cards. App surfaces separate by navy tone, not shadow. Cards 
 - **Small cards:** two container queries trim them: under 171px only the name, rating and the set's look remain; 171–259px drops the fine print except the serial.
 - **Motion:** looping animations on a card pause when it scrolls off screen (`data-asleep`); every loop has a `prefers-reduced-motion` fallback.
 
+### Ticket stock (panels)
+Every app panel is cut from ticket stock, never a generic rounded box:
+- **`.ticket-panel`:** a panel with punched notches on both sides at `--notch-y` (set it to the line where a header tears off, and put a `.perf` there).
+- **`.ticket-list`:** on a `ul` inside a ticket panel; rows are split by perforations, not borders.
+- **`.ticket-row`:** a single row with a tear-off stub on the left (`.ticket-row__stub`: a rank, a count), notched where the stub tears.
+- Notches are a CSS mask, so anything drawn outside the edge is clipped: rings and focus on these use inset box-shadows.
+
 ### Buttons
 Pill or 6px-radius, condensed uppercase label. Primary: orange stock on ink. Secondary: navy panel with a navy-600 line.
 

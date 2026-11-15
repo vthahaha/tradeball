@@ -222,6 +222,42 @@ select {
     radial-gradient(var(--notch) at 100% var(--notch-y), #0000 98%, #000) right / 51% 100% no-repeat;
 }
 
+/* Rows on ticket stock: perforations between them, the notches punched at the first row */
+.ticket-list { --notch-y: 1.9rem; }
+.ticket-list > li + li {
+  background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 11px) top left / 100% 2px no-repeat;
+}
+
+/* A row with a tear-off stub on the left (a rank, a count): notched top and bottom where the stub
+   tears, a perforation down the tear */
+.ticket-row {
+  --stub: 3.5rem;
+  display: flex;
+  align-items: stretch;
+  background: var(--panel);
+  border-radius: 6px;
+  -webkit-mask:
+    radial-gradient(7px at var(--stub) 0, #0000 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(7px at var(--stub) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+  mask:
+    radial-gradient(7px at var(--stub) 0, #0000 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(7px at var(--stub) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+  transition: background-color 0.15s ease;
+}
+.ticket-row:hover { background: var(--panel-2); }
+/* the notch mask would clip an outside focus ring, so it is drawn inside the edge */
+.ticket-row:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.ticket-row__stub {
+  display: grid;
+  flex: none;
+  width: var(--stub);
+  place-items: center;
+  background: repeating-linear-gradient(180deg, var(--line) 0 6px, transparent 6px 11px) right / 2px 100% no-repeat;
+}
+
 /* ───────────────────────────── Card: a trading card ─────────────────────────────
    A 5:7 card with a parallel border (the rarity, at a glance), an art panel with a
    drawn scene behind the player (CardArt.tsx: team design for the base set, one

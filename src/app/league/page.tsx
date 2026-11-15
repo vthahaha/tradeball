@@ -36,11 +36,11 @@ export default async function LeaguePage() {
               <li key={u.id}>
                 <Link
                   href={`/u/${encodeURIComponent(u.username)}`}
-                  className={`flex items-center gap-4 rounded-md border bg-panel/80 p-3 transition-colors hover:border-accent ${
-                    u.id === me.id ? "border-accent/50" : "border-line"
-                  }`}
+                  className={`ticket-row ${u.id === me.id ? "ring-1 ring-inset ring-accent/60" : ""}`}
+                  aria-current={u.id === me.id ? "true" : undefined}
                 >
-                  <span className="w-8 text-center font-display text-3xl text-muted">{i + 1}</span>
+                  <span className={`ticket-row__stub font-display text-3xl ${i === 0 ? "text-accent" : "text-muted"}`}>{i + 1}</span>
+                  <div className="flex min-w-0 flex-1 items-center gap-4 p-3">
                   <div className="min-w-0 flex-1">
                     <div className="truncate font-display text-2xl leading-none">
                       @{u.username}
@@ -61,6 +61,7 @@ export default async function LeaguePage() {
                     ))}
                   </div>
                   <span className="font-display text-2xl">{stats.completion}%</span>
+                  </div>
                 </Link>
               </li>
             ))}

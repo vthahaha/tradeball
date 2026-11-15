@@ -121,8 +121,8 @@ function NeedsList({
   const sorted = [...needs].sort(order);
   const tradeable = sorted.filter((d) => owners[d.designId]?.length).length;
   return (
-    <div className="mt-3 rounded-md border border-line bg-panel/80">
-      <p className="border-b border-dashed border-line px-4 py-2.5 font-cond text-sm font-semibold text-muted">
+    <div className="ticket-panel mt-3" style={{ "--notch-y": "1.3rem" } as React.CSSProperties}>
+      <p className="px-4 py-2.5 font-cond text-sm font-semibold text-muted">
         {tradeable > 0 ? (
           <>
             <span className="text-text">{tradeable}</span> of the {needs.length} you need are in someone&apos;s binder.
@@ -131,7 +131,8 @@ function NeedsList({
           "Nobody in the league has pulled these yet."
         )}
       </p>
-      <ul className="max-h-80 divide-y divide-line/60 overflow-y-auto">
+      <div className="perf" aria-hidden />
+      <ul className="ticket-list max-h-80 overflow-y-auto">
         {sorted.map((d) => {
           const who = owners[d.designId] ?? [];
           const name = d.players.map((p) => p.name).join(" & ");

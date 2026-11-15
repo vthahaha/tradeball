@@ -36,7 +36,7 @@ export function Feed({ items, empty = "Nothing here yet." }: { items: FeedItem[]
     return <p className="rounded-md border border-dashed border-line px-4 py-6 text-center text-muted">{empty}</p>;
   }
   return (
-    <ul className="divide-y divide-line/60 rounded-md border border-line bg-panel/80">
+    <ul className="ticket-panel ticket-list">
       {items.map((it) => (
         <li key={it.id} className="flex items-center gap-3 px-4 py-3">
           {it.kind === "pull" ? (

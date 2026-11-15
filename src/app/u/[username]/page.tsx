@@ -119,11 +119,14 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
         )}
       </div>
 
-      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
-        {statTiles.map((s) => (
-          <div key={s.label} className="rounded-md border border-line bg-panel/80 px-4 py-3">
-            <div className="font-cond text-xs font-bold uppercase tracking-[0.2em] text-muted">{s.label}</div>
-            <div className="font-display text-3xl">{s.value}</div>
+      <section aria-label="Stats" className="ticket-panel mt-6 grid grid-cols-3 sm:grid-cols-5">
+        {statTiles.map((s, i) => (
+          <div
+            key={s.label}
+            className={`px-4 py-3 ${i < statTiles.length - 1 ? "sm:border-r-2 sm:border-dashed sm:border-line" : ""} ${i % 3 !== 2 ? "max-sm:border-r-2 max-sm:border-dashed max-sm:border-line" : ""} ${i >= 3 ? "max-sm:border-t-2 max-sm:border-dashed max-sm:border-line" : ""}`}
+          >
+            <div className="field-label">{s.label}</div>
+            <div className="font-display text-3xl leading-tight">{s.value}</div>
           </div>
         ))}
       </section>
@@ -173,7 +176,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
                 ["You have, they need", match.give, "On their wishlist"],
               ] as const
             ).map(([title, list, wishLabel]) => (
-              <div key={title} className="rounded-md border border-line bg-panel/80 p-4">
+              <div key={title} className="ticket-panel p-4">
                 <h3 className="field-label">
                   {title} ({list.length})
                 </h3>

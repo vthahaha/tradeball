@@ -112,7 +112,7 @@ export function TradeCard({
         : `From @${trade.from}`;
 
   return (
-    <article className="rounded-md border border-line bg-panel/80 p-4">
+    <article className="ticket-panel p-4" style={{ "--notch-y": "2.9rem" } as React.CSSProperties}>
       <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <h3 className="font-display text-2xl leading-none">{headline}</h3>
         {trade.isCounter && (
@@ -125,6 +125,7 @@ export function TradeCard({
         </span>
         <span className="ml-auto font-cond text-sm text-muted">{when(trade.resolvedAt ?? trade.createdAt)}</span>
       </header>
+      <div className="perf -mx-4 mt-3" aria-hidden />
 
       {trade.message && <p className="mt-2 text-sm italic text-text/90">&ldquo;{trade.message}&rdquo;</p>}
 
