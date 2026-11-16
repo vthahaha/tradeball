@@ -1331,6 +1331,44 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
+    // Career Montage (Mythic): a whole career cut together. The full-art photo is cut into three
+    // panels like a jump-cut sequence, each nudged up or down and split by black gaps; the middle
+    // panel stays true, the outer two are toned in the team's two colours. The career span runs
+    // huge in outlined type across the foot, the name solid beneath it.
+    case "montage":
+      return (
+        <div className="tb-ins tb-ins--montage">
+          {photo()}
+          {props.showImg && (
+            <>
+              {(["l", "r"] as const).map((side) => (
+                <div key={side} className={`tb-ins__cmcut is-${side}`} aria-hidden>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- the same splash art, cut */}
+                  <img src={props.imgSrc} alt="" draggable={false} referrerPolicy="no-referrer" />
+                </div>
+              ))}
+            </>
+          )}
+          <div className="tb-ins__cmgaps" aria-hidden />
+          <div className="tb-ins__fade" aria-hidden />
+          <div className="tb-ins__set">Career Montage</div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            {card.kicker && <div className="tb-ins__cmspan">{card.kicker}</div>}
+            <div className="tb-ins__name" style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}>
+              {name}
+            </div>
+            <div className="tb-ins__fine">
+              <span>
+                {card.team} · {p.pos}
+              </span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
     default:
       return null;
   }

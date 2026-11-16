@@ -157,6 +157,7 @@ export const INSERT_DESIGNS: CardDesign[] = INSERT_CARDS.map((c) => {
     kicker: c.kicker,
     team: c.team,
     team2: c.team2,
+    career: c.career,
     fromTeam: c.fromTeam,
     stats: c.stats,
     statLine: c.stats ? c.note : undefined,
@@ -202,6 +203,8 @@ export interface CardView {
   team: string;
   fromTeam?: string;
   team2?: string;
+  /** Every team in the career, in order (Career Montage backs). */
+  career?: string[];
   meta?: string;
   note?: string;
   /** Splash art for inserts, once one has been chosen. */
@@ -237,6 +240,7 @@ export function cardView(designId: string): CardView {
     team: d.team ?? ps[0].team,
     fromTeam: d.fromTeam,
     team2: d.team2,
+    career: d.career,
     meta: d.meta,
     note: d.note,
     art: INSERT_ART[d.id] || undefined,

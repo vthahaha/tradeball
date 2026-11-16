@@ -266,6 +266,14 @@ export function SetIcon({ type }: { type: string }) {
           <path d="M5 10v11h14V10M12 10v11M8.5 10l-1 11M15.5 10l1 11" fill="none" stroke="currentColor" strokeWidth="1.8" />
         </>,
       );
+    case "montage":
+      return s(
+        <>
+          <rect x="3" y="5" width="5" height="15" fill="currentColor" opacity="0.55" />
+          <rect x="9.5" y="2" width="5" height="17" fill="currentColor" />
+          <rect x="16" y="6" width="5" height="15" fill="currentColor" opacity="0.55" />
+        </>,
+      );
     case "dreamteam":
       return s(
         <>

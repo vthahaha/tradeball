@@ -60,9 +60,9 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  // Uncommon: 38
-  light: 9, // The Light
-  shadow: 9, // The Shadow
+  // Uncommon: 37.5
+  light: 8.75, // The Light
+  shadow: 8.75, // The Shadow
   passports: 7, // Passports
   snipers: 4.3, // Snipers
   dimers: 4.3, // Dimers
@@ -87,9 +87,10 @@ export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
   goldenboy: 2.5, // Golden Boy
   botb: 2.5, // Best of the Best
   rivalries: 2.5, // Rivalries
-  // Mythic: 1.6, about 1 pack in 30 holds one; a Generational about 1 in 125
+  // Mythic: 2.1, about 1 pack in 24 holds one; a Generational about 1 in 125
   stardom: 0.6, // Ultimate Stardom
   dreamteam: 0.6, // The Dream Team
+  montage: 0.5, // Career Montage
   generational: 0.4, // Generational
   // Grail: 0.1, about 1 pack in 500
   iconic: 0.1, // Iconic Moments

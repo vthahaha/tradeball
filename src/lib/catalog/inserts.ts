@@ -48,6 +48,8 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "sparkplug", name: "Spark Plug", rarity: "epic", boost: 2 },
   { id: "villains", name: "Supervillains", rarity: "rare", boost: 1 },
   { id: "circus", name: "The Circus", rarity: "epic", boost: 1 },
+  // Mythic
+  { id: "montage", name: "Career Montage", rarity: "mythic", boost: 0 },
   // Grail
   { id: "iconic", name: "Iconic Moments", rarity: "grail", boost: 0 },
 ];
@@ -70,6 +72,8 @@ export interface InsertCard {
   player2?: string;
   legend2?: Legend;
   team2?: string;
+  /** Every team in the player's career, in order (Career Montage backs). */
+  career?: string[];
   /** Team nickname to show and colour by, when not the player's current team. */
   team?: string;
   fromTeam?: string;
@@ -883,6 +887,20 @@ const THE_CIRCUS: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "circus" }));
 
+// Career Montage (Mythic): whole careers cut together. kicker = the NBA career span; ratings are
+// fixed at 90 or better
+const CAREER_MONTAGE: InsertCard[] = (
+  [
+    { id: "CM1", career: ["Raptors", "Magic", "Rockets", "Knicks", "Pistons", "Hawks", "Spurs"], kicker: "1997–2013", team: "Magic", legend: L("Tracy McGrady", "G", "USA", 94) },
+    { id: "CM2", career: ["76ers", "Nuggets", "Pistons", "Grizzlies"], kicker: "1996–2010", team: "76ers", legend: L("Allen Iverson", "G", "USA", 95) },
+    { id: "CM3", career: ["Lakers"], kicker: "1996–2016", team: "Lakers", legend: L("Kobe Bryant", "G", "USA", 98) },
+    { id: "CM4", career: ["Cavaliers", "Heat", "Lakers", "76ers"], kicker: "2003–", team: "Cavaliers", player: "1966", ovr: 98 }, // LeBron James
+    { id: "CM5", career: ["Nuggets", "Knicks", "Thunder", "Rockets", "Trail Blazers", "Lakers"], kicker: "2003–2022", team: "Nuggets", legend: L("Carmelo Anthony", "F", "USA", 93) },
+    { id: "CM6", career: ["Kings", "Grizzlies", "Heat", "Magic"], kicker: "1998–2011", team: "Kings", legend: L("Jason Williams", "G", "USA", 90) },
+    { id: "CM7", career: ["Raptors", "Nets", "Magic", "Suns", "Mavericks", "Grizzlies", "Kings", "Hawks"], kicker: "1998–2020", team: "Raptors", legend: L("Vince Carter", "G", "USA", 93) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "montage" }));
+
 // ── Grail ──
 
 // Iconic Moments: the plays everyone has replayed (title = the moment, kicker = the date,
@@ -959,5 +977,6 @@ export const INSERT_CARDS: InsertCard[] = [
   ...SPARK_PLUG,
   ...SUPERVILLAINS,
   ...THE_CIRCUS,
+  ...CAREER_MONTAGE,
   ...ICONIC_MOMENTS,
 ];

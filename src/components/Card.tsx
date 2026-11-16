@@ -283,6 +283,16 @@ function TeamMedal({ team }: { team: string }) {
   );
 }
 
+/** Career Montage backs: both colours of every team the player played for, in order, as diagonal
+ *  stripes of equal width (one team: two wide stripes; eight teams: sixteen narrow ones). */
+function careerStripes(teams: string[]) {
+  const colors = teams.flatMap((t) => teamColors(t));
+  const w = 100 / colors.length;
+  const stops = colors.map((c, i) => `${c} ${(i * w).toFixed(2)}% ${((i + 1) * w).toFixed(2)}%`).join(", ");
+  // a dark band across the middle so the mark and the medal read over any colours
+  return `linear-gradient(180deg, transparent 20%, #000000b3 30%, #000000b3 70%, transparent 80%), linear-gradient(115deg, ${stops})`;
+}
+
 export function CardReverse({
   card,
   finish = "standard",
@@ -307,7 +317,7 @@ export function CardReverse({
     >
       <div className="tb-card__frame">
         <div className="tb-rev" data-set={card.type}>
-          <div className="tb-rev__deco" aria-hidden />
+          <div className="tb-rev__deco" aria-hidden style={card.career?.length ? { background: careerStripes(card.career) } : undefined} />
           <div className="tb-rev__mark" aria-hidden>
             G7
           </div>

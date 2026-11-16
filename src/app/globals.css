@@ -2707,6 +2707,70 @@ select {
   white-space: nowrap;
 }
 
+/* Career Montage (Mythic): a career cut together. The photo is cut into three panels like a
+   jump-cut sequence: the middle one true, the outer two shifted up and down and toned in the team's
+   two colours (a deliberate exception to the no-tint rule: only the outer cuts, never the middle);
+   black gaps between them. The career span runs huge in outlined type across the foot, the name
+   solid under it. */
+.tb-ins--montage { background: #000; color: #fff; }
+.tb-ins__cmcut {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+}
+.tb-ins__cmcut img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  filter: grayscale(1) contrast(1.15);
+}
+.tb-ins__cmcut::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: color;
+}
+.tb-ins__cmcut.is-l { clip-path: inset(0 66.7% 0 0); transform: translateY(-4cqw); }
+.tb-ins__cmcut.is-l::after { background: var(--t1); }
+.tb-ins__cmcut.is-r { clip-path: inset(0 0 0 66.7%); transform: translateY(4cqw); }
+.tb-ins__cmcut.is-r::after { background: var(--t2); }
+.tb-ins__cmgaps {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    linear-gradient(#000 0 0) calc(33.3% - 0.6cqw) 0 / 1.2cqw 100% no-repeat,
+    linear-gradient(#000 0 0) calc(66.7% + 0.6cqw) 0 / 1.2cqw 100% no-repeat;
+  pointer-events: none;
+}
+.tb-ins--montage .tb-ins__fade {
+  z-index: 4;
+  height: 44%;
+  background: linear-gradient(180deg, transparent, #000000c4 52%, #000);
+}
+.tb-ins--montage .tb-ins__set,
+.tb-ins--montage .tb-ins__ovr { z-index: 5; text-shadow: 0 0.3cqw 1.2cqw #000c; }
+.tb-ins--montage .tb-ins__set { font-style: italic; }
+.tb-ins--montage .tb-ins__foot { z-index: 5; padding: 0 4.6cqw 4.4cqw; }
+.tb-ins__cmspan {
+  margin-bottom: 0.6cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: 15cqw;
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  color: transparent;
+  -webkit-text-stroke: 0.45cqw #fff;
+  white-space: nowrap;
+}
+.tb-ins--montage .tb-ins__name { font-stretch: 80%; }
+.tb-ins--montage .tb-ins__fine { color: #ffffffbf; }
+
 /* The Light / The Shadow: a beam enters the top-left corner, a prism splits it into a spectrum
    band running diagonally behind the player, landing in two stripes of team colour. The Light is
    bright on white with a pastel prism border; The Shadow is the same beam swallowed in black, with
@@ -3361,6 +3425,12 @@ select {
 .tb-rev[data-set="circus"] { --rev-bg: #e3242b; --rev-ink: #1b1440; --rev-mark: #ffd84a; --rev-medal: #fff; --rev-rule: #1b144040; }
 .tb-rev[data-set="circus"] .tb-rev__deco { background: repeating-linear-gradient(90deg, #e3242b 0 7cqw, #fff3d6 7cqw 14cqw); }
 .tb-rev[data-set="circus"] .tb-rev__mark { text-shadow: 0.6cqw 0.6cqw 0 #1b1440; }
+
+/* Career Montage: the career as stripes, both colours of every team in order, with a dark band
+   across the middle (both set inline by CardReverse) */
+.tb-rev[data-set="montage"] { --rev-bg: #000; --rev-mark: #fff; --rev-rule: #ffffff59; }
+.tb-rev[data-set="montage"] .tb-rev__mark { text-shadow: 0 0.4cqw 1.2cqw #000; }
+.tb-rev[data-set="montage"] .tb-rev__foot { padding: 1cqw 2cqw 0; background: #000000b3; border-radius: 0.6cqw; }
 
 /* ── face-down: the Gate 7 card back inside the parallel border ── */
 .is-facedown .tb-card__frame {

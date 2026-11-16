@@ -392,6 +392,15 @@ export const INSERT_ART: Record<string, string> = {
   CI9: "/inserts/CI9.jpg", // Giannis Antetokounmpo
   CI10: "/inserts/CI10.jpg", // Robin Lopez
 
+  // Mythic: Career Montage
+  CM1: "/inserts/CM1.jpg", // Tracy McGrady
+  CM2: "/inserts/CM2.jpg", // Allen Iverson
+  CM3: "/inserts/CM3.jpg", // Kobe Bryant
+  CM4: "/inserts/CM4.jpg", // LeBron James
+  CM5: "/inserts/CM5.jpg", // Carmelo Anthony
+  CM6: "/inserts/CM6.jpg", // Jason Williams
+  CM7: "/inserts/CM7.jpg", // Vince Carter
+
   // Grail: Iconic Moments
   IM1: "/inserts/IM1.jpg", // The Last Shot, Michael Jordan
   IM2: "/inserts/IM2.jpg", // The Block, LeBron James
