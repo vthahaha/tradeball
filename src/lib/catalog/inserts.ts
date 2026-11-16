@@ -43,6 +43,11 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "snipers", name: "Snipers", rarity: "uncommon", boost: 2 },
   { id: "dimers", name: "Dimers", rarity: "uncommon", boost: 2 },
   { id: "snatchers", name: "Snatchers", rarity: "uncommon", boost: 2 },
+  // Set 6
+  { id: "thanksgiving", name: "Thanksgiving", rarity: "epic", boost: 2 },
+  { id: "sparkplug", name: "Spark Plug", rarity: "epic", boost: 2 },
+  { id: "villains", name: "Supervillains", rarity: "rare", boost: 1 },
+  { id: "circus", name: "The Circus", rarity: "epic", boost: 1 },
   // Grail
   { id: "iconic", name: "Iconic Moments", rarity: "grail", boost: 0 },
 ];
@@ -805,6 +810,79 @@ const SNATCHERS: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "snatchers" }));
 
+// ── Set 6 ──
+
+// 1. Thanksgiving
+const THANKSGIVING: InsertCard[] = (
+  [
+    { id: "TH1", player: "4845367" }, // Stephon Castle
+    { id: "TH2", player: "4065648" }, // Jayson Tatum
+    { id: "TH3", player: "4278039" }, // Nickeil Alexander-Walker
+    { id: "TH4", player: "3908809" }, // Donovan Mitchell
+    { id: "TH5", player: "5041955" }, // Darryn Peterson
+    { id: "TH6", player: "4900671" }, // Ajay Mitchell
+    { id: "TH7", player: "4566434" }, // Franz Wagner
+    { id: "TH8", player: "3064440" }, // Zach LaVine
+    { id: "TH9", team: "Suns", legend: L("Amar'e Stoudemire", "F", "USA", 90) },
+    { id: "TH10", team: "Nets", legend: L("Kenyon Martin", "F", "USA", 84) },
+    { id: "TH11", team: "Nuggets", legend: L("Antonio McDyess", "F", "USA", 84) },
+    { id: "TH12", team: "Mavericks", legend: L("Rolando Blackman", "G", "USA", 86) },
+    { id: "TH13", team: "Warriors", legend: L("Monta Ellis", "G", "USA", 85) },
+    { id: "TH14", team: "Hornets", legend: L("Larry Johnson", "F", "USA", 86) },
+    { id: "TH15", team: "Knicks", legend: L("Jeremy Lin", "G", "USA", 80) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "thanksgiving" }));
+
+// 2. Spark Plug: the instant offense off the bench
+const SPARK_PLUG: InsertCard[] = (
+  [
+    { id: "SPL1", team: "Clippers", legend: L("Lou Williams", "G", "USA", 84) },
+    { id: "SPL2", team: "Clippers", legend: L("Jamal Crawford", "G", "USA", 83) },
+    { id: "SPL3", team: "Kings", player: "4395723" }, // Keldon Johnson
+    { id: "SPL4", player: "4066354" }, // Payton Pritchard
+    { id: "SPL5", team: "Celtics", legend: L("Kevin McHale", "F", "USA", 92) },
+    { id: "SPL6", team: "Pacers", legend: L("Detlef Schrempf", "F", "Germany", 86) },
+    { id: "SPL7", team: "Bucks", legend: L("Ricky Pierce", "G", "USA", 83) },
+    { id: "SPL8", team: "Rockets", legend: L("Eric Gordon", "G", "USA", 82) },
+    { id: "SPL9", team: "Spurs", legend: L("Manu Ginobili", "G", "Argentina", 89) },
+    { id: "SPL10", team: "Mavericks", legend: L("Jason Terry", "G", "USA", 84) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "sparkplug" }));
+
+// 3. Supervillains: the league's favourite people to boo
+const SUPERVILLAINS: InsertCard[] = (
+  [
+    { id: "VI1", player: "6589" }, // Draymond Green
+    { id: "VI2", player: "3155526" }, // Dillon Brooks
+    { id: "VI3", team: "Pistons", legend: L("Bill Laimbeer", "C", "USA", 85) },
+    { id: "VI4", team: "Timberwolves", legend: L("Christian Laettner", "F", "USA", 83) },
+    { id: "VI5", team: "Rockets", legend: L("Vernon Maxwell", "G", "USA", 80) },
+    { id: "VI6", team: "Pacers", legend: L("Stephen Jackson", "F", "USA", 82) },
+    { id: "VI7", team: "Lakers", legend: L("Rick Fox", "F", "Canada", 80) },
+    { id: "VI8", team: "Knicks", legend: L("J.R. Smith", "G", "USA", 81) },
+    { id: "VI9", team: "Spurs", legend: L("Bruce Bowen", "F", "USA", 80) },
+    { id: "VI10", team: "Bulls", legend: L("Dennis Rodman", "F", "USA", 89) },
+    { id: "VI11", team: "Clippers", legend: L("Patrick Beverley", "G", "USA", 80) },
+    { id: "VI12", team: "Kings", legend: L("Vlade Divac", "C", "Serbia", 86) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "villains" }));
+
+// 4. The Circus
+const THE_CIRCUS: InsertCard[] = (
+  [
+    { id: "CI1", team: "Hawks", legend: L("Jeff Teague", "G", "USA", 82) },
+    { id: "CI2", team: "Lakers", legend: L("Nick Young", "G", "USA", 78) },
+    { id: "CI3", team: "Rockets", legend: L("Russell Westbrook", "G", "USA", 92) },
+    { id: "CI4", player: "4278129" }, // Deandre Ayton
+    { id: "CI5", team: "Warriors", legend: L("JaVale McGee", "C", "USA", 78) },
+    { id: "CI6", player: "2991235" }, // Steven Adams
+    { id: "CI7", team: "Celtics", legend: L("Brian Scalabrine", "F", "USA", 70) },
+    { id: "CI8", team: "Hornets", player: "4432816" }, // LaMelo Ball
+    { id: "CI9", player: "3032977" }, // Giannis Antetokounmpo
+    { id: "CI10", team: "Bucks", legend: L("Robin Lopez", "C", "USA", 75) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "circus" }));
+
 // ── Grail ──
 
 // Iconic Moments: the plays everyone has replayed (title = the moment, kicker = the date,
@@ -877,5 +955,9 @@ export const INSERT_CARDS: InsertCard[] = [
   ...SNIPERS,
   ...DIMERS,
   ...SNATCHERS,
+  ...THANKSGIVING,
+  ...SPARK_PLUG,
+  ...SUPERVILLAINS,
+  ...THE_CIRCUS,
   ...ICONIC_MOMENTS,
 ];

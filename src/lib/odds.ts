@@ -60,25 +60,29 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  // Uncommon: 43
-  light: 10, // The Light
-  shadow: 10, // The Shadow
-  passports: 8, // Passports
-  snipers: 5, // Snipers
-  dimers: 5, // Dimers
-  snatchers: 5, // Snatchers
-  // Rare: 28
-  newblood: 9, // New Blood
-  fortress: 7, // Stone Fortress
-  cult: 6.5, // Cult Classic
-  wizards: 5.5, // Time Wizards
-  // Epic: 19.8
-  flash: 4, // Flash of Brilliance
-  goodbyes: 4, // Hard Goodbyes
-  dotd: 4, // Day of the Dead
-  founders: 3, // Founding Father
-  lunar: 2.4, // Lunar New Year
-  thirdeye: 2.4, // The Third Eye
+  // Uncommon: 38
+  light: 9, // The Light
+  shadow: 9, // The Shadow
+  passports: 7, // Passports
+  snipers: 4.3, // Snipers
+  dimers: 4.3, // Dimers
+  snatchers: 4.4, // Snatchers
+  // Rare: 30
+  newblood: 8, // New Blood
+  fortress: 6.5, // Stone Fortress
+  cult: 6, // Cult Classic
+  wizards: 5, // Time Wizards
+  villains: 4.5, // Supervillains
+  // Epic: 22.8
+  flash: 3, // Flash of Brilliance
+  goodbyes: 3, // Hard Goodbyes
+  dotd: 3, // Day of the Dead
+  founders: 2.5, // Founding Father
+  thanksgiving: 2.5, // Thanksgiving
+  lunar: 2, // Lunar New Year
+  thirdeye: 2, // The Third Eye
+  sparkplug: 2.4, // Spark Plug
+  circus: 2.4, // The Circus
   // Legendary: 7.5
   goldenboy: 2.5, // Golden Boy
   botb: 2.5, // Best of the Best

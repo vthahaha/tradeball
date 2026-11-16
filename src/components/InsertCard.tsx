@@ -302,6 +302,93 @@ function SkillMotif({ kind }: { kind: string }) {
   );
 }
 
+/** A small deterministic number from a string, so a card's random-looking details never change. */
+function seedOf(s: string) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+/** Text set letter by letter, each letter turned and coloured: the whimsy of Thanksgiving's
+ *  wordmark (gentle) and The Circus's names (wild). */
+function LetterRun({ text, seed, colors, wild = false }: { text: string; seed: string; colors?: string[]; wild?: boolean }) {
+  let h = seedOf(seed);
+  const next = () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0;
+    return (h % 1000) / 1000;
+  };
+  let ci = 0;
+  return (
+    <>
+      {[...text].map((ch, i) => {
+        if (ch === " ") return <span key={i}> </span>;
+        const r = wild ? (next() - 0.5) * 34 : (i % 2 ? 1 : -1) * (3 + next() * 4);
+        const y = wild ? (next() - 0.5) * 0.35 : 0;
+        const sc = wild ? 0.85 + next() * 0.4 : 1;
+        const color = colors ? colors[ci++ % colors.length] : undefined;
+        return (
+          <span
+            key={i}
+            style={{ display: "inline-block", transform: `translateY(${y}em) rotate(${r.toFixed(1)}deg) scale(${sc.toFixed(2)})`, color }}
+          >
+            {ch}
+          </span>
+        );
+      })}
+    </>
+  );
+}
+
+/** Thanksgiving's Easter eggs: one small drawing hidden on every card, a different one and in a
+ *  different place by card number. */
+const EGGS: { label: string; d: React.ReactNode }[] = [
+  { label: "a wishbone", d: <path d="M12 21v-5M12 16L6.5 4M12 16l5.5-12M5 4.5a1.5 1.5 0 1 0 3 0M16 4.5a1.5 1.5 0 1 0 3 0" /> },
+  { label: "a slice of pie", d: <><path d="M3 18L13 4l8 14z" /><path d="M3 18h18M6 14h12" /></> },
+  { label: "an acorn", d: <><path d="M6 10h12c0 6-3 10-6 11-3-1-6-5-6-11z" /><path d="M5 10c0-3 3-5 7-5s7 2 7 5zM12 5V2" /></> },
+  { label: "an ear of corn", d: <><path d="M12 3c3 0 4 5 4 9s-1 8-4 9c-3-1-4-5-4-9s1-9 4-9z" /><path d="M8 12c-3 1-4 5-4 8M16 12c3 1 4 5 4 8M10 8h4M9.5 12h5M10 16h4" /></> },
+  { label: "a pumpkin", d: <><path d="M12 7c-5 0-8 3-8 7s3 7 8 7 8-3 8-7-3-7-8-7z" /><path d="M12 7c-2 2-2 12 0 14M12 7c2 2 2 12 0 14M12 7V3l2-1" /></> },
+  { label: "a drumstick", d: <><path d="M14 3a6 6 0 1 1-4 10l-4 4" /><path d="M5 16.5a1.5 1.5 0 1 1-2 2M8 19.5a1.5 1.5 0 1 1-2 2" /></> },
+];
+const EGG_SPOTS = [
+  { left: "6cqw", top: "40cqw" },
+  { right: "6cqw", top: "58cqw" },
+  { left: "7cqw", top: "74cqw" },
+  { right: "7cqw", top: "34cqw" },
+  { left: "40cqw", top: "7cqw" },
+  { right: "18cqw", top: "84cqw" },
+  { left: "8cqw", top: "18cqw" },
+];
+
+/** Thanksgiving's falling leaves: a simple lobed leaf in five autumn colours. */
+const LEAF = "M12 2l1.6 4.4 3.8-2.2-.9 4.6 4.5.5-3.4 3 3 3.5-4.6.3.4 4.7L12 18l-4.4 2.8.4-4.7-4.6-.3 3-3.5-3.4-3 4.5-.5-.9-4.6 3.8 2.2z";
+
+/** Spark Plug's circuit: traces that link the photo to the rating, the wordmark and the nameplate,
+ *  each with a node at its end; a second copy carries the travelling current. */
+const SPARK_TRACES = [
+  "M10 14 V9 H34",
+  "M90 14 V11 H72 V5",
+  "M8 62 H4 V96 H14",
+  "M92 70 H97 V104 H86",
+  "M30 96 V104 H44",
+  "M70 96 V100 H58",
+];
+function SparkCircuit() {
+  return (
+    <svg className="tb-ins__spcircuit" viewBox="0 0 100 140" preserveAspectRatio="none" aria-hidden>
+      {SPARK_TRACES.map((d) => (
+        <path key={d} d={d} className="is-trace" />
+      ))}
+      {SPARK_TRACES.map((d, i) => (
+        <path key={`c${d}`} d={d} className="is-current" style={{ animationDelay: `${-i * 0.45}s` }} />
+      ))}
+    </svg>
+  );
+}
+const BOLT = "M13 2L4 14h7l-2 8 9-12h-7z";
+
+/** The Circus: one silly sticker per card. */
+const STICKERS = ["HONK!", "OOPS", "BOING", "WHEEE", "TA-DA!", "HUH?", "SPLAT", "OKAY?", "WOW", "LOL"];
+
 export function InsertFront(props: InsertFrontProps) {
   const { card } = props;
   const wallId = useId().replace(/:/g, "");
@@ -1102,6 +1189,143 @@ export function InsertFront(props: InsertFrontProps) {
               {serial}
               {no}
             </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Thanksgiving: full art inside a crimped pie-crust border, autumn leaves drifting over the
+    // edges, the set's name in letters of five harvest colours that bob like a kids' menu, the name
+    // written on a place card at the table. Every card hides one small Easter egg somewhere.
+    case "thanksgiving": {
+      const n = Number(card.designId.match(/\d+$/)?.[0] ?? 0);
+      const egg = EGGS[n % EGGS.length];
+      return (
+        <div className="tb-ins tb-ins--thanksgiving">
+          {photo()}
+          <div className="tb-ins__fade" aria-hidden />
+          <div className="tb-ins__tgcrust" aria-hidden />
+          <div className="tb-ins__tgleaves" aria-hidden>
+            {[0, 1, 2, 3, 4].map((i) => (
+              <svg key={i} viewBox="0 0 24 24">
+                <path d={LEAF} />
+              </svg>
+            ))}
+          </div>
+          <svg className="tb-ins__tgegg" viewBox="0 0 24 24" style={EGG_SPOTS[n % EGG_SPOTS.length]} role="img" aria-label={`Hidden: ${egg.label}`}>
+            {egg.d}
+          </svg>
+          <div className="tb-ins__tgmark">
+            <LetterRun text="Thanksgiving" seed={card.designId} colors={["#ff8a1f", "#e8324a", "#ffc93c", "#7ccf5a", "#b56cff"]} />
+          </div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__tgcard">
+            <div className="tb-ins__tgname" style={{ fontSize: `${nameSize(name, 1.15)}cqw` }}>
+              {name}
+            </div>
+            <div className="tb-ins__fine is-center">
+              <span>
+                {card.team} · {p.pos}
+              </span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Spark Plug: a circuit board. The photo in a yellow-edged window, yellow traces linking it to
+    // the rating, the wordmark and the nameplate with a pulse of current running along them, the
+    // rating in a battery, a lightning bolt splitting the wordmark, the name on a yellow bar.
+    case "sparkplug":
+      return (
+        <div className="tb-ins tb-ins--sparkplug">
+          <SparkCircuit />
+          {photo()}
+          <div className="tb-ins__spmark">
+            Spark
+            <svg viewBox="0 0 24 24" aria-hidden>
+              <path d={BOLT} />
+            </svg>
+            Plug
+          </div>
+          <div className="tb-ins__spbattery">
+            <b>{card.ovr}</b>
+            <small>{p.pos}</small>
+          </div>
+          <div className="tb-ins__spplate">
+            <div className="tb-ins__name" style={{ fontSize: `${nameSize(name, 0.7)}cqw` }}>
+              {name}
+            </div>
+            <div className="tb-ins__fine">
+              <span>{card.team}</span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
+    // Supervillains: a black card lit from below by hellfire, the photo in a pointed gothic arch
+    // with a red glow and devil horns on its shoulders, the rating on a saw-edged blood seal, the
+    // set and the name in red engraved capitals.
+    case "villains":
+      return (
+        <div className="tb-ins tb-ins--villains">
+          <div className="tb-ins__vlfire" aria-hidden>
+            <i />
+            <i />
+            <i />
+          </div>
+          <div className="tb-ins__vlglow" aria-hidden />
+          {photo()}
+          <svg className="tb-ins__vlhorns" viewBox="0 0 100 30" aria-hidden>
+            <path d="M22 30C12 24 8 12 14 0c1 10 6 18 16 22z" />
+            <path d="M78 30c10-6 14-18 8-30-1 10-6 18-16 22z" />
+          </svg>
+          <div className="tb-ins__vlmark">Supervillains</div>
+          <div className="tb-ins__vlseal">
+            <b>{card.ovr}</b>
+            <small>{p.pos}</small>
+          </div>
+          <div className="tb-ins__foot">
+            <div className="tb-ins__name" style={{ fontSize: `${nameSize(name, 0.72)}cqw` }}>
+              {name}
+            </div>
+            <div className="tb-ins__fine">
+              <span>{card.team}</span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
+    // The Circus: the big top. Red and cream tent stripes under a scalloped valance, a marquee sign
+    // with bulbs, the photo in a crooked polka-dot frame that will not sit still, the rating on a
+    // juggling ball, a silly sticker slapped on, and the name bouncing letter by letter on a banner.
+    case "circus": {
+      const n = Number(card.designId.match(/\d+$/)?.[0] ?? 0);
+      return (
+        <div className="tb-ins tb-ins--circus">
+          <div className="tb-ins__cxvalance" aria-hidden />
+          <div className="tb-ins__cxsign">The Circus</div>
+          <div className="tb-ins__cxframe">{photo()}</div>
+          <div className="tb-ins__cxball">
+            <b>{card.ovr}</b>
+          </div>
+          <div className="tb-ins__cxsticker" aria-hidden>
+            {STICKERS[n % STICKERS.length]}
+          </div>
+          <div className="tb-ins__cxbanner">
+            <div className="tb-ins__cxname" style={{ fontSize: `${nameSize(name, 0.66)}cqw` }}>
+              <LetterRun text={name} seed={card.designId} wild />
+            </div>
+          </div>
+          <div className="tb-ins__cxact">
+            Act No. {n} · {card.team} · {p.pos}
+            {serial}
           </div>
         </div>
       );

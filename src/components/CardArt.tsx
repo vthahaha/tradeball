@@ -249,6 +249,23 @@ export function SetIcon({ type }: { type: string }) {
           <path d="M7.5 13h9M8.5 13l1.5 7M15.5 13l-1.5 7M12 13v7" stroke="currentColor" strokeWidth="1.8" />
         </>,
       );
+    case "thanksgiving":
+      return s(<path d="M12 2l1.6 4.4 3.8-2.2-.9 4.6 4.5.5-3.4 3 3 3.5-4.6.3.4 4.7L12 18l-4.4 2.8.4-4.7-4.6-.3 3-3.5-3.4-3 4.5-.5-.9-4.6 3.8 2.2z" fill="currentColor" />);
+    case "sparkplug":
+      return s(<path d="M13 2L4 14h7l-2 8 9-12h-7z" fill="currentColor" />);
+    case "villains":
+      return s(
+        <>
+          <path d="M5 21C2 15 3 7 7 3c0 6 2 10 6 12zM19 21c3-6 2-14-2-18 0 6-2 10-6 12z" fill="currentColor" />
+        </>,
+      );
+    case "circus":
+      return s(
+        <>
+          <path d="M12 2L3 10h18z" fill="currentColor" />
+          <path d="M5 10v11h14V10M12 10v11M8.5 10l-1 11M15.5 10l1 11" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        </>,
+      );
     case "dreamteam":
       return s(
         <>
