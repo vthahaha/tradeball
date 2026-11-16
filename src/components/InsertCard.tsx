@@ -10,7 +10,9 @@ import {
   teamCode,
   type CardView,
   type Finish,
+  teamColors,
 } from "@/lib/catalog";
+import { luminance } from "@/lib/color";
 import { fmtStat, initials, lastName, nameSize } from "./cardText";
 import { Flag, flagStripes, NATIONS } from "./flags";
 
@@ -1331,13 +1333,20 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
-    // Career Montage (Mythic): a whole career cut together. The full-art photo is cut into three
-    // panels like a jump-cut sequence, each nudged up or down and split by black gaps; the middle
-    // panel stays true, the outer two are toned in the team's two colours. The career span runs
-    // huge in outlined type across the foot, the name solid beneath it.
-    case "montage":
+    // Career Montage (Mythic): a whole career in one frame. The full-art photo stays true in the
+    // middle while its two sides fade into the team's colours, the main colour from the left and the
+    // second from the right. The career span runs huge in outlined type across the foot.
+    case "montage": {
+      // the right side takes the team's second colour, unless that is white, black or grey (it
+      // would come out washed out), in which case a lighter shade of the main colour
+      const t2 = teamColors(card.team)[1];
+      const rgb = [1, 3, 5].map((i) => parseInt(t2.slice(i, i + 2), 16));
+      const plain = luminance(t2) > 0.7 || luminance(t2) < 0.03 || Math.max(...rgb) - Math.min(...rgb) < 40;
       return (
-        <div className="tb-ins tb-ins--montage">
+        <div
+          className="tb-ins tb-ins--montage"
+          style={{ "--cm2": plain ? "color-mix(in oklab, var(--t1) 50%, #fff)" : "var(--t2)" } as React.CSSProperties}
+        >
           {photo()}
           {props.showImg && (
             <>
@@ -1349,7 +1358,6 @@ export function InsertFront(props: InsertFrontProps) {
               ))}
             </>
           )}
-          <div className="tb-ins__cmgaps" aria-hidden />
           <div className="tb-ins__fade" aria-hidden />
           <div className="tb-ins__set">Career Montage</div>
           <Rating ovr={card.ovr} pos={p.pos} />
@@ -1368,6 +1376,7 @@ export function InsertFront(props: InsertFrontProps) {
           </div>
         </div>
       );
+    }
 
     default:
       return null;

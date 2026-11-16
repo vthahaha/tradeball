@@ -2707,11 +2707,10 @@ select {
   white-space: nowrap;
 }
 
-/* Career Montage (Mythic): a career cut together. The photo is cut into three panels like a
-   jump-cut sequence: the middle one true, the outer two shifted up and down and toned in the team's
-   two colours (a deliberate exception to the no-tint rule: only the outer cuts, never the middle);
-   black gaps between them. The career span runs huge in outlined type across the foot, the name
-   solid under it. */
+/* Career Montage (Mythic): a career in one frame. The photo stays true in the middle; its two sides
+   fade into the team's colours, the main colour from the left and the second from the right (or a
+   light shade of the main colour when the second is white, black or grey). No cuts, no gaps: the
+   art stays whole. The career span runs huge in outlined type across the foot. */
 .tb-ins--montage { background: #000; color: #fff; }
 .tb-ins__cmcut {
   position: absolute;
@@ -2734,19 +2733,16 @@ select {
   inset: 0;
   mix-blend-mode: color;
 }
-.tb-ins__cmcut.is-l { clip-path: inset(0 66.7% 0 0); transform: translateY(-4cqw); }
-.tb-ins__cmcut.is-l::after { background: var(--t1); }
-.tb-ins__cmcut.is-r { clip-path: inset(0 0 0 66.7%); transform: translateY(4cqw); }
-.tb-ins__cmcut.is-r::after { background: var(--t2); }
-.tb-ins__cmgaps {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background:
-    linear-gradient(#000 0 0) calc(33.3% - 0.6cqw) 0 / 1.2cqw 100% no-repeat,
-    linear-gradient(#000 0 0) calc(66.7% + 0.6cqw) 0 / 1.2cqw 100% no-repeat;
-  pointer-events: none;
+.tb-ins__cmcut.is-l {
+  -webkit-mask-image: linear-gradient(90deg, #000 0 22%, transparent 46%);
+  mask-image: linear-gradient(90deg, #000 0 22%, transparent 46%);
 }
+.tb-ins__cmcut.is-l::after { background: var(--t1); }
+.tb-ins__cmcut.is-r {
+  -webkit-mask-image: linear-gradient(270deg, #000 0 22%, transparent 46%);
+  mask-image: linear-gradient(270deg, #000 0 22%, transparent 46%);
+}
+.tb-ins__cmcut.is-r::after { background: var(--cm2, var(--t2)); }
 .tb-ins--montage .tb-ins__fade {
   z-index: 4;
   height: 44%;
@@ -3426,7 +3422,7 @@ select {
 .tb-rev[data-set="circus"] .tb-rev__deco { background: repeating-linear-gradient(90deg, #e3242b 0 7cqw, #fff3d6 7cqw 14cqw); }
 .tb-rev[data-set="circus"] .tb-rev__mark { text-shadow: 0.6cqw 0.6cqw 0 #1b1440; }
 
-/* Career Montage: the career as stripes, both colours of every team in order, with a dark band
+/* Career Montage back: the career as stripes, both colours of every team in order, with a dark band
    across the middle (both set inline by CardReverse) */
 .tb-rev[data-set="montage"] { --rev-bg: #000; --rev-mark: #fff; --rev-rule: #ffffff59; }
 .tb-rev[data-set="montage"] .tb-rev__mark { text-shadow: 0 0.4cqw 1.2cqw #000; }
