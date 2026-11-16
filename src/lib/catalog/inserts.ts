@@ -838,7 +838,7 @@ const SPARK_PLUG: InsertCard[] = (
   [
     { id: "SPL1", team: "Clippers", legend: L("Lou Williams", "G", "USA", 84) },
     { id: "SPL2", team: "Clippers", legend: L("Jamal Crawford", "G", "USA", 83) },
-    { id: "SPL3", team: "Kings", player: "4395723" }, // Keldon Johnson
+    { id: "SPL3", player: "4395723" }, // Keldon Johnson
     { id: "SPL4", player: "4066354" }, // Payton Pritchard
     { id: "SPL5", team: "Celtics", legend: L("Kevin McHale", "F", "USA", 92) },
     { id: "SPL6", team: "Pacers", legend: L("Detlef Schrempf", "F", "Germany", 86) },
@@ -877,7 +877,7 @@ const THE_CIRCUS: InsertCard[] = (
     { id: "CI5", team: "Warriors", legend: L("JaVale McGee", "C", "USA", 78) },
     { id: "CI6", player: "2991235" }, // Steven Adams
     { id: "CI7", team: "Celtics", legend: L("Brian Scalabrine", "F", "USA", 70) },
-    { id: "CI8", team: "Hornets", player: "4432816" }, // LaMelo Ball
+    { id: "CI8", player: "4432816" }, // LaMelo Ball
     { id: "CI9", player: "3032977" }, // Giannis Antetokounmpo
     { id: "CI10", team: "Bucks", legend: L("Robin Lopez", "C", "USA", 75) },
   ] as Omit<InsertCard, "cls">[]
