@@ -338,21 +338,21 @@ export const INSERT_ART: Record<string, string> = {
   ST10: "/inserts/ST10.jpg", // Nikola Jokic
 
   // Set 6: 1. Thanksgiving
-  TH1: "", // Stephon Castle
-  TH2: "", // Jayson Tatum
-  TH3: "", // Nickeil Alexander-Walker
-  TH4: "", // Donovan Mitchell
-  TH5: "", // Darryn Peterson
-  TH6: "", // Ajay Mitchell
-  TH7: "", // Franz Wagner
-  TH8: "", // Zach LaVine
-  TH9: "", // Amar'e Stoudemire
-  TH10: "", // Kenyon Martin
-  TH11: "", // Antonio McDyess
-  TH12: "", // Rolando Blackman
-  TH13: "", // Monta Ellis
-  TH14: "", // Larry Johnson
-  TH15: "", // Jeremy Lin
+  TH1: "/inserts/TH1.jpg", // Stephon Castle
+  TH2: "/inserts/TH2.jpg", // Jayson Tatum
+  TH3: "/inserts/TH3.jpg", // Nickeil Alexander-Walker
+  TH4: "/inserts/TH4.jpg", // Donovan Mitchell
+  TH5: "/inserts/TH5.jpg", // Darryn Peterson
+  TH6: "/inserts/TH6.jpg", // Ajay Mitchell
+  TH7: "/inserts/TH7.jpg", // Franz Wagner
+  TH8: "/inserts/TH8.jpg", // Zach LaVine
+  TH9: "/inserts/TH9.jpg", // Amar'e Stoudemire
+  TH10: "/inserts/TH10.jpg", // Kenyon Martin
+  TH11: "/inserts/TH11.jpg", // Antonio McDyess
+  TH12: "/inserts/TH12.jpg", // Rolando Blackman
+  TH13: "/inserts/TH13.jpg", // Monta Ellis
+  TH14: "/inserts/TH14.jpg", // Larry Johnson
+  TH15: "/inserts/TH15.jpg", // Jeremy Lin
 
   // Set 6: 2. Spark Plug
   SPL1: "", // Lou Williams
@@ -367,30 +367,30 @@ export const INSERT_ART: Record<string, string> = {
   SPL10: "", // Jason Terry
 
   // Set 6: 3. Supervillains
-  VI1: "", // Draymond Green
-  VI2: "", // Dillon Brooks
-  VI3: "", // Bill Laimbeer
-  VI4: "", // Christian Laettner
-  VI5: "", // Vernon Maxwell
-  VI6: "", // Stephen Jackson
-  VI7: "", // Rick Fox
-  VI8: "", // J.R. Smith
-  VI9: "", // Bruce Bowen
-  VI10: "", // Dennis Rodman
-  VI11: "", // Patrick Beverley
-  VI12: "", // Vlade Divac
+  VI1: "/inserts/VI1.jpg", // Draymond Green
+  VI2: "/inserts/VI2.jpg", // Dillon Brooks
+  VI3: "/inserts/VI3.jpg", // Bill Laimbeer
+  VI4: "/inserts/VI4.jpg", // Christian Laettner
+  VI5: "/inserts/VI5.jpg", // Vernon Maxwell
+  VI6: "/inserts/VI6.jpg", // Stephen Jackson
+  VI7: "/inserts/VI7.jpg", // Rick Fox
+  VI8: "/inserts/VI8.jpg", // J.R. Smith
+  VI9: "/inserts/VI9.jpg", // Bruce Bowen
+  VI10: "/inserts/VI10.jpg", // Dennis Rodman
+  VI11: "/inserts/VI11.jpg", // Patrick Beverley
+  VI12: "/inserts/VI12.jpg", // Vlade Divac
 
   // Set 6: 4. The Circus
-  CI1: "", // Jeff Teague
-  CI2: "", // Nick Young
-  CI3: "", // Russell Westbrook
-  CI4: "", // Deandre Ayton
-  CI5: "", // JaVale McGee
-  CI6: "", // Steven Adams
-  CI7: "", // Brian Scalabrine
-  CI8: "", // LaMelo Ball
-  CI9: "", // Giannis Antetokounmpo
-  CI10: "", // Robin Lopez
+  CI1: "/inserts/CI1.jpg", // Jeff Teague
+  CI2: "/inserts/CI2.jpg", // Nick Young
+  CI3: "/inserts/CI3.jpg", // Russell Westbrook
+  CI4: "/inserts/CI4.jpg", // Deandre Ayton
+  CI5: "/inserts/CI5.jpg", // JaVale McGee
+  CI6: "/inserts/CI6.jpg", // Steven Adams
+  CI7: "/inserts/CI7.jpg", // Brian Scalabrine
+  CI8: "/inserts/CI8.jpg", // LaMelo Ball
+  CI9: "/inserts/CI9.jpg", // Giannis Antetokounmpo
+  CI10: "/inserts/CI10.jpg", // Robin Lopez
 
   // Grail: Iconic Moments
   IM1: "/inserts/IM1.jpg", // The Last Shot, Michael Jordan
