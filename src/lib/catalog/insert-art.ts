@@ -355,16 +355,16 @@ export const INSERT_ART: Record<string, string> = {
   TH15: "/inserts/TH15.jpg", // Jeremy Lin
 
   // Set 6: 2. Spark Plug
-  SPL1: "", // Lou Williams
-  SPL2: "", // Jamal Crawford
-  SPL3: "", // Keldon Johnson
-  SPL4: "", // Payton Pritchard
-  SPL5: "", // Kevin McHale
-  SPL6: "", // Detlef Schrempf
-  SPL7: "", // Ricky Pierce
-  SPL8: "", // Eric Gordon
-  SPL9: "", // Manu Ginobili
-  SPL10: "", // Jason Terry
+  SPL1: "/inserts/SPL1.jpg", // Lou Williams
+  SPL2: "/inserts/SPL2.jpg", // Jamal Crawford
+  SPL3: "/inserts/SPL3.jpg", // Keldon Johnson
+  SPL4: "/inserts/SPL4.jpg", // Payton Pritchard
+  SPL5: "/inserts/SPL5.jpg", // Kevin McHale
+  SPL6: "/inserts/SPL6.jpg", // Detlef Schrempf
+  SPL7: "/inserts/SPL7.jpg", // Ricky Pierce
+  SPL8: "/inserts/SPL8.jpg", // Eric Gordon
+  SPL9: "/inserts/SPL9.jpg", // Manu Ginobili
+  SPL10: "/inserts/SPL10.jpg", // Jason Terry
 
   // Set 6: 3. Supervillains
   VI1: "/inserts/VI1.jpg", // Draymond Green
