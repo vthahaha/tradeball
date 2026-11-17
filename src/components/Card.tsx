@@ -318,6 +318,15 @@ export function CardReverse({
       <div className="tb-card__frame">
         <div className="tb-rev" data-set={card.type}>
           <div className="tb-rev__deco" aria-hidden style={card.career?.length ? { background: careerStripes(card.career) } : undefined} />
+          {card.type === "teamculture" && (
+            <div className="tb-rev__zine" aria-hidden>
+              <b>{teamCode(card.team) || card.team.slice(0, 3).toUpperCase()}</b>
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+          )}
           <div className="tb-rev__mark" aria-hidden>
             G7
           </div>

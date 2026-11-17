@@ -3704,28 +3704,76 @@ select {
 .tb-rev[data-set="montage"] .tb-rev__mark { text-shadow: 0 0.4cqw 1.2cqw #000; }
 .tb-rev[data-set="montage"] .tb-rev__foot { padding: 1cqw 2cqw 0; background: #000000b3; border-radius: 0.6cqw; }
 
-/* Team Culture: street art. A brick wall, spray-paint bursts in the team's colours with drips running
-   down from them, and the G7 mark tagged in, outlined in the second colour. */
-.tb-rev[data-set="teamculture"] { --rev-bg: #6b3a2c; --rev-mark: var(--t1); --rev-ink: #fff; --rev-medal: #fff; --rev-rule: #ffffff40; }
+/* Team Culture back: the same zine collage as the art. Solid team-colour paper under a coarse
+   halftone in the second colour, two scraps of torn newsprint taped down at angles, the team code
+   as a huge clipped headline in the second colour, and the G7 mark as a cut-out paper label. */
+.tb-rev[data-set="teamculture"] { --rev-bg: var(--t1); --rev-ink: #111; --rev-mark: #111; --rev-medal: #f3ecdc; --rev-rule: #11111140; }
 .tb-rev[data-set="teamculture"] .tb-rev__deco {
   background:
-    radial-gradient(28% 18% at 30% 26%, color-mix(in oklab, var(--t1) 90%, transparent), transparent 70%),
-    radial-gradient(24% 16% at 72% 72%, color-mix(in oklab, var(--t2) 85%, transparent), transparent 70%),
-    linear-gradient(var(--t1) 0 0) 22% 34% / 1cqw 16cqw no-repeat,
-    linear-gradient(var(--t1) 0 0) 34% 33% / 0.8cqw 24cqw no-repeat,
-    linear-gradient(var(--t1) 0 0) 41% 32% / 0.7cqw 10cqw no-repeat,
-    linear-gradient(var(--t2) 0 0) 66% 82% / 0.9cqw 14cqw no-repeat,
-    linear-gradient(var(--t2) 0 0) 78% 80% / 0.7cqw 9cqw no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 .4H24M0 6.4H24M.4 0V6M12.4 6V12' fill='none' stroke='%23d9c2a8' stroke-opacity='.45' stroke-width='.8'/%3E%3C/svg%3E") 0 0 / 18cqw 9cqw,
-    linear-gradient(180deg, #7a4232, #5c3024);
+    radial-gradient(circle, color-mix(in oklab, var(--t2) 55%, transparent) 0 0.55cqw, transparent 0.7cqw) 0 0 / 2.4cqw 2.4cqw,
+    radial-gradient(120% 90% at 30% 20%, #ffffff24, transparent 60%),
+    var(--t1);
+  -webkit-mask-image: linear-gradient(160deg, #000 30%, #0008 70%, #000);
+  mask-image: linear-gradient(160deg, #000 30%, #0008 70%, #000);
 }
-.tb-rev[data-set="teamculture"] .tb-rev__mark {
-  font-style: italic;
-  -webkit-text-stroke: 0.9cqw var(--t2);
+.tb-rev__zine {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* the headline: the team code cut out of a poster, huge and tilted */
+.tb-rev__zine b {
+  position: absolute;
+  bottom: 7cqw;
+  left: -2cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: 40cqw;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  color: var(--t2);
+  -webkit-text-stroke: 0.6cqw #111;
   paint-order: stroke fill;
-  text-shadow: 1.2cqw 1.2cqw 0 #000a;
-  transform: rotate(-6deg);
+  transform: rotate(-7deg);
+  text-shadow: 1.4cqw 1.4cqw 0 #1118;
 }
+/* torn newsprint: cream paper with column rules, ragged edges */
+.tb-rev__zine i:nth-child(2),
+.tb-rev__zine i:nth-child(3) {
+  position: absolute;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 1.4cqw, #2a262033 1.4cqw 1.65cqw),
+    linear-gradient(90deg, transparent 48%, #2a262040 48% 49%, transparent 49%),
+    #efe7d6;
+  box-shadow: 0 0.8cqw 1.4cqw #0007;
+  clip-path: polygon(0 4%, 8% 0, 17% 5%, 29% 1%, 41% 6%, 55% 0, 68% 5%, 80% 1%, 92% 6%, 100% 2%, 98% 96%, 86% 100%, 73% 95%, 60% 100%, 46% 94%, 33% 99%, 20% 95%, 8% 100%, 1% 95%);
+}
+.tb-rev__zine i:nth-child(2) { top: 6cqw; left: -3cqw; width: 46cqw; height: 34cqw; transform: rotate(-8deg); }
+.tb-rev__zine i:nth-child(3) { top: 44cqw; right: -4cqw; width: 40cqw; height: 28cqw; transform: rotate(6deg); }
+/* tape: translucent strips holding the scraps down */
+.tb-rev__zine i:nth-child(4),
+.tb-rev__zine i:nth-child(5) {
+  position: absolute;
+  width: 16cqw;
+  height: 4.4cqw;
+  background: #f6efdcb3;
+  box-shadow: 0 0.2cqw 0.4cqw #0003;
+}
+.tb-rev__zine i:nth-child(4) { top: 4cqw; left: 28cqw; transform: rotate(14deg); }
+.tb-rev__zine i:nth-child(5) { top: 42cqw; right: 22cqw; transform: rotate(-18deg); }
+/* the mark: a cut-out paper label stuck on */
+.tb-rev[data-set="teamculture"] .tb-rev__mark {
+  padding: 1.6cqw 4cqw 2.4cqw;
+  background: #f3ecdc;
+  font-style: italic;
+  box-shadow: 0.8cqw 0.8cqw 0 #111;
+  transform: rotate(-4deg);
+}
+.tb-rev[data-set="teamculture"] .tb-rev__foot { padding: 1cqw 2cqw 0.6cqw; background: #f3ecdc; color: #111; border-top: none; box-shadow: 0.5cqw 0.5cqw 0 #111; }
+
 /* Crownless Emperors: purple velvet, gold damask, the mark in gold */
 .tb-rev[data-set="emperors"] { --rev-bg: #2a0e3f; --rev-mark: #f1cf6b; --rev-ink: #f1cf6b; --rev-rule: #e2b64f55; }
 .tb-rev[data-set="emperors"] .tb-rev__deco {
