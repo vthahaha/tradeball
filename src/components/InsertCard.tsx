@@ -1378,6 +1378,97 @@ export function InsertFront(props: InsertFrontProps) {
       );
     }
 
+    // Team Culture: the art does the work (it carries the players and their names). Nothing on the
+    // photo but a small rating; a slim strip at the foot with the set and the team in its colours.
+    case "teamculture":
+      return (
+        <div className="tb-ins tb-ins--teamculture">
+          {photo()}
+          <div className="tb-ins__tcrate">{card.ovr}</div>
+          <div className="tb-ins__tcstrip">
+            <span>Team Culture</span>
+            <b style={{ background: "var(--t1)", color: "var(--t1-ink)", boxShadow: "inset 0 -0.6cqw 0 var(--t2)" }}>
+              {teamCode(card.team)}
+            </b>
+            {serial}
+            {no}
+          </div>
+        </div>
+      );
+
+    // Crownless Emperors: regal, and missing the one thing. Royal purple velvet with a faint gold
+    // damask, the photo in an arched gilded frame, and above it a crimson cushion with gold tassels,
+    // empty: only a faint dashed ghost of a crown hangs over it. Gold Bodoni for the set and name.
+    case "emperors":
+      return (
+        <div className="tb-ins tb-ins--emperors">
+          <div className="tb-ins__set">Crownless Emperors</div>
+          {photo()}
+          <svg className="tb-ins__ceghost" viewBox="0 0 60 30" aria-hidden>
+            <path d="M6 26L3 6l13 10L30 2l14 14L57 6l-3 20z" />
+            <circle cx="30" cy="2" r="2" />
+          </svg>
+          <div className="tb-ins__cecushion" aria-hidden>
+            <i />
+            <i />
+          </div>
+          <div className="tb-ins__cecoin">
+            <b>{card.ovr}</b>
+            <small>{p.pos}</small>
+          </div>
+          <div className="tb-ins__ceplate">
+            <div className="tb-ins__name" style={{ fontSize: `${nameSize(name, 0.7)}cqw` }}>
+              {name}
+            </div>
+            <div className="tb-ins__fine is-center">
+              <span>{card.team}</span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
+    // Four Horsemen (Grail): each player one of the riders (Conquest white, Death pale, War red,
+    // Famine black and gold). Full art under a storm closing in from the edges in the rider's colour,
+    // a jagged crack of lightning, embers rising, a huge outlined numeral running off the left edge,
+    // and the rider's name burned huge across the foot.
+    case "horsemen": {
+      const rider = (card.kicker ?? "Conquest").toLowerCase();
+      const num = ["conquest", "death", "war", "famine"].indexOf(rider);
+      return (
+        <div className={`tb-ins tb-ins--horsemen is-${rider}`}>
+          {photo()}
+          <div className="tb-ins__hmstorm" aria-hidden />
+          <div className="tb-ins__hmnum" aria-hidden>
+            {["I", "II", "III", "IV"][Math.max(0, num)]}
+          </div>
+          <svg className="tb-ins__hmbolt" viewBox="0 0 30 80" aria-hidden>
+            <path d="M18 0L8 30h8L4 56h7L2 80l20-34h-8l12-22h-8z" />
+          </svg>
+          <div className="tb-ins__hmembers" aria-hidden>
+            <i />
+            <i />
+          </div>
+          <div className="tb-ins__set">The Four Horsemen</div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot">
+            <div className="tb-ins__hmrider">{card.kicker}</div>
+            <div className="tb-ins__name" style={{ fontSize: `${nameSize(name, 0.62)}cqw` }}>
+              {name}
+            </div>
+            <div className="tb-ins__fine">
+              <span>
+                {card.team} · {p.pos}
+              </span>
+              {serial}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     default:
       return null;
   }

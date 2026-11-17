@@ -392,6 +392,62 @@ export const INSERT_ART: Record<string, string> = {
   CI9: "/inserts/CI9.jpg", // Giannis Antetokounmpo
   CI10: "/inserts/CI10.jpg", // Robin Lopez
 
+  // Set 7: 1. Team Culture
+  TC1: "/inserts/TC1.jpg", // Atlanta Hawks
+  TC2: "/inserts/TC2.jpg", // Boston Celtics
+  TC3: "/inserts/TC3.jpg", // Brooklyn Nets
+  TC4: "/inserts/TC4.jpg", // Charlotte Hornets
+  TC5: "/inserts/TC5.jpg", // Chicago Bulls
+  TC6: "/inserts/TC6.jpg", // Cleveland Cavaliers
+  TC7: "/inserts/TC7.jpg", // Dallas Mavericks
+  TC8: "/inserts/TC8.jpg", // Denver Nuggets
+  TC9: "/inserts/TC9.jpg", // Detroit Pistons
+  TC10: "/inserts/TC10.jpg", // Golden State Warriors
+  TC11: "/inserts/TC11.jpg", // Houston Rockets
+  TC12: "/inserts/TC12.jpg", // Indiana Pacers
+  TC13: "/inserts/TC13.jpg", // LA Clippers
+  TC14: "/inserts/TC14.jpg", // Los Angeles Lakers
+  TC15: "/inserts/TC15.jpg", // Memphis Grizzlies
+  TC16: "/inserts/TC16.jpg", // Miami Heat
+  TC17: "/inserts/TC17.jpg", // Milwaukee Bucks
+  TC18: "/inserts/TC18.jpg", // Minnesota Timberwolves
+  TC19: "/inserts/TC19.jpg", // New Orleans Pelicans
+  TC20: "/inserts/TC20.jpg", // New York Knicks
+  TC21: "/inserts/TC21.jpg", // Oklahoma City Thunder
+  TC22: "/inserts/TC22.jpg", // Orlando Magic
+  TC23: "/inserts/TC23.jpg", // Philadelphia 76ers
+  TC24: "/inserts/TC24.jpg", // Phoenix Suns
+  TC25: "/inserts/TC25.jpg", // Portland Trail Blazers
+  TC26: "/inserts/TC26.jpg", // Sacramento Kings
+  TC27: "/inserts/TC27.jpg", // San Antonio Spurs
+  TC28: "/inserts/TC28.jpg", // Toronto Raptors
+  TC29: "/inserts/TC29.jpg", // Utah Jazz
+  TC30: "/inserts/TC30.jpg", // Washington Wizards
+  TC31: "/inserts/TC31.jpg", // Seattle SuperSonics
+
+  // Set 7: 2. Crownless Emperors
+  CE1: "", // Elgin Baylor
+  CE2: "", // Dikembe Mutombo
+  CE3: "", // Steve Nash
+  CE4: "", // Allen Iverson
+  CE5: "", // Tracy McGrady
+  CE6: "", // Charles Barkley
+  CE7: "", // John Stockton
+  CE8: "", // Karl Malone
+  CE9: "", // Reggie Miller
+  CE10: "", // Dominique Wilkins
+  CE11: "", // Vince Carter
+  CE12: "", // Grant Hill
+  CE13: "", // Chris Webber
+  CE14: "", // Chris Paul
+  CE15: "", // Derrick Rose
+
+  // Grail: Four Horsemen
+  FH1: "", // Jalen Brunson
+  FH2: "", // Victor Wembanyama
+  FH3: "", // Donovan Mitchell
+  FH4: "", // Shai Gilgeous-Alexander
+
   // Mythic: Career Montage
   CM1: "/inserts/CM1.jpg", // Tracy McGrady
   CM2: "/inserts/CM2.jpg", // Allen Iverson

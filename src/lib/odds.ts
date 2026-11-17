@@ -60,20 +60,20 @@ export const INSERTS_PER_PACK = 2;
  * A class left out here is never pulled.
  */
 export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
-  // Uncommon: 37.5
-  light: 8.75, // The Light
-  shadow: 8.75, // The Shadow
-  passports: 7, // Passports
-  snipers: 4.3, // Snipers
-  dimers: 4.3, // Dimers
-  snatchers: 4.4, // Snatchers
+  // Uncommon: 32.5
+  light: 7, // The Light
+  shadow: 7, // The Shadow
+  passports: 6.3, // Passports
+  snipers: 4, // Snipers
+  dimers: 4, // Dimers
+  snatchers: 4.2, // Snatchers
   // Rare: 30
   newblood: 8, // New Blood
   fortress: 6.5, // Stone Fortress
   cult: 6, // Cult Classic
   wizards: 5, // Time Wizards
   villains: 4.5, // Supervillains
-  // Epic: 22.8
+  // Epic: 25.2
   flash: 3, // Flash of Brilliance
   goodbyes: 3, // Hard Goodbyes
   dotd: 3, // Day of the Dead
@@ -83,17 +83,20 @@ export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
   thirdeye: 2, // The Third Eye
   sparkplug: 2.4, // Spark Plug
   circus: 2.4, // The Circus
-  // Legendary: 7.5
+  emperors: 2.4, // Crownless Emperors
+  // Legendary: 10
   goldenboy: 2.5, // Golden Boy
   botb: 2.5, // Best of the Best
   rivalries: 2.5, // Rivalries
+  teamculture: 2.5, // Team Culture
   // Mythic: 2.1, about 1 pack in 24 holds one; a Generational about 1 in 125
   stardom: 0.6, // Ultimate Stardom
   dreamteam: 0.6, // The Dream Team
   montage: 0.5, // Career Montage
   generational: 0.4, // Generational
-  // Grail: 0.1, about 1 pack in 500
+  // Grail: 0.2, about 1 pack in 250
   iconic: 0.1, // Iconic Moments
+  horsemen: 0.1, // Four Horsemen
 };
 export const MAX_BANKED_PACKS = 3;
 

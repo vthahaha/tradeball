@@ -2767,6 +2767,281 @@ select {
 .tb-ins--montage .tb-ins__name { font-stretch: 80%; }
 .tb-ins--montage .tb-ins__fine { color: #ffffffbf; }
 
+/* ── Set 7 ── */
+
+/* Team Culture: the art does the work, so the front stays out of its way: a small rating chip in
+   the corner and a slim black strip at the foot with the set and the team code in its colours. */
+.tb-ins--teamculture { background: #111; color: #fff; }
+.tb-ins__tcrate {
+  position: absolute;
+  top: 3cqw;
+  right: 3cqw;
+  z-index: 4;
+  padding: 0.8cqw 1.6cqw;
+  border-radius: 0.8cqw;
+  background: #000000a6;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: 5.4cqw;
+  line-height: 1;
+}
+.tb-ins__tcstrip {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 1.8cqw;
+  padding: 1.8cqw 3cqw;
+  background: #000000d9;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffffffbf;
+}
+.tb-ins__tcstrip > span:first-child {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 3.8cqw;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+.tb-ins__tcstrip > b {
+  padding: 0.4cqw 1.4cqw 0.8cqw;
+  border-radius: 0.5cqw;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 3.2cqw;
+  letter-spacing: 0.04em;
+}
+.tb-ins__tcstrip .tb-ins__no { margin-left: auto; }
+
+/* Crownless Emperors: regal, missing the one thing. Royal purple velvet with a faint gold damask,
+   the photo in an arched gilded frame, a crimson cushion with gold tassels above it, empty, under a
+   faint dashed ghost of the crown that never came. */
+.tb-ins--emperors {
+  background:
+    radial-gradient(circle, #f1cf6b14 0 0.5cqw, transparent 0.6cqw) 0 0 / 5cqw 5cqw,
+    radial-gradient(circle, #f1cf6b0d 0 0.9cqw, transparent 1cqw) 2.5cqw 2.5cqw / 5cqw 5cqw,
+    radial-gradient(110% 80% at 50% 35%, #5a1f84, #2a0e3f 60%, #170624);
+  color: #f1cf6b;
+}
+.tb-ins--emperors .tb-ins__set {
+  right: 4cqw;
+  left: 4cqw;
+  max-width: none;
+  text-align: center;
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 5cqw;
+  letter-spacing: 0.02em;
+  color: #f1cf6b;
+}
+.tb-ins--emperors .tb-ins__photo {
+  inset: 27cqw 10cqw 34cqw;
+  z-index: 2;
+  border-radius: 50% 50% 0.8cqw 0.8cqw / 26% 26% 0.8cqw 0.8cqw;
+  background: #2a0e3f;
+  box-shadow:
+    0 0 0 1cqw #e2b64f,
+    0 0 0 1.4cqw #6b4a12,
+    0 0 0 2.2cqw #f6dc8a,
+    0 1.6cqw 2.6cqw 1.4cqw #0009;
+}
+.tb-ins__ceghost {
+  position: absolute;
+  top: 9cqw;
+  left: 50%;
+  z-index: 3;
+  width: 26cqw;
+  height: auto;
+  fill: none;
+  stroke: #f1cf6b;
+  stroke-width: 1.2;
+  stroke-dasharray: 2.6 2.2;
+  stroke-linejoin: round;
+  opacity: 0.55;
+  transform: translateX(-50%);
+}
+/* the cushion: crimson velvet, gold piping and a tassel at each corner, nothing on it */
+.tb-ins__cecushion {
+  position: absolute;
+  top: 18.5cqw;
+  left: 50%;
+  z-index: 3;
+  width: 32cqw;
+  height: 7cqw;
+  border-radius: 50% / 60%;
+  background: radial-gradient(70% 90% at 50% 30%, #c6283c, #7d0f22 70%);
+  box-shadow: inset 0 0 0 0.45cqw #e2b64f, 0 0.8cqw 1.2cqw #0008;
+  transform: translateX(-50%);
+}
+.tb-ins__cecushion i {
+  position: absolute;
+  bottom: -2.6cqw;
+  width: 1.4cqw;
+  height: 3.6cqw;
+  border-radius: 0 0 0.7cqw 0.7cqw;
+  background: linear-gradient(180deg, #f6dc8a, #b8862a);
+}
+.tb-ins__cecushion i:first-child { left: 1.6cqw; }
+.tb-ins__cecushion i:last-child { right: 1.6cqw; }
+/* the rating on a gold coin at the frame's corner */
+.tb-ins__cecoin {
+  position: absolute;
+  right: 4cqw;
+  bottom: 31cqw;
+  z-index: 4;
+  display: grid;
+  width: 15cqw;
+  aspect-ratio: 1;
+  place-content: center;
+  justify-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff1c2, #e2b64f 45%, #8a6414);
+  box-shadow: inset 0 0 0 0.6cqw #8a641499, inset 0 0 0 1cqw #f6dc8a, 0 0.6cqw 1cqw #000a;
+  color: #3d2a05;
+}
+.tb-ins__cecoin b {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 72%;
+  font-size: 6cqw;
+  line-height: 0.9;
+}
+.tb-ins__cecoin small {
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 1.8cqw;
+  letter-spacing: 0.2em;
+}
+.tb-ins__ceplate {
+  position: absolute;
+  right: 6cqw;
+  bottom: 4.4cqw;
+  left: 6cqw;
+  z-index: 4;
+  padding: 2.2cqw 3cqw 1.8cqw;
+  border-top: 0.4cqw solid #e2b64f;
+  border-bottom: 0.4cqw solid #e2b64f;
+  background: linear-gradient(180deg, #3a1356, #22093a);
+  text-align: center;
+}
+.tb-ins--emperors .tb-ins__name {
+  font-family: var(--font-engrave), serif;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #f6dc8a;
+}
+.tb-ins--emperors .tb-ins__fine { color: #d9b8f0; border-top-color: #e2b64f40; }
+
+/* Four Horsemen (Grail): each card a rider, the colour set by the rider (--hm, --hm-dk). Full art
+   under a storm closing in from the edges in that colour, a jagged lightning crack, embers rising,
+   a huge outlined Roman numeral off the left edge, and the rider's name burned huge across the foot. */
+.tb-ins--horsemen.is-conquest { --hm: #f4efe0; --hm-dk: #6b5a2a; --hm-glow: #ffe9a8; }
+.tb-ins--horsemen.is-death { --hm: #a8f0c0; --hm-dk: #10301e; --hm-glow: #7dffb0; }
+.tb-ins--horsemen.is-war { --hm: #ff3a2a; --hm-dk: #3a0505; --hm-glow: #ff7a3a; }
+.tb-ins--horsemen.is-famine { --hm: #f0c048; --hm-dk: #050505; --hm-glow: #ffcf5a; }
+.tb-ins--horsemen { background: var(--hm-dk); color: #fff; }
+.tb-ins__hmstorm {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(120% 70% at 50% 50%, transparent 45%, color-mix(in oklab, var(--hm-dk) 85%, transparent) 100%),
+    linear-gradient(180deg, color-mix(in oklab, var(--hm-dk) 80%, transparent) 0%, transparent 22%, transparent 55%, var(--hm-dk) 100%);
+  pointer-events: none;
+}
+.tb-ins__hmnum {
+  position: absolute;
+  top: 6cqw;
+  left: -4cqw;
+  z-index: 3;
+  font-family: var(--font-engrave), serif;
+  font-weight: 700;
+  font-size: 62cqw;
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 0.6cqw color-mix(in oklab, var(--hm) 70%, transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.tb-ins__hmbolt {
+  position: absolute;
+  top: 2cqw;
+  right: 8cqw;
+  z-index: 3;
+  width: 12cqw;
+  height: auto;
+  fill: var(--hm);
+  filter: drop-shadow(0 0 1.6cqw var(--hm-glow)) drop-shadow(0 0 0.4cqw #fff);
+  opacity: 0.9;
+}
+.tb-ins__hmembers,
+.tb-ins__hmembers i {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.tb-ins__hmembers { z-index: 3; overflow: hidden; }
+.tb-ins__hmembers i {
+  inset: 0 0 -40%;
+  background:
+    radial-gradient(circle, var(--hm-glow) 0 0.35cqw, transparent 0.5cqw) 8% 10% / 23cqw 19cqw,
+    radial-gradient(circle, var(--hm) 0 0.25cqw, transparent 0.4cqw) 30% 60% / 17cqw 23cqw;
+  animation: tb-embers 6s linear infinite;
+  opacity: 0.8;
+}
+.tb-ins__hmembers i:last-child { animation-duration: 9s; animation-delay: -4s; opacity: 0.55; }
+@keyframes tb-embers {
+  from { transform: translateY(0); }
+  to { transform: translateY(-28%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-ins__hmembers i { animation: none; }
+}
+.tb-ins--horsemen .tb-ins__set {
+  z-index: 5;
+  left: auto;
+  right: 4cqw;
+  top: 17cqw;
+  max-width: 34cqw;
+  text-align: right;
+  font-family: var(--font-engrave), serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 4.4cqw;
+  letter-spacing: 0.02em;
+  color: var(--hm);
+  text-shadow: 0 0 1.4cqw var(--hm-dk), 0 0.3cqw 0 #000;
+}
+.tb-ins--horsemen .tb-ins__ovr { z-index: 5; right: auto; left: 4cqw; text-align: left; text-shadow: 0 0 1.4cqw var(--hm-dk), 0 0.3cqw 0 #000; }
+.tb-ins--horsemen .tb-ins__foot { z-index: 5; padding: 0 4.4cqw 4.4cqw; }
+.tb-ins__hmrider {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 78%;
+  font-size: 17cqw;
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--hm);
+  text-shadow: 0 0 2.4cqw var(--hm-glow), 0.6cqw 0.6cqw 0 #000;
+}
+.tb-ins--horsemen .tb-ins__name { margin-top: 1cqw; text-shadow: 0 0.3cqw 1cqw #000; }
+.tb-ins--horsemen .tb-ins__fine { color: #ffffffc4; border-top-color: color-mix(in oklab, var(--hm) 40%, transparent); }
+
 /* The Light / The Shadow: a beam enters the top-left corner, a prism splits it into a spectrum
    band running diagonally behind the player, landing in two stripes of team colour. The Light is
    bright on white with a pastel prism border; The Shadow is the same beam swallowed in black, with
@@ -3018,6 +3293,7 @@ select {
   .tb-ins__moment,
   .tb-ins__est,
   .tb-ins__pickcap,
+  .tb-ins__tcstrip > span:first-child,
   .tb-ins__cxact,
   .tb-ins__tgegg,
   .tb-ins__trteam,
@@ -3427,6 +3703,47 @@ select {
 .tb-rev[data-set="montage"] { --rev-bg: #000; --rev-mark: #fff; --rev-rule: #ffffff59; }
 .tb-rev[data-set="montage"] .tb-rev__mark { text-shadow: 0 0.4cqw 1.2cqw #000; }
 .tb-rev[data-set="montage"] .tb-rev__foot { padding: 1cqw 2cqw 0; background: #000000b3; border-radius: 0.6cqw; }
+
+/* Team Culture: street art. A brick wall, spray-paint bursts in the team's colours with drips running
+   down from them, and the G7 mark tagged in, outlined in the second colour. */
+.tb-rev[data-set="teamculture"] { --rev-bg: #6b3a2c; --rev-mark: var(--t1); --rev-ink: #fff; --rev-medal: #fff; --rev-rule: #ffffff40; }
+.tb-rev[data-set="teamculture"] .tb-rev__deco {
+  background:
+    radial-gradient(28% 18% at 30% 26%, color-mix(in oklab, var(--t1) 90%, transparent), transparent 70%),
+    radial-gradient(24% 16% at 72% 72%, color-mix(in oklab, var(--t2) 85%, transparent), transparent 70%),
+    linear-gradient(var(--t1) 0 0) 22% 34% / 1cqw 16cqw no-repeat,
+    linear-gradient(var(--t1) 0 0) 34% 33% / 0.8cqw 24cqw no-repeat,
+    linear-gradient(var(--t1) 0 0) 41% 32% / 0.7cqw 10cqw no-repeat,
+    linear-gradient(var(--t2) 0 0) 66% 82% / 0.9cqw 14cqw no-repeat,
+    linear-gradient(var(--t2) 0 0) 78% 80% / 0.7cqw 9cqw no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 .4H24M0 6.4H24M.4 0V6M12.4 6V12' fill='none' stroke='%23d9c2a8' stroke-opacity='.45' stroke-width='.8'/%3E%3C/svg%3E") 0 0 / 18cqw 9cqw,
+    linear-gradient(180deg, #7a4232, #5c3024);
+}
+.tb-rev[data-set="teamculture"] .tb-rev__mark {
+  font-style: italic;
+  -webkit-text-stroke: 0.9cqw var(--t2);
+  paint-order: stroke fill;
+  text-shadow: 1.2cqw 1.2cqw 0 #000a;
+  transform: rotate(-6deg);
+}
+/* Crownless Emperors: purple velvet, gold damask, the mark in gold */
+.tb-rev[data-set="emperors"] { --rev-bg: #2a0e3f; --rev-mark: #f1cf6b; --rev-ink: #f1cf6b; --rev-rule: #e2b64f55; }
+.tb-rev[data-set="emperors"] .tb-rev__deco {
+  background:
+    radial-gradient(circle, #f1cf6b14 0 0.5cqw, transparent 0.6cqw) 0 0 / 5cqw 5cqw,
+    radial-gradient(110% 80% at 50% 40%, #5a1f84, transparent 70%);
+  box-shadow: inset 0 0 0 2cqw #2a0e3f, inset 0 0 0 2.4cqw #e2b64f;
+}
+/* Four Horsemen: a storm over black, the mark lit */
+.tb-rev[data-set="horsemen"] { --rev-bg: #050505; --rev-mark: #f4efe0; --rev-rule: #ffffff40; }
+.tb-rev[data-set="horsemen"] .tb-rev__deco {
+  background:
+    radial-gradient(40% 30% at 20% 20%, #ff3a2a40, transparent 70%),
+    radial-gradient(40% 30% at 80% 30%, #a8f0c040, transparent 70%),
+    radial-gradient(40% 30% at 30% 80%, #f0c04840, transparent 70%),
+    radial-gradient(40% 30% at 75% 75%, #f4efe033, transparent 70%);
+}
+.tb-rev[data-set="horsemen"] .tb-rev__mark { text-shadow: 0 0 2.4cqw #ffffff66; }
 
 /* ── face-down: the Gate 7 card back inside the parallel border ── */
 .is-facedown .tb-card__frame {

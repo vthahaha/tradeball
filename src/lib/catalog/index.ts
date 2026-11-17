@@ -143,8 +143,8 @@ export const INSERT_DESIGNS: CardDesign[] = INSERT_CARDS.map((c) => {
   const one = slot(c.player, c.legend, 1);
   if (!one) throw new Error(`Insert ${c.id}: no player`);
   const two = slot(c.player2, c.legend2, 2);
-  // a two-player card rates the pair: the average of the two; Grail cards are always 99
-  const ovr = cls.rarity === "grail" ? 99 : (c.ovr ?? (two ? Math.round((one.ovr + two.ovr) / 2) : one.ovr));
+  // a two-player card rates the pair: the average of the two; Grail cards are 99 unless they set one
+  const ovr = cls.rarity === "grail" ? (c.ovr ?? 99) : (c.ovr ?? (two ? Math.round((one.ovr + two.ovr) / 2) : one.ovr));
   return {
     id: c.id,
     sport: "basketball",

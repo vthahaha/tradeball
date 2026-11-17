@@ -48,6 +48,10 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "sparkplug", name: "Spark Plug", rarity: "epic", boost: 2 },
   { id: "villains", name: "Supervillains", rarity: "rare", boost: 1 },
   { id: "circus", name: "The Circus", rarity: "epic", boost: 1 },
+  // Set 7
+  { id: "teamculture", name: "Team Culture", rarity: "legendary", boost: 0 },
+  { id: "emperors", name: "Crownless Emperors", rarity: "epic", boost: 0 },
+  { id: "horsemen", name: "Four Horsemen", rarity: "grail", boost: 0 },
   // Mythic
   { id: "montage", name: "Career Montage", rarity: "mythic", boost: 0 },
   // Grail
@@ -887,6 +891,79 @@ const THE_CIRCUS: InsertCard[] = (
   ] as Omit<InsertCard, "cls">[]
 ).map((c) => ({ ...c, cls: "circus" }));
 
+// ── Set 7 ──
+
+// 1. Team Culture: one card per team. The art carries the team's notable players and their names,
+// so the "player" is the team itself
+const TEAM_CULTURE: InsertCard[] = (
+  [
+    { id: "TC1", team: "Hawks", legend: L("Atlanta Hawks", "Team", "", 90) },
+    { id: "TC2", team: "Celtics", legend: L("Boston Celtics", "Team", "", 90) },
+    { id: "TC3", team: "Nets", legend: L("Brooklyn Nets", "Team", "", 90) },
+    { id: "TC4", team: "Hornets", legend: L("Charlotte Hornets", "Team", "", 90) },
+    { id: "TC5", team: "Bulls", legend: L("Chicago Bulls", "Team", "", 90) },
+    { id: "TC6", team: "Cavaliers", legend: L("Cleveland Cavaliers", "Team", "", 90) },
+    { id: "TC7", team: "Mavericks", legend: L("Dallas Mavericks", "Team", "", 90) },
+    { id: "TC8", team: "Nuggets", legend: L("Denver Nuggets", "Team", "", 90) },
+    { id: "TC9", team: "Pistons", legend: L("Detroit Pistons", "Team", "", 90) },
+    { id: "TC10", team: "Warriors", legend: L("Golden State Warriors", "Team", "", 90) },
+    { id: "TC11", team: "Rockets", legend: L("Houston Rockets", "Team", "", 90) },
+    { id: "TC12", team: "Pacers", legend: L("Indiana Pacers", "Team", "", 90) },
+    { id: "TC13", team: "Clippers", legend: L("LA Clippers", "Team", "", 90) },
+    { id: "TC14", team: "Lakers", legend: L("Los Angeles Lakers", "Team", "", 90) },
+    { id: "TC15", team: "Grizzlies", legend: L("Memphis Grizzlies", "Team", "", 90) },
+    { id: "TC16", team: "Heat", legend: L("Miami Heat", "Team", "", 90) },
+    { id: "TC17", team: "Bucks", legend: L("Milwaukee Bucks", "Team", "", 90) },
+    { id: "TC18", team: "Timberwolves", legend: L("Minnesota Timberwolves", "Team", "", 90) },
+    { id: "TC19", team: "Pelicans", legend: L("New Orleans Pelicans", "Team", "", 90) },
+    { id: "TC20", team: "Knicks", legend: L("New York Knicks", "Team", "", 90) },
+    { id: "TC21", team: "Thunder", legend: L("Oklahoma City Thunder", "Team", "", 90) },
+    { id: "TC22", team: "Magic", legend: L("Orlando Magic", "Team", "", 90) },
+    { id: "TC23", team: "76ers", legend: L("Philadelphia 76ers", "Team", "", 90) },
+    { id: "TC24", team: "Suns", legend: L("Phoenix Suns", "Team", "", 90) },
+    { id: "TC25", team: "Trail Blazers", legend: L("Portland Trail Blazers", "Team", "", 90) },
+    { id: "TC26", team: "Kings", legend: L("Sacramento Kings", "Team", "", 90) },
+    { id: "TC27", team: "Spurs", legend: L("San Antonio Spurs", "Team", "", 90) },
+    { id: "TC28", team: "Raptors", legend: L("Toronto Raptors", "Team", "", 90) },
+    { id: "TC29", team: "Jazz", legend: L("Utah Jazz", "Team", "", 90) },
+    { id: "TC30", team: "Wizards", legend: L("Washington Wizards", "Team", "", 90) },
+    // a franchise that is gone: coloured as the SuperSonics, the back carries the Thunder's logo
+    { id: "TC31", team: "SuperSonics", legend: L("Seattle SuperSonics", "Team", "", 90) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "teamculture" }));
+
+// 2. Crownless Emperors: all-time greats who never won a ring
+const CROWNLESS_EMPERORS: InsertCard[] = (
+  [
+    { id: "CE1", team: "Lakers", legend: L("Elgin Baylor", "F", "USA", 95) },
+    { id: "CE2", team: "Nuggets", legend: L("Dikembe Mutombo", "C", "DR Congo", 89) },
+    { id: "CE3", team: "Suns", legend: L("Steve Nash", "G", "Canada", 93) },
+    { id: "CE4", team: "76ers", legend: L("Allen Iverson", "G", "USA", 95) },
+    { id: "CE5", team: "Magic", legend: L("Tracy McGrady", "G", "USA", 94) },
+    { id: "CE6", team: "Suns", legend: L("Charles Barkley", "F", "USA", 95) },
+    { id: "CE7", team: "Jazz", legend: L("John Stockton", "G", "USA", 93) },
+    { id: "CE8", team: "Jazz", legend: L("Karl Malone", "F", "USA", 95) },
+    { id: "CE9", team: "Pacers", legend: L("Reggie Miller", "G", "USA", 92) },
+    { id: "CE10", team: "Hawks", legend: L("Dominique Wilkins", "F", "USA", 93) },
+    { id: "CE11", team: "Raptors", legend: L("Vince Carter", "G", "USA", 91) },
+    { id: "CE12", team: "Pistons", legend: L("Grant Hill", "F", "USA", 91) },
+    { id: "CE13", team: "Kings", legend: L("Chris Webber", "F", "USA", 91) },
+    { id: "CE14", team: "Clippers", legend: L("Chris Paul", "G", "USA", 93) },
+    { id: "CE15", team: "Bulls", legend: L("Derrick Rose", "G", "USA", 91) },
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "emperors" }));
+
+// 3. Four Horsemen (Grail): the best player of each 2025-26 conference finalist, each one of the
+// riders (kicker = the rider). Brunson 99, the rest 98
+const FOUR_HORSEMEN: InsertCard[] = (
+  [
+    { id: "FH1", kicker: "Conquest", player: "3934672", ovr: 99 }, // Jalen Brunson
+    { id: "FH2", kicker: "Death", player: "5104157", ovr: 98 }, // Victor Wembanyama
+    { id: "FH3", kicker: "War", player: "3908809", ovr: 98 }, // Donovan Mitchell
+    { id: "FH4", kicker: "Famine", player: "4278073", ovr: 98 }, // Shai Gilgeous-Alexander
+  ] as Omit<InsertCard, "cls">[]
+).map((c) => ({ ...c, cls: "horsemen" }));
+
 // Career Montage (Mythic): whole careers cut together. kicker = the NBA career span; ratings are
 // fixed at 90 or better
 const CAREER_MONTAGE: InsertCard[] = (
@@ -977,6 +1054,9 @@ export const INSERT_CARDS: InsertCard[] = [
   ...SPARK_PLUG,
   ...SUPERVILLAINS,
   ...THE_CIRCUS,
+  ...TEAM_CULTURE,
+  ...CROWNLESS_EMPERORS,
+  ...FOUR_HORSEMEN,
   ...CAREER_MONTAGE,
   ...ICONIC_MOMENTS,
 ];

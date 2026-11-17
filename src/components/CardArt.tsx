@@ -274,6 +274,24 @@ export function SetIcon({ type }: { type: string }) {
           <rect x="16" y="6" width="5" height="15" fill="currentColor" opacity="0.55" />
         </>,
       );
+    case "teamculture":
+      return s(
+        <>
+          <path d="M5 4c4-2 10-2 14 1-2 4-1 7 1 9-5 3-11 3-16 0 2-3 3-6 1-10z" fill="currentColor" />
+          <path d="M8 15v5M12 16v3M16 15v6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        </>,
+      );
+    case "emperors":
+      return s(
+        <path d="M4 19L3 7l5 4 4-7 4 7 5-4-1 12z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeDasharray="2.5 2" strokeLinejoin="round" />,
+      );
+    case "horsemen":
+      return s(
+        <>
+          <path d="M13 2L6 13h5l-2 9 9-13h-5z" fill="currentColor" />
+          <path d="M3 21h18" stroke="currentColor" strokeWidth="1.6" />
+        </>,
+      );
     case "dreamteam":
       return s(
         <>
