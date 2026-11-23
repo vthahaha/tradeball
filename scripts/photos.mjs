@@ -38,9 +38,6 @@ const mlbTeams = abbrs(src("mlb.ts").split("MLB_PLAYERS")[0]);
 const lolRows = [...src("lol.ts").matchAll(/^\s*(\{"id":"[^\n]*\}),?$/gm)].map((m) => JSON.parse(m[1]));
 const lolTeams = JSON.parse(src("lol.ts").match(/LOL_TEAMS: LolTeam\[\] = (\[[\s\S]*?\n\]);/)[1]);
 const nhlTeams = abbrs(src("nhl.ts").split("NHL_PLAYERS")[0]);
-// The Champions: title-run players by ESPN id; the ones without a base card need their own copy
-const LEAGUE_DIR = { NBA: "nba", NFL: "nfl", MLB: "mlb", NHL: "nhl" };
-const champRows = [...src("champions.ts").matchAll(/^\s*(\{"id":"CH[^\n]*\}),?$/gm)].map((m) => JSON.parse(m[1])).filter((r) => r.espn && LEAGUE_DIR[r.league]);
 const nbaTeams = abbrs(src("nba.ts").split("NBA_PLAYERS")[0]);
 // historic and college teams on insert cards borrow a current franchise's logo (index.ts LOGO_FRANCHISE)
 const nflTeams = abbrs(src("nfl.ts").split("NFL_PLAYERS")[0]);
@@ -97,7 +94,6 @@ const jobs = [
   ...mlbTeams.map((a) => ["logos", `mlb/${a}`, `https://a.espncdn.com/i/teamlogos/mlb/500/${a}.png`, LOGO_W]),
   ...nhlTeams.map((a) => ["logos", `nhl/${a}`, `https://a.espncdn.com/i/teamlogos/nhl/500/${a}.png`, LOGO_W]),
   ...lolRows.filter((r) => r.photo).map((r) => ["players", `lol/${r.id}`, r.photo, PHOTO_W]),
-  ...champRows.map((r) => ["players", `${LEAGUE_DIR[r.league]}/${r.espn}`, `https://a.espncdn.com/i/headshots/${LEAGUE_DIR[r.league]}/players/full/${r.espn}.png`, PHOTO_W]),
   ...lolTeams.filter((t) => t.logo).map((t) => ["logos", `lol/${t.abbr.toLowerCase()}`, t.logo, LOGO_W]),
 ];
 await pool(jobs, 12, ([kind, key, url, w]) => remote(kind, key, url, at(`public/${kind}/${key}.webp`), w));

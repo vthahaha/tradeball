@@ -159,9 +159,8 @@ export function Card({
   // Inserts show their splash art once one is chosen (insert-art.ts); until then the set's
   // scene carries the card with the initials. New Blood always uses the ESPN headshot.
   const headshot = isDuo ? undefined : (p1.photo ?? (p1.espnId ? headshotUrl(p1.espnId) : undefined));
-  // The Champions use the player's own photo too, until splash art is chosen for a card
   const imgSrc = insert
-    ? card.type === "newblood" || (card.type === "champions" && !card.art)
+    ? card.type === "newblood"
       ? headshot
       : (small && card.artThumb) || card.art
     : headshot;

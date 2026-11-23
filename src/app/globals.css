@@ -3362,19 +3362,8 @@ select {
 @media (prefers-reduced-motion: reduce) {
   .tb-ins__chribbon::after { animation: none; }
 }
-/* soccer photos (UEFA) are opaque squares on white: hung as a framed portrait, not a cut-out */
-.tb-card[data-sport="soccer"] .tb-ins--champions .tb-card__splash.is-headshot {
-  top: 19cqw;
-  left: 15cqw;
-  width: 70cqw;
-  height: 70cqw;
-  object-fit: cover;
-  object-position: 50% 15%;
-  border: 1.2cqw solid #d9a73e;
-  border-radius: 0.6cqw;
-  box-shadow: 0 0 0 0.5cqw #1b1405, 0 1.6cqw 3cqw #0009;
-  filter: none;
-}
+/* no art yet: the initials, in the ink that reads on the team colour (beats the soccer base rule) */
+.tb-card .tb-ins--champions .tb-card__mono { color: var(--t1-ink); text-shadow: 0 0.6cqw 2cqw #0007; }
 .tb-ins--champions .tb-ins__ovr { color: #fff6dc; }
 .tb-ins__chplate {
   border-top: 0.7cqw solid #d9a73e;

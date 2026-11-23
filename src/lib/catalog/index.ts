@@ -388,9 +388,10 @@ export const INSERT_DESIGNS: CardDesign[] = INSERT_CARDS.map((c) => {
   };
 });
 // ── The Champions (every sport): the players from each league's last title run (champions.ts) ──
-// The card wears the title team's colours even when the player has moved on since. A player
+// The card wears the title team's colours even when the player has moved on since; its picture is
+// splash art chosen in insert-art.ts (until then, the player's initials). A player
 // with a base card in his sport rates from it (+2, the class boost), or from how big a part he
-// played (`share`) when that is higher. Photos come from the base card, or ESPN / UEFA / Leaguepedia.
+// played (`share`) when that is higher.
 
 /** What each league's title was, and what the stat line covers. */
 const TITLES: Record<ChampionRow["league"], { team: string; title: string; kicker: string; statLine: string }> = {
@@ -412,19 +413,11 @@ const baseIdOf = (r: ChampionRow) =>
   })[r.sport];
 const basePlayers = new Map(PLAYERS.map((p) => [p.id, p]));
 const champClass = classById.get("champions")!;
-const championPhoto = (r: ChampionRow, base: Player | undefined) => {
-  if (r.photo) return r.photo; // PSG: UEFA's photo from the title season
-  if (base?.photo) return base.photo;
-  if (r.sport === "basketball" && r.espn) return headshotUrl(r.espn);
-  const league = ({ football: "nfl", baseball: "mlb", hockey: "nhl" } as const)[r.sport as "football" | "baseball" | "hockey"];
-  return league && r.espn ? espnHeadshot(league, r.espn) : undefined;
-};
 const CHAMPION_PLAYERS: Player[] = CHAMPIONS.map((r) => {
   const base = basePlayers.get(baseIdOf(r));
   return {
     id: `champ-${r.id}`,
     espnId: "",
-    photo: championPhoto(r, base),
     sport: r.sport,
     name: r.name,
     team: TITLES[r.league].team,
