@@ -25,6 +25,7 @@
   --stock-mixed: #2e7d5b;
   --stock-diamond: #3f78d1; /* MLB: the Diamond pack */
   --stock-ice: #9ccbe6; /* NHL: the Faceoff pack */
+  --stock-nexus: #2fb3a1; /* League of Legends: the Nexus pack */
   --paper: #f7f7f2;
   --paper-2: #e8e6dc;
   --ink: #14213d;
@@ -4307,6 +4308,20 @@ select {
 }
 .tb-pack[data-pack="hockey"] .tb-pack__stub {
   background: repeating-linear-gradient(180deg, #00000026 0 0.6cqw, #ffffff4d 0.6cqw 1.2cqw), linear-gradient(100deg, #7fb6d6, #d2ecf8 50%, #6aa3c6);
+}
+
+/* the Nexus pack (League of Legends): the wrapper in crystal-teal stock */
+.tb-pack[data-pack="esports"] .tb-pack__body {
+  background:
+    linear-gradient(100deg, transparent 18%, #ffffff66 26%, transparent 34% 60%, #ffffff40 66%, transparent 72%),
+    linear-gradient(180deg, #ffffff26, transparent 40%, #00000033),
+    linear-gradient(100deg, #2fb3a1, #a8efe3 24%, #1d8577 44%, #74d9c9 62%, #146b60 84%, #2fb3a1);
+}
+.tb-pack[data-pack="esports"] .tb-pack__body::before {
+  background: repeating-linear-gradient(180deg, #00000040 0 0.6cqw, #ffffff40 0.6cqw 1.2cqw), #1d8577;
+}
+.tb-pack[data-pack="esports"] .tb-pack__stub {
+  background: repeating-linear-gradient(180deg, #00000033 0 0.6cqw, #ffffff38 0.6cqw 1.2cqw), linear-gradient(100deg, #1d8577, #74d9c9 50%, #146b60);
 }
 
 /* NEW stamp: lands on a card the first time it enters your binder */

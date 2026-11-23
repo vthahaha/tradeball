@@ -1,6 +1,13 @@
 import type { Sport } from "@/lib/catalog/types";
 
 export function SportIcon({ sport = "basketball", className }: { sport?: Sport; className?: string }) {
+  if (sport === "esports")
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-label="Esports">
+        <path d="M12 2l7 6-7 14-7-14z" />
+        <path d="M5 8h14M12 2L9 8l3 14 3-14z" />
+      </svg>
+    );
   if (sport === "baseball")
     return (
       <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.6" aria-label="Baseball">

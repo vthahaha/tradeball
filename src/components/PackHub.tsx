@@ -20,11 +20,25 @@ const PACKS: { type: PackType; name: string; gate: string; seat: string; inserts
   { type: "football", name: "Gridiron", gate: "FB", seat: "8", inserts: false },
   { type: "baseball", name: "Diamond", gate: "BB", seat: "8", inserts: false },
   { type: "hockey", name: "Faceoff", gate: "HK", seat: "8", inserts: false },
+  { type: "esports", name: "Nexus", gate: "LOL", seat: "8", inserts: false },
 ];
 const hasInserts = (p: (typeof PACKS)[number]) => p.inserts && INSERT_DESIGNS.length > 0;
 
 /** The ball printed on the wrapper. */
 function PackBall({ type }: { type: PackType }) {
+  if (type === "esports")
+    return (
+      <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
+        {/* a cut crystal: a tall gem with lit and shaded facets */}
+        <path d="M50 4 L84 32 L50 96 L16 32 Z" fill="#d8fff8" stroke="#14213d" strokeWidth="2.4" strokeLinejoin="round" />
+        <path d="M16 32 H84 M50 4 L36 32 L50 96 L64 32 Z" fill="none" stroke="#14213d" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M50 4 L36 32 H16 Z" fill="#9ff3e4" />
+        <path d="M50 4 L64 32 H84 Z" fill="#5fd6c3" />
+        <path d="M16 32 L50 96 L36 32 Z" fill="#7de6d4" />
+        <path d="M84 32 L50 96 L64 32 Z" fill="#2fb3a1" />
+        <path d="M16 32 H84 L50 96 Z M50 4 L84 32 L50 96 L16 32 Z" fill="none" stroke="#14213d" strokeWidth="2.4" strokeLinejoin="round" />
+      </svg>
+    );
   if (type === "baseball")
     return (
       <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>

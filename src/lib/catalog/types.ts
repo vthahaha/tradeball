@@ -1,7 +1,7 @@
 import { INSERT_CLASSES } from "./inserts";
 
-export type Sport = "basketball" | "soccer" | "football" | "baseball" | "hockey";
-export const SPORTS: readonly Sport[] = ["basketball", "soccer", "football", "baseball", "hockey"];
+export type Sport = "basketball" | "soccer" | "football" | "baseball" | "hockey" | "esports";
+export const SPORTS: readonly Sport[] = ["basketball", "soccer", "football", "baseball", "hockey", "esports"];
 
 /** Grail sits above Mythic. No class uses it yet; its drop weight is 0 until one does. */
 export const RARITIES = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "grail"] as const;
@@ -17,10 +17,11 @@ export type InsertType = string;
 
 /**
  * NBA base set + rookies, "ucl" for the soccer base set (Champions League squads), "nfl" for the
- * football base set (NFL depth charts), "mlb" and "nhl" for baseball and hockey, "duo" for
+ * football base set (NFL depth charts), "mlb" and "nhl" for baseball and hockey, "lol" for the
+ * League of Legends Worlds 2026 players, "duo" for
  * future multi-player cards, or an insert class id. Every non-insert type renders the base layout.
  */
-export type CardType = "base" | "rookie" | "ucl" | "nfl" | "mlb" | "nhl" | "duo" | (string & {});
+export type CardType = "base" | "rookie" | "ucl" | "nfl" | "mlb" | "nhl" | "lol" | "duo" | (string & {});
 
 /** The non-insert sets, in binder order: key (= card type), name, short mark, sport. */
 export const BASE_SETS = [
@@ -30,6 +31,7 @@ export const BASE_SETS = [
   { key: "nfl", name: "NFL", short: "NFL", sport: "football" },
   { key: "mlb", name: "MLB", short: "MLB", sport: "baseball" },
   { key: "nhl", name: "NHL", short: "NHL", sport: "hockey" },
+  { key: "lol", name: "Worlds 2026", short: "LOL", sport: "esports" },
 ] as const satisfies readonly { key: CardType; name: string; short: string; sport: Sport }[];
 export type BaseSetKey = (typeof BASE_SETS)[number]["key"];
 export const isInsert = (t: CardType): t is InsertType => (INSERT_TYPES as readonly string[]).includes(t);
@@ -127,6 +129,34 @@ export interface ProPlayerRow {
   photo?: null;
 }
 export type MlbPlayerRow = ProPlayerRow;
+
+/** A League of Legends team at Worlds 2026, from scripts/lol (Leaguepedia). */
+export interface LolTeam {
+  abbr: string; // "BLG"
+  name: string; // name on the card, "Bilibili Gaming"
+  full: string; // Leaguepedia's page name
+  color: string;
+  alt: string;
+  logo: string | null; // Leaguepedia's square logo (remote; npm run photos makes a local copy)
+  finish: string; // "Champion", "Runner-up", "Semifinals", ..., "Play-In"
+}
+
+/** One generated row per League of Legends card in lol.ts. */
+export interface LolPlayerRow {
+  id: string; // slug of the Leaguepedia page ("bin-chen-ze-bin")
+  name: string; // in-game name, "Faker"
+  realName: string;
+  team: string; // team abbreviation
+  pos: "TOP" | "JNG" | "MID" | "BOT" | "SUP";
+  nation: string;
+  rarity: Rarity;
+  ovr: number;
+  /** At Worlds 2026: games, KDA, win %. */
+  stats: StatLine | null;
+  /** Leaguepedia's photo (remote), or null. */
+  photo: string | null;
+  no: number;
+}
 export type NhlPlayerRow = ProPlayerRow;
 
 /** One generated row per football card in nfl.ts. */
