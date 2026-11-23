@@ -2,7 +2,9 @@ import { INSERT_ART } from "./insert-art";
 import { INSERT_THUMBS, LOCAL_LOGOS, LOCAL_PLAYERS } from "./local-art";
 import { INSERT_CARDS, INSERT_CLASSES } from "./inserts";
 import { NBA_PLAYERS, NBA_TEAMS } from "./nba";
+import { MLB_PLAYERS, MLB_SEASON, MLB_TEAMS } from "./mlb";
 import { NFL_PLAYERS, NFL_SEASON, NFL_TEAMS } from "./nfl";
+import { NHL_PLAYERS, NHL_SEASON, NHL_TEAMS } from "./nhl";
 import { UCL_PLAYERS, UCL_SEASON, UCL_TEAMS } from "./ucl";
 import type { CardDesign, CardType, InsertType, Player, Rarity, Sport, StatLine } from "./types";
 import { BASE_SETS, INSERT_TYPES, RARITIES, SPORTS } from "./types";
@@ -11,17 +13,18 @@ export * from "./types";
 export { NBA_SEASON } from "./nba";
 export { UCL_SEASON } from "./ucl";
 export { NFL_SEASON } from "./nfl";
+export { MLB_SEASON } from "./mlb";
+export { NHL_SEASON } from "./nhl";
 
 export const SET_ID = "s1";
 export const SET_NAME = "Series 1";
 
 const teamByAbbr = new Map(NBA_TEAMS.map((t) => [t.abbr, t]));
-/** Champions League clubs by the name printed on the card ("Real Madrid") and by UEFA id. */
-const clubByName = new Map(UCL_TEAMS.map((t) => [t.name, t]));
+/** Champions League clubs by UEFA id. */
 const clubById = new Map(UCL_TEAMS.map((t) => [t.id, t]));
-/** NFL teams by nickname ("Chiefs", as printed) and by abbreviation. No nickname is shared with an NBA team. */
-const nflByName = new Map(NFL_TEAMS.map((t) => [t.name, t]));
 const nflByAbbr = new Map(NFL_TEAMS.map((t) => [t.abbr, t]));
+const mlbByAbbr = new Map(MLB_TEAMS.map((t) => [t.abbr, t]));
+const nhlByAbbr = new Map(NHL_TEAMS.map((t) => [t.abbr, t]));
 const teamByName = new Map(NBA_TEAMS.map((t) => [t.name, t]));
 const nick = (abbr: string) => teamByAbbr.get(abbr)?.name ?? abbr;
 
@@ -29,16 +32,21 @@ const nick = (abbr: string) => teamByAbbr.get(abbr)?.name ?? abbr;
 export const headshotUrl = (espnId: string) =>
   LOCAL_PLAYERS.has(`nba/${espnId}`) ? `/players/nba/${espnId}.webp` : `https://a.espncdn.com/i/headshots/nba/players/full/${espnId}.png`;
 
+type EspnLeague = "nba" | "nfl" | "mlb" | "nhl";
 /** A team logo: the small local WebP (scripts/photos.mjs) when there is one, else ESPN's 500 px PNG. */
-const espnLogo = (league: "nba" | "nfl", abbr: string) => {
+const espnLogo = (league: EspnLeague, abbr: string) => {
   const a = abbr.toLowerCase();
   return LOCAL_LOGOS.has(`${league}/${a}`) ? `/logos/${league}/${a}.webp` : `https://a.espncdn.com/i/teamlogos/${league}/500/${a}.png`;
 };
 
-/** [primary, secondary] team colours, from the team nickname shown on a card. */
+/** ESPN's NFL / MLB / NHL headshot cut-out, local WebP first (the same style as the NBA ones). */
+const espnHeadshot = (league: EspnLeague, espnId: string) =>
+  LOCAL_PLAYERS.has(`${league}/${espnId}`)
+    ? `/players/${league}/${espnId}.webp`
+    : `https://a.espncdn.com/i/headshots/${league}/players/full/${espnId}.png`;
+
 const ABBR_FIX: Record<string, string> = { NY: "NYK", GS: "GSW", SA: "SAS", NO: "NOP", UTAH: "UTA", WSH: "WAS" };
 
-/** Three-letter code for a team nickname, as printed on cards (NYK, GSW, SAS...). */
 /** Franchises that no longer play under the name a card prints. */
 const HISTORIC: Record<string, { abbr: string; colors: [string, string] }> = {
   SuperSonics: { abbr: "SEA", colors: ["#00653a", "#ffc200"] },
@@ -48,16 +56,6 @@ const HISTORIC: Record<string, { abbr: string; colors: [string, string] }> = {
   Duke: { abbr: "DUKE", colors: ["#001a57", "#ffffff"] },
   "Philadelphia Warriors": { abbr: "PHW", colors: ["#1d428a", "#ffc72c"] },
 };
-
-export function teamCode(team: string): string {
-  const club = clubByName.get(team);
-  if (club) return club.code;
-  const nfl = nflByName.get(team);
-  if (nfl) return nfl.abbr;
-  if (HISTORIC[team]) return HISTORIC[team].abbr;
-  const abbr = teamByName.get(team)?.abbr ?? "";
-  return ABBR_FIX[abbr] ?? abbr;
-}
 
 /** Historic and non-NBA teams on cards, mapped to the franchise that carries them today. */
 const LOGO_FRANCHISE: Record<string, string> = {
@@ -69,23 +67,52 @@ const LOGO_FRANCHISE: Record<string, string> = {
   "Philadelphia Warriors": "GS",
 };
 
-/** ESPN's logo for the team's current franchise (hotlinked like the headshots). */
-export function teamLogo(team: string): string | undefined {
-  const club = clubByName.get(team);
-  if (club) return club.logo; // UEFA's crest
-  const nfl = nflByName.get(team);
-  if (nfl) return espnLogo("nfl", nfl.abbr);
-  const abbr = LOGO_FRANCHISE[team] ?? teamByName.get(team)?.abbr;
-  return abbr ? espnLogo("nba", abbr) : undefined;
+/** What a card needs to know about a team: the code it prints, its two colours, its logo. */
+interface TeamInfo {
+  code: string;
+  colors: [string, string];
+  logo?: string;
 }
 
-export function teamColors(team: string): [string, string] {
-  const club = clubByName.get(team);
-  if (club) return [club.color, club.alt];
-  const nfl = nflByName.get(team);
-  if (nfl) return [nfl.color, nfl.alt];
+function nbaTeam(team: string): TeamInfo | undefined {
+  const logoAbbr = LOGO_FRANCHISE[team] ?? teamByName.get(team)?.abbr;
+  const logo = logoAbbr ? espnLogo("nba", logoAbbr) : undefined;
+  if (HISTORIC[team]) return { code: HISTORIC[team].abbr, colors: HISTORIC[team].colors, logo };
   const t = teamByName.get(team);
-  return t ? [t.color, t.alt] : (HISTORIC[team]?.colors ?? ["#233862", "#a9b6d3"]);
+  return t ? { code: ABBR_FIX[t.abbr] ?? t.abbr, colors: [t.color, t.alt], logo } : undefined;
+}
+
+/**
+ * Teams by the name printed on the card, per sport. Nicknames repeat across leagues (Giants and
+ * Cardinals in the NFL and MLB, Kings in the NBA and NHL, Panthers and Jets in the NFL and NHL,
+ * Rangers in MLB and the NHL), so a lookup that knows the card's sport must pass it.
+ */
+const TEAMS: Record<Exclude<Sport, "basketball">, Map<string, TeamInfo>> = {
+  soccer: new Map(UCL_TEAMS.map((t) => [t.name, { code: t.code, colors: [t.color, t.alt], logo: t.logo }])),
+  football: new Map(NFL_TEAMS.map((t) => [t.name, { code: t.abbr, colors: [t.color, t.alt], logo: espnLogo("nfl", t.abbr) }])),
+  baseball: new Map(MLB_TEAMS.map((t) => [t.name, { code: t.abbr, colors: [t.color, t.alt], logo: espnLogo("mlb", t.abbr) }])),
+  hockey: new Map(NHL_TEAMS.map((t) => [t.name, { code: t.abbr, colors: [t.color, t.alt], logo: espnLogo("nhl", t.abbr) }])),
+};
+
+/** A team by its printed name. Without a sport, the NBA comes first (the insert sets are all NBA). */
+function teamInfo(team: string, sport?: Sport): TeamInfo | undefined {
+  if (sport) return sport === "basketball" ? nbaTeam(team) : TEAMS[sport].get(team);
+  return nbaTeam(team) ?? TEAMS.soccer.get(team) ?? TEAMS.football.get(team) ?? TEAMS.baseball.get(team) ?? TEAMS.hockey.get(team);
+}
+
+/** The code a card prints for a team (NYK, RMA, KC, NYY, EDM...). */
+export function teamCode(team: string, sport?: Sport): string {
+  return teamInfo(team, sport)?.code ?? "";
+}
+
+/** The team's logo: UEFA's crest for clubs, ESPN's logo (local WebP when there is one) otherwise. */
+export function teamLogo(team: string, sport?: Sport): string | undefined {
+  return teamInfo(team, sport)?.logo;
+}
+
+/** [primary, secondary] team colours, from the team name shown on a card. */
+export function teamColors(team: string, sport?: Sport): [string, string] {
+  return teamInfo(team, sport)?.colors ?? ["#233862", "#a9b6d3"];
 }
 
 export function slug(s: string) {
@@ -106,6 +133,8 @@ export function setLabel(type: CardType): string {
   if (type === "rookie") return `${SET_NAME} · Rookie`;
   if (type === "ucl") return `${SET_NAME} · Champions League`;
   if (type === "nfl") return `${SET_NAME} · NFL`;
+  if (type === "mlb") return `${SET_NAME} · MLB`;
+  if (type === "nhl") return `${SET_NAME} · NHL`;
   return INSERT_NAMES[type] ?? type;
 }
 
@@ -153,8 +182,7 @@ const SOCCER_PLAYERS: Player[] = UCL_PLAYERS.map((r) => ({
 PLAYERS.push(...SOCCER_PLAYERS);
 
 /** ESPN's transparent NFL headshot cut-out (the same style as the NBA ones). */
-export const nflHeadshotUrl = (espnId: string) =>
-  LOCAL_PLAYERS.has(`nfl/${espnId}`) ? `/players/nfl/${espnId}.webp` : `https://a.espncdn.com/i/headshots/nfl/players/full/${espnId}.png`;
+export const nflHeadshotUrl = (espnId: string) => espnHeadshot("nfl", espnId);
 
 /** Binder-size thumbnail of a local insert art file, when scripts/photos.mjs has made one. */
 const artThumb = (art: string | undefined) => {
@@ -180,7 +208,30 @@ const FOOTBALL_PLAYERS: Player[] = NFL_PLAYERS.map((r) => ({
 }));
 PLAYERS.push(...FOOTBALL_PLAYERS);
 
-// ── Base sets: NBA base + rookies, Champions League, NFL ──
+/** MLB and NHL players: ESPN rows with a nation (no college), and a headshot like the NBA's. */
+function proPlayers(rows: typeof MLB_PLAYERS, sport: "baseball" | "hockey", league: "mlb" | "nhl", byAbbr: Map<string, { name: string }>, statLine: string): Player[] {
+  return rows.map((r) => ({
+    id: `${league}-${r.id}`,
+    espnId: "", // the NBA headshot path does not apply; the photo is set here
+    photo: r.photo === null ? undefined : espnHeadshot(league, r.id),
+    sport,
+    name: r.name,
+    team: byAbbr.get(r.team)?.name ?? r.team,
+    teamAbbr: r.team,
+    pos: r.pos,
+    nation: r.nation,
+    jersey: r.jersey,
+    ovr: r.ovr,
+    stats: r.stats,
+    statLine: r.stats ? statLine : null,
+  }));
+}
+PLAYERS.push(
+  ...proPlayers(MLB_PLAYERS, "baseball", "mlb", mlbByAbbr, `${MLB_SEASON} season`),
+  ...proPlayers(NHL_PLAYERS, "hockey", "nhl", nhlByAbbr, `${NHL_SEASON} so far`),
+);
+
+// ── Base sets: NBA base + rookies, Champions League, NFL, MLB, NHL ──
 
 const BASE_DESIGNS: CardDesign[] = [
   ...NBA_PLAYERS.map((r) => ({
@@ -212,7 +263,25 @@ const BASE_DESIGNS: CardDesign[] = [
     ovr: r.ovr,
     no: r.no,
     rookie: r.rookie || undefined,
+    retired: r.retired || undefined,
   })),
+  ...([
+    [MLB_PLAYERS, "baseball", "mlb"],
+    [NHL_PLAYERS, "hockey", "nhl"],
+  ] as const).flatMap(([rows, sport, league]) =>
+    rows.map((r) => ({
+      id: `${league}-${r.id}`,
+      sport,
+      set: SET_ID,
+      type: league,
+      rarity: r.rarity,
+      playerIds: [`${league}-${r.id}`],
+      ovr: r.ovr,
+      no: r.no,
+      rookie: r.rookie || undefined,
+      retired: r.retired || undefined,
+    })),
+  ),
 ];
 
 // ── Inserts (inserts.ts) ──
@@ -293,7 +362,10 @@ export const getDesign = (id: string) => designById.get(id);
 export const POOLS = Object.fromEntries(
   SPORTS.map((s) => [s, Object.fromEntries(RARITIES.map((r) => [r, [] as CardDesign[]]))]),
 ) as Record<Sport, Record<Rarity, CardDesign[]>>;
-for (const d of BASE_DESIGNS) POOLS[d.sport][d.rarity].push(d);
+for (const d of BASE_DESIGNS) if (!d.retired) POOLS[d.sport][d.rarity].push(d);
+
+/** The cards a set is completed against: everything except retired cards. */
+export const ACTIVE_DESIGNS = DESIGNS.filter((d) => !d.retired);
 
 /** Insert designs by class, for the guaranteed insert slot. */
 export const INSERT_POOLS = Object.fromEntries(
@@ -315,6 +387,8 @@ export interface CardView {
   no?: number;
   /** First-year player in a set without a rookie list (NFL). */
   rookie?: boolean;
+  /** Cut from its set: shown to owners, never pulled, not counted toward completion. */
+  retired?: boolean;
   stats: StatLine | null;
   statLine: string | null;
   /** Team nickname to colour the card by (defaults to the player's team). */
@@ -366,6 +440,7 @@ export function cardView(designId: string): CardView {
     note: d.note,
     no: d.no,
     rookie: d.rookie,
+    retired: d.retired,
     art: INSERT_ART[d.id] || undefined,
     artThumb: artThumb(INSERT_ART[d.id]),
   };

@@ -1,15 +1,18 @@
 import { notFound } from "next/navigation";
 import { TurnableCard } from "@/components/Card";
 import { isAdmin } from "@/lib/admin";
-import { cardView, INSERT_NAMES, INSERT_POOLS, INSERT_TYPES, POOLS, RARITIES } from "@/lib/catalog";
+import { cardView, INSERT_NAMES, INSERT_POOLS, INSERT_TYPES, POOLS, RARITIES, type Sport } from "@/lib/catalog";
 import { getCurrentUser } from "@/lib/session";
 
 export const metadata = { title: "Insert preview" };
 
-/** Clubs shown in full in the Champions League section (by card name). */
-const PREVIEW_CLUBS = ["Real Madrid", "Bodø/Glimt"];
-/** NFL team shown in full (by nickname). */
-const PREVIEW_NFL = "Chiefs";
+/** Per sport after the NBA base set: one card per edition, then these teams in full (as printed). */
+const PREVIEW_SETS: { sport: Sport; title: string; teams: string[] }[] = [
+  { sport: "soccer", title: "Champions League", teams: ["Real Madrid", "Bodø/Glimt"] },
+  { sport: "football", title: "NFL", teams: ["Chiefs"] },
+  { sport: "baseball", title: "MLB", teams: ["Yankees"] },
+  { sport: "hockey", title: "NHL", teams: ["Oilers"] },
+];
 
 /**
  * Every insert card, to check splash art from insert-art.ts. Open on `npm run dev`
@@ -64,46 +67,27 @@ export default async function PreviewPage({ searchParams }: { searchParams: Prom
           </ul>
         </section>
       )}
-      {show === "all" && (
-        <section className="mt-10">
-          <h2 className="font-display text-2xl">
-            Champions League <span className="font-cond text-base text-muted">one per edition, then {PREVIEW_CLUBS.join(" and ")}</span>
-          </h2>
-          <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
-            {[
-              ...RARITIES.flatMap((r) => POOLS.soccer[r].slice(0, 1)).map((d) => cardView(d.id)),
-              ...RARITIES.flatMap((r) => POOLS.soccer[r])
-                .map((d) => cardView(d.id))
-                .filter((v) => PREVIEW_CLUBS.includes(v.team))
-                .sort((a, b) => (a.no ?? 0) - (b.no ?? 0)),
-            ].map((v, i) => (
-              <li key={`${v.designId}-${i}`}>
-                <TurnableCard card={v} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-      {show === "all" && (
-        <section className="mt-10">
-          <h2 className="font-display text-2xl">
-            NFL <span className="font-cond text-base text-muted">one per edition, then the {PREVIEW_NFL}</span>
-          </h2>
-          <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
-            {[
-              ...RARITIES.flatMap((r) => POOLS.football[r].slice(0, 1)).map((d) => cardView(d.id)),
-              ...RARITIES.flatMap((r) => POOLS.football[r])
-                .map((d) => cardView(d.id))
-                .filter((v) => v.team === PREVIEW_NFL)
-                .sort((a, b) => (a.no ?? 0) - (b.no ?? 0)),
-            ].map((v, i) => (
-              <li key={`${v.designId}-${i}`}>
-                <TurnableCard card={v} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {show === "all" &&
+        PREVIEW_SETS.map((ps) => (
+          <section key={ps.sport} className="mt-10">
+            <h2 className="font-display text-2xl">
+              {ps.title} <span className="font-cond text-base text-muted">one per edition, then the {ps.teams.join(" and ")}</span>
+            </h2>
+            <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+              {[
+                ...RARITIES.flatMap((r) => POOLS[ps.sport][r].slice(0, 1)).map((d) => cardView(d.id)),
+                ...RARITIES.flatMap((r) => POOLS[ps.sport][r])
+                  .map((d) => cardView(d.id))
+                  .filter((v) => ps.teams.includes(v.team))
+                  .sort((x, y) => (x.no ?? 0) - (y.no ?? 0)),
+              ].map((v, i) => (
+                <li key={`${v.designId}-${i}`}>
+                  <TurnableCard card={v} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
       {groups
         .filter((g) => g.cards.length > 0)
         .map((g) => (

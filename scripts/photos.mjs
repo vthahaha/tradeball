@@ -1,8 +1,8 @@
 // Self-hosts the card images that are heavy to hotlink, as small WebP files under public/:
 //
 //   public/players/nba/<espn id>.webp   NBA headshots     (ESPN serves 600 px PNGs of ~200 KB)
-//   public/players/nfl/<espn id>.webp   NFL headshots     (the same)
-//   public/logos/nba|nfl/<abbr>.webp    team logos        (ESPN serves 500 px PNGs of ~80 KB)
+//   public/players/nfl|mlb|nhl/<id>.webp  NFL, MLB and NHL headshots (the same)
+//   public/logos/<league>/<abbr>.webp   team logos        (ESPN serves 500 px PNGs of ~80 KB)
 //   public/inserts/thumb/<file>.webp    insert art at binder size, e.g. thumb/HG1.jpg.webp (the originals
 //                                       are sized for the viewer; some art exists as both .jpg and .png)
 //
@@ -30,6 +30,10 @@ const abbrs = (text) => [...text.matchAll(/"abbr": "([A-Z]+)"/g)].map((m) => m[1
 // NBA rows are pretty-printed one per line too; their ids are ESPN athlete ids
 const nbaIds = [...new Set([...src("nba.ts").matchAll(/"id":"(\d+)"/g)].map((m) => m[1]))];
 const nflIds = ids(src("nfl.ts"));
+const mlbIds = ids(src("mlb.ts"));
+const nhlIds = ids(src("nhl.ts"));
+const mlbTeams = abbrs(src("mlb.ts").split("MLB_PLAYERS")[0]);
+const nhlTeams = abbrs(src("nhl.ts").split("NHL_PLAYERS")[0]);
 const nbaTeams = abbrs(src("nba.ts").split("NBA_PLAYERS")[0]);
 // historic and college teams on insert cards borrow a current franchise's logo (index.ts LOGO_FRANCHISE)
 const nflTeams = abbrs(src("nfl.ts").split("NFL_PLAYERS")[0]);
@@ -74,13 +78,17 @@ async function remote(kind, key, url, out, width) {
   have[kind].push(key);
 }
 
-for (const d of ["players/nba", "players/nfl", "logos/nba", "logos/nfl", "inserts/thumb"]) mkdirSync(at(`public/${d}`), { recursive: true });
+for (const d of ["players/nba", "players/nfl", "players/mlb", "players/nhl", "logos/nba", "logos/nfl", "logos/mlb", "logos/nhl", "inserts/thumb"]) mkdirSync(at(`public/${d}`), { recursive: true });
 
 const jobs = [
   ...nbaIds.map((id) => ["players", `nba/${id}`, `https://a.espncdn.com/i/headshots/nba/players/full/${id}.png`, PHOTO_W]),
   ...nflIds.map((id) => ["players", `nfl/${id}`, `https://a.espncdn.com/i/headshots/nfl/players/full/${id}.png`, PHOTO_W]),
+  ...mlbIds.map((id) => ["players", `mlb/${id}`, `https://a.espncdn.com/i/headshots/mlb/players/full/${id}.png`, PHOTO_W]),
+  ...nhlIds.map((id) => ["players", `nhl/${id}`, `https://a.espncdn.com/i/headshots/nhl/players/full/${id}.png`, PHOTO_W]),
   ...nbaTeams.map((a) => ["logos", `nba/${a}`, `https://a.espncdn.com/i/teamlogos/nba/500/${a}.png`, LOGO_W]),
   ...nflTeams.map((a) => ["logos", `nfl/${a}`, `https://a.espncdn.com/i/teamlogos/nfl/500/${a}.png`, LOGO_W]),
+  ...mlbTeams.map((a) => ["logos", `mlb/${a}`, `https://a.espncdn.com/i/teamlogos/mlb/500/${a}.png`, LOGO_W]),
+  ...nhlTeams.map((a) => ["logos", `nhl/${a}`, `https://a.espncdn.com/i/teamlogos/nhl/500/${a}.png`, LOGO_W]),
 ];
 await pool(jobs, 12, ([kind, key, url, w]) => remote(kind, key, url, at(`public/${kind}/${key}.webp`), w));
 
@@ -105,10 +113,10 @@ writeFileSync(
 // NBA and NFL headshots and logos as small WebP files, and binder-size thumbnails of the insert art.
 // Anything not listed falls back to the remote image, so a stale list is safe, just slower.
 
-/** "nba/<espn id>" or "nfl/<espn id>" → public/players/<key>.webp */
+/** "<league>/<espn id>" (nba, nfl, mlb, nhl) → public/players/<key>.webp */
 export const LOCAL_PLAYERS = new Set<string>(${list(have.players)});
 
-/** "nba/<abbr>" or "nfl/<abbr>" (lowercase) → public/logos/<key>.webp */
+/** "<league>/<abbr>" (lowercase) → public/logos/<key>.webp */
 export const LOCAL_LOGOS = new Set<string>(${list(have.logos)});
 
 /** Insert art file names ("HG1.jpg") with a thumbnail at public/inserts/thumb/<file>.webp */

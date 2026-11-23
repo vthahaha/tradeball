@@ -1,5 +1,5 @@
 import "server-only";
-import { cardView, DESIGNS, getDesign, SPORTS, type Finish, type Sport } from "./catalog";
+import { ACTIVE_DESIGNS, cardView, getDesign, SPORTS, type Finish, type Sport } from "./catalog";
 import { db } from "./db";
 import { FINISH_SUPPLY } from "./odds";
 import { hydrateInstance, type PulledCard } from "./packs";
@@ -46,7 +46,8 @@ export async function showcaseCards(user: { id: string; showcase: string }): Pro
   });
 }
 
-const TOTAL = Object.fromEntries(SPORTS.map((s) => [s, DESIGNS.filter((d) => d.sport === s).length])) as Record<Sport, number>;
+// completion counts the active sets only: retired cards still show to their owners but are not part of a set
+const TOTAL = Object.fromEntries(SPORTS.map((s) => [s, ACTIVE_DESIGNS.filter((d) => d.sport === s).length])) as Record<Sport, number>;
 
 export async function userStats(userId: string) {
   const [designs, cards, trades] = await Promise.all([
@@ -57,16 +58,15 @@ export async function userStats(userId: string) {
   const owned = Object.fromEntries(SPORTS.map((s) => [s, 0])) as Record<Sport, number>;
   for (const d of designs) {
     const design = getDesign(d.designId);
-    if (design) owned[design.sport]++;
+    if (design && !design.retired) owned[design.sport]++;
   }
   const unique = SPORTS.reduce((n, s) => n + owned[s], 0);
   return {
     cards,
     unique,
-    completion: Math.round((unique / DESIGNS.length) * 100),
-    basketball: { owned: owned.basketball, total: TOTAL.basketball },
-    soccer: { owned: owned.soccer, total: TOTAL.soccer },
-    football: { owned: owned.football, total: TOTAL.football },
+    completion: Math.round((unique / ACTIVE_DESIGNS.length) * 100),
+    /** owned / total per sport */
+    bySport: Object.fromEntries(SPORTS.map((s) => [s, { owned: owned[s], total: TOTAL[s] }])) as Record<Sport, { owned: number; total: number }>,
     trades,
   };
 }
