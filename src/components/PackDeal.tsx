@@ -198,7 +198,7 @@ export function PackDeal({ cards, onDone }: { cards: PulledCard[]; onDone: () =>
       <ol className="relative z-10 flex w-full max-w-xl flex-wrap justify-center gap-1.5" aria-label="Cards so far">
         {shown.map((c) => (
           <li key={c.instanceId} className="w-9 sm:w-11">
-            <Card card={c} finish={c.finish} serialNo={c.serialNo} supply={c.supply} tilt={false} />
+            <Card card={c} finish={c.finish} serialNo={c.serialNo} supply={c.supply} tilt={false} small />
           </li>
         ))}
         {Array.from({ length: cards.length - shown.length }, (_, i) => (

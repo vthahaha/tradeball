@@ -27,6 +27,8 @@ export interface CardProps {
   grade?: number | null;
   missing?: boolean;
   tilt?: boolean;
+  /** A thumbnail-size card (binder pockets, trade lists): inserts load their small art. */
+  small?: boolean;
   className?: string;
 }
 
@@ -141,6 +143,7 @@ export function Card({
   grade,
   missing,
   tilt = true,
+  small = false,
   className,
 }: CardProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -157,7 +160,7 @@ export function Card({
   const imgSrc = insert
     ? card.type === "newblood"
       ? headshot
-      : card.art
+      : (small && card.artThumb) || card.art
     : headshot;
   const showImg = !!imgSrc && !imgFailed;
   const name = isDuo ? `${lastName(p1.name)} & ${lastName(p2.name)}` : p1.name;

@@ -8,6 +8,7 @@
     "build:local": "node scripts/check-css.mjs && next build",
     "check:css": "node scripts/check-css.mjs",
     "art": "node scripts/optimize-art.mjs",
+    "photos": "node scripts/photos.mjs",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate"

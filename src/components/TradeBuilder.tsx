@@ -24,7 +24,7 @@ function sortCards(cards: PulledCard[]) {
 export function MiniCard({ card, badge }: { card: PulledCard; badge?: React.ReactNode }) {
   return (
     <div className="relative">
-      <Card card={card} finish={card.finish} serialNo={card.serialNo} supply={card.supply} grade={card.grade} tilt={false} />
+      <Card card={card} finish={card.finish} serialNo={card.serialNo} supply={card.supply} grade={card.grade} tilt={false} small />
       {badge}
     </div>
   );
