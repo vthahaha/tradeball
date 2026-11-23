@@ -46,6 +46,7 @@ const SPORT_META: Record<Sport, { name: string; short: string; stock: string }> 
   football: { name: "Football", short: "NFL", stock: "var(--stock-mixed)" },
   baseball: { name: "Baseball", short: "MLB", stock: "var(--stock-diamond)" },
   hockey: { name: "Hockey", short: "NHL", stock: "var(--stock-ice)" },
+  esports: { name: "Esports", short: "LoL", stock: "var(--stock-nexus)" },
 };
 
 /** How a sport's binder opens: basketball by set (it has inserts), the single-set sports by team. */
@@ -85,7 +86,7 @@ function SportTabs({
           {sport === "all" ? "Back to one sport" : "All sports together"}
         </button>
       </div>
-      <div role="tablist" aria-label="Sport" className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5 sm:gap-3">
+      <div role="tablist" aria-label="Sport" className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6 sm:gap-3">
         {SPORTS.map((s) => {
           const { owned, total } = totals[s];
           const on = sport === s || sport === "all";

@@ -418,6 +418,7 @@ const SPORT_NAME: Record<CardView["sport"], string> = {
   football: "Football",
   baseball: "Baseball",
   hockey: "Hockey",
+  esports: "Esports",
 };
 
 /** The Gate 7 card back. Its border is already the parallel, so the rarity shows before the flip. */

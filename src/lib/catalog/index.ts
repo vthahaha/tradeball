@@ -2,6 +2,7 @@ import { INSERT_ART } from "./insert-art";
 import { INSERT_THUMBS, LOCAL_LOGOS, LOCAL_PLAYERS } from "./local-art";
 import { INSERT_CARDS, INSERT_CLASSES } from "./inserts";
 import { NBA_PLAYERS, NBA_TEAMS } from "./nba";
+import { LOL_EVENT, LOL_PLAYERS, LOL_TEAMS } from "./lol";
 import { MLB_PLAYERS, MLB_SEASON, MLB_TEAMS } from "./mlb";
 import { NFL_PLAYERS, NFL_SEASON, NFL_TEAMS } from "./nfl";
 import { NHL_PLAYERS, NHL_SEASON, NHL_TEAMS } from "./nhl";
@@ -15,6 +16,7 @@ export { UCL_SEASON } from "./ucl";
 export { NFL_SEASON } from "./nfl";
 export { MLB_SEASON } from "./mlb";
 export { NHL_SEASON } from "./nhl";
+export { LOL_EVENT } from "./lol";
 
 export const SET_ID = "s1";
 export const SET_NAME = "Series 1";
@@ -92,7 +94,14 @@ const TEAMS: Record<Exclude<Sport, "basketball">, Map<string, TeamInfo>> = {
   football: new Map(NFL_TEAMS.map((t) => [t.name, { code: t.abbr, colors: [t.color, t.alt], logo: espnLogo("nfl", t.abbr) }])),
   baseball: new Map(MLB_TEAMS.map((t) => [t.name, { code: t.abbr, colors: [t.color, t.alt], logo: espnLogo("mlb", t.abbr) }])),
   hockey: new Map(NHL_TEAMS.map((t) => [t.name, { code: t.abbr, colors: [t.color, t.alt], logo: espnLogo("nhl", t.abbr) }])),
+  esports: new Map(LOL_TEAMS.map((t) => [t.name, { code: t.abbr, colors: [t.color, t.alt], logo: lolLogo(t) }])),
 };
+
+/** A Worlds team's logo: the local WebP (scripts/photos.mjs) when there is one, else Leaguepedia's. */
+function lolLogo(t: (typeof LOL_TEAMS)[number]) {
+  const key = `lol/${t.abbr.toLowerCase()}`;
+  return LOCAL_LOGOS.has(key) ? `/logos/${key}.webp` : (t.logo ?? undefined);
+}
 
 /** A team by its printed name. Without a sport, the NBA comes first (the insert sets are all NBA). */
 function teamInfo(team: string, sport?: Sport): TeamInfo | undefined {
@@ -135,6 +144,7 @@ export function setLabel(type: CardType): string {
   if (type === "nfl") return `${SET_NAME} · NFL`;
   if (type === "mlb") return `${SET_NAME} · MLB`;
   if (type === "nhl") return `${SET_NAME} · NHL`;
+  if (type === "lol") return `${SET_NAME} · ${LOL_EVENT}`;
   return INSERT_NAMES[type] ?? type;
 }
 
@@ -231,6 +241,26 @@ PLAYERS.push(
   ...proPlayers(NHL_PLAYERS, "hockey", "nhl", nhlByAbbr, `${NHL_SEASON} so far`),
 );
 
+// League of Legends players at Worlds 2026: the card prints the in-game name; photos are Leaguepedia's
+const lolTeamByAbbr = new Map(LOL_TEAMS.map((t) => [t.abbr, t]));
+PLAYERS.push(
+  ...LOL_PLAYERS.map((r) => ({
+    id: `lol-${r.id}`,
+    espnId: "",
+    photo: LOCAL_PLAYERS.has(`lol/${r.id}`) ? `/players/lol/${r.id}.webp` : (r.photo ?? undefined),
+    sport: "esports" as const,
+    name: r.name,
+    team: lolTeamByAbbr.get(r.team)?.name ?? r.team,
+    teamAbbr: r.team,
+    pos: r.pos,
+    nation: r.nation,
+    jersey: "",
+    ovr: r.ovr,
+    stats: r.stats,
+    statLine: r.stats ? LOL_EVENT : null,
+  })),
+);
+
 // ── Base sets: NBA base + rookies, Champions League, NFL, MLB, NHL ──
 
 const BASE_DESIGNS: CardDesign[] = [
@@ -280,6 +310,16 @@ const BASE_DESIGNS: CardDesign[] = [
       rookie: r.rookie || undefined,
     })),
   ),
+  ...LOL_PLAYERS.map((r) => ({
+    id: `lol-${r.id}`,
+    sport: "esports" as const,
+    set: SET_ID,
+    type: "lol",
+    rarity: r.rarity,
+    playerIds: [`lol-${r.id}`],
+    ovr: r.ovr,
+    no: r.no,
+  })),
 ];
 
 // ── Inserts (inserts.ts) ──

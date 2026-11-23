@@ -12,6 +12,7 @@ const PREVIEW_SETS: { sport: Sport; title: string; teams: string[] }[] = [
   { sport: "football", title: "NFL", teams: ["Chiefs"] },
   { sport: "baseball", title: "MLB", teams: ["Yankees"] },
   { sport: "hockey", title: "NHL", teams: ["Oilers"] },
+  { sport: "esports", title: "Worlds 2026", teams: ["Bilibili Gaming", "T1"] },
 ];
 
 /**

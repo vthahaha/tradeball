@@ -123,6 +123,7 @@ function Side({
           <option value="nfl">NFL</option>
           <option value="mlb">MLB</option>
           <option value="nhl">NHL</option>
+          <option value="lol">Worlds 2026</option>
           {INSERT_DESIGNS.length > 0 && <option value="insert">Inserts</option>}
         </select>
         {highlight.size > 0 && (
