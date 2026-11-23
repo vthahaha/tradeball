@@ -5,12 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { NUMBERED_FINISHES, SHARDS_PER_PACK, shardValueFor } from "@/lib/odds";
 import { useEffect, useMemo, useState } from "react";
-import { BASE_SETS, INSERT_NAMES, INSERT_TYPES, setTitle, teamColors, type CardView } from "@/lib/catalog";
-import { isInsert, RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
+import { BASE_SETS, INSERT_NAMES, INSERT_TYPES, setTitle, teamCode, teamColors, type CardView } from "@/lib/catalog";
+import { isInsert, RARITIES, SPORTS, type Finish, type Rarity, type Sport } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
 import { Card, cardNo } from "./Card";
 import { CardViewer } from "./CardViewer";
 import { SetIcon } from "./CardArt";
+import { SportIcon } from "./SportIcon";
 
 export interface OwnedCopy {
   instanceId: string;
@@ -36,6 +37,79 @@ const RARITY_COLOR: Record<Rarity, string> = {
 
 type SortKey = "set" | "rarity" | "ovr" | "newest" | "name";
 type GroupKey = "set" | "team" | "rarity" | "none";
+type SportKey = Sport | "all";
+
+/** Each sport's tab is cut from the ticket stock of its pack. */
+const SPORT_META: Record<Sport, { name: string; short: string; stock: string }> = {
+  basketball: { name: "Basketball", short: "Hoops", stock: "var(--stock-hoops)" },
+  soccer: { name: "Soccer", short: "Soccer", stock: "var(--stock-soccer)" },
+  football: { name: "Football", short: "NFL", stock: "var(--stock-mixed)" },
+};
+
+/** How a sport's binder opens: basketball by set (it has inserts), the single-set sports by team. */
+const defaultGroup = (s: SportKey): GroupKey => (s === "soccer" || s === "football" ? "team" : "set");
+const defaultShelf = (s: SportKey): "sets" | "teams" => (s === "soccer" || s === "football" ? "teams" : "sets");
+
+/** The sport switch: one ticket tab per sport with what you hold of it. */
+function SportTabs({
+  sport,
+  onPick,
+  totals,
+}: {
+  sport: SportKey;
+  onPick: (s: SportKey) => void;
+  totals: Record<Sport, { owned: number; total: number }>;
+}) {
+  return (
+    <section aria-label="Sports" className="mt-5">
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 className="field-label">Sport</h2>
+        <button
+          type="button"
+          onClick={() => onPick(sport === "all" ? SPORTS[0] : "all")}
+          aria-pressed={sport === "all"}
+          className="font-cond text-sm font-bold uppercase tracking-wider text-accent hover:underline"
+        >
+          {sport === "all" ? "Back to one sport" : "All sports together"}
+        </button>
+      </div>
+      <div role="tablist" aria-label="Sport" className="mt-2 grid grid-cols-3 gap-2 sm:gap-3">
+        {SPORTS.map((s) => {
+          const { owned, total } = totals[s];
+          const on = sport === s || sport === "all";
+          return (
+            <button
+              key={s}
+              type="button"
+              role="tab"
+              aria-selected={sport === s}
+              aria-controls="binder-body"
+              onClick={() => onPick(s)}
+              className={`tb-sporttab ${sport === s ? "is-active" : ""} ${on ? "" : "is-dim"}`}
+              style={{ "--stock": SPORT_META[s].stock } as React.CSSProperties}
+            >
+              <span className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+                <SportIcon sport={s} className="size-4 shrink-0 sm:size-5" />
+                <span className="truncate font-cond text-sm font-extrabold uppercase tracking-wide sm:text-base sm:tracking-wider">
+                  <span className="sm:hidden">{SPORT_META[s].short}</span>
+                  <span className="hidden sm:inline">{SPORT_META[s].name}</span>
+                </span>
+              </span>
+              <span className="mt-2 flex items-baseline gap-1">
+                <span className="font-display text-2xl leading-none sm:text-3xl">{owned}</span>
+                <span className="font-cond text-sm text-muted">/{total}</span>
+                <span className="ml-auto hidden font-cond text-sm text-muted sm:inline">{total ? Math.round((owned / total) * 100) : 0}%</span>
+              </span>
+              <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-bg-2" aria-hidden>
+                <span className="block h-full rounded-full" style={{ width: `${Math.max(owned ? 2 : 0, (owned / (total || 1)) * 100)}%`, background: "var(--stock)" }} />
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
 /** Completion strip columns by how many sets it shows (static class names, for Tailwind). */
 const STRIP_COLS: Record<number, string> = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3", 4: "grid-cols-2 sm:grid-cols-4", 5: "grid-cols-2 sm:grid-cols-5" };
@@ -227,6 +301,7 @@ export function CollectionView({
   shards,
   showcase,
   locked,
+  initialSport,
 }: {
   designs: CardView[];
   copies: OwnedCopy[];
@@ -237,6 +312,8 @@ export function CollectionView({
   shards: number;
   showcase: string[];
   locked: string[];
+  /** The sport the binder opens on (from ?sport=, or the one you hold the most of). */
+  initialSport: SportKey;
 }) {
   const router = useRouter();
   const [wishSet, setWishSet] = useState(() => new Set(wishes));
@@ -286,10 +363,12 @@ export function CollectionView({
     });
   }
 
-  const [setFilter, setSetFilter] = useState<string>("all"); // all | base | rookie | insert | <insert class id>
+  const [sport, setSport] = useState<SportKey>(initialSport);
+  const [setFilter, setSetFilter] = useState<string>("all"); // all | base | rookie | ucl | nfl | insert | <insert class id>
   const [team, setTeam] = useState<string>("all");
   const [rarity, setRarity] = useState<Rarity | "all">("all");
-  const [group, setGroup] = useState<GroupKey>("set");
+  const [group, setGroup] = useState<GroupKey>(defaultGroup(initialSport));
+  const [shelfMode, setShelfMode] = useState<"sets" | "teams">(defaultShelf(initialSport));
   const [showMissing, setShowMissing] = useState(true);
   const [dupesOnly, setDupesOnly] = useState(false);
   const [sort, setSort] = useState<SortKey>("set");
@@ -297,19 +376,23 @@ export function CollectionView({
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState<string | null>(null);
 
+  /** Switch sport: the filters belong to the old sport, so they reset; the URL keeps the choice. */
+  function pickSport(s: SportKey) {
+    if (s === sport) return;
+    setSport(s);
+    setSetFilter("all");
+    setTeam("all");
+    setRarity("all");
+    setGroup(defaultGroup(s));
+    setShelfMode(defaultShelf(s));
+    setNeedsOpen(null);
+    const url = new URL(window.location.href);
+    url.searchParams.set("sport", s);
+    window.history.replaceState(null, "", url);
+  }
+
   // a card's slot in its set: the catalog order, so slot 7 is always card 7
   const slotOf = useMemo(() => new Map(designs.map((d, i) => [d.designId, i])), [designs]);
-
-  // the shelf: every set with what you hold of it
-  const shelf = useMemo(() => {
-    const held = new Set(copies.map((c) => c.designId));
-    return [...BASE_SETS.map((b) => b.key), ...INSERT_TYPES]
-      .map((k) => {
-        const all = designs.filter((d) => d.type === k);
-        return { key: k, rarity: all[0]?.rarity ?? "common", total: all.length, owned: all.filter((d) => held.has(d.designId)).length };
-      })
-      .filter((x) => x.total > 0);
-  }, [designs, copies]);
 
   const byDesign = useMemo(() => {
     const m = new Map<string, OwnedCopy[]>();
@@ -317,23 +400,70 @@ export function CollectionView({
     return m;
   }, [copies]);
 
-  // the completion strip: each base set, then all inserts together (sets with no cards are left out)
+  // what you hold of each sport (the tabs), and the cards of the sport on show
+  const sportTotals = useMemo(() => {
+    const t = Object.fromEntries(SPORTS.map((s) => [s, { owned: 0, total: 0 }])) as Record<Sport, { owned: number; total: number }>;
+    for (const d of designs) {
+      t[d.sport].total++;
+      if (byDesign.has(d.designId)) t[d.sport].owned++;
+    }
+    return t;
+  }, [designs, byDesign]);
+  const inSport = useMemo(() => (sport === "all" ? designs : designs.filter((d) => d.sport === sport)), [designs, sport]);
+
+  // the shelf: every set of this sport with what you hold of it
+  const shelf = useMemo(() => {
+    return [...BASE_SETS.map((b) => b.key as string), ...INSERT_TYPES]
+      .map((k) => {
+        const all = inSport.filter((d) => d.type === k);
+        return { key: k, rarity: all[0]?.rarity ?? "common", total: all.length, owned: all.filter((d) => byDesign.has(d.designId)).length };
+      })
+      .filter((x) => x.total > 0);
+  }, [inSport, byDesign]);
+
+  // the team shelf: every team of this sport, in its colours, with what you hold of it
+  const teamShelf = useMemo(() => {
+    const m = new Map<string, { owned: number; total: number }>();
+    for (const d of inSport) {
+      if (!d.team || isInsert(d.type)) continue; // team pages count the base sets; inserts carry legends and old franchises
+      const x = m.get(d.team) ?? { owned: 0, total: 0 };
+      x.total++;
+      if (byDesign.has(d.designId)) x.owned++;
+      m.set(d.team, x);
+    }
+    return [...m.entries()].map(([key, x]) => ({ key, ...x })).sort((a, b) => a.key.localeCompare(b.key));
+  }, [inSport, byDesign]);
+
+  // the completion strip: one cell per sport on "all", else each set of the sport, inserts together
   const strip = useMemo(() => {
+    if (sport === "all") return SPORTS.map((s) => ({ key: s as string, label: SPORT_META[s].name, ...sportTotals[s] }));
     const per = (t: string) => {
-      const all = designs.filter((d) => (t === "insert" ? isInsert(d.type) : d.type === t));
+      const all = inSport.filter((d) => (t === "insert" ? isInsert(d.type) : d.type === t));
       return { owned: all.filter((d) => byDesign.has(d.designId)).length, total: all.length };
     };
-    return [...BASE_SETS.map((b) => [b.key, b.name] as const), ["insert", "Inserts"] as const]
+    return [...BASE_SETS.map((b) => [b.key as string, b.name] as const), ["insert", "Inserts"] as const]
       .map(([key, label]) => ({ key, label, ...per(key) }))
       .filter((x) => x.total > 0);
-  }, [designs, byDesign]);
-  const hasInserts = strip.some((x) => x.key === "insert");
-  const teams = useMemo(() => [...new Set(designs.map((d) => d.team).filter(Boolean))].sort(), [designs]);
+  }, [sport, inSport, byDesign, sportTotals]);
+  const hasInserts = inSport.some((d) => isInsert(d.type));
+  const showStrip = sport !== "all" && strip.length > 1;
+  const teams = useMemo(() => [...new Set(inSport.map((d) => d.team).filter(Boolean))].sort(), [inSport]);
+  const setKeys = useMemo(() => new Set(inSport.map((d) => d.type)), [inSport]);
+
+  // a search that finds nothing here but something in another sport says where
+  const elsewhere = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q || sport === "all") return [];
+    const hit = (d: CardView) => d.players.some((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q));
+    return SPORTS.filter((s) => s !== sport)
+      .map((s) => ({ sport: s, n: designs.filter((d) => d.sport === s && hit(d)).length }))
+      .filter((x) => x.n > 0);
+  }, [query, sport, designs]);
 
   // Everything the filters allow, owned or not: group headers count against this.
   const scope = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return designs.filter((d) => {
+    return inSport.filter((d) => {
       if (wishOnly && !wishSet.has(d.designId)) return false;
       if (setFilter === "insert" ? !isInsert(d.type) : setFilter !== "all" && d.type !== setFilter) return false;
       if (team !== "all" && d.team !== team) return false;
@@ -341,7 +471,7 @@ export function CollectionView({
       if (q && !d.players.some((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))) return false;
       return true;
     });
-  }, [designs, setFilter, team, rarity, query, wishOnly, wishSet]);
+  }, [inSport, setFilter, team, rarity, query, wishOnly, wishSet]);
 
   const groups = useMemo(() => {
     const shown = scope.filter((d) => {
@@ -448,8 +578,15 @@ export function CollectionView({
 
   return (
     <>
+      <SportTabs sport={sport} onPick={pickSport} totals={sportTotals} />
+
+      <div id="binder-body" role="tabpanel" aria-label={sport === "all" ? "All sports" : SPORT_META[sport].name}>
       {/* Completion, as one season-ticket strip */}
-      <section aria-label="Set completion" className="ticket-panel mt-5">
+      {/* a ticket when it has a tear line (the set cells); a plain strip when it is one row */}
+      <section aria-label="Set completion" className={showStrip ? "ticket-panel mt-4" : "mt-4 rounded-md bg-panel"}>
+        {/* one cell per set, when the sport has more than one; a single set is already its tab */}
+        {showStrip && (
+        <>
         <div className={`grid ${STRIP_COLS[strip.length] ?? "grid-cols-2 sm:grid-cols-4"}`}>
           {strip.map(({ key: s, label, owned, total }) => {
             return (
@@ -468,6 +605,8 @@ export function CollectionView({
           })}
         </div>
         <div className="perf" aria-hidden />
+        </>
+        )}
         <div className="flex items-center justify-between gap-3 px-3 py-2.5 sm:px-5">
           <span className="font-cond text-sm font-semibold text-muted" title={`${SHARDS_PER_PACK} shards = 1 bonus pack`}>
             <span className="text-text">{copies.length}</span> cards
@@ -515,16 +654,82 @@ export function CollectionView({
         )}
       </AnimatePresence>
 
-      {/* The shelf: every set as a spine, with how much of it you hold. Tap to open that set. */}
-      <section aria-label="Sets" className="mt-6">
-        <div className="flex items-baseline justify-between gap-3">
-          <h2 className="field-label">Sets</h2>
-          {setFilter !== "all" && (
+      {/* The shelf: every set (or team) as a spine, with how much of it you hold. Tap to open it. */}
+      <section aria-label={shelfMode === "teams" ? "Teams" : "Sets"} className="mt-6">
+        <div className="flex items-center justify-between gap-3">
+          <div role="radiogroup" aria-label="Shelf" className="flex rounded-full border border-line p-0.5">
+            {(
+              [
+                ["sets", `Sets (${shelf.length})`],
+                ["teams", `Teams (${teamShelf.length})`],
+              ] as const
+            ).map(([k, label]) => (
+              <button
+                key={k}
+                type="button"
+                role="radio"
+                aria-checked={shelfMode === k}
+                onClick={() => setShelfMode(k)}
+                className={`rounded-full px-3 py-1 font-cond text-sm font-bold uppercase tracking-wider transition-colors ${
+                  shelfMode === k ? "bg-text text-bg" : "text-muted hover:text-text"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {shelfMode === "sets" && setFilter !== "all" && (
             <button type="button" className="font-cond text-sm font-bold uppercase tracking-wider text-accent hover:underline" onClick={() => setSetFilter("all")}>
               Show every set
             </button>
           )}
+          {shelfMode === "teams" && team !== "all" && (
+            <button type="button" className="font-cond text-sm font-bold uppercase tracking-wider text-accent hover:underline" onClick={() => setTeam("all")}>
+              Show every team
+            </button>
+          )}
         </div>
+        {shelfMode === "teams" ? (
+          <ul className="no-scrollbar -mx-4 mt-2 flex snap-x gap-2.5 overflow-x-auto px-4 pb-2">
+            {teamShelf.map((x) => {
+              const done = x.owned === x.total;
+              const active = team === x.key;
+              const [t1, t2] = teamColors(x.key);
+              return (
+                <li key={x.key} className="snap-start">
+                  <button
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => {
+                      setTeam(active ? "all" : x.key);
+                      setGroup("team");
+                      document.getElementById("binder-pages")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    className={`tb-spine tb-spine--team relative flex h-full w-36 flex-col gap-2 rounded-md border bg-panel p-3 text-left transition-colors ${
+                      active ? "border-text" : done ? "border-accent/70" : "border-line hover:border-muted"
+                    }`}
+                    style={{ "--spine": t1, "--spine-2": t2 } as React.CSSProperties}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="grid h-7 min-w-7 shrink-0 place-items-center rounded bg-panel-2 px-1 font-display text-xs" aria-hidden>
+                        {teamCode(x.key) || x.key.slice(0, 3).toUpperCase()}
+                      </span>
+                      <span className="min-w-0 truncate font-cond text-sm font-bold uppercase tracking-wide">{x.key}</span>
+                    </span>
+                    <span className="mt-auto flex items-baseline gap-1">
+                      <span className="font-display text-xl leading-none">{x.owned}</span>
+                      <span className="font-cond text-sm text-muted">/{x.total}</span>
+                      {done && <span className="tb-spine__done ml-auto">Complete</span>}
+                    </span>
+                    <span className="h-1 overflow-hidden rounded-full bg-bg-2" aria-hidden>
+                      <span className="block h-full rounded-full bg-accent" style={{ width: `${(x.owned / x.total) * 100}%` }} />
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
         <ul className="no-scrollbar -mx-4 mt-2 flex snap-x gap-2.5 overflow-x-auto px-4 pb-2">
           {shelf.map((x) => {
             const done = x.owned === x.total;
@@ -569,6 +774,7 @@ export function CollectionView({
             );
           })}
         </ul>
+        )}
       </section>
 
       {/* Filters: what to show, then how to group it */}
@@ -584,13 +790,13 @@ export function CollectionView({
           />
           <Select label="Set" value={setFilter} onChange={setSetFilter}>
             <option value="all">All sets</option>
-            {BASE_SETS.map((b) => (
+            {BASE_SETS.filter((b) => setKeys.has(b.key)).map((b) => (
               <option key={b.key} value={b.key}>
                 {b.name}
               </option>
             ))}
             {hasInserts && <option value="insert">All inserts</option>}
-            {INSERT_TYPES.map((t) => (
+            {INSERT_TYPES.filter((t) => setKeys.has(t)).map((t) => (
               <option key={t} value={t}>
                 {INSERT_NAMES[t]}
               </option>
@@ -607,7 +813,7 @@ export function CollectionView({
         </div>
         <div className="flex items-center gap-2 no-scrollbar overflow-x-auto px-3 py-3 sm:flex-wrap sm:overflow-visible sm:px-5">
           <Chip active={rarity === "all"} onClick={() => setRarity("all")}>Any rarity</Chip>
-          {RARITIES.filter((r) => designs.some((d) => d.rarity === r)).map((r) => (
+          {RARITIES.filter((r) => inSport.some((d) => d.rarity === r)).map((r) => (
             <Chip key={r} active={rarity === r} onClick={() => setRarity(r)} color={RARITY_COLOR[r]}>
               {r}
             </Chip>
@@ -662,14 +868,29 @@ export function CollectionView({
 
       <p className="mt-4 font-cond text-sm font-semibold text-muted" aria-live="polite">
         {shownCount} card{shownCount === 1 ? "" : "s"}
+        {sport !== "all" ? ` in ${SPORT_META[sport].name}` : ""}
         {showMissing && !wishOnly ? " · cards you haven't pulled are blurred" : ""}
+        {elsewhere.map((x) => (
+          <button
+            key={x.sport}
+            type="button"
+            onClick={() => pickSport(x.sport)}
+            className="ml-3 font-bold uppercase tracking-wider text-accent hover:underline"
+          >
+            {x.n} in {SPORT_META[x.sport].name} →
+          </button>
+        ))}
       </p>
 
       {/* Binder pages, one per group */}
       <div id="binder-pages" className="scroll-mt-20" />
       {shownCount === 0 ? (
         <p className="mt-6 rounded-md border border-dashed border-line px-4 py-10 text-center text-muted">
-          {copies.length === 0 && !showMissing ? "Your binder is empty. Go open a pack!" : "No cards match these filters."}
+          {copies.length === 0 && !showMissing
+            ? "Your binder is empty. Go open a pack!"
+            : elsewhere.length > 0
+              ? `Nothing in ${SPORT_META[sport as Sport].name} matches. Try ${elsewhere.map((x) => SPORT_META[x.sport].name).join(" or ")}, above.`
+              : "No cards match these filters."}
         </p>
       ) : (
         groups.map((g) => (
@@ -713,6 +934,7 @@ export function CollectionView({
           </section>
         ))
       )}
+      </div>
 
       <AnimatePresence>
         {openDesign && (
