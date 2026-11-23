@@ -1,5 +1,5 @@
 import "server-only";
-import { cardView, DESIGNS, getDesign, type Finish } from "./catalog";
+import { cardView, DESIGNS, getDesign, SPORTS, type Finish, type Sport } from "./catalog";
 import { db } from "./db";
 import { FINISH_SUPPLY } from "./odds";
 import { hydrateInstance, type PulledCard } from "./packs";
@@ -46,7 +46,7 @@ export async function showcaseCards(user: { id: string; showcase: string }): Pro
   });
 }
 
-const TOTAL = { basketball: DESIGNS.length };
+const TOTAL = Object.fromEntries(SPORTS.map((s) => [s, DESIGNS.filter((d) => d.sport === s).length])) as Record<Sport, number>;
 
 export async function userStats(userId: string) {
   const [designs, cards, trades] = await Promise.all([
@@ -54,17 +54,18 @@ export async function userStats(userId: string) {
     db.cardInstance.count({ where: { ownerId: userId, recycledAt: null } }),
     db.trade.count({ where: { status: "accepted", OR: [{ fromId: userId }, { toId: userId }] } }),
   ]);
-  const owned = { basketball: 0 };
+  const owned = Object.fromEntries(SPORTS.map((s) => [s, 0])) as Record<Sport, number>;
   for (const d of designs) {
     const design = getDesign(d.designId);
     if (design) owned[design.sport]++;
   }
-  const unique = owned.basketball;
+  const unique = SPORTS.reduce((n, s) => n + owned[s], 0);
   return {
     cards,
     unique,
     completion: Math.round((unique / DESIGNS.length) * 100),
     basketball: { owned: owned.basketball, total: TOTAL.basketball },
+    soccer: { owned: owned.soccer, total: TOTAL.soccer },
     trades,
   };
 }

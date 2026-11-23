@@ -90,7 +90,7 @@ function Landing({ error }: { error?: string }) {
           Real <span className="text-accent">chase.</span>
         </h1>
         <p className="mt-5 max-w-md text-lg text-muted">
-          Basketball cards from this season&apos;s rosters, for you and your friends. Tear a free ticket every few hours, chase numbered
+          Basketball and Champions League cards from this season&apos;s squads, for you and your friends. Tear a free ticket every few hours, chase numbered
           Golds and one-of-one Masterpieces, and trade for the rest.
         </p>
         <div className="mt-8">

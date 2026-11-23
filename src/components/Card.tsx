@@ -7,6 +7,7 @@ import {
   INSERT_NAMES,
   isInsert,
   SET_NAME,
+  setLabel,
   teamCode,
   teamColors,
   teamLogo,
@@ -59,6 +60,7 @@ function baseMeta(card: CardView) {
 
 export function cardNo(card: CardView) {
   if (isInsert(card.type)) return card.designId;
+  if (card.type === "ucl" && card.no) return `UCL-${card.no}`;
   const m = card.designId.match(/^nba-(\d+)-(\w+)$/);
   return m ? `${m[2] === "rookie" ? "RC" : "B"}-${m[1]}` : card.designId;
 }
@@ -144,10 +146,10 @@ export function Card({
   const [imgFailed, setImgFailed] = useState(false);
   const [p1, p2] = card.players;
   const { style, insert, isDuo, setName } = useLook(card);
-  // Base and rookie cards show the ESPN headshot. Inserts show their splash art once one is
-  // chosen (insert-art.ts); until then the set's scene carries the card with the initials.
-  // New Blood always uses the ESPN headshot; other inserts use their chosen splash art.
-  const headshot = !isDuo && p1.espnId ? headshotUrl(p1.espnId) : undefined;
+  // Base and rookie cards show the ESPN headshot (Champions League cards: UEFA's squad photo).
+  // Inserts show their splash art once one is chosen (insert-art.ts); until then the set's
+  // scene carries the card with the initials. New Blood always uses the ESPN headshot.
+  const headshot = isDuo ? undefined : (p1.photo ?? (p1.espnId ? headshotUrl(p1.espnId) : undefined));
   const imgSrc = insert
     ? card.type === "newblood"
       ? headshot
@@ -186,6 +188,7 @@ export function Card({
       data-rarity={card.rarity}
       data-finish={finish}
       data-type={card.type}
+      data-sport={card.sport}
       data-insert={insert ? "" : undefined}
       data-art={showImg ? (insert ? "splash" : "headshot") : "none"}
       style={style}
@@ -212,7 +215,7 @@ export function Card({
             <div className="tb-base__photo">
               <div className="tb-base__band" aria-hidden />
               {showImg ? (
-                // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs, hotlinked on purpose
+                // eslint-disable-next-line @next/next/no-img-element -- ESPN cut-outs / UEFA squad photos, hotlinked on purpose
                 <img
                   className="tb-card__face-img"
                   src={imgSrc}
@@ -340,10 +343,7 @@ export function CardReverse({
             </div>
           )}
           <div className="tb-rev__foot">
-            <span>
-              {setName ??
-                `${SET_NAME} · ${card.type === "rookie" ? "Rookie" : "Base"}`}
-            </span>
+            <span>{setName ?? setLabel(card.type)}</span>
             <SerialLine
               finish={finish}
               serialNo={serialNo}
@@ -406,9 +406,11 @@ export function TurnableCard(props: CardProps) {
 /** The Gate 7 card back. Its border is already the parallel, so the rarity shows before the flip. */
 export function CardBack({
   rarity,
+  sport = "basketball",
   className,
 }: {
   rarity?: string;
+  sport?: CardView["sport"];
   className?: string;
 }) {
   return (
@@ -421,7 +423,9 @@ export function CardBack({
           <div className="tb-card__cover-mark">
             <span>Gate</span>
             <b>7</b>
-            <span>{SET_NAME} · Basketball</span>
+            <span>
+              {SET_NAME} · {sport === "soccer" ? "Soccer" : "Basketball"}
+            </span>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@
 // stamp lands as it turns. Sound is synthesised and can be muted; phones that can, buzz.
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { INSERT_NAMES, RARITIES, SET_NAME } from "@/lib/catalog";
+import { RARITIES, setLabel } from "@/lib/catalog";
 import type { PulledCard } from "@/lib/packs";
 import { buzz, playCharge, playFlip, playReveal, setSoundOn, soundOn } from "@/lib/sound";
 import { Card, CardBack } from "./Card";
@@ -33,8 +33,7 @@ export function pullLabel(c: PulledCard) {
   return "Legend pull";
 }
 
-const setOf = (c: PulledCard) =>
-  c.type === "base" ? `${SET_NAME} · Base` : c.type === "rookie" ? `${SET_NAME} · Rookie` : (INSERT_NAMES[c.type] ?? c.type);
+const setOf = (c: PulledCard) => setLabel(c.type);
 
 export function PackDeal({ cards, onDone }: { cards: PulledCard[]; onDone: () => void }) {
   const reduce = useReducedMotion();
@@ -160,7 +159,7 @@ export function PackDeal({ cards, onDone }: { cards: PulledCard[]; onDone: () =>
                 transition={reduce ? { duration: 0 } : { duration: 0.55, ease: [0.3, 1.25, 0.5, 1] }}
               >
                 <span className="tb-deal__back absolute inset-0 block [backface-visibility:hidden]">
-                  <CardBack rarity={card.rarity} />
+                  <CardBack rarity={card.rarity} sport={card.sport} />
                 </span>
                 <span className="absolute inset-0 block [backface-visibility:hidden] [transform:rotateY(180deg)]">
                   <Card card={card} finish={card.finish} serialNo={card.serialNo} supply={card.supply} grade={card.grade} />
@@ -204,7 +203,7 @@ export function PackDeal({ cards, onDone }: { cards: PulledCard[]; onDone: () =>
         ))}
         {Array.from({ length: cards.length - shown.length }, (_, i) => (
           <li key={`left-${i}`} className="w-9 opacity-40 sm:w-11" aria-hidden>
-            <CardBack />
+            <CardBack sport={cards[0]?.sport} />
           </li>
         ))}
       </ol>

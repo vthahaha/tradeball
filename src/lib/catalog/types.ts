@@ -1,7 +1,7 @@
 import { INSERT_CLASSES } from "./inserts";
 
-// Basketball only for now. Keep the union shape so another sport can come back later.
-export type Sport = "basketball";
+export type Sport = "basketball" | "soccer";
+export const SPORTS: readonly Sport[] = ["basketball", "soccer"];
 
 /** Grail sits above Mythic. No class uses it yet; its drop weight is 0 until one does. */
 export const RARITIES = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "grail"] as const;
@@ -15,8 +15,19 @@ export type Rarity = (typeof RARITIES)[number];
 export const INSERT_TYPES: readonly string[] = INSERT_CLASSES.map((c) => c.id);
 export type InsertType = string;
 
-/** Base set + rookies, "duo" for future multi-player cards, or an insert class id. */
-export type CardType = "base" | "rookie" | "duo" | (string & {});
+/**
+ * NBA base set + rookies, "ucl" for the soccer base set (Champions League squads), "duo" for
+ * future multi-player cards, or an insert class id. Every non-insert type renders the base layout.
+ */
+export type CardType = "base" | "rookie" | "ucl" | "duo" | (string & {});
+
+/** The non-insert sets, in binder order: key (= card type), name, short mark, sport. */
+export const BASE_SETS = [
+  { key: "base", name: "Base set", short: "B", sport: "basketball" },
+  { key: "rookie", name: "Rookies", short: "RC", sport: "basketball" },
+  { key: "ucl", name: "Champions League", short: "UCL", sport: "soccer" },
+] as const satisfies readonly { key: CardType; name: string; short: string; sport: Sport }[];
+export type BaseSetKey = (typeof BASE_SETS)[number]["key"];
 export const isInsert = (t: CardType): t is InsertType => (INSERT_TYPES as readonly string[]).includes(t);
 
 export const FINISHES = ["standard", "foil", "holo", "gold", "black", "masterpiece"] as const;
@@ -50,9 +61,42 @@ export interface NbaPlayerRow {
   college?: string;
 }
 
+/** A Champions League club, from scripts/ucl. */
+export interface UclTeam {
+  id: string; // UEFA team id
+  code: string; // "RMA"
+  name: string; // name on the card, "Real Madrid"
+  full: string; // "Real Madrid C.F."
+  color: string;
+  alt: string;
+  logo: string; // UEFA crest (240px PNG)
+}
+
+/** One generated row per soccer card in ucl.ts. */
+export interface UclPlayerRow {
+  id: string; // UEFA player id (also names the official headshot)
+  espnId: string; // "" when ESPN had no match
+  name: string;
+  club: string; // UEFA team id
+  pos: "GK" | "DF" | "MF" | "FW";
+  nation: string;
+  jersey: string;
+  age: number | null;
+  rarity: Rarity;
+  ovr: number;
+  /** 2026-27 so far, league + Champions League: APP, G, A (keepers: APP, SV, GA). */
+  stats: StatLine | null;
+  /** Card number in the set, 1..n: club by club, keepers first. */
+  no: number;
+  /** Set when UEFA has no photo this season: an older season's photo, or null for none. */
+  photoYear?: number | null;
+}
+
 export interface Player {
   id: string;
   espnId: string;
+  /** Headshot URL when it does not come from ESPN's NBA cut-outs (UEFA's official squad photo). */
+  photo?: string;
   sport: Sport;
   name: string;
   team: string; // team nickname, e.g. "Celtics"
@@ -94,4 +138,6 @@ export interface CardDesign {
   meta?: string;
   /** Shown on the stub when there are no stats. */
   note?: string;
+  /** Card number within its set (Champions League cards). */
+  no?: number;
 }

@@ -553,6 +553,36 @@ select {
 }
 .tb-base__plate .tb-card__serial b { color: #8a5f00; }
 
+/* Champions League base cards: UEFA's squad photo is an opaque square on white, so the photo
+   sits on white stock and the team colours come in as a sash across the shirt, over the photo
+   (never over the face). The OVR is printed in ink on the white. */
+.tb-card[data-sport="soccer"] .tb-base__photo {
+  background: #fff;
+}
+.tb-card[data-sport="soccer"] .tb-card__face-img {
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-position: 50% 18%;
+  filter: none;
+}
+.tb-card[data-sport="soccer"] .tb-base__band {
+  bottom: -9%;
+  z-index: 2;
+  height: 21%;
+  background: linear-gradient(180deg, var(--t2) 0 22%, var(--t1) 22%);
+  box-shadow: 0 -0.4cqw 0 #00000014;
+}
+.tb-card[data-sport="soccer"] .tb-card__mono { color: var(--t1-text); }
+.tb-card[data-sport="soccer"] .tb-base__ovr {
+  color: var(--ink);
+  text-shadow: none;
+}
+.tb-card[data-sport="soccer"] .tb-base__plate {
+  border-top-color: var(--t2);
+}
+.tb-card[data-sport="soccer"] .tb-base__plate em { color: var(--t1-text); }
+
 /* ── insert sets: one photo or print technique each, the set's name set as type.
    The parallel border stays, thinner. ── */
 .tb-card[data-insert] .tb-card__frame {
@@ -4172,6 +4202,24 @@ select {
   width: 60%;
   height: 4.6cqw;
   background: repeating-linear-gradient(90deg, var(--ink) 0 0.5cqw, transparent 0.5cqw 1cqw, var(--ink) 1cqw 2cqw, transparent 2cqw 2.4cqw);
+}
+
+/* the Champions pack: the same wrapper in orange stock, with a ball in place of the hoop */
+.tb-pack[data-pack="soccer"] .tb-pack__body {
+  background:
+    linear-gradient(100deg, transparent 18%, #ffffff59 26%, transparent 34% 60%, #ffffff33 66%, transparent 72%),
+    linear-gradient(180deg, #ffffff26, transparent 40%, #00000033),
+    linear-gradient(100deg, #ff7a45, #ffc09f 24%, #d9531c 44%, #ffa06f 62%, #b2400f 84%, #ff7a45);
+}
+.tb-pack[data-pack="soccer"] .tb-pack__body::before {
+  background:
+    repeating-linear-gradient(180deg, #00000040 0 0.6cqw, #ffffff40 0.6cqw 1.2cqw),
+    #c4521f;
+}
+.tb-pack[data-pack="soccer"] .tb-pack__stub {
+  background:
+    repeating-linear-gradient(180deg, #00000033 0 0.6cqw, #ffffff38 0.6cqw 1.2cqw),
+    linear-gradient(100deg, #d9531c, #ffa06f 50%, #b2400f);
 }
 
 /* NEW stamp: lands on a card the first time it enters your binder */
