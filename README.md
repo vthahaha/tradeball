@@ -37,12 +37,11 @@ Sign-in is **Google only**. Set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (see
 | Path | What |
 |---|---|
 | `src/lib/catalog/soccer.ts`, `basketball.ts` | Player list + special cards (moments, duos). Edit these to add players. |
-| `src/lib/catalog/nfl.ts`, `scripts/nfl/` | Football base set: each team's starting 22 from the 2026 NFL depth charts (run `scripts/nfl/fetch.sh` then `node scripts/nfl/build.js`; `--trim` re-applies the pick without re-rating; star ratings are pinned in `PINS`) |
+| `src/lib/catalog/nfl.ts`, `scripts/nfl/` | Football base set: each team's starting 22 from the 2026 NFL depth charts (run `scripts/nfl/fetch.sh` then `node scripts/nfl/build.js`; `--trim` re-applies the pick without re-rating anyone kept; star ratings are pinned in `PINS`) |
 | `src/lib/catalog/mlb.ts`, `scripts/mlb/` | Baseball base set: 18 per team (lineup, 5 starters, closer, 3 relievers), rated on 2026 WAR (`scripts/mlb/fetch.sh`, `node scripts/mlb/build.js`) |
 | `src/lib/catalog/nhl.ts`, `scripts/nhl/` | Hockey base set: 16 per team (top 3 lines, 5 D, 2 G) from the 2026-27 lines (`scripts/nhl/fetch.sh`, `node scripts/nhl/build.js`) |
 | `src/lib/catalog/ucl.ts`, `scripts/ucl/` | Soccer base set: 2026-27 Champions League squads (generated; run `scripts/ucl/fetch.sh` then `node scripts/ucl/build.js`; star ratings are pinned in `PINS` in build.js) |
 | `scripts/photos.mjs` (`npm run photos`) | Downloads NBA/NFL headshots and logos as small WebP files into `public/players` and `public/logos`, and makes binder-size thumbnails of the insert art; writes `src/lib/catalog/local-art.ts`. Re-run after rebuilding a player set or adding art. Cache lifetimes for these are in `next.config.ts`. |
-| Retired cards | A rebuild never deletes a card: players who drop out of a set stay in its file with `"retired": true`. Owners still see them (stamped "Retired"); packs never drop them and they do not count toward completion. |
 | `src/lib/catalog/index.ts` | Turns players into card designs (rarity rules, stats) |
 | `src/lib/odds.ts` | All odds: rarity, finishes, numbered supply, grades, pity |
 | `src/lib/packs.ts` | Pack timer + server-side pack opening |

@@ -263,7 +263,6 @@ const BASE_DESIGNS: CardDesign[] = [
     ovr: r.ovr,
     no: r.no,
     rookie: r.rookie || undefined,
-    retired: r.retired || undefined,
   })),
   ...([
     [MLB_PLAYERS, "baseball", "mlb"],
@@ -279,7 +278,6 @@ const BASE_DESIGNS: CardDesign[] = [
       ovr: r.ovr,
       no: r.no,
       rookie: r.rookie || undefined,
-      retired: r.retired || undefined,
     })),
   ),
 ];
@@ -362,10 +360,7 @@ export const getDesign = (id: string) => designById.get(id);
 export const POOLS = Object.fromEntries(
   SPORTS.map((s) => [s, Object.fromEntries(RARITIES.map((r) => [r, [] as CardDesign[]]))]),
 ) as Record<Sport, Record<Rarity, CardDesign[]>>;
-for (const d of BASE_DESIGNS) if (!d.retired) POOLS[d.sport][d.rarity].push(d);
-
-/** The cards a set is completed against: everything except retired cards. */
-export const ACTIVE_DESIGNS = DESIGNS.filter((d) => !d.retired);
+for (const d of BASE_DESIGNS) POOLS[d.sport][d.rarity].push(d);
 
 /** Insert designs by class, for the guaranteed insert slot. */
 export const INSERT_POOLS = Object.fromEntries(
@@ -387,8 +382,6 @@ export interface CardView {
   no?: number;
   /** First-year player in a set without a rookie list (NFL). */
   rookie?: boolean;
-  /** Cut from its set: shown to owners, never pulled, not counted toward completion. */
-  retired?: boolean;
   stats: StatLine | null;
   statLine: string | null;
   /** Team nickname to colour the card by (defaults to the player's team). */
@@ -440,7 +433,6 @@ export function cardView(designId: string): CardView {
     note: d.note,
     no: d.no,
     rookie: d.rookie,
-    retired: d.retired,
     art: INSERT_ART[d.id] || undefined,
     artThumb: artThumb(INSERT_ART[d.id]),
   };

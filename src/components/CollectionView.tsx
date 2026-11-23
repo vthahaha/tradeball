@@ -444,23 +444,18 @@ export function CollectionView({
   const sportTotals = useMemo(() => {
     const t = Object.fromEntries(SPORTS.map((s) => [s, { owned: 0, total: 0 }])) as Record<Sport, { owned: number; total: number }>;
     for (const d of designs) {
-      if (d.retired) continue; // retired cards are not part of any set
       t[d.sport].total++;
       if (byDesign.has(d.designId)) t[d.sport].owned++;
     }
     return t;
   }, [designs, byDesign]);
-  // the sport's cards; a retired card only if you own it
-  const inSport = useMemo(
-    () => designs.filter((d) => (sport === "all" || d.sport === sport) && (!d.retired || byDesign.has(d.designId))),
-    [designs, sport, byDesign],
-  );
+  const inSport = useMemo(() => (sport === "all" ? designs : designs.filter((d) => d.sport === sport)), [designs, sport]);
 
   // the shelf: every set of this sport with what you hold of it
   const shelf = useMemo(() => {
     return [...BASE_SETS.map((b) => b.key as string), ...INSERT_TYPES]
       .map((k) => {
-        const all = inSport.filter((d) => d.type === k && !d.retired);
+        const all = inSport.filter((d) => d.type === k);
         return { key: k, rarity: all[0]?.rarity ?? "common", total: all.length, owned: all.filter((d) => byDesign.has(d.designId)).length };
       })
       .filter((x) => x.total > 0);
@@ -470,7 +465,7 @@ export function CollectionView({
   const teamShelf = useMemo(() => {
     const m = new Map<string, { owned: number; total: number }>();
     for (const d of inSport) {
-      if (!d.team || isInsert(d.type) || d.retired) continue; // team pages count the base sets; inserts carry legends and old franchises
+      if (!d.team || isInsert(d.type)) continue; // team pages count the base sets; inserts carry legends and old franchises
       const k = teamKey(d);
       const x = m.get(k) ?? { owned: 0, total: 0 };
       x.total++;
@@ -484,7 +479,7 @@ export function CollectionView({
   const strip = useMemo(() => {
     if (sport === "all") return SPORTS.map((s) => ({ key: s as string, label: SPORT_META[s].name, ...sportTotals[s] }));
     const per = (t: string) => {
-      const all = inSport.filter((d) => !d.retired && (t === "insert" ? isInsert(d.type) : d.type === t));
+      const all = inSport.filter((d) => (t === "insert" ? isInsert(d.type) : d.type === t));
       return { owned: all.filter((d) => byDesign.has(d.designId)).length, total: all.length };
     };
     return [...BASE_SETS.map((b) => [b.key as string, b.name] as const), ["insert", "Inserts"] as const]
@@ -559,11 +554,9 @@ export function CollectionView({
     for (const d of scope) {
       const k = keyOf(d);
       const g = map.get(k) ?? { cards: [], owned: 0, total: 0, needs: [] };
-      if (!d.retired) {
-        g.total++;
-        if (byDesign.has(d.designId)) g.owned++;
-        else g.needs.push(d);
-      }
+      g.total++;
+      if (byDesign.has(d.designId)) g.owned++;
+      else g.needs.push(d);
       map.set(k, g);
     }
     for (const d of shown) map.get(keyOf(d))!.cards.push(d);
@@ -624,11 +617,6 @@ export function CollectionView({
                       {!owned && (
                         <span className="tb-binder__tag" aria-hidden>
                           Not pulled
-                        </span>
-                      )}
-                      {owned && d.retired && (
-                        <span className="tb-binder__retired" title="Retired from the set: packs no longer drop it">
-                          Retired
                         </span>
                       )}
                       {owned && owned.length > 1 && (

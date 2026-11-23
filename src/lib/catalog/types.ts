@@ -125,8 +125,6 @@ export interface ProPlayerRow {
   no: number;
   /** null when ESPN has no headshot (the card prints initials). */
   photo?: null;
-  /** Cut from the set: still shown to anyone who owns it, never pulled. */
-  retired?: boolean;
 }
 export type MlbPlayerRow = ProPlayerRow;
 export type NhlPlayerRow = ProPlayerRow;
@@ -148,8 +146,6 @@ export interface NflPlayerRow {
   no: number;
   /** null when ESPN has no headshot (the card prints initials). */
   photo?: null;
-  /** Cut from the set: still shown to anyone who owns it, never pulled, not counted toward the set. */
-  retired?: boolean;
 }
 
 export interface Player {
@@ -202,7 +198,4 @@ export interface CardDesign {
   no?: number;
   /** A first-year player in a set without a separate rookie list (NFL): the card gets the RC mark. */
   rookie?: boolean;
-  /** Cut from its set (e.g. NFL backups when the set shrank to the starting 22): owned copies still
-   *  show, packs never drop it, and it does not count toward completion. */
-  retired?: boolean;
 }
