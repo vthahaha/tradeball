@@ -8,6 +8,8 @@ export const metadata = { title: "Insert preview" };
 
 /** Clubs shown in full in the Champions League section (by card name). */
 const PREVIEW_CLUBS = ["Real Madrid", "Bodø/Glimt"];
+/** NFL team shown in full (by nickname). */
+const PREVIEW_NFL = "Chiefs";
 
 /**
  * Every insert card, to check splash art from insert-art.ts. Open on `npm run dev`
@@ -73,6 +75,26 @@ export default async function PreviewPage({ searchParams }: { searchParams: Prom
               ...RARITIES.flatMap((r) => POOLS.soccer[r])
                 .map((d) => cardView(d.id))
                 .filter((v) => PREVIEW_CLUBS.includes(v.team))
+                .sort((a, b) => (a.no ?? 0) - (b.no ?? 0)),
+            ].map((v, i) => (
+              <li key={`${v.designId}-${i}`}>
+                <TurnableCard card={v} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {show === "all" && (
+        <section className="mt-10">
+          <h2 className="font-display text-2xl">
+            NFL <span className="font-cond text-base text-muted">one per edition, then the {PREVIEW_NFL}</span>
+          </h2>
+          <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+            {[
+              ...RARITIES.flatMap((r) => POOLS.football[r].slice(0, 1)).map((d) => cardView(d.id)),
+              ...RARITIES.flatMap((r) => POOLS.football[r])
+                .map((d) => cardView(d.id))
+                .filter((v) => v.team === PREVIEW_NFL)
                 .sort((a, b) => (a.no ?? 0) - (b.no ?? 0)),
             ].map((v, i) => (
               <li key={`${v.designId}-${i}`}>

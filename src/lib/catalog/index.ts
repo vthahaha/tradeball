@@ -1,6 +1,7 @@
 import { INSERT_ART } from "./insert-art";
 import { INSERT_CARDS, INSERT_CLASSES } from "./inserts";
 import { NBA_PLAYERS, NBA_TEAMS } from "./nba";
+import { NFL_PLAYERS, NFL_SEASON, NFL_TEAMS } from "./nfl";
 import { UCL_PLAYERS, UCL_SEASON, UCL_TEAMS } from "./ucl";
 import type { CardDesign, CardType, InsertType, Player, Rarity, Sport, StatLine } from "./types";
 import { BASE_SETS, INSERT_TYPES, RARITIES, SPORTS } from "./types";
@@ -8,6 +9,7 @@ import { BASE_SETS, INSERT_TYPES, RARITIES, SPORTS } from "./types";
 export * from "./types";
 export { NBA_SEASON } from "./nba";
 export { UCL_SEASON } from "./ucl";
+export { NFL_SEASON } from "./nfl";
 
 export const SET_ID = "s1";
 export const SET_NAME = "Series 1";
@@ -16,6 +18,9 @@ const teamByAbbr = new Map(NBA_TEAMS.map((t) => [t.abbr, t]));
 /** Champions League clubs by the name printed on the card ("Real Madrid") and by UEFA id. */
 const clubByName = new Map(UCL_TEAMS.map((t) => [t.name, t]));
 const clubById = new Map(UCL_TEAMS.map((t) => [t.id, t]));
+/** NFL teams by nickname ("Chiefs", as printed) and by abbreviation. No nickname is shared with an NBA team. */
+const nflByName = new Map(NFL_TEAMS.map((t) => [t.name, t]));
+const nflByAbbr = new Map(NFL_TEAMS.map((t) => [t.abbr, t]));
 const teamByName = new Map(NBA_TEAMS.map((t) => [t.name, t]));
 const nick = (abbr: string) => teamByAbbr.get(abbr)?.name ?? abbr;
 
@@ -39,6 +44,8 @@ const HISTORIC: Record<string, { abbr: string; colors: [string, string] }> = {
 export function teamCode(team: string): string {
   const club = clubByName.get(team);
   if (club) return club.code;
+  const nfl = nflByName.get(team);
+  if (nfl) return nfl.abbr;
   if (HISTORIC[team]) return HISTORIC[team].abbr;
   const abbr = teamByName.get(team)?.abbr ?? "";
   return ABBR_FIX[abbr] ?? abbr;
@@ -58,6 +65,8 @@ const LOGO_FRANCHISE: Record<string, string> = {
 export function teamLogo(team: string): string | undefined {
   const club = clubByName.get(team);
   if (club) return club.logo; // UEFA's crest
+  const nfl = nflByName.get(team);
+  if (nfl) return `https://a.espncdn.com/i/teamlogos/nfl/500/${nfl.abbr.toLowerCase()}.png`;
   const abbr = LOGO_FRANCHISE[team] ?? teamByName.get(team)?.abbr;
   return abbr ? `https://a.espncdn.com/i/teamlogos/nba/500/${abbr.toLowerCase()}.png` : undefined;
 }
@@ -65,6 +74,8 @@ export function teamLogo(team: string): string | undefined {
 export function teamColors(team: string): [string, string] {
   const club = clubByName.get(team);
   if (club) return [club.color, club.alt];
+  const nfl = nflByName.get(team);
+  if (nfl) return [nfl.color, nfl.alt];
   const t = teamByName.get(team);
   return t ? [t.color, t.alt] : (HISTORIC[team]?.colors ?? ["#233862", "#a9b6d3"]);
 }
@@ -86,6 +97,7 @@ export function setLabel(type: CardType): string {
   if (type === "base") return `${SET_NAME} · Base`;
   if (type === "rookie") return `${SET_NAME} · Rookie`;
   if (type === "ucl") return `${SET_NAME} · Champions League`;
+  if (type === "nfl") return `${SET_NAME} · NFL`;
   return INSERT_NAMES[type] ?? type;
 }
 
@@ -132,7 +144,28 @@ const SOCCER_PLAYERS: Player[] = UCL_PLAYERS.map((r) => ({
 }));
 PLAYERS.push(...SOCCER_PLAYERS);
 
-// ── Base sets: NBA base + rookies, Champions League ──
+/** ESPN's transparent NFL headshot cut-out (the same style as the NBA ones). */
+export const nflHeadshotUrl = (espnId: string) => `https://a.espncdn.com/i/headshots/nfl/players/full/${espnId}.png`;
+
+const FOOTBALL_PLAYERS: Player[] = NFL_PLAYERS.map((r) => ({
+  id: `nfl-${r.id}`,
+  espnId: "", // the NBA headshot path does not apply; the photo is set below
+  photo: r.photo === null ? undefined : nflHeadshotUrl(r.id),
+  sport: "football",
+  name: r.name,
+  team: nflByAbbr.get(r.team)?.name ?? r.team,
+  teamAbbr: r.team,
+  pos: r.pos,
+  nation: "",
+  jersey: r.jersey,
+  ovr: r.ovr,
+  stats: r.stats,
+  statLine: r.stats ? `${NFL_SEASON} season so far` : null,
+  college: r.college || undefined,
+}));
+PLAYERS.push(...FOOTBALL_PLAYERS);
+
+// ── Base sets: NBA base + rookies, Champions League, NFL ──
 
 const BASE_DESIGNS: CardDesign[] = [
   ...NBA_PLAYERS.map((r) => ({
@@ -153,6 +186,17 @@ const BASE_DESIGNS: CardDesign[] = [
     playerIds: [`ucl-${r.id}`],
     ovr: r.ovr,
     no: r.no,
+  })),
+  ...NFL_PLAYERS.map((r) => ({
+    id: `nfl-${r.id}`,
+    sport: "football" as const,
+    set: SET_ID,
+    type: "nfl",
+    rarity: r.rarity,
+    playerIds: [`nfl-${r.id}`],
+    ovr: r.ovr,
+    no: r.no,
+    rookie: r.rookie || undefined,
   })),
 ];
 
@@ -252,8 +296,10 @@ export interface CardView {
   year?: number;
   ovr: number;
   players: Pick<Player, "id" | "espnId" | "photo" | "name" | "team" | "pos" | "nation" | "jersey" | "pick" | "college">[];
-  /** Card number within its set (Champions League cards). */
+  /** Card number within its set (Champions League and NFL cards). */
   no?: number;
+  /** First-year player in a set without a rookie list (NFL). */
+  rookie?: boolean;
   stats: StatLine | null;
   statLine: string | null;
   /** Team nickname to colour the card by (defaults to the player's team). */
@@ -302,6 +348,7 @@ export function cardView(designId: string): CardView {
     meta: d.meta,
     note: d.note,
     no: d.no,
+    rookie: d.rookie,
     art: INSERT_ART[d.id] || undefined,
   };
 }

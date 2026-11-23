@@ -16,7 +16,7 @@ const engrave = Bodoni_Moda({ variable: "--font-engrave", subsets: ["latin"], st
 
 export const metadata: Metadata = {
   title: "Gate 7",
-  description: "Open free basketball and Champions League card packs from this season’s squads and trade with friends.",
+  description: "Open free basketball, Champions League and NFL card packs from this season’s squads and trade with friends.",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

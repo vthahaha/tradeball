@@ -37,6 +37,7 @@ Sign-in is **Google only**. Set `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (see
 | Path | What |
 |---|---|
 | `src/lib/catalog/soccer.ts`, `basketball.ts` | Player list + special cards (moments, duos). Edit these to add players. |
+| `src/lib/catalog/nfl.ts`, `scripts/nfl/` | Football base set: 2026 NFL depth charts, ~29 per team (generated; run `scripts/nfl/fetch.sh` then `node scripts/nfl/build.js`; star ratings are pinned in `PINS` in build.js) |
 | `src/lib/catalog/ucl.ts`, `scripts/ucl/` | Soccer base set: 2026-27 Champions League squads (generated; run `scripts/ucl/fetch.sh` then `node scripts/ucl/build.js`; star ratings are pinned in `PINS` in build.js) |
 | `src/lib/catalog/index.ts` | Turns players into card designs (rarity rules, stats) |
 | `src/lib/odds.ts` | All odds: rarity, finishes, numbered supply, grades, pity |

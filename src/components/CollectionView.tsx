@@ -38,7 +38,7 @@ type SortKey = "set" | "rarity" | "ovr" | "newest" | "name";
 type GroupKey = "set" | "team" | "rarity" | "none";
 
 /** Completion strip columns by how many sets it shows (static class names, for Tailwind). */
-const STRIP_COLS: Record<number, string> = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3", 4: "grid-cols-2 sm:grid-cols-4" };
+const STRIP_COLS: Record<number, string> = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3", 4: "grid-cols-2 sm:grid-cols-4", 5: "grid-cols-2 sm:grid-cols-5" };
 
 function groupTitle(group: GroupKey, k: string) {
   if (group === "set") return setTitle(k);

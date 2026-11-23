@@ -66,6 +66,7 @@ export async function userStats(userId: string) {
     completion: Math.round((unique / DESIGNS.length) * 100),
     basketball: { owned: owned.basketball, total: TOTAL.basketball },
     soccer: { owned: owned.soccer, total: TOTAL.soccer },
+    football: { owned: owned.football, total: TOTAL.football },
     trades,
   };
 }
