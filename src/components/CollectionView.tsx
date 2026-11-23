@@ -44,11 +44,23 @@ const SPORT_META: Record<Sport, { name: string; short: string; stock: string }> 
   basketball: { name: "Basketball", short: "Hoops", stock: "var(--stock-hoops)" },
   soccer: { name: "Soccer", short: "Soccer", stock: "var(--stock-soccer)" },
   football: { name: "Football", short: "NFL", stock: "var(--stock-mixed)" },
+  baseball: { name: "Baseball", short: "MLB", stock: "var(--stock-diamond)" },
+  hockey: { name: "Hockey", short: "NHL", stock: "var(--stock-ice)" },
 };
 
 /** How a sport's binder opens: basketball by set (it has inserts), the single-set sports by team. */
-const defaultGroup = (s: SportKey): GroupKey => (s === "soccer" || s === "football" ? "team" : "set");
-const defaultShelf = (s: SportKey): "sets" | "teams" => (s === "soccer" || s === "football" ? "teams" : "sets");
+const defaultGroup = (s: SportKey): GroupKey => (s === "basketball" || s === "all" ? "set" : "team");
+const defaultShelf = (s: SportKey): "sets" | "teams" => (s === "basketball" || s === "all" ? "sets" : "teams");
+
+/**
+ * A team inside the binder is "sport|name": nicknames repeat across leagues (the NFL and MLB both
+ * have Giants), so pages, filters and spines key on both. `teamOf` splits it back.
+ */
+const teamKey = (d: Pick<CardView, "sport" | "team">) => `${d.sport}|${d.team}`;
+const teamOf = (k: string) => {
+  const i = k.indexOf("|");
+  return { sport: k.slice(0, i) as Sport, team: k.slice(i + 1) };
+};
 
 /** The sport switch: one ticket tab per sport with what you hold of it. */
 function SportTabs({
@@ -73,7 +85,7 @@ function SportTabs({
           {sport === "all" ? "Back to one sport" : "All sports together"}
         </button>
       </div>
-      <div role="tablist" aria-label="Sport" className="mt-2 grid grid-cols-3 gap-2 sm:gap-3">
+      <div role="tablist" aria-label="Sport" className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5 sm:gap-3">
         {SPORTS.map((s) => {
           const { owned, total } = totals[s];
           const on = sport === s || sport === "all";
@@ -140,6 +152,7 @@ const STRIP_COLS: Record<number, string> = { 1: "grid-cols-1", 2: "grid-cols-2",
 function groupTitle(group: GroupKey, k: string) {
   if (group === "set") return setTitle(k);
   if (group === "rarity") return k[0].toUpperCase() + k.slice(1);
+  if (group === "team") return k === "Legends" ? k : teamOf(k).team;
   return k;
 }
 
@@ -161,7 +174,7 @@ function GroupHead({
   needsOpen: boolean;
   onNeeds: () => void;
 }) {
-  const [t1, t2] = group === "team" ? teamColors(k) : ["", ""];
+  const [t1, t2] = group === "team" && k !== "Legends" ? teamColors(teamOf(k).team, teamOf(k).sport) : ["", ""];
   const pct = total ? Math.round((owned / total) * 100) : 0;
   return (
     <header className="flex items-center gap-3 border-b-2 border-dashed border-line pb-3">
@@ -431,18 +444,23 @@ export function CollectionView({
   const sportTotals = useMemo(() => {
     const t = Object.fromEntries(SPORTS.map((s) => [s, { owned: 0, total: 0 }])) as Record<Sport, { owned: number; total: number }>;
     for (const d of designs) {
+      if (d.retired) continue; // retired cards are not part of any set
       t[d.sport].total++;
       if (byDesign.has(d.designId)) t[d.sport].owned++;
     }
     return t;
   }, [designs, byDesign]);
-  const inSport = useMemo(() => (sport === "all" ? designs : designs.filter((d) => d.sport === sport)), [designs, sport]);
+  // the sport's cards; a retired card only if you own it
+  const inSport = useMemo(
+    () => designs.filter((d) => (sport === "all" || d.sport === sport) && (!d.retired || byDesign.has(d.designId))),
+    [designs, sport, byDesign],
+  );
 
   // the shelf: every set of this sport with what you hold of it
   const shelf = useMemo(() => {
     return [...BASE_SETS.map((b) => b.key as string), ...INSERT_TYPES]
       .map((k) => {
-        const all = inSport.filter((d) => d.type === k);
+        const all = inSport.filter((d) => d.type === k && !d.retired);
         return { key: k, rarity: all[0]?.rarity ?? "common", total: all.length, owned: all.filter((d) => byDesign.has(d.designId)).length };
       })
       .filter((x) => x.total > 0);
@@ -452,20 +470,21 @@ export function CollectionView({
   const teamShelf = useMemo(() => {
     const m = new Map<string, { owned: number; total: number }>();
     for (const d of inSport) {
-      if (!d.team || isInsert(d.type)) continue; // team pages count the base sets; inserts carry legends and old franchises
-      const x = m.get(d.team) ?? { owned: 0, total: 0 };
+      if (!d.team || isInsert(d.type) || d.retired) continue; // team pages count the base sets; inserts carry legends and old franchises
+      const k = teamKey(d);
+      const x = m.get(k) ?? { owned: 0, total: 0 };
       x.total++;
       if (byDesign.has(d.designId)) x.owned++;
-      m.set(d.team, x);
+      m.set(k, x);
     }
-    return [...m.entries()].map(([key, x]) => ({ key, ...x })).sort((a, b) => a.key.localeCompare(b.key));
+    return [...m.entries()].map(([key, x]) => ({ key, ...teamOf(key), ...x })).sort((a, b) => a.team.localeCompare(b.team) || a.sport.localeCompare(b.sport));
   }, [inSport, byDesign]);
 
   // the completion strip: one cell per sport on "all", else each set of the sport, inserts together
   const strip = useMemo(() => {
     if (sport === "all") return SPORTS.map((s) => ({ key: s as string, label: SPORT_META[s].name, ...sportTotals[s] }));
     const per = (t: string) => {
-      const all = inSport.filter((d) => (t === "insert" ? isInsert(d.type) : d.type === t));
+      const all = inSport.filter((d) => !d.retired && (t === "insert" ? isInsert(d.type) : d.type === t));
       return { owned: all.filter((d) => byDesign.has(d.designId)).length, total: all.length };
     };
     return [...BASE_SETS.map((b) => [b.key as string, b.name] as const), ["insert", "Inserts"] as const]
@@ -474,7 +493,11 @@ export function CollectionView({
   }, [sport, inSport, byDesign, sportTotals]);
   const hasInserts = inSport.some((d) => isInsert(d.type));
   const showStrip = sport !== "all" && strip.length > 1;
-  const teams = useMemo(() => [...new Set(inSport.map((d) => d.team).filter(Boolean))].sort(), [inSport]);
+  // the team filter: "sport|name" keys, sorted by name; on "all", each name says its league
+  const teams = useMemo(
+    () => [...new Set(inSport.filter((d) => d.team).map(teamKey))].map(teamOf).sort((a, b) => a.team.localeCompare(b.team) || a.sport.localeCompare(b.sport)),
+    [inSport],
+  );
   const setKeys = useMemo(() => new Set(inSport.map((d) => d.type)), [inSport]);
 
   // a search that finds nothing here but something in another sport says where
@@ -493,7 +516,7 @@ export function CollectionView({
     return inSport.filter((d) => {
       if (wishOnly && !wishSet.has(d.designId)) return false;
       if (setFilter === "insert" ? !isInsert(d.type) : setFilter !== "all" && d.type !== setFilter) return false;
-      if (team !== "all" && d.team !== team) return false;
+      if (team !== "all" && teamKey(d) !== team) return false;
       if (rarity !== "all" && d.rarity !== rarity) return false;
       if (q && !d.players.some((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))) return false;
       return true;
@@ -522,7 +545,7 @@ export function CollectionView({
           return a.players[0].name.localeCompare(b.players[0].name);
       }
     };
-    const keyOf = (d: CardView) => (group === "team" ? d.team || "Legends" : group === "rarity" ? d.rarity : group === "set" ? d.type : "all");
+    const keyOf = (d: CardView) => (group === "team" ? (d.team ? teamKey(d) : "Legends") : group === "rarity" ? d.rarity : group === "set" ? d.type : "all");
     const baseIdx = (k: string) => BASE_SETS.findIndex((b) => b.key === k);
     const order = (k: string) =>
       group === "rarity"
@@ -536,9 +559,11 @@ export function CollectionView({
     for (const d of scope) {
       const k = keyOf(d);
       const g = map.get(k) ?? { cards: [], owned: 0, total: 0, needs: [] };
-      g.total++;
-      if (byDesign.has(d.designId)) g.owned++;
-      else g.needs.push(d);
+      if (!d.retired) {
+        g.total++;
+        if (byDesign.has(d.designId)) g.owned++;
+        else g.needs.push(d);
+      }
       map.set(k, g);
     }
     for (const d of shown) map.get(keyOf(d))!.cards.push(d);
@@ -599,6 +624,11 @@ export function CollectionView({
                       {!owned && (
                         <span className="tb-binder__tag" aria-hidden>
                           Not pulled
+                        </span>
+                      )}
+                      {owned && d.retired && (
+                        <span className="tb-binder__retired" title="Retired from the set: packs no longer drop it">
+                          Retired
                         </span>
                       )}
                       {owned && owned.length > 1 && (
@@ -745,7 +775,7 @@ export function CollectionView({
             {teamShelf.map((x) => {
               const done = x.owned === x.total;
               const active = team === x.key;
-              const [t1, t2] = teamColors(x.key);
+              const [t1, t2] = teamColors(x.team, x.sport);
               return (
                 <li key={x.key} className="snap-start">
                   <button
@@ -763,9 +793,9 @@ export function CollectionView({
                   >
                     <span className="flex items-center gap-2">
                       <span className="grid h-7 min-w-7 shrink-0 place-items-center rounded bg-panel-2 px-1 font-display text-xs" aria-hidden>
-                        {teamCode(x.key) || x.key.slice(0, 3).toUpperCase()}
+                        {teamCode(x.team, x.sport) || x.team.slice(0, 3).toUpperCase()}
                       </span>
-                      <span className="min-w-0 truncate font-cond text-sm font-bold uppercase tracking-wide">{x.key}</span>
+                      <span className="min-w-0 truncate font-cond text-sm font-bold uppercase tracking-wide">{x.team}</span>
                     </span>
                     <span className="mt-auto flex items-baseline gap-1">
                       <span className="font-display text-xl leading-none">{x.owned}</span>
@@ -856,8 +886,9 @@ export function CollectionView({
           <Select label="Team" value={team} onChange={setTeam}>
             <option value="all">All teams</option>
             {teams.map((t) => (
-              <option key={t} value={t}>
-                {t}
+              <option key={teamKey(t)} value={teamKey(t)}>
+                {t.team}
+                {sport === "all" ? ` · ${SPORT_META[t.sport].short}` : ""}
               </option>
             ))}
           </Select>

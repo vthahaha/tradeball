@@ -1,7 +1,7 @@
 import { INSERT_CLASSES } from "./inserts";
 
-export type Sport = "basketball" | "soccer" | "football";
-export const SPORTS: readonly Sport[] = ["basketball", "soccer", "football"];
+export type Sport = "basketball" | "soccer" | "football" | "baseball" | "hockey";
+export const SPORTS: readonly Sport[] = ["basketball", "soccer", "football", "baseball", "hockey"];
 
 /** Grail sits above Mythic. No class uses it yet; its drop weight is 0 until one does. */
 export const RARITIES = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "grail"] as const;
@@ -17,10 +17,10 @@ export type InsertType = string;
 
 /**
  * NBA base set + rookies, "ucl" for the soccer base set (Champions League squads), "nfl" for the
- * football base set (NFL depth charts), "duo" for
+ * football base set (NFL depth charts), "mlb" and "nhl" for baseball and hockey, "duo" for
  * future multi-player cards, or an insert class id. Every non-insert type renders the base layout.
  */
-export type CardType = "base" | "rookie" | "ucl" | "nfl" | "duo" | (string & {});
+export type CardType = "base" | "rookie" | "ucl" | "nfl" | "mlb" | "nhl" | "duo" | (string & {});
 
 /** The non-insert sets, in binder order: key (= card type), name, short mark, sport. */
 export const BASE_SETS = [
@@ -28,6 +28,8 @@ export const BASE_SETS = [
   { key: "rookie", name: "Rookies", short: "RC", sport: "basketball" },
   { key: "ucl", name: "Champions League", short: "UCL", sport: "soccer" },
   { key: "nfl", name: "NFL", short: "NFL", sport: "football" },
+  { key: "mlb", name: "MLB", short: "MLB", sport: "baseball" },
+  { key: "nhl", name: "NHL", short: "NHL", sport: "hockey" },
 ] as const satisfies readonly { key: CardType; name: string; short: string; sport: Sport }[];
 export type BaseSetKey = (typeof BASE_SETS)[number]["key"];
 export const isInsert = (t: CardType): t is InsertType => (INSERT_TYPES as readonly string[]).includes(t);
@@ -103,6 +105,32 @@ export interface NflTeam {
   alt: string;
 }
 
+/** An MLB or NHL team, from scripts/mlb and scripts/nhl (the same shape as NflTeam). */
+export type MlbTeam = NflTeam;
+export type NhlTeam = NflTeam;
+
+/** One generated row per baseball or hockey card in mlb.ts / nhl.ts. */
+export interface ProPlayerRow {
+  id: string; // ESPN athlete id (also names the headshot)
+  name: string;
+  team: string; // team abbreviation
+  pos: string; // MLB: C, 1B ... DH, SP, CL, RP; NHL: C, LW, RW, D, G
+  jersey: string;
+  nation: string;
+  rookie: boolean;
+  rarity: Rarity;
+  ovr: number;
+  /** MLB: last season (AVG HR RBI; pitchers ERA W SO or ERA SV SO). NHL: this season (G A PTS; W GAA SV%). */
+  stats: StatLine | null;
+  no: number;
+  /** null when ESPN has no headshot (the card prints initials). */
+  photo?: null;
+  /** Cut from the set: still shown to anyone who owns it, never pulled. */
+  retired?: boolean;
+}
+export type MlbPlayerRow = ProPlayerRow;
+export type NhlPlayerRow = ProPlayerRow;
+
 /** One generated row per football card in nfl.ts. */
 export interface NflPlayerRow {
   id: string; // ESPN athlete id (also names the headshot)
@@ -120,6 +148,8 @@ export interface NflPlayerRow {
   no: number;
   /** null when ESPN has no headshot (the card prints initials). */
   photo?: null;
+  /** Cut from the set: still shown to anyone who owns it, never pulled, not counted toward the set. */
+  retired?: boolean;
 }
 
 export interface Player {
@@ -172,4 +202,7 @@ export interface CardDesign {
   no?: number;
   /** A first-year player in a set without a separate rookie list (NFL): the card gets the RC mark. */
   rookie?: boolean;
+  /** Cut from its set (e.g. NFL backups when the set shrank to the starting 22): owned copies still
+   *  show, packs never drop it, and it does not count toward completion. */
+  retired?: boolean;
 }

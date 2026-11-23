@@ -23,6 +23,8 @@
   --stock-soccer: #ff7a45;
   --stock-hoops: #f2b33d;
   --stock-mixed: #2e7d5b;
+  --stock-diamond: #3f78d1; /* MLB: the Diamond pack */
+  --stock-ice: #9ccbe6; /* NHL: the Faceoff pack */
   --paper: #f7f7f2;
   --paper-2: #e8e6dc;
   --ink: #14213d;
@@ -4084,6 +4086,26 @@ select {
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
+/* an owned card that has been cut from its set: a small stamp, the card itself untouched */
+.tb-binder__retired {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.35rem;
+  z-index: 10;
+  padding: 0.1rem 0.45rem;
+  border: 1.5px solid var(--stamp);
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--bg-2) 85%, transparent);
+  color: var(--stamp);
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+  pointer-events: none;
+}
 .tb-binder__seticon svg {
   width: 1.3rem;
   height: 1.3rem;
@@ -4278,6 +4300,33 @@ select {
   background:
     repeating-linear-gradient(180deg, #00000033 0 0.6cqw, #ffffff38 0.6cqw 1.2cqw),
     linear-gradient(100deg, #1f5e43, #6cbf93 50%, #174a34);
+}
+
+/* the Diamond pack (MLB): the wrapper in infield-blue stock */
+.tb-pack[data-pack="baseball"] .tb-pack__body {
+  background:
+    linear-gradient(100deg, transparent 18%, #ffffff59 26%, transparent 34% 60%, #ffffff33 66%, transparent 72%),
+    linear-gradient(180deg, #ffffff26, transparent 40%, #00000033),
+    linear-gradient(100deg, #3f78d1, #a9c6f2 24%, #2a5aa8 44%, #7fa7e6 62%, #1f4689 84%, #3f78d1);
+}
+.tb-pack[data-pack="baseball"] .tb-pack__body::before {
+  background: repeating-linear-gradient(180deg, #00000040 0 0.6cqw, #ffffff40 0.6cqw 1.2cqw), #2a5aa8;
+}
+.tb-pack[data-pack="baseball"] .tb-pack__stub {
+  background: repeating-linear-gradient(180deg, #00000033 0 0.6cqw, #ffffff38 0.6cqw 1.2cqw), linear-gradient(100deg, #2a5aa8, #7fa7e6 50%, #1f4689);
+}
+/* the Faceoff pack (NHL): the wrapper in ice stock */
+.tb-pack[data-pack="hockey"] .tb-pack__body {
+  background:
+    linear-gradient(100deg, transparent 18%, #ffffff80 26%, transparent 34% 60%, #ffffff4d 66%, transparent 72%),
+    linear-gradient(180deg, #ffffff33, transparent 40%, #00000026),
+    linear-gradient(100deg, #9ccbe6, #e8f5fc 24%, #7fb6d6 44%, #d2ecf8 62%, #6aa3c6 84%, #9ccbe6);
+}
+.tb-pack[data-pack="hockey"] .tb-pack__body::before {
+  background: repeating-linear-gradient(180deg, #00000030 0 0.6cqw, #ffffff60 0.6cqw 1.2cqw), #7fb6d6;
+}
+.tb-pack[data-pack="hockey"] .tb-pack__stub {
+  background: repeating-linear-gradient(180deg, #00000026 0 0.6cqw, #ffffff4d 0.6cqw 1.2cqw), linear-gradient(100deg, #7fb6d6, #d2ecf8 50%, #6aa3c6);
 }
 
 /* NEW stamp: lands on a card the first time it enters your binder */

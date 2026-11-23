@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import {
+  BASE_SETS,
   headshotUrl,
   INSERT_NAMES,
   isInsert,
@@ -64,17 +65,18 @@ function baseMeta(card: CardView) {
 
 export function cardNo(card: CardView) {
   if (isInsert(card.type)) return card.designId;
-  if (card.type === "ucl" && card.no) return `UCL-${card.no}`;
-  if (card.type === "nfl" && card.no) return `NFL-${card.no}`;
+  // numbered sets print their short mark: UCL-12, NFL-301, MLB-88, NHL-5
+  const set = BASE_SETS.find((b) => b.key === card.type);
+  if (set && card.no) return `${set.short}-${card.no}`;
   const m = card.designId.match(/^nba-(\d+)-(\w+)$/);
   return m ? `${m[2] === "rookie" ? "RC" : "B"}-${m[1]}` : card.designId;
 }
 
 function useLook(card: CardView) {
-  const [t1, t2] = teamColors(card.team);
-  const [f1] = card.fromTeam ? teamColors(card.fromTeam) : [t1];
+  const [t1, t2] = teamColors(card.team, card.sport);
+  const [f1] = card.fromTeam ? teamColors(card.fromTeam, card.sport) : [t1];
   // Rivalries: the second player's team, as --u1 / --u2
-  const [u1, u2] = card.team2 ? teamColors(card.team2) : [t1, t2];
+  const [u1, u2] = card.team2 ? teamColors(card.team2, card.sport) : [t1, t2];
   const insert = isInsert(card.type);
   const isDuo = !!card.players[1];
   return {
@@ -270,9 +272,9 @@ export function Card({
 
 // ── back: the Gate 7 mark and the team's logo; each insert set prints its own back ──
 
-function TeamMedal({ team }: { team: string }) {
+function TeamMedal({ team, sport }: { team: string; sport: CardView["sport"] }) {
   const [failed, setFailed] = useState(false);
-  const src = teamLogo(team);
+  const src = teamLogo(team, sport);
   return (
     <span className="tb-rev__medal">
       {src && !failed ? (
@@ -287,7 +289,7 @@ function TeamMedal({ team }: { team: string }) {
           onError={() => setFailed(true)}
         />
       ) : (
-        <b>{teamCode(team) || team.slice(0, 3).toUpperCase()}</b>
+        <b>{teamCode(team, sport) || team.slice(0, 3).toUpperCase()}</b>
       )}
     </span>
   );
@@ -330,7 +332,7 @@ export function CardReverse({
           <div className="tb-rev__deco" aria-hidden style={card.career?.length ? { background: careerStripes(card.career) } : undefined} />
           {card.type === "teamculture" && (
             <div className="tb-rev__zine" aria-hidden>
-              <b>{teamCode(card.team) || card.team.slice(0, 3).toUpperCase()}</b>
+              <b>{teamCode(card.team, card.sport) || card.team.slice(0, 3).toUpperCase()}</b>
               <i />
               <i />
               <i />
@@ -345,7 +347,7 @@ export function CardReverse({
               className={`tb-rev__logos ${teams.length > 1 ? "is-pair" : ""}`}
             >
               {teams.map((t) => (
-                <TeamMedal key={t} team={t} />
+                <TeamMedal key={t} team={t} sport={card.sport} />
               ))}
             </div>
           )}
@@ -410,7 +412,13 @@ export function TurnableCard(props: CardProps) {
 
 // ── face-down (pack reveal) ──
 
-const SPORT_NAME: Record<CardView["sport"], string> = { basketball: "Basketball", soccer: "Soccer", football: "Football" };
+const SPORT_NAME: Record<CardView["sport"], string> = {
+  basketball: "Basketball",
+  soccer: "Soccer",
+  football: "Football",
+  baseball: "Baseball",
+  hockey: "Hockey",
+};
 
 /** The Gate 7 card back. Its border is already the parallel, so the rarity shows before the flip. */
 export function CardBack({

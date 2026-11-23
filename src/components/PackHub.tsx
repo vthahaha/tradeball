@@ -18,11 +18,39 @@ const PACKS: { type: PackType; name: string; gate: string; seat: string; inserts
   { type: "basketball", name: "Hoops", gate: "BB", seat: "8", inserts: true },
   { type: "soccer", name: "Champions", gate: "FC", seat: "8", inserts: false },
   { type: "football", name: "Gridiron", gate: "FB", seat: "8", inserts: false },
+  { type: "baseball", name: "Diamond", gate: "BB", seat: "8", inserts: false },
+  { type: "hockey", name: "Faceoff", gate: "HK", seat: "8", inserts: false },
 ];
 const hasInserts = (p: (typeof PACKS)[number]) => p.inserts && INSERT_DESIGNS.length > 0;
 
 /** The ball printed on the wrapper. */
 function PackBall({ type }: { type: PackType }) {
+  if (type === "baseball")
+    return (
+      <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
+        {/* a baseball: white hide, two curved seams with their red stitches */}
+        <circle cx="50" cy="50" r="46" fill="#f7f7f2" stroke="#14213d" strokeWidth="2.4" />
+        <path d="M24 12 C40 32 40 68 24 88 M76 12 C60 32 60 68 76 88" fill="none" stroke="#c62828" strokeWidth="2.6" />
+        <path
+          d="M30 22 l6 -3 M33 30 l7 -2 M35 38 l7 -1 M36 46 l7 0 M36 54 l7 0 M35 62 l7 1 M33 70 l7 2 M30 78 l6 3 M70 22 l-6 -3 M67 30 l-7 -2 M65 38 l-7 -1 M64 46 l-7 0 M64 54 l-7 0 M65 62 l-7 1 M67 70 l-7 2 M70 78 l-6 3"
+          fill="none"
+          stroke="#c62828"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  if (type === "hockey")
+    return (
+      <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
+        {/* a puck, tipped toward us: black rubber, a knurled rim, a sheen on the face */}
+        <ellipse cx="50" cy="62" rx="44" ry="20" fill="#0b0f17" stroke="#14213d" strokeWidth="2.4" />
+        <rect x="6" y="40" width="88" height="22" fill="#0b0f17" />
+        <ellipse cx="50" cy="40" rx="44" ry="20" fill="#1d2433" stroke="#14213d" strokeWidth="2.4" />
+        <path d="M10 46 V58 M18 49 V61 M26 51 V63 M34 52 V64 M42 53 V65 M50 53 V66 M58 53 V65 M66 52 V64 M74 51 V63 M82 49 V61 M90 46 V58" stroke="#2b3446" strokeWidth="2" />
+        <ellipse cx="40" cy="35" rx="18" ry="5" fill="#ffffff1f" />
+      </svg>
+    );
   if (type === "football")
     return (
       <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
