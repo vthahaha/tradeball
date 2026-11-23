@@ -463,4 +463,118 @@ export const INSERT_ART: Record<string, string> = {
   IM3: "/inserts/IM3.jpg", // The 38 Feet, Stephen Curry
   IM4: "/inserts/IM4.jpg", // The Stepover, Allen Iverson
   IM5: "/inserts/IM5.jpg", // The 100th Point, Wilt Chamberlain
+
+  // Legendary: The Champions (every sport). Leave "" for the initials on the set's background.
+  // NBA: Knicks
+  CH1: "", // Jalen Brunson
+  CH2: "", // Josh Hart
+  CH3: "", // Mikal Bridges
+  CH4: "", // OG Anunoby
+  CH5: "", // Karl-Anthony Towns
+  CH6: "", // Miles McBride
+  CH7: "", // Landry Shamet
+  CH8: "", // Mitchell Robinson
+  CH9: "", // Jordan Clarkson
+  CH10: "", // Jose Alvarado
+  CH11: "", // Ariel Hukporti
+  // NFL: Seahawks
+  CH12: "", // Sam Darnold
+  CH13: "", // Kenneth Walker III
+  CH14: "", // Ernest Jones IV
+  CH15: "", // Devon Witherspoon
+  CH16: "", // Drake Thomas
+  CH17: "", // Nick Emmanwori
+  CH18: "", // DeMarcus Lawrence
+  CH19: "", // Byron Murphy II
+  CH20: "", // Julian Love
+  CH21: "", // Coby Bryant
+  CH22: "", // Riq Woolen
+  CH23: "", // Josh Jobe
+  CH24: "", // Jaxon Smith-Njigba
+  CH25: "", // Cooper Kupp
+  CH26: "", // Tyrice Knight
+  CH27: "", // Abraham Lucas
+  CH28: "", // Jalen Sundell
+  CH29: "", // Charles Cross
+  CH30: "", // Anthony Bradford
+  CH31: "", // Grey Zabel
+  CH32: "", // Derick Hall
+  CH33: "", // Jason Myers
+  CH34: "", // Michael Dickson
+  CH35: "", // George Holani
+  CH36: "", // Leonard Williams
+  CH37: "", // Jarran Reed
+  CH38: "", // Velus Jones Jr.
+  CH39: "", // Uchenna Nwosu
+  CH40: "", // Boye Mafe
+  CH41: "", // Rashid Shaheed
+  CH42: "", // AJ Barner
+  // MLB: Brewers
+  CH43: "", // Jackson Chourio
+  CH44: "", // Jacob Misiorowski
+  CH45: "", // Aaron Ashby
+  CH46: "", // William Contreras
+  CH47: "", // Cooper Pratt
+  CH48: "", // Garrett Mitchell
+  CH49: "", // Jake Bauers
+  CH50: "", // Brice Turang
+  CH51: "", // Robert Gasser
+  CH52: "", // Christian Yelich
+  CH53: "", // Logan Henderson
+  CH54: "", // Sal Frelick
+  CH55: "", // Abner Uribe
+  CH56: "", // Dustin May
+  CH57: "", // David Hamilton
+  CH58: "", // Trevor Megill
+  CH59: "", // JoJo Romero
+  CH60: "", // DL Hall
+  CH61: "", // Joey Ortiz
+  CH62: "", // Antonio Senzatela
+  // NHL: Hurricanes
+  CH63: "", // Frederik Andersen
+  CH64: "", // K'Andre Miller
+  CH65: "", // Jaccob Slavin
+  CH66: "", // Sean Walker
+  CH67: "", // Jalen Chatfield
+  CH68: "", // Sebastian Aho
+  CH69: "", // Seth Jarvis
+  CH70: "", // Jordan Staal
+  CH71: "", // Jackson Blake
+  CH72: "", // Shayne Gostisbehere
+  CH73: "", // Nikolaj Ehlers
+  CH74: "", // Andrei Svechnikov
+  CH75: "", // Logan Stankoven
+  CH76: "", // Taylor Hall
+  CH77: "", // Jordan Martinook
+  CH78: "", // Alexander Nikishin
+  CH79: "", // Brandon Bussi
+  CH80: "", // Mark Jankowski
+  CH81: "", // Eric Robinson
+  CH82: "", // William Carrier
+  // UCL: Paris SG
+  CH83: "", // Willian Pacho
+  CH84: "", // Nuno Mendes
+  CH85: "", // Vitinha
+  CH86: "", // Warren Zaïre-Emery
+  CH87: "", // Khvicha Kvaratskhelia
+  CH88: "", // Bradley Barcola
+  CH89: "", // Marquinhos
+  CH90: "", // João Neves
+  CH91: "", // Achraf Hakimi
+  CH92: "", // Ousmane Dembélé
+  CH93: "", // Désiré Doué
+  CH94: "", // Matvei Safonov
+  CH95: "", // Senny Mayulu
+  CH96: "", // Gonçalo Ramos
+  CH97: "", // Lucas Hernández
+  CH98: "", // Kang-in Lee
+  CH99: "", // Fabián Ruiz
+  CH100: "", // Illia Zabarnyi
+  CH101: "", // Lucas Chevalier
+  // LoL: Bilibili Gaming
+  CH102: "", // Bin
+  CH103: "", // Xun
+  CH104: "", // Knight
+  CH105: "", // Viper
+  CH106: "", // ON
 };

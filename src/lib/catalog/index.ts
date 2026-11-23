@@ -1,5 +1,6 @@
 import { INSERT_ART } from "./insert-art";
 import { INSERT_THUMBS, LOCAL_LOGOS, LOCAL_PLAYERS } from "./local-art";
+import { CHAMPIONS } from "./champions";
 import { INSERT_CARDS, INSERT_CLASSES } from "./inserts";
 import { NBA_PLAYERS, NBA_TEAMS } from "./nba";
 import { LOL_EVENT, LOL_PLAYERS, LOL_TEAMS } from "./lol";
@@ -7,7 +8,7 @@ import { MLB_PLAYERS, MLB_SEASON, MLB_TEAMS } from "./mlb";
 import { NFL_PLAYERS, NFL_SEASON, NFL_TEAMS } from "./nfl";
 import { NHL_PLAYERS, NHL_SEASON, NHL_TEAMS } from "./nhl";
 import { UCL_PLAYERS, UCL_SEASON, UCL_TEAMS } from "./ucl";
-import type { CardDesign, CardType, InsertType, Player, Rarity, Sport, StatLine } from "./types";
+import type { CardDesign, CardType, ChampionRow, InsertType, Player, Rarity, Sport, StatLine } from "./types";
 import { BASE_SETS, INSERT_TYPES, RARITIES, SPORTS } from "./types";
 
 export * from "./types";
@@ -386,9 +387,69 @@ export const INSERT_DESIGNS: CardDesign[] = INSERT_CARDS.map((c) => {
     note: c.note,
   };
 });
+// ── The Champions (every sport): the players from each league's last title run (champions.ts) ──
+// The card wears the title team's colours even when the player has moved on since; its picture is
+// splash art chosen in insert-art.ts (until then, the player's initials). A player
+// with a base card in his sport rates from it (+2, the class boost), or from how big a part he
+// played (`share`) when that is higher.
+
+/** What each league's title was, and what the stat line covers. */
+const TITLES: Record<ChampionRow["league"], { team: string; title: string; kicker: string; statLine: string }> = {
+  NBA: { team: "Knicks", title: "2026 NBA Champions", kicker: "NBA Finals", statLine: "2026 Playoffs" },
+  NFL: { team: "Seahawks", title: "Super Bowl LX Champions", kicker: "Super Bowl LX", statLine: "2025 Playoffs" },
+  MLB: { team: "Brewers", title: "2026 World Series Champions", kicker: "World Series", statLine: "2026 Postseason" },
+  NHL: { team: "Hurricanes", title: "2026 Stanley Cup Champions", kicker: "Stanley Cup", statLine: "2026 Playoffs" },
+  UCL: { team: "Paris SG", title: "2025-26 Champions League Winners", kicker: "Champions League", statLine: "2025-26 Champions League" },
+  LoL: { team: "Bilibili Gaming", title: "2026 World Champions", kicker: "Worlds 2026", statLine: "Worlds 2026" },
+};
+const baseIdOf = (r: ChampionRow) =>
+  ({
+    basketball: `nba-${r.espn}`,
+    football: `nfl-${r.espn}`,
+    baseball: `mlb-${r.espn}`,
+    hockey: `nhl-${r.espn}`,
+    soccer: `ucl-${r.uefa}`,
+    esports: `lol-${r.lol}`,
+  })[r.sport];
+const basePlayers = new Map(PLAYERS.map((p) => [p.id, p]));
+const champClass = classById.get("champions")!;
+const CHAMPION_PLAYERS: Player[] = CHAMPIONS.map((r) => {
+  const base = basePlayers.get(baseIdOf(r));
+  return {
+    id: `champ-${r.id}`,
+    espnId: "",
+    sport: r.sport,
+    name: r.name,
+    team: TITLES[r.league].team,
+    teamAbbr: "",
+    pos: base?.pos ?? r.pos,
+    nation: base?.nation || r.nation,
+    jersey: base?.jersey ?? "",
+    // a title hero never rates below his part in the run (a 72 quarterback who won the Super Bowl)
+    ovr: Math.min(99, Math.max(base ? base.ovr + champClass.boost : 0, Math.round(74 + 10 * r.share))),
+    stats: r.stats,
+    statLine: TITLES[r.league].statLine,
+  };
+});
+const CHAMPION_DESIGNS: CardDesign[] = CHAMPIONS.map((r, i) => ({
+  id: r.id,
+  sport: r.sport,
+  set: SET_ID,
+  type: "champions",
+  rarity: champClass.rarity,
+  playerIds: [CHAMPION_PLAYERS[i].id],
+  ovr: CHAMPION_PLAYERS[i].ovr,
+  title: TITLES[r.league].title,
+  kicker: TITLES[r.league].kicker,
+  team: TITLES[r.league].team,
+  stats: r.stats ?? undefined,
+  statLine: TITLES[r.league].statLine,
+}));
+INSERT_DESIGNS.push(...CHAMPION_DESIGNS);
+
 export const DESIGNS: CardDesign[] = [...BASE_DESIGNS, ...INSERT_DESIGNS];
 
-const playerById = new Map([...PLAYERS, ...LEGEND_PLAYERS].map((p) => [p.id, p]));
+const playerById = new Map([...PLAYERS, ...LEGEND_PLAYERS, ...CHAMPION_PLAYERS].map((p) => [p.id, p]));
 const designById = new Map(DESIGNS.map((d) => [d.id, d]));
 
 if (designById.size !== DESIGNS.length) throw new Error("Duplicate card design ids in catalog");
@@ -406,6 +467,11 @@ for (const d of BASE_DESIGNS) POOLS[d.sport][d.rarity].push(d);
 export const INSERT_POOLS = Object.fromEntries(
   INSERT_TYPES.map((t) => [t, INSERT_DESIGNS.filter((d) => d.type === t)]),
 ) as Record<InsertType, CardDesign[]>;
+
+/** Insert designs by sport, then class: a pack only pulls inserts of its own sport. */
+export const INSERT_POOLS_BY_SPORT = Object.fromEntries(
+  SPORTS.map((s) => [s, Object.fromEntries(INSERT_TYPES.map((t) => [t, INSERT_POOLS[t].filter((d) => d.sport === s)]))]),
+) as Record<Sport, Record<InsertType, CardDesign[]>>;
 
 /** Everything the client needs to render a card, flattened. */
 export interface CardView {

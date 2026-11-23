@@ -3,7 +3,7 @@ import type { User } from "@prisma/client";
 import {
   cardView,
   getDesign,
-  INSERT_POOLS,
+  INSERT_POOLS_BY_SPORT,
   POOLS,
   RARITIES,
   type CardView,
@@ -89,12 +89,19 @@ function rollDesign(sport: Sport, weights: Partial<Record<Rarity, number>>) {
   return pick(POOLS[sport][rarity]);
 }
 
-/** The insert slot. A sport with no insert classes yet (soccer) rolls a normal card instead. */
+/**
+ * The insert slot. Each class's weight is its % chance per slot (odds.ts). Only classes with cards
+ * in the pack's sport count: the NBA's add up to 100 or more, so a Hoops insert slot always pulls an
+ * insert; another sport's insert slot pulls one with the odds of its classes (The Champions: 2.5%)
+ * and a normal card the rest of the time.
+ */
 function rollInsert(sport: Sport) {
-  const classes = (Object.keys(INSERT_CLASS_WEIGHTS) as InsertType[]).filter((c) => INSERT_POOLS[c]?.[0]?.sport === sport);
-  if (classes.length === 0) return rollDesign(sport, RARITY_WEIGHTS);
+  const pools = INSERT_POOLS_BY_SPORT[sport];
+  const classes = (Object.keys(INSERT_CLASS_WEIGHTS) as InsertType[]).filter((c) => pools[c]?.length);
+  const total = classes.reduce((t, c) => t + (INSERT_CLASS_WEIGHTS[c] ?? 0), 0);
+  if (classes.length === 0 || Math.random() * 100 >= total) return rollDesign(sport, RARITY_WEIGHTS);
   const cls = weightedPick(classes.map((c) => [c, INSERT_CLASS_WEIGHTS[c] ?? 0] as [InsertType, number])) as InsertType;
-  return pick(INSERT_POOLS[cls]);
+  return pick(pools[cls]);
 }
 
 const isLegendaryPlus = (r: Rarity) => RARITIES.indexOf(r) >= RARITIES.indexOf("legendary");

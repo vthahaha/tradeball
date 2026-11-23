@@ -159,6 +159,26 @@ export interface LolPlayerRow {
 }
 export type NhlPlayerRow = ProPlayerRow;
 
+/** One generated row per "The Champions" card in champions.ts: a player from a league's last title run. */
+export interface ChampionRow {
+  id: string; // card id, "CH1"
+  league: "NBA" | "NFL" | "MLB" | "NHL" | "UCL" | "LoL";
+  sport: Sport;
+  /** Where the player's photo and base card come from: ESPN id, UEFA id or League slug. */
+  espn?: string;
+  uefa?: string | null;
+  lol?: string;
+  name: string;
+  pos: string;
+  nation: string;
+  /** UEFA's squad photo for the title season (PSG). */
+  photo?: string | null;
+  /** The title run: per game (NBA) or totals. */
+  stats: StatLine | null;
+  /** 1 = led the team's run, 0 = the last one in; rates players with no base card. */
+  share: number;
+}
+
 /** One generated row per football card in nfl.ts. */
 export interface NflPlayerRow {
   id: string; // ESPN athlete id (also names the headshot)

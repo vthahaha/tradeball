@@ -59,4 +59,5 @@ next-env.d.ts
 /scripts/mlb/data/
 /scripts/nhl/data/
 /scripts/lol/data/
+/scripts/champions/data/
 /scripts/nba/selection.json
