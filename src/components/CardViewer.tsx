@@ -6,7 +6,7 @@
 // The binder adds its own actions below the facts through `children`.
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { INSERT_NAMES, SET_NAME, type CardView, type Finish } from "@/lib/catalog";
+import { setLabel, type CardView, type Finish } from "@/lib/catalog";
 import { Card, CardReverse, PARALLEL, cardNo, type CardProps } from "./Card";
 
 const FINISH_NAME: Record<Finish, string> = {
@@ -19,10 +19,10 @@ const FINISH_NAME: Record<Finish, string> = {
 };
 const STAT_KEYS = ["PTS", "REB", "AST", "STL", "BLK", "3P%"] as const;
 
-function setLabel(card: CardView) {
-  if (card.type === "base") return `${SET_NAME} · Base`;
-  if (card.type === "rookie") return `${SET_NAME} · Rookie`;
-  return INSERT_NAMES[card.type] ?? card.type;
+/** Basketball lines are per game; soccer lines are season totals (APP, G, A / APP, SV, GA). */
+function statHeading(card: CardView) {
+  if (card.sport === "soccer") return card.statLine ?? "This season";
+  return card.statLine ? `${card.statLine} per game` : "Per game";
 }
 
 export interface CardViewerProps extends CardProps {
@@ -144,7 +144,7 @@ export function CardViewer({ onClose, onPrev, onNext, children, ...card }: CardV
               className="font-cond text-sm font-bold uppercase tracking-[0.2em]"
               style={{ color: `var(--r-${c.rarity})` }}
             >
-              {setLabel(c)}
+              {setLabel(c.type)}
             </div>
             {c.title && <p className="mt-1 font-cond text-lg font-bold uppercase tracking-[0.12em] text-muted">{c.title}</p>}
             <h2 className="mt-1 font-display text-4xl leading-none sm:text-5xl">{names}</h2>
@@ -164,9 +164,9 @@ export function CardViewer({ onClose, onPrev, onNext, children, ...card }: CardV
 
             {c.stats && (
               <div className="mt-5">
-                <h3 className="field-label">{c.statLine ? `${c.statLine} per game` : "Per game"}</h3>
+                <h3 className="field-label">{statHeading(c)}</h3>
                 <dl className="mt-2 grid grid-cols-6 gap-2">
-                  {STAT_KEYS.filter((k) => c.stats![k] != null).map((k) => (
+                  {(c.sport === "soccer" ? Object.keys(c.stats) : STAT_KEYS.filter((k) => c.stats![k] != null)).map((k) => (
                     <div key={k} className="rounded-md bg-panel-2 px-1 py-2 text-center">
                       <dd className="font-display text-xl leading-none">
                         {k === "3P%" ? c.stats![k].toFixed(1) : c.stats![k]}

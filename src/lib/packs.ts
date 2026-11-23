@@ -32,6 +32,7 @@ import {
 
 export const PACK_TYPES = {
   basketball: { name: "Hoops Pack", sports: ["basketball"] as Sport[] },
+  soccer: { name: "Champions Pack", sports: ["soccer"] as Sport[] },
 };
 export type PackType = keyof typeof PACK_TYPES;
 
@@ -84,9 +85,9 @@ function rollDesign(sport: Sport, weights: Partial<Record<Rarity, number>>) {
   return pick(POOLS[sport][rarity]);
 }
 
-/** The insert slot. With no insert classes defined yet, it rolls a normal card instead. */
+/** The insert slot. A sport with no insert classes yet (soccer) rolls a normal card instead. */
 function rollInsert(sport: Sport) {
-  const classes = (Object.keys(INSERT_CLASS_WEIGHTS) as InsertType[]).filter((c) => INSERT_POOLS[c]?.length);
+  const classes = (Object.keys(INSERT_CLASS_WEIGHTS) as InsertType[]).filter((c) => INSERT_POOLS[c]?.[0]?.sport === sport);
   if (classes.length === 0) return rollDesign(sport, RARITY_WEIGHTS);
   const cls = weightedPick(classes.map((c) => [c, INSERT_CLASS_WEIGHTS[c] ?? 0] as [InsertType, number])) as InsertType;
   return pick(INSERT_POOLS[cls]);

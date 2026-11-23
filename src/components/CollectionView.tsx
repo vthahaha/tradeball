@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { NUMBERED_FINISHES, SHARDS_PER_PACK, shardValueFor } from "@/lib/odds";
 import { useEffect, useMemo, useState } from "react";
-import { INSERT_NAMES, INSERT_TYPES, teamColors, type CardView } from "@/lib/catalog";
+import { BASE_SETS, INSERT_NAMES, INSERT_TYPES, setTitle, teamColors, type CardView } from "@/lib/catalog";
 import { isInsert, RARITIES, type Finish, type Rarity } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
 import { Card, cardNo } from "./Card";
@@ -37,8 +37,11 @@ const RARITY_COLOR: Record<Rarity, string> = {
 type SortKey = "set" | "rarity" | "ovr" | "newest" | "name";
 type GroupKey = "set" | "team" | "rarity" | "none";
 
+/** Completion strip columns by how many sets it shows (static class names, for Tailwind). */
+const STRIP_COLS: Record<number, string> = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3", 4: "grid-cols-2 sm:grid-cols-4" };
+
 function groupTitle(group: GroupKey, k: string) {
-  if (group === "set") return k === "base" ? "Base set" : k === "rookie" ? "Rookies" : (INSERT_NAMES[k] ?? k);
+  if (group === "set") return setTitle(k);
   if (group === "rarity") return k[0].toUpperCase() + k.slice(1);
   return k;
 }
@@ -300,7 +303,7 @@ export function CollectionView({
   // the shelf: every set with what you hold of it
   const shelf = useMemo(() => {
     const held = new Set(copies.map((c) => c.designId));
-    return ["base", "rookie", ...INSERT_TYPES]
+    return [...BASE_SETS.map((b) => b.key), ...INSERT_TYPES]
       .map((k) => {
         const all = designs.filter((d) => d.type === k);
         return { key: k, rarity: all[0]?.rarity ?? "common", total: all.length, owned: all.filter((d) => held.has(d.designId)).length };
@@ -314,14 +317,17 @@ export function CollectionView({
     return m;
   }, [copies]);
 
-  const stats = useMemo(() => {
-    const per = (t: "base" | "rookie" | "insert") => {
+  // the completion strip: each base set, then all inserts together (sets with no cards are left out)
+  const strip = useMemo(() => {
+    const per = (t: string) => {
       const all = designs.filter((d) => (t === "insert" ? isInsert(d.type) : d.type === t));
       return { owned: all.filter((d) => byDesign.has(d.designId)).length, total: all.length };
     };
-    return { base: per("base"), rookie: per("rookie"), insert: per("insert") };
+    return [...BASE_SETS.map((b) => [b.key, b.name] as const), ["insert", "Inserts"] as const]
+      .map(([key, label]) => ({ key, label, ...per(key) }))
+      .filter((x) => x.total > 0);
   }, [designs, byDesign]);
-  const hasInserts = stats.insert.total > 0;
+  const hasInserts = strip.some((x) => x.key === "insert");
   const teams = useMemo(() => [...new Set(designs.map((d) => d.team).filter(Boolean))].sort(), [designs]);
 
   // Everything the filters allow, owned or not: group headers count against this.
@@ -360,8 +366,15 @@ export function CollectionView({
       }
     };
     const keyOf = (d: CardView) => (group === "team" ? d.team || "Legends" : group === "rarity" ? d.rarity : group === "set" ? d.type : "all");
+    const baseIdx = (k: string) => BASE_SETS.findIndex((b) => b.key === k);
     const order = (k: string) =>
-      group === "rarity" ? -RARITIES.indexOf(k as Rarity) : group === "set" ? (k === "base" ? -2 : k === "rookie" ? -1 : INSERT_TYPES.indexOf(k)) : 0;
+      group === "rarity"
+        ? -RARITIES.indexOf(k as Rarity)
+        : group === "set"
+          ? baseIdx(k) >= 0
+            ? baseIdx(k) - BASE_SETS.length
+            : INSERT_TYPES.indexOf(k)
+          : 0;
     const map = new Map<string, { cards: CardView[]; owned: number; total: number; needs: CardView[] }>();
     for (const d of scope) {
       const k = keyOf(d);
@@ -437,17 +450,8 @@ export function CollectionView({
     <>
       {/* Completion, as one season-ticket strip */}
       <section aria-label="Set completion" className="ticket-panel mt-5">
-        <div className={`grid ${hasInserts ? "grid-cols-3" : "grid-cols-2"}`}>
-          {(
-            [
-              ["base", "Base set"],
-              ["rookie", "Rookies"],
-              ["insert", "Inserts"],
-            ] as const
-          )
-            .filter(([s]) => s !== "insert" || hasInserts)
-            .map(([s, label]) => {
-            const { owned, total } = stats[s];
+        <div className={`grid ${STRIP_COLS[strip.length] ?? "grid-cols-2 sm:grid-cols-4"}`}>
+          {strip.map(({ key: s, label, owned, total }) => {
             return (
               <div key={s} className="border-r-2 border-dashed border-line px-3 py-3 last:border-r-0 sm:px-5 sm:py-4">
                 <div className="field-label">{label}</div>
@@ -547,7 +551,7 @@ export function CollectionView({
                           <SetIcon type={x.key} />
                         </span>
                       ) : (
-                        <span className="font-display text-xs">{x.key === "base" ? "B" : "RC"}</span>
+                        <span className="font-display text-xs">{BASE_SETS.find((b) => b.key === x.key)?.short}</span>
                       )}
                     </span>
                     <span className="min-w-0 truncate font-cond text-sm font-bold uppercase tracking-wide">{groupTitle("set", x.key)}</span>
@@ -580,8 +584,11 @@ export function CollectionView({
           />
           <Select label="Set" value={setFilter} onChange={setSetFilter}>
             <option value="all">All sets</option>
-            <option value="base">Base set</option>
-            <option value="rookie">Rookies</option>
+            {BASE_SETS.map((b) => (
+              <option key={b.key} value={b.key}>
+                {b.name}
+              </option>
+            ))}
             {hasInserts && <option value="insert">All inserts</option>}
             {INSERT_TYPES.map((t) => (
               <option key={t} value={t}>

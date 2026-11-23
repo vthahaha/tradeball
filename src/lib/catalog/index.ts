@@ -1,16 +1,21 @@
 import { INSERT_ART } from "./insert-art";
 import { INSERT_CARDS, INSERT_CLASSES } from "./inserts";
 import { NBA_PLAYERS, NBA_TEAMS } from "./nba";
-import type { CardDesign, InsertType, Player, Rarity, Sport, StatLine } from "./types";
-import { INSERT_TYPES, RARITIES } from "./types";
+import { UCL_PLAYERS, UCL_SEASON, UCL_TEAMS } from "./ucl";
+import type { CardDesign, CardType, InsertType, Player, Rarity, Sport, StatLine } from "./types";
+import { BASE_SETS, INSERT_TYPES, RARITIES, SPORTS } from "./types";
 
 export * from "./types";
 export { NBA_SEASON } from "./nba";
+export { UCL_SEASON } from "./ucl";
 
 export const SET_ID = "s1";
 export const SET_NAME = "Series 1";
 
 const teamByAbbr = new Map(NBA_TEAMS.map((t) => [t.abbr, t]));
+/** Champions League clubs by the name printed on the card ("Real Madrid") and by UEFA id. */
+const clubByName = new Map(UCL_TEAMS.map((t) => [t.name, t]));
+const clubById = new Map(UCL_TEAMS.map((t) => [t.id, t]));
 const teamByName = new Map(NBA_TEAMS.map((t) => [t.name, t]));
 const nick = (abbr: string) => teamByAbbr.get(abbr)?.name ?? abbr;
 
@@ -32,6 +37,8 @@ const HISTORIC: Record<string, { abbr: string; colors: [string, string] }> = {
 };
 
 export function teamCode(team: string): string {
+  const club = clubByName.get(team);
+  if (club) return club.code;
   if (HISTORIC[team]) return HISTORIC[team].abbr;
   const abbr = teamByName.get(team)?.abbr ?? "";
   return ABBR_FIX[abbr] ?? abbr;
@@ -49,11 +56,15 @@ const LOGO_FRANCHISE: Record<string, string> = {
 
 /** ESPN's logo for the team's current franchise (hotlinked like the headshots). */
 export function teamLogo(team: string): string | undefined {
+  const club = clubByName.get(team);
+  if (club) return club.logo; // UEFA's crest
   const abbr = LOGO_FRANCHISE[team] ?? teamByName.get(team)?.abbr;
   return abbr ? `https://a.espncdn.com/i/teamlogos/nba/500/${abbr.toLowerCase()}.png` : undefined;
 }
 
 export function teamColors(team: string): [string, string] {
+  const club = clubByName.get(team);
+  if (club) return [club.color, club.alt];
   const t = teamByName.get(team);
   return t ? [t.color, t.alt] : (HISTORIC[team]?.colors ?? ["#233862", "#a9b6d3"]);
 }
@@ -69,6 +80,17 @@ export function slug(s: string) {
 
 /** Insert class display names. */
 export const INSERT_NAMES: Record<InsertType, string> = Object.fromEntries(INSERT_CLASSES.map((c) => [c.id, c.name]));
+
+/** The set a card type belongs to, as printed: "Series 1 · Base", "Champions League", "Golden Boy". */
+export function setLabel(type: CardType): string {
+  if (type === "base") return `${SET_NAME} · Base`;
+  if (type === "rookie") return `${SET_NAME} · Rookie`;
+  if (type === "ucl") return `${SET_NAME} · Champions League`;
+  return INSERT_NAMES[type] ?? type;
+}
+
+/** A set's binder title: "Base set", "Rookies", "Champions League", or the insert name. */
+export const setTitle = (key: string) => BASE_SETS.find((b) => b.key === key)?.name ?? INSERT_NAMES[key] ?? key;
 
 // ── Players (one per person; base and rookie rows share nothing) ──
 
@@ -89,22 +111,55 @@ export const PLAYERS: Player[] = NBA_PLAYERS.map((r) => ({
   college: r.college,
 }));
 
-// ── Base set + rookies ──
+/** UEFA's official squad photo (324px JPEG on white), hotlinked like the ESPN cut-outs.
+ *  UEFA names a season by the year it ends: 2027 = 2026-27. */
+export const uefaPhotoUrl = (uefaId: string, year = 2027) => `https://img.uefa.com/imgml/TP/players/1/${year}/324x324/${uefaId}.jpg`;
 
-const BASE_DESIGNS: CardDesign[] = NBA_PLAYERS.map((r) => ({
-  id: `nba-${r.id}-${r.type}`,
-  sport: "basketball",
-  set: SET_ID,
-  type: r.type,
-  rarity: r.rarity,
-  playerIds: [`nba-${r.id}`],
+const SOCCER_PLAYERS: Player[] = UCL_PLAYERS.map((r) => ({
+  id: `ucl-${r.id}`,
+  espnId: "", // the card's photo is UEFA's, not ESPN's NBA headshot path
+  photo: r.photoYear === null ? undefined : uefaPhotoUrl(r.id, r.photoYear),
+  sport: "soccer",
+  name: r.name,
+  team: clubById.get(r.club)?.name ?? r.club,
+  teamAbbr: clubById.get(r.club)?.code ?? "",
+  pos: r.pos,
+  nation: r.nation,
+  jersey: r.jersey,
   ovr: r.ovr,
+  stats: r.stats,
+  statLine: r.stats ? `${UCL_SEASON} so far` : null,
 }));
+PLAYERS.push(...SOCCER_PLAYERS);
+
+// ── Base sets: NBA base + rookies, Champions League ──
+
+const BASE_DESIGNS: CardDesign[] = [
+  ...NBA_PLAYERS.map((r) => ({
+    id: `nba-${r.id}-${r.type}`,
+    sport: "basketball" as const,
+    set: SET_ID,
+    type: r.type,
+    rarity: r.rarity,
+    playerIds: [`nba-${r.id}`],
+    ovr: r.ovr,
+  })),
+  ...UCL_PLAYERS.map((r) => ({
+    id: `ucl-${r.id}`,
+    sport: "soccer" as const,
+    set: SET_ID,
+    type: "ucl",
+    rarity: r.rarity,
+    playerIds: [`ucl-${r.id}`],
+    ovr: r.ovr,
+    no: r.no,
+  })),
+];
 
 // ── Inserts (inserts.ts) ──
 // Card ids are the ids from the insert document (NB1, GE9, ...). Splash art goes in insert-art.ts.
 
-const baseById = new Map(PLAYERS.map((p) => [p.espnId, p]));
+const baseById = new Map(PLAYERS.filter((p) => p.sport === "basketball").map((p) => [p.espnId, p]));
 const classById = new Map(INSERT_CLASSES.map((c) => [c.id, c]));
 
 /** Retired players and legends: no roster row, no headshot, no season stats. */
@@ -175,10 +230,10 @@ if (designById.size !== DESIGNS.length) throw new Error("Duplicate card design i
 export const getPlayer = (id: string) => playerById.get(id);
 export const getDesign = (id: string) => designById.get(id);
 
-/** Base + rookie designs grouped for normal pack slots: pool[sport][rarity]. */
-export const POOLS: Record<Sport, Record<Rarity, CardDesign[]>> = {
-  basketball: Object.fromEntries(RARITIES.map((r) => [r, [] as CardDesign[]])) as Record<Rarity, CardDesign[]>,
-};
+/** Base-set designs grouped for normal pack slots: pool[sport][rarity]. */
+export const POOLS = Object.fromEntries(
+  SPORTS.map((s) => [s, Object.fromEntries(RARITIES.map((r) => [r, [] as CardDesign[]]))]),
+) as Record<Sport, Record<Rarity, CardDesign[]>>;
 for (const d of BASE_DESIGNS) POOLS[d.sport][d.rarity].push(d);
 
 /** Insert designs by class, for the guaranteed insert slot. */
@@ -196,7 +251,9 @@ export interface CardView {
   kicker?: string;
   year?: number;
   ovr: number;
-  players: Pick<Player, "id" | "espnId" | "name" | "team" | "pos" | "nation" | "jersey" | "pick" | "college">[];
+  players: Pick<Player, "id" | "espnId" | "photo" | "name" | "team" | "pos" | "nation" | "jersey" | "pick" | "college">[];
+  /** Card number within its set (Champions League cards). */
+  no?: number;
   stats: StatLine | null;
   statLine: string | null;
   /** Team nickname to colour the card by (defaults to the player's team). */
@@ -224,9 +281,10 @@ export function cardView(designId: string): CardView {
     kicker: d.kicker,
     year: d.year,
     ovr: d.ovr,
-    players: ps.map(({ id, espnId, name, team, pos, nation, jersey, pick, college }) => ({
+    players: ps.map(({ id, espnId, photo, name, team, pos, nation, jersey, pick, college }) => ({
       id,
       espnId,
+      photo,
       name,
       team,
       pos,
@@ -243,6 +301,7 @@ export function cardView(designId: string): CardView {
     career: d.career,
     meta: d.meta,
     note: d.note,
+    no: d.no,
     art: INSERT_ART[d.id] || undefined,
   };
 }

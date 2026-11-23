@@ -6,6 +6,9 @@ import { getCurrentUser } from "@/lib/session";
 
 export const metadata = { title: "Insert preview" };
 
+/** Clubs shown in full in the Champions League section (by card name). */
+const PREVIEW_CLUBS = ["Real Madrid", "Bodø/Glimt"];
+
 /**
  * Every insert card, to check splash art from insert-art.ts. Open on `npm run dev`
  * (no sign-in or database needed); on the live site only admins can see it.
@@ -54,6 +57,26 @@ export default async function PreviewPage({ searchParams }: { searchParams: Prom
             {RARITIES.flatMap((r) => POOLS.basketball[r].slice(0, 1)).map((d) => (
               <li key={d.id}>
                 <TurnableCard card={cardView(d.id)} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {show === "all" && (
+        <section className="mt-10">
+          <h2 className="font-display text-2xl">
+            Champions League <span className="font-cond text-base text-muted">one per edition, then {PREVIEW_CLUBS.join(" and ")}</span>
+          </h2>
+          <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+            {[
+              ...RARITIES.flatMap((r) => POOLS.soccer[r].slice(0, 1)).map((d) => cardView(d.id)),
+              ...RARITIES.flatMap((r) => POOLS.soccer[r])
+                .map((d) => cardView(d.id))
+                .filter((v) => PREVIEW_CLUBS.includes(v.team))
+                .sort((a, b) => (a.no ?? 0) - (b.no ?? 0)),
+            ].map((v, i) => (
+              <li key={`${v.designId}-${i}`}>
+                <TurnableCard card={v} />
               </li>
             ))}
           </ul>

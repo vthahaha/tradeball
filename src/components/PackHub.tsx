@@ -13,9 +13,46 @@ import { PackDeal } from "./PackDeal";
 import { CheckIcon, TicketIcon } from "./Icons";
 import { SportIcon } from "./SportIcon";
 
-const PACKS: { type: PackType; name: string; gate: string; seat: string }[] = [
-  { type: "basketball", name: "Hoops", gate: "BB", seat: "8" },
+/** `inserts`: whether this pack's last slots are inserts (soccer has no insert sets yet). */
+const PACKS: { type: PackType; name: string; gate: string; seat: string; inserts: boolean }[] = [
+  { type: "basketball", name: "Hoops", gate: "BB", seat: "8", inserts: true },
+  { type: "soccer", name: "Champions", gate: "FC", seat: "8", inserts: false },
 ];
+const hasInserts = (p: (typeof PACKS)[number]) => p.inserts && INSERT_DESIGNS.length > 0;
+
+/** The ball printed on the wrapper. */
+function PackBall({ type }: { type: PackType }) {
+  if (type === "soccer")
+    return (
+      <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
+        <circle cx="50" cy="50" r="46" fill="#f7f7f2" stroke="#14213d" strokeWidth="2.4" />
+        {/* a centre pentagon, five seams out to five cut-off panels at the rim */}
+        <path d="M50 33 L66 45 L60 64 L40 64 L34 45 Z" fill="#14213d" />
+        <path
+          d="M50 33 V12 M66 45 L86 38 M60 64 L72 82 M40 64 L28 82 M34 45 L14 38"
+          fill="none"
+          stroke="#14213d"
+          strokeWidth="2.4"
+        />
+        <path d="M38 5 L50 12 L62 5 A46 46 0 0 0 38 5 Z" fill="#14213d" />
+        <path d="M95 44 L86 38 L89 26 A46 46 0 0 1 95 44 Z" fill="#14213d" />
+        <path d="M80 87 L72 82 L84 76 A46 46 0 0 1 80 87 Z" fill="#14213d" />
+        <path d="M20 87 L28 82 L16 76 A46 46 0 0 0 20 87 Z" fill="#14213d" />
+        <path d="M5 44 L14 38 L11 26 A46 46 0 0 0 5 44 Z" fill="#14213d" />
+      </svg>
+    );
+  return (
+    <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
+      <circle cx="50" cy="50" r="46" fill="#e2691f" stroke="#14213d" strokeWidth="2.4" />
+      <path
+        d="M50 4 V96 M4 50 H96 M20 14 C34 30 34 70 20 86 M80 14 C66 30 66 70 80 86"
+        fill="none"
+        stroke="#14213d"
+        strokeWidth="2.4"
+      />
+    </svg>
+  );
+}
 
 const BIG: Rarity[] = ["legendary", "mythic", "grail"];
 const isBig = (c: PulledCard) => BIG.includes(c.rarity) || !!c.serialNo;
@@ -70,18 +107,10 @@ export function PackArt({ type, no, torn = false }: { type: PackType; no: number
     <div className="tb-pack" data-pack={type}>
       <div className="tb-pack__ticket">
         <div className="tb-pack__body">
-          <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
-            <circle cx="50" cy="50" r="46" fill="#e2691f" stroke="#14213d" strokeWidth="2.4" />
-            <path
-              d="M50 4 V96 M4 50 H96 M20 14 C34 30 34 70 20 86 M80 14 C66 30 66 70 80 86"
-              fill="none"
-              stroke="#14213d"
-              strokeWidth="2.4"
-            />
-          </svg>
+          <PackBall type={type} />
           <div className="tb-pack__label">
             <div className="tb-pack__brand">
-              <SportIcon />
+              <SportIcon sport={type} />
               <span className="truncate">Gate 7 · Series 1</span>
             </div>
             <div className="tb-pack__name">{p.name}</div>
@@ -92,7 +121,7 @@ export function PackArt({ type, no, torn = false }: { type: PackType; no: number
               <div>
                 Floor<b>Rare+</b>
               </div>
-              {INSERT_DESIGNS.length > 0 && (
+              {hasInserts(p) && (
                 <div>
                   Inserts<b>{INSERTS_PER_PACK}</b>
                 </div>
@@ -195,7 +224,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
   return (
     <div className="flex flex-col">
       {/* Ticket shelf */}
-      <section aria-label="Packs" className="w-full max-w-xl">
+      <section aria-label="Packs" className="flex w-full max-w-xl flex-col gap-6">
         {PACKS.map((p) => (
           <motion.button
             key={p.type}
@@ -210,7 +239,7 @@ export function PackHub({ initialStatus, nextNo }: { initialStatus: PackStatus; 
           >
             <PackArt type={p.type} no={no} />
             <span className="mt-2 flex items-center justify-between font-cond text-sm font-bold text-muted">
-              <span>8 cards · 1 Rare or better{INSERT_DESIGNS.length > 0 ? ` · ${INSERTS_PER_PACK} inserts` : ""}</span>
+              <span>8 cards · 1 Rare or better{hasInserts(p) ? ` · ${INSERTS_PER_PACK} inserts` : ""}</span>
               <span className="text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                 {busy === p.type ? "Tearing…" : "Tear →"}
               </span>
