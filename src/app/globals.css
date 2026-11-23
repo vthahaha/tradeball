@@ -4222,6 +4222,24 @@ select {
     linear-gradient(100deg, #d9531c, #ffa06f 50%, #b2400f);
 }
 
+/* the Gridiron pack: the wrapper in pitch-green stock */
+.tb-pack[data-pack="football"] .tb-pack__body {
+  background:
+    linear-gradient(100deg, transparent 18%, #ffffff59 26%, transparent 34% 60%, #ffffff33 66%, transparent 72%),
+    linear-gradient(180deg, #ffffff26, transparent 40%, #00000033),
+    linear-gradient(100deg, #2e7d5b, #8fd1ad 24%, #1f5e43 44%, #6cbf93 62%, #174a34 84%, #2e7d5b);
+}
+.tb-pack[data-pack="football"] .tb-pack__body::before {
+  background:
+    repeating-linear-gradient(180deg, #00000040 0 0.6cqw, #ffffff40 0.6cqw 1.2cqw),
+    #1f5e43;
+}
+.tb-pack[data-pack="football"] .tb-pack__stub {
+  background:
+    repeating-linear-gradient(180deg, #00000033 0 0.6cqw, #ffffff38 0.6cqw 1.2cqw),
+    linear-gradient(100deg, #1f5e43, #6cbf93 50%, #174a34);
+}
+
 /* NEW stamp: lands on a card the first time it enters your binder */
 /* ── the deal: one card at a time (PackDeal.tsx). --glow is the card's rarity colour. While a big
    card charges, its back glows and trembles, harder at each level; Mythic and Grail also light the

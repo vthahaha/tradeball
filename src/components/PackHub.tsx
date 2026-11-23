@@ -17,11 +17,24 @@ import { SportIcon } from "./SportIcon";
 const PACKS: { type: PackType; name: string; gate: string; seat: string; inserts: boolean }[] = [
   { type: "basketball", name: "Hoops", gate: "BB", seat: "8", inserts: true },
   { type: "soccer", name: "Champions", gate: "FC", seat: "8", inserts: false },
+  { type: "football", name: "Gridiron", gate: "FB", seat: "8", inserts: false },
 ];
 const hasInserts = (p: (typeof PACKS)[number]) => p.inserts && INSERT_DESIGNS.length > 0;
 
 /** The ball printed on the wrapper. */
 function PackBall({ type }: { type: PackType }) {
+  if (type === "football")
+    return (
+      <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>
+        {/* a football end-on at an angle, with its laces */}
+        <g transform="rotate(-35 50 50)">
+          <ellipse cx="50" cy="50" rx="46" ry="29" fill="#8a4a24" stroke="#14213d" strokeWidth="2.4" />
+          <path d="M16 36 Q12 50 16 64 M84 36 Q88 50 84 64" fill="none" stroke="#f7f7f2" strokeWidth="3.2" />
+          <path d="M34 50 H66" stroke="#f7f7f2" strokeWidth="3" />
+          <path d="M38 44 V56 M44 44 V56 M50 44 V56 M56 44 V56 M62 44 V56" stroke="#f7f7f2" strokeWidth="2.6" />
+        </g>
+      </svg>
+    );
   if (type === "soccer")
     return (
       <svg className="tb-pack__ball" viewBox="0 0 100 100" aria-hidden>

@@ -1,7 +1,7 @@
 import { INSERT_CLASSES } from "./inserts";
 
-export type Sport = "basketball" | "soccer";
-export const SPORTS: readonly Sport[] = ["basketball", "soccer"];
+export type Sport = "basketball" | "soccer" | "football";
+export const SPORTS: readonly Sport[] = ["basketball", "soccer", "football"];
 
 /** Grail sits above Mythic. No class uses it yet; its drop weight is 0 until one does. */
 export const RARITIES = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "grail"] as const;
@@ -16,16 +16,18 @@ export const INSERT_TYPES: readonly string[] = INSERT_CLASSES.map((c) => c.id);
 export type InsertType = string;
 
 /**
- * NBA base set + rookies, "ucl" for the soccer base set (Champions League squads), "duo" for
+ * NBA base set + rookies, "ucl" for the soccer base set (Champions League squads), "nfl" for the
+ * football base set (NFL depth charts), "duo" for
  * future multi-player cards, or an insert class id. Every non-insert type renders the base layout.
  */
-export type CardType = "base" | "rookie" | "ucl" | "duo" | (string & {});
+export type CardType = "base" | "rookie" | "ucl" | "nfl" | "duo" | (string & {});
 
 /** The non-insert sets, in binder order: key (= card type), name, short mark, sport. */
 export const BASE_SETS = [
   { key: "base", name: "Base set", short: "B", sport: "basketball" },
   { key: "rookie", name: "Rookies", short: "RC", sport: "basketball" },
   { key: "ucl", name: "Champions League", short: "UCL", sport: "soccer" },
+  { key: "nfl", name: "NFL", short: "NFL", sport: "football" },
 ] as const satisfies readonly { key: CardType; name: string; short: string; sport: Sport }[];
 export type BaseSetKey = (typeof BASE_SETS)[number]["key"];
 export const isInsert = (t: CardType): t is InsertType => (INSERT_TYPES as readonly string[]).includes(t);
@@ -92,6 +94,34 @@ export interface UclPlayerRow {
   photoYear?: number | null;
 }
 
+/** An NFL team, from scripts/nfl. */
+export interface NflTeam {
+  abbr: string; // "KC"
+  name: string; // nickname on the card, "Chiefs"
+  full: string; // "Kansas City Chiefs"
+  color: string;
+  alt: string;
+}
+
+/** One generated row per football card in nfl.ts. */
+export interface NflPlayerRow {
+  id: string; // ESPN athlete id (also names the headshot)
+  name: string;
+  team: string; // team abbreviation
+  pos: string; // QB, RB, WR, TE, LT, LG, C, RG, RT, DE, DT, NT, OLB, LB, CB, S, K, P
+  jersey: string;
+  college: string;
+  rookie: boolean;
+  rarity: Rarity;
+  ovr: number;
+  /** 2026 season totals so far, by position (QB: YDS TD INT, DB: TKL INT PD, ...). */
+  stats: StatLine | null;
+  /** Card number in the set, 1..n: team by team, offense, defense, specialists. */
+  no: number;
+  /** null when ESPN has no headshot (the card prints initials). */
+  photo?: null;
+}
+
 export interface Player {
   id: string;
   espnId: string;
@@ -138,6 +168,8 @@ export interface CardDesign {
   meta?: string;
   /** Shown on the stub when there are no stats. */
   note?: string;
-  /** Card number within its set (Champions League cards). */
+  /** Card number within its set (Champions League and NFL cards). */
   no?: number;
+  /** A first-year player in a set without a separate rookie list (NFL): the card gets the RC mark. */
+  rookie?: boolean;
 }

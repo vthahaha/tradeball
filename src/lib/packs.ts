@@ -33,6 +33,7 @@ import {
 export const PACK_TYPES = {
   basketball: { name: "Hoops Pack", sports: ["basketball"] as Sport[] },
   soccer: { name: "Champions Pack", sports: ["soccer"] as Sport[] },
+  football: { name: "Gridiron Pack", sports: ["football"] as Sport[] },
 };
 export type PackType = keyof typeof PACK_TYPES;
 

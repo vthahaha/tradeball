@@ -19,9 +19,9 @@ const FINISH_NAME: Record<Finish, string> = {
 };
 const STAT_KEYS = ["PTS", "REB", "AST", "STL", "BLK", "3P%"] as const;
 
-/** Basketball lines are per game; soccer lines are season totals (APP, G, A / APP, SV, GA). */
+/** Basketball lines are per game; soccer and NFL lines are season totals (APP, G, A / YDS, TD, INT). */
 function statHeading(card: CardView) {
-  if (card.sport === "soccer") return card.statLine ?? "This season";
+  if (card.sport !== "basketball") return card.statLine ?? "This season";
   return card.statLine ? `${card.statLine} per game` : "Per game";
 }
 
@@ -166,7 +166,7 @@ export function CardViewer({ onClose, onPrev, onNext, children, ...card }: CardV
               <div className="mt-5">
                 <h3 className="field-label">{statHeading(c)}</h3>
                 <dl className="mt-2 grid grid-cols-6 gap-2">
-                  {(c.sport === "soccer" ? Object.keys(c.stats) : STAT_KEYS.filter((k) => c.stats![k] != null)).map((k) => (
+                  {(c.sport !== "basketball" ? Object.keys(c.stats) : STAT_KEYS.filter((k) => c.stats![k] != null)).map((k) => (
                     <div key={k} className="rounded-md bg-panel-2 px-1 py-2 text-center">
                       <dd className="font-display text-xl leading-none">
                         {k === "3P%" ? c.stats![k].toFixed(1) : c.stats![k]}

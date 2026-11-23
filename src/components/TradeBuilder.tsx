@@ -48,7 +48,7 @@ function Side({
   highlightLabel: string;
 }) {
   const [q, setQ] = useState("");
-  const [kind, setKind] = useState<"all" | "base" | "rookie" | "ucl" | "insert">("all");
+  const [kind, setKind] = useState<"all" | "base" | "rookie" | "ucl" | "nfl" | "insert">("all");
   const [wantedOnly, setWantedOnly] = useState(false);
   const sorted = useMemo(() => sortCards(cards), [cards]);
   const picked = sorted.filter((c) => selected.includes(c.instanceId));
@@ -112,7 +112,7 @@ function Side({
         />
         <select
           value={kind}
-          onChange={(e) => setKind(e.target.value as "all" | "base" | "rookie" | "ucl" | "insert")}
+          onChange={(e) => setKind(e.target.value as "all" | "base" | "rookie" | "ucl" | "nfl" | "insert")}
           aria-label="Card type"
           className="rounded-full border border-line bg-bg-2 px-3 py-1.5 font-cond text-sm font-bold uppercase"
         >
@@ -120,6 +120,7 @@ function Side({
           <option value="base">Base</option>
           <option value="rookie">Rookies</option>
           <option value="ucl">Champions League</option>
+          <option value="nfl">NFL</option>
           {INSERT_DESIGNS.length > 0 && <option value="insert">Inserts</option>}
         </select>
         {highlight.size > 0 && (

@@ -50,17 +50,20 @@ const FINISH_LABEL: Record<Finish, string | null> = {
   masterpiece: "Masterpiece",
 };
 
-/** The small print under a base card's name: draft pick for rookies, nation for everyone else. */
+/** The small print under a base card's name: draft pick for NBA rookies, college for NFL players,
+ *  nation for everyone else. */
 function baseMeta(card: CardView) {
   const p = card.players[0];
   if (card.type === "rookie" && p.pick)
     return `Pick ${p.pick}${p.college ? ` · ${p.college}` : ""}`;
+  if (card.sport === "football") return p.college || card.team;
   return p.nation || card.team;
 }
 
 export function cardNo(card: CardView) {
   if (isInsert(card.type)) return card.designId;
   if (card.type === "ucl" && card.no) return `UCL-${card.no}`;
+  if (card.type === "nfl" && card.no) return `NFL-${card.no}`;
   const m = card.designId.match(/^nba-(\d+)-(\w+)$/);
   return m ? `${m[2] === "rookie" ? "RC" : "B"}-${m[1]}` : card.designId;
 }
@@ -146,7 +149,8 @@ export function Card({
   const [imgFailed, setImgFailed] = useState(false);
   const [p1, p2] = card.players;
   const { style, insert, isDuo, setName } = useLook(card);
-  // Base and rookie cards show the ESPN headshot (Champions League cards: UEFA's squad photo).
+  // Base and rookie cards show the ESPN headshot (Champions League cards: UEFA's squad photo;
+  // NFL cards: ESPN's NFL cut-out, carried in `photo`).
   // Inserts show their splash art once one is chosen (insert-art.ts); until then the set's
   // scene carries the card with the initials. New Blood always uses the ESPN headshot.
   const headshot = isDuo ? undefined : (p1.photo ?? (p1.espnId ? headshotUrl(p1.espnId) : undefined));
@@ -233,7 +237,7 @@ export function Card({
                 <b>{card.ovr}</b>
                 <span>{isDuo ? "Duo" : p1.pos}</span>
               </div>
-              {card.type === "rookie" && (
+              {(card.type === "rookie" || card.rookie) && (
                 <div className="tb-base__rc" title="Rookie card">
                   RC
                 </div>
@@ -403,6 +407,8 @@ export function TurnableCard(props: CardProps) {
 
 // ── face-down (pack reveal) ──
 
+const SPORT_NAME: Record<CardView["sport"], string> = { basketball: "Basketball", soccer: "Soccer", football: "Football" };
+
 /** The Gate 7 card back. Its border is already the parallel, so the rarity shows before the flip. */
 export function CardBack({
   rarity,
@@ -424,7 +430,7 @@ export function CardBack({
             <span>Gate</span>
             <b>7</b>
             <span>
-              {SET_NAME} · {sport === "soccer" ? "Soccer" : "Basketball"}
+              {SET_NAME} · {SPORT_NAME[sport]}
             </span>
           </div>
         </div>

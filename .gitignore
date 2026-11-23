@@ -55,4 +55,5 @@ next-env.d.ts
 # NBA research downloads
 /scripts/nba/data/
 /scripts/ucl/data/
+/scripts/nfl/data/
 /scripts/nba/selection.json
