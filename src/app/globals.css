@@ -3960,6 +3960,46 @@ select {
   width: 0.3rem;
   background: var(--spine, var(--line));
 }
+/* a team spine: the team's two colours down the left edge */
+.tb-spine--team::before {
+  width: 0.45rem;
+  background: linear-gradient(90deg, var(--spine) 0 65%, var(--spine-2, var(--spine)) 65%);
+}
+
+/* the sport switch: a ticket tab per sport, in the stock of that sport's pack (--stock) */
+.tb-sporttab {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0.75rem 0.75rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: var(--panel);
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s, opacity 0.15s;
+}
+.tb-sporttab::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.3rem;
+  background: var(--stock);
+  opacity: 0.55;
+}
+.tb-sporttab:hover { border-color: var(--muted); }
+.tb-sporttab.is-active {
+  border-color: var(--stock);
+  background: color-mix(in oklab, var(--stock) 13%, var(--panel));
+}
+.tb-sporttab.is-active::before { opacity: 1; }
+.tb-sporttab.is-dim { opacity: 0.7; }
+.tb-sporttab.is-dim:hover { opacity: 1; }
+@media (min-width: 640px) {
+  .tb-sporttab { padding: 1rem 1.1rem 0.9rem; }
+}
+
 .tb-spine__done {
   padding: 0.05rem 0.45rem;
   border: 1.5px solid var(--accent);
