@@ -74,7 +74,6 @@ export function CardViewer({ onClose, onPrev, onNext, children, ...card }: CardV
   if (card.serialNo && card.supply)
     facts.push(["Serial", <b key="s" className="text-[#ffd76a]">{card.supply === 1 ? "1 of 1" : `${card.serialNo} / ${card.supply}`}</b>]);
   if (card.grade != null) facts.push(["Grade", card.grade === 10 ? "10 · Gem Mint" : String(card.grade)]);
-  if (c.retired) facts.push(["Status", "Retired · no longer in packs"]);
 
   return (
     <motion.div
