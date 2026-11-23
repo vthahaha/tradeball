@@ -3291,6 +3291,100 @@ select {
 }
 .tb-ins--fortress .tb-ins__fine { border-top-color: #ece6d833; color: #b9b4a8; }
 
+/* The Champions: the title team's colour under a gold sunburst, confetti in the air above the
+   player, a metallic gold ribbon for the set's name and the title, a dark plate with gold rules */
+.tb-ins--champions { background: #0f0c06; color: #fff6dc; }
+.tb-ins--champions .tb-ins__photo {
+  background: radial-gradient(circle at 50% 58%, color-mix(in oklab, var(--t1) 78%, #fff), var(--t1) 62%, color-mix(in oklab, var(--t1) 70%, #000));
+}
+.tb-ins__chrays {
+  position: absolute;
+  inset: -25%;
+  z-index: 0;
+  background: repeating-conic-gradient(from 0deg at 50% 56%, #f6d77a33 0deg 5deg, transparent 5deg 15deg);
+  mask-image: radial-gradient(circle at 50% 56%, #000 30%, transparent 72%);
+}
+.tb-ins__chconfetti {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle, #f6d77a 0 0.75cqw, transparent 0.85cqw) 0 0 / 23cqw 19cqw,
+    radial-gradient(circle, var(--t2) 0 0.6cqw, transparent 0.7cqw) 9cqw 7cqw / 29cqw 23cqw,
+    radial-gradient(circle, #fff 0 0.45cqw, transparent 0.55cqw) 15cqw 3cqw / 31cqw 27cqw;
+  mask-image: linear-gradient(#000 0 35%, transparent 70%);
+  opacity: 0.85;
+}
+.tb-ins__chribbon {
+  position: absolute;
+  top: 4.5cqw;
+  left: 0;
+  z-index: 4;
+  overflow: hidden;
+  padding: 1.6cqw 6cqw 1.8cqw 4.5cqw;
+  background: linear-gradient(100deg, #a87420, #f6d77a 32%, #c8952e 55%, #ffe9a6 76%, #a87420);
+  color: #1b1405;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 3.4cqw) 50%, 100% 100%, 0 100%);
+  box-shadow: 0 0.6cqw 1.4cqw #0006;
+}
+.tb-ins__chribbon b {
+  display: block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 900;
+  font-stretch: 80%;
+  font-size: 5.6cqw;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.tb-ins__chribbon span {
+  display: block;
+  margin-top: 0.6cqw;
+  font-family: var(--font-body), sans-serif;
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 2.3cqw;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.tb-ins__chribbon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, #ffffffa6 46%, transparent 62%);
+  transform: translateX(-120%);
+  animation: tb-chshine 5s ease-in-out infinite;
+}
+@keyframes tb-chshine {
+  0%, 55% { transform: translateX(-120%); }
+  85%, 100% { transform: translateX(120%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-ins__chribbon::after { animation: none; }
+}
+/* soccer photos (UEFA) are opaque squares on white: hung as a framed portrait, not a cut-out */
+.tb-card[data-sport="soccer"] .tb-ins--champions .tb-card__splash.is-headshot {
+  top: 19cqw;
+  left: 15cqw;
+  width: 70cqw;
+  height: 70cqw;
+  object-fit: cover;
+  object-position: 50% 15%;
+  border: 1.2cqw solid #d9a73e;
+  border-radius: 0.6cqw;
+  box-shadow: 0 0 0 0.5cqw #1b1405, 0 1.6cqw 3cqw #0009;
+  filter: none;
+}
+.tb-ins--champions .tb-ins__ovr { color: #fff6dc; }
+.tb-ins__chplate {
+  border-top: 0.7cqw solid #d9a73e;
+  background: linear-gradient(180deg, #1c160b, #0f0c06);
+  box-shadow: inset 0 0.6cqw 0 #f6d77a2e;
+}
+.tb-ins__chplate .tb-ins__line { color: #e7c36a; }
+.tb-ins__chplate .tb-ins__fine { border-top-color: #d9a73e44; color: #b9a26a; }
+.tb-ins__chplate .tb-ins__fine b { color: #fff6dc; }
+
 /* cards scrolled off screen (Card.tsx marks them asleep) stop their looping animations */
 .tb-card[data-asleep],
 .tb-card[data-asleep] * {
@@ -3471,6 +3565,19 @@ select {
   background:
     repeating-linear-gradient(45deg, #e2b64f12 0 0.2cqw, transparent 0.2cqw 1.1cqw),
     repeating-linear-gradient(-45deg, #e2b64f12 0 0.2cqw, transparent 0.2cqw 1.1cqw);
+}
+
+/* The Champions: gold on near-black, a sunburst behind the mark */
+.tb-rev[data-set="champions"] {
+  --rev-bg: #0f0c06;
+  --rev-ink: #f2d27a;
+  --rev-mark: #f2d27a;
+  --rev-rule: #f2d27a55;
+}
+.tb-rev[data-set="champions"] .tb-rev__deco {
+  inset: 2.4cqw;
+  border: 0.3cqw solid #d9a73e88;
+  background: repeating-conic-gradient(from 0deg at 50% 45%, #f2d27a1f 0deg 5deg, transparent 5deg 15deg);
 }
 
 /* Generational: night black inside a thin rainbow foil line, the mark in seal gold */

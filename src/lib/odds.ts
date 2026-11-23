@@ -84,11 +84,12 @@ export const INSERT_CLASS_WEIGHTS: Partial<Record<InsertType, number>> = {
   sparkplug: 2.4, // Spark Plug
   circus: 2.4, // The Circus
   emperors: 2.4, // Crownless Emperors
-  // Legendary: 10
+  // Legendary: 12.5 (The Champions is in every pack; see rollInsert in packs.ts)
   goldenboy: 2.5, // Golden Boy
   botb: 2.5, // Best of the Best
   rivalries: 2.5, // Rivalries
   teamculture: 2.5, // Team Culture
+  champions: 2.5, // The Champions (every sport)
   // Mythic: 2.1, about 1 pack in 24 holds one; a Generational about 1 in 125
   stardom: 0.6, // Ultimate Stardom
   dreamteam: 0.6, // The Dream Team

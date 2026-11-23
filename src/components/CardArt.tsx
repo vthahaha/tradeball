@@ -274,6 +274,15 @@ export function SetIcon({ type }: { type: string }) {
           <rect x="16" y="6" width="5" height="15" fill="currentColor" opacity="0.55" />
         </>,
       );
+    case "champions":
+      // a trophy cup: bowl, handles, stem and base
+      return s(
+        <>
+          <path d="M7 3h10v5a5 5 0 0 1-10 0z" fill="currentColor" />
+          <path d="M7 5H4a3 3 0 0 0 3 4M17 5h3a3 3 0 0 1-3 4" fill="none" stroke="currentColor" strokeWidth="1.8" />
+          <path d="M12 13v4M8 21h8l-1-4H9z" fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+        </>,
+      );
     case "teamculture":
       return s(
         <>

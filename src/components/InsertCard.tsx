@@ -124,6 +124,14 @@ function Photo({
   );
 }
 
+/** A title-run stat as printed: whole numbers as they are, rates to three places (.373), the rest to one. */
+function champStat(k: string, v: number) {
+  if (Number.isInteger(v)) return String(v);
+  if (k === "AVG" || k === "SV%") return v.toFixed(3).replace(/^0/, "");
+  if (k === "GAA" || k === "ERA") return v.toFixed(2);
+  return v.toFixed(1);
+}
+
 /** 1 -> 1st, 3 -> 3rd, 11 -> 11th */
 function ordinal(n: string) {
   const v = Number(n);
@@ -1433,6 +1441,47 @@ export function InsertFront(props: InsertFrontProps) {
     // Famine black and gold). Full art under a storm closing in from the edges in the rider's colour,
     // a jagged crack of lightning, embers rising, a huge outlined numeral running off the left edge,
     // and the rider's name burned huge across the foot.
+    // The Champions (every sport): the title team's colours with a gold sunburst behind the player
+    // and confetti in the air, a gold ribbon with the set's name over the title, and the title run's
+    // numbers on a dark plate. One loop: a slow shine across the ribbon.
+    case "champions":
+      return (
+        <div className="tb-ins tb-ins--champions">
+          {photo(
+            <>
+              <div className="tb-ins__chrays" aria-hidden />
+              <div className="tb-ins__chconfetti" aria-hidden />
+            </>,
+          )}
+          <div className="tb-ins__chribbon">
+            <b>The Champions</b>
+            <span>{card.kicker}</span>
+          </div>
+          <Rating ovr={card.ovr} pos={p.pos} />
+          <div className="tb-ins__foot tb-ins__chplate">
+            <div className="tb-ins__name" style={{ fontSize: `${nameSize(name, 0.74)}cqw` }}>
+              {name}
+            </div>
+            <div className="tb-ins__line">
+              <span>{card.title}</span>
+              {serial}
+            </div>
+            <div className="tb-ins__fine">
+              {card.stats && (
+                <span className="tb-ins__stats">
+                  {Object.entries(card.stats).map(([k, v]) => (
+                    <span key={k}>
+                      <b>{champStat(k, v)}</b> {k}
+                    </span>
+                  ))}
+                </span>
+              )}
+              {no}
+            </div>
+          </div>
+        </div>
+      );
+
     case "horsemen": {
       const rider = (card.kicker ?? "Conquest").toLowerCase();
       const num = ["conquest", "death", "war", "famine"].indexOf(rider);

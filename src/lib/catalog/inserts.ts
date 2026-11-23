@@ -50,6 +50,8 @@ export const INSERT_CLASSES: InsertClass[] = [
   { id: "circus", name: "The Circus", rarity: "epic", boost: 1 },
   // Set 7
   { id: "teamculture", name: "Team Culture", rarity: "legendary", boost: 0 },
+  // Every sport: the players who won the last title in each league (champions.ts, not INSERT_CARDS)
+  { id: "champions", name: "The Champions", rarity: "legendary", boost: 2 },
   { id: "emperors", name: "Crownless Emperors", rarity: "epic", boost: 0 },
   { id: "horsemen", name: "Four Horsemen", rarity: "grail", boost: 0 },
   // Mythic
