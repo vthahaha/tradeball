@@ -56,7 +56,7 @@ export default async function LeaguePage() {
                   <div className="hidden shrink-0 gap-1.5 sm:flex">
                     {cards.map((c) => (
                       <div key={c.instanceId} className="w-12">
-                        <Card card={c} finish={c.finish} serialNo={c.serialNo} supply={c.supply} tilt={false} />
+                        <Card card={c} finish={c.finish} serialNo={c.serialNo} supply={c.supply} tilt={false} small />
                       </div>
                     ))}
                   </div>

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { CollectionView, type OwnedCopy } from "@/components/CollectionView";
-import { cardView, DESIGNS, getDesign, SPORTS, type Sport } from "@/lib/catalog";
+import { getDesign, SPORTS, type Sport } from "@/lib/catalog";
 import { db } from "@/lib/db";
 import { hydrateInstance } from "@/lib/packs";
 import { parseShowcase } from "@/lib/recycle";
@@ -58,7 +58,6 @@ export default async function CollectionPage({ searchParams }: { searchParams: P
         Your <span className="text-accent">binder</span>
       </h1>
       <CollectionView
-        designs={DESIGNS.map((d) => cardView(d.id))}
         copies={copies}
         packsOpened={user.packsOpened}
         wishes={wishes}

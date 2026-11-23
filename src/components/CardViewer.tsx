@@ -202,7 +202,7 @@ export function InspectableCard(props: CardProps & { label?: string }) {
         onClick={() => setOpen(true)}
         aria-label={label ?? `Open ${card.card.players.map((p) => p.name).join(" & ")}`}
       >
-        <Card {...card} />
+        <Card {...card} small />
       </button>
       <AnimatePresence>{open && <CardViewer {...card} tilt onClose={() => setOpen(false)} />}</AnimatePresence>
     </>

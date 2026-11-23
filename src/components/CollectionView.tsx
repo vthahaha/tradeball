@@ -4,8 +4,8 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { NUMBERED_FINISHES, SHARDS_PER_PACK, shardValueFor } from "@/lib/odds";
-import { useEffect, useMemo, useState } from "react";
-import { BASE_SETS, INSERT_NAMES, INSERT_TYPES, setTitle, teamCode, teamColors, type CardView } from "@/lib/catalog";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { BASE_SETS, cardView, DESIGNS, INSERT_NAMES, INSERT_TYPES, setTitle, teamCode, teamColors, type CardView } from "@/lib/catalog";
 import { isInsert, RARITIES, SPORTS, type Finish, type Rarity, type Sport } from "@/lib/catalog/types";
 import { PinIcon, RecycleIcon, ShardIcon, StarIcon } from "./Icons";
 import { Card, cardNo } from "./Card";
@@ -108,6 +108,29 @@ function SportTabs({
         })}
       </div>
     </section>
+  );
+}
+
+/** The binder draws this many cards first, and this many more each time you scroll near the end. */
+const FIRST_BATCH = 72;
+const NEXT_BATCH = 144;
+
+/** Calls `onMore` when it scrolls within ~two screens of view: the binder's next batch of pages. */
+function MoreOnScroll({ left, onMore }: { left: number; onMore: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver((es) => es.some((e) => e.isIntersecting) && onMore(), { rootMargin: "1600px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [onMore]);
+  return (
+    <div ref={ref} className="mt-8 flex justify-center">
+      <button type="button" className="btn btn-ghost" onClick={onMore}>
+        Show more ({left} left)
+      </button>
+    </div>
   );
 }
 
@@ -291,8 +314,12 @@ function Chip({ active, onClick, children, color }: { active: boolean; onClick: 
   );
 }
 
+/** Every card in the catalog. Built here, not passed in: the catalog is already in the page's
+ *  JavaScript, and sending its 2,400+ cards as page data as well doubled the binder's size. */
+let allDesigns: CardView[] | null = null;
+const catalogCards = () => (allDesigns ??= DESIGNS.map((d) => cardView(d.id)));
+
 export function CollectionView({
-  designs,
   copies,
   packsOpened,
   wishes,
@@ -303,7 +330,6 @@ export function CollectionView({
   locked,
   initialSport,
 }: {
-  designs: CardView[];
   copies: OwnedCopy[];
   packsOpened: number;
   wishes: string[];
@@ -316,6 +342,7 @@ export function CollectionView({
   initialSport: SportKey;
 }) {
   const router = useRouter();
+  const designs = catalogCards();
   const [wishSet, setWishSet] = useState(() => new Set(wishes));
   const [wishOnly, setWishOnly] = useState(false);
   const [recycleOpen, setRecycleOpen] = useState(false);
@@ -522,6 +549,29 @@ export function CollectionView({
   }, [scope, byDesign, showMissing, dupesOnly, wishOnly, group, sort, slotOf]);
   const shownCount = groups.reduce((n, g) => n + g.cards.length, 0);
 
+  // Draw the binder in batches: a sport can have 900+ cards, and drawing them all at once froze
+  // phones. Any change of what is shown starts again from the first batch.
+  const [limit, setLimit] = useState(FIRST_BATCH);
+  const viewKey = [sport, setFilter, team, rarity, group, showMissing, dupesOnly, wishOnly, sort, query].join("|");
+  const [limitKey, setLimitKey] = useState(viewKey);
+  if (limitKey !== viewKey) {
+    setLimitKey(viewKey);
+    setLimit(FIRST_BATCH);
+  }
+  const moreBatch = useMemo(() => () => setLimit((l) => l + NEXT_BATCH), []);
+  // each group gets the cards that fit under the limit, in order; groups past it wait their turn
+  const drawn = useMemo(() => {
+    const out: ((typeof groups)[number] & { drawnCards: CardView[] })[] = [];
+    let room = limit;
+    for (const g of groups) {
+      if (room <= 0) break;
+      const drawnCards = g.cards.slice(0, room);
+      room -= drawnCards.length;
+      out.push({ ...g, drawnCards });
+    }
+    return out;
+  }, [groups, limit]);
+
   const openDesign = open ? designs.find((d) => d.designId === open) : null;
 
   // one pocket of a binder page
@@ -537,6 +587,7 @@ export function CollectionView({
                       aria-label={`${d.players.map((p) => p.name).join(" & ")}${owned ? `, ${owned.length} owned` : ", not pulled yet"}`}
                     >
                       <Card
+                        small
                         card={d}
                         missing={!owned}
                         tilt={!!owned}
@@ -893,7 +944,7 @@ export function CollectionView({
               : "No cards match these filters."}
         </p>
       ) : (
-        groups.map((g) => (
+        drawn.map((g) => (
           <section key={g.key} className="mt-8" aria-label={group === "none" ? "Cards" : groupTitle(group, g.key)}>
             {group !== "none" && (
               <GroupHead
@@ -921,9 +972,9 @@ export function CollectionView({
             )}
             {/* nine-pocket pages, two side by side on wide screens */}
             <div className="mt-4 grid gap-5 lg:grid-cols-2">
-              {Array.from({ length: Math.ceil(g.cards.length / 9) }, (_, pi) => (
+              {Array.from({ length: Math.ceil(g.drawnCards.length / 9) }, (_, pi) => (
                 <div key={pi} className="tb-page">
-                  <ul className="grid grid-cols-3 gap-2 sm:gap-3">{g.cards.slice(pi * 9, pi * 9 + 9).map((d) => slot(d))}</ul>
+                  <ul className="grid grid-cols-3 gap-2 sm:gap-3">{g.drawnCards.slice(pi * 9, pi * 9 + 9).map((d) => slot(d))}</ul>
                   <div className="tb-page__no">
                     Page {pi + 1}
                     {g.cards.length > 9 ? ` of ${Math.ceil(g.cards.length / 9)}` : ""}
@@ -934,6 +985,7 @@ export function CollectionView({
           </section>
         ))
       )}
+      {shownCount > limit && <MoreOnScroll left={shownCount - limit} onMore={moreBatch} />}
       </div>
 
       <AnimatePresence>

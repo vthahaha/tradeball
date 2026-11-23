@@ -1,4 +1,5 @@
 import { INSERT_ART } from "./insert-art";
+import { INSERT_THUMBS, LOCAL_LOGOS, LOCAL_PLAYERS } from "./local-art";
 import { INSERT_CARDS, INSERT_CLASSES } from "./inserts";
 import { NBA_PLAYERS, NBA_TEAMS } from "./nba";
 import { NFL_PLAYERS, NFL_SEASON, NFL_TEAMS } from "./nfl";
@@ -25,7 +26,14 @@ const teamByName = new Map(NBA_TEAMS.map((t) => [t.name, t]));
 const nick = (abbr: string) => teamByAbbr.get(abbr)?.name ?? abbr;
 
 /** ESPN's transparent headshot cut-out for a player (borrowed from ESPN's CDN). */
-export const headshotUrl = (espnId: string) => `https://a.espncdn.com/i/headshots/nba/players/full/${espnId}.png`;
+export const headshotUrl = (espnId: string) =>
+  LOCAL_PLAYERS.has(`nba/${espnId}`) ? `/players/nba/${espnId}.webp` : `https://a.espncdn.com/i/headshots/nba/players/full/${espnId}.png`;
+
+/** A team logo: the small local WebP (scripts/photos.mjs) when there is one, else ESPN's 500 px PNG. */
+const espnLogo = (league: "nba" | "nfl", abbr: string) => {
+  const a = abbr.toLowerCase();
+  return LOCAL_LOGOS.has(`${league}/${a}`) ? `/logos/${league}/${a}.webp` : `https://a.espncdn.com/i/teamlogos/${league}/500/${a}.png`;
+};
 
 /** [primary, secondary] team colours, from the team nickname shown on a card. */
 const ABBR_FIX: Record<string, string> = { NY: "NYK", GS: "GSW", SA: "SAS", NO: "NOP", UTAH: "UTA", WSH: "WAS" };
@@ -66,9 +74,9 @@ export function teamLogo(team: string): string | undefined {
   const club = clubByName.get(team);
   if (club) return club.logo; // UEFA's crest
   const nfl = nflByName.get(team);
-  if (nfl) return `https://a.espncdn.com/i/teamlogos/nfl/500/${nfl.abbr.toLowerCase()}.png`;
+  if (nfl) return espnLogo("nfl", nfl.abbr);
   const abbr = LOGO_FRANCHISE[team] ?? teamByName.get(team)?.abbr;
-  return abbr ? `https://a.espncdn.com/i/teamlogos/nba/500/${abbr.toLowerCase()}.png` : undefined;
+  return abbr ? espnLogo("nba", abbr) : undefined;
 }
 
 export function teamColors(team: string): [string, string] {
@@ -145,7 +153,14 @@ const SOCCER_PLAYERS: Player[] = UCL_PLAYERS.map((r) => ({
 PLAYERS.push(...SOCCER_PLAYERS);
 
 /** ESPN's transparent NFL headshot cut-out (the same style as the NBA ones). */
-export const nflHeadshotUrl = (espnId: string) => `https://a.espncdn.com/i/headshots/nfl/players/full/${espnId}.png`;
+export const nflHeadshotUrl = (espnId: string) =>
+  LOCAL_PLAYERS.has(`nfl/${espnId}`) ? `/players/nfl/${espnId}.webp` : `https://a.espncdn.com/i/headshots/nfl/players/full/${espnId}.png`;
+
+/** Binder-size thumbnail of a local insert art file, when scripts/photos.mjs has made one. */
+const artThumb = (art: string | undefined) => {
+  const file = art?.startsWith("/inserts/") ? art.slice("/inserts/".length) : undefined;
+  return file && INSERT_THUMBS.has(file) ? `/inserts/thumb/${file}.webp` : undefined;
+};
 
 const FOOTBALL_PLAYERS: Player[] = NFL_PLAYERS.map((r) => ({
   id: `nfl-${r.id}`,
@@ -312,6 +327,8 @@ export interface CardView {
   note?: string;
   /** Splash art for inserts, once one has been chosen. */
   art?: string;
+  /** The same art at binder size (small cards use it; the viewer and the pack reveal use `art`). */
+  artThumb?: string;
 }
 
 export function cardView(designId: string): CardView {
@@ -350,5 +367,6 @@ export function cardView(designId: string): CardView {
     no: d.no,
     rookie: d.rookie,
     art: INSERT_ART[d.id] || undefined,
+    artThumb: artThumb(INSERT_ART[d.id]),
   };
 }
